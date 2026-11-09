@@ -3,140 +3,262 @@
 <html lang="mn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123b30">
 <title>MONGOL MARKET</title>
 <style>
+:root{--g:#123b30;--g2:#205b43;--gold:#e8b85c;--cream:#f7f6f0;--ink:#203128;--muted:#718078}
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f5f6f8;color:#20252b}
-header{background:#123c32;color:white;padding:22px 15px}
-.logo{font-size:27px;font-weight:bold;letter-spacing:1px}
-header p{margin:7px 0 0;color:#d4e8df}
-.search{padding:15px;background:white}
-.search input{width:100%;padding:14px;border:1px solid #ddd;border-radius:9px;font-size:16px}
-.container{padding:15px}
-h2{font-size:19px}
-.categories{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.cat{background:white;padding:17px 10px;border-radius:10px;text-align:center;font-weight:bold;border:1px solid #eee;cursor:pointer}
-.cat:active{background:#dceee6}
-.products{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.product{background:white;border-radius:10px;padding:13px}
-.product .pic{font-size:42px;text-align:center;background:#edf3ef;padding:17px;border-radius:8px}
-.product h3{font-size:15px;margin:10px 0}
-.price{color:#14734c;font-weight:bold}
-button{background:#146b4b;color:white;border:0;padding:12px;border-radius:7px;width:100%;margin-top:9px;font-weight:bold;font-size:14px}
-.section{background:white;padding:18px;margin-top:18px;border-radius:10px}
-.section p{line-height:1.6}
-.secondary{background:#234b80}
-footer{background:#123c32;color:white;padding:25px 15px;margin-top:25px}
-small{color:#aaa}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:Arial,sans-serif}
+button,input{font:inherit}
+button{cursor:pointer}
+header{background:var(--g);color:white;padding:15px}
+.top{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.logo{font-weight:900;font-size:23px;letter-spacing:1px}
+.logo span{color:var(--gold)}
+.tag{font-size:10px;color:#d4e4d9;margin-top:4px}
+.cartbtn{border:0;border-radius:12px;background:var(--gold);padding:12px;font-weight:bold;color:var(--g)}
+.hero{min-height:270px;background:linear-gradient(90deg,rgba(10,40,30,.85),rgba(10,40,30,.15)),url('mongol-market-banner.png') center/cover no-repeat;display:flex;align-items:center;color:white}
+.hero-inner{width:1100px;margin:auto;padding:35px 20px}
+.hero h1{font-size:clamp(30px,6vw,48px);margin:0 0 10px}
+.hero h1 span{color:var(--gold)}
+.hero p{line-height:1.6;max-width:480px}
+.search{width:100%;max-width:550px;border:0;border-radius:13px;padding:15px;margin-top:10px}
+.wrap{max-width:1100px;margin:auto;padding:20px 14px}
+.welcome{background:linear-gradient(120deg,#123b30,#28664b);color:white;padding:20px;border-radius:17px;margin-bottom:22px}
+.welcome h2{margin:0 0 8px}
+.welcome p{font-size:13px;line-height:1.6;color:#e1eee5;margin:0}
+.heading{font-size:21px;margin:23px 0 14px}
+.categories{display:flex;gap:9px;overflow-x:auto;padding-bottom:12px}
+.cat{white-space:nowrap;border:1px solid #dce2d9;background:white;color:var(--g);padding:11px 15px;border-radius:25px}
+.cat.active{background:var(--g);color:white}
+.products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.product{background:white;border-radius:16px;overflow:hidden;border:1px solid #e7e9e2;box-shadow:0 4px 15px #1a352010}
+.photo{height:125px;background:linear-gradient(145deg,#e2eee4,#f8edcf);display:grid;place-items:center;font-size:52px}
+.details{padding:12px}
+.details h3{font-size:15px;margin:0 0 7px}
+.details small{color:var(--muted)}
+.price{font-weight:900;color:var(--g);font-size:18px;margin:12px 0}
+.add{width:100%;border:0;border-radius:10px;padding:11px;background:var(--g);color:white;font-weight:bold}
+.add:active{background:var(--g2)}
+.panel{background:white;border-radius:16px;padding:17px;margin:20px 0;border:1px solid #e6e9e2}
+.panel h2{margin-top:0;font-size:20px}
+.links{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.link{display:block;text-align:center;text-decoration:none;border-radius:10px;padding:13px 8px;background:var(--g);color:white;font-weight:bold;font-size:13px}
+.link.gold{background:var(--gold);color:var(--g)}
+.cartitem{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 0;border-bottom:1px solid #eee}
+.cartitem b{font-size:14px}
+.qty{display:flex;align-items:center;gap:8px}
+.qty button{border:0;border-radius:7px;padding:7px 10px;background:#e9f0e9}
+.remove{background:none!important;color:#b33}
+.total{display:flex;justify-content:space-between;padding:8px 0;font-size:14px}
+.final{font-size:19px;font-weight:bold;color:var(--g);border-top:1px solid #ddd;padding-top:13px}
+.field{width:100%;padding:13px;border:1px solid #dce2da;border-radius:10px;margin:6px 0 12px}
+.primary{width:100%;padding:14px;background:var(--g);color:white;border:0;border-radius:10px;font-weight:bold}
+.note{font-size:12px;color:var(--muted);line-height:1.7}
+.terms details{border-bottom:1px solid #e7e9e2;padding:13px 0}
+.terms summary{font-weight:bold;cursor:pointer;font-size:14px}
+.terms p{font-size:13px;line-height:1.75;color:#58675e}
+footer{background:#102c24;color:white;text-align:center;padding:25px 15px}
+footer p{font-size:12px;color:#c9d9ce;line-height:1.7}
+@media(min-width:650px){.products{grid-template-columns:repeat(3,1fr)}.photo{height:165px}}
+@media(min-width:950px){.products{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
 
 <header>
-<div class="logo">MONGOL MARKET</div>
-<p>Монголын худалдааны нэгдсэн платформ</p>
+<div class="top">
+ <div>
+  <div class="logo">MONGOL <span>MARKET</span></div>
+  <div class="tag">МОНГОЛЫН НЭГДСЭН ЦАХИМ ЗАХ ЗЭЭЛ 🇲🇳</div>
+ </div>
+ <button class="cartbtn" onclick="showCart()">🛒 Сагс <span id="count">0</span></button>
+</div>
 </header>
 
-<div class="search">
-<input id="search" placeholder="Бараа хайх..." oninput="showProducts()">
-</div>
+<section class="hero">
+ <div class="hero-inner">
+  <h1>Монголын зах зээл<br><span>Нэг дор.</span></h1>
+  <p>Худалдан авагч, нийлүүлэгч хоёрыг холбосон Монголын нэгдсэн цахим зах зээл.</p>
+  <input class="search" id="search" placeholder="🔍 Бараа хайх..." oninput="render()">
+ </div>
+</section>
 
-<div class="container">
+<main class="wrap">
+<section class="welcome">
+ <h2>Тавтай морил! 🇲🇳</h2>
+ <p>Хүссэн бараагаа нэг дороос хайж олоорой. Нийлүүлэгч бол бараагаа байршуулж, худалдан авагчдаа хүргээрэй.</p>
+</section>
 
-<h2>Барааны ангилал</h2>
-<div class="categories">
-<div class="cat" onclick="filter('Ариун цэвэр')">🧼 Ариун цэврийн бараа</div>
-<div class="cat" onclick="filter('Цэвэрлэгээ')">🧹 Цэвэрлэгээний хэрэгсэл</div>
-<div class="cat" onclick="filter('Бичиг хэрэг')">📚 Бичиг хэрэг</div>
-<div class="cat" onclick="filter('Сав баглаа')">📦 Сав баглаа боодол</div>
-<div class="cat" onclick="filter('Ресторан')">🍽️ Ресторан, гал тогоо</div>
-<div class="cat" onclick="filter('Гэр ахуй')">🏠 Гэр ахуйн бараа</div>
-<div class="cat" onclick="filter('Цахилгаан')">💡 Цахилгаан бараа</div>
-<div class="cat" onclick="filter('Бусад')">🛍️ Бусад бүх бараа</div>
-</div>
+<h2 class="heading">🛍️ Барааны ангилал</h2>
+<div class="categories" id="categories"></div>
 
-<h2>Онцлох бараанууд</h2>
+<h2 class="heading">✨ Бүх бараа</h2>
 <div class="products" id="products"></div>
 
-<div class="section">
-<h2>🏪 Нийлүүлэгч болох</h2>
-<p>Та өөрийн бизнес, бараа бүтээгдэхүүнээ MONGOL MARKET-д бүртгүүлээрэй.</p>
-<button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdjHVcErBq_D6UAfafBoV1MtsXLLfSUZUFG_XXwUjO0T3I50g/viewform','_blank')">
-Нийлүүлэгчээр бүртгүүлэх
-</button>
+<section class="panel">
+<h2>🤝 Нийлүүлэгч болох</h2>
+<p class="note">MONGOL MARKET-д бүртгүүлж бараагаа Монгол даяар танилцуулаарай. Бүртгэл болон бараа байршуулалт үнэ төлбөргүй.</p>
+<div class="links">
+<a class="link" target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSdjHVcErBq_D6UAfafBoV1MtsXLLfSUZUFG_XXwUjO0T3I50g/viewform?usp=dialog">Нийлүүлэгч бүртгүүлэх</a>
+<a class="link gold" target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSelNRs6XBF99agGRVI4F7YmcJqmgAsDNxVe4lPymmvnyORj6g/viewform?usp=dialog">Бараа нэмэх</a>
 </div>
+</section>
 
-<div class="section">
-<h2>📦 Бараа нэмэх</h2>
-<p>Барааныхаа нэр, үнэ, зураг, тайлбарыг оруулж худалдаанд байршуулах хүсэлт илгээнэ үү.</p>
-<button class="secondary" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSelNRs6XBF99agGRVI4F7YmcJqmgAsDNxVe4lPymmvnyORj6g/viewform','_blank')">
-Бараа нэмэх
-</button>
-</div>
-
-<div class="section">
+<section class="panel" id="cart">
 <h2>🛒 Миний сагс</h2>
-<p id="cart">Таны сагс хоосон байна.</p>
+<div id="items"></div>
+<div id="totals"></div>
+<div id="checkout" hidden>
+<h3>Захиалагчийн мэдээлэл</h3>
+<input class="field" id="buyer" placeholder="Овог нэр">
+<input class="field" id="phone" type="tel" placeholder="Утасны дугаар">
+<input class="field" id="address" placeholder="Хүргэлтийн хаяг">
+<button class="primary" onclick="order()">Захиалгын мэдээлэл бэлдэх</button>
+<div id="result"></div>
 </div>
+</section>
 
-</div>
+<section class="panel terms">
+<h2>📜 Үйлчилгээний нөхцөл</h2>
+<details>
+<summary>1. Платформын үйл ажиллагаа</summary>
+<p>MONGOL MARKET нь худалдан авагч болон нийлүүлэгчийг холбох цахим платформ юм. Одоогийн хувилбар нь демо бөгөөд бодит төлбөр хүлээн авах, хадгалах, шилжүүлэх үйлчилгээ идэвхжээгүй.</p>
+</details>
+<details>
+<summary>2. Нийлүүлэгчийн бүртгэл ба гэрээ</summary>
+<p>Нийлүүлэгч бүртгүүлэхдээ үнэн зөв мэдээлэл өгнө. Цахим гэрээний нөхцөлийг уншиж зөвшөөрсөн тохиолдолд бүртгэл баталгаажна. Бүртгэл, бараа байршуулалт үнэ төлбөргүй байна.</p>
+</details>
+<details>
+<summary>3. Барааны мэдээлэл ба чанар</summary>
+<p>Нийлүүлэгч барааны нэр, зураг, үнэ, үлдэгдэл, тайлбар, хүргэлтийн мэдээллийг үнэн зөв оруулна. Барааны чанар, аюулгүй байдал, гарал үүсэл, зөв тоо хэмжээ болон хуульд нийцлийг нийлүүлэгч хариуцна.</p>
+</details>
+<details>
+<summary>4. Платформын 5%-ийн шимтгэл</summary>
+<p>Амжилттай биелсэн борлуулалтын үнийн дүнгийн 5%-ийг платформын үйлчилгээний шимтгэлээр тооцохоор төлөвлөсөн. Үлдсэн 95%-ийг нийлүүлэгчид олгоно. Бодит шимтгэл хураалт нь гэрээ, татвар, төлбөрийн үйлчилгээний шаардлага хангагдаж, систем идэвхжсэний дараа хэрэгжинэ. Цуцлагдсан болон амжилтгүй захиалгад шимтгэл тооцохгүй.</p>
+</details>
+<details>
+<summary>5. Төлбөр ба мөнгөн шилжүүлэг</summary>
+<p>Бодит төлбөрийн систем холбогдсон үед төлбөрийг QPay эсвэл эрх бүхий төлбөрийн үйлчилгээ үзүүлэгчийн баталгаажуулалтаар шалгана. Шимтгэл суутгах, нийлүүлэгчид үлдэгдэл төлөх, буцаалт хийх нөхцөл, хугацааг гэрээ болон холбогдох хуульд нийцүүлнэ. Одоогийн демо хувилбарт бодит төлбөр хийгдэхгүй.</p>
+</details>
+<details>
+<summary>6. Хүргэлт</summary>
+<p>Хүргэлтийн үнэ, хугацаа, нөхцөлийг худалдан авагчид урьдчилан мэдээлнэ. Хүргэлтийг нийлүүлэгч өөрөө зохион байгуулж, барааг тохирсон газар, хугацаанд хүргэх үүрэгтэй.</p>
+</details>
+<details>
+<summary>7. Буцаалт, буцаан олголт, гомдол</summary>
+<p>Бараа гэмтэлтэй, буруу, дутуу, тайлбартай зөрүүтэй бол худалдан авагч хуульд заасан эрхээ эдэлнэ. Буцаалт, солилт, буцаан олголтыг хэрэглэгчийн эрхийг хамгаалах хууль тогтоомжид нийцүүлэн шийдвэрлэнэ. Платформ гомдлыг бүртгэж, талуудын шийдвэрлэлтийг хянах боломжтой байхаар хөгжүүлнэ.</p>
+</details>
+<details>
+<summary>8. Захиалга цуцлах</summary>
+<p>Захиалга биелж эхлэхээс өмнө цуцлах хүсэлт гаргаж болно. Цуцлалт, төлбөр буцаах ажиллагааг төлбөрийн үйлчилгээний нөхцөл болон хэрэглэгчийн хууль ёсны эрхэд нийцүүлнэ.</p>
+</details>
+<details>
+<summary>9. Хувийн мэдээлэл</summary>
+<p>Хэрэглэгч, нийлүүлэгчийн мэдээллийг зөвхөн бүртгэл, захиалга, хүргэлт, үйлчилгээний зорилгоор шаардлагатай хэмжээнд ашиглана. Нууц үг, төлбөрийн мэдээллийг хамгаалалтын шаардлагад нийцүүлэн боловсруулах ёстой. Зөвшөөрөлгүй гуравдагч этгээдэд мэдээлэл дамжуулахгүй, хуульд заасан тохиолдлыг эс тооцно.</p>
+</details>
+<details>
+<summary>10. Хориглосон бараа</summary>
+<p>Хууль бус, хуурамч, хулгайн, зөвшөөрөлгүй, аюултай болон хууль тогтоомжоор худалдаалахыг хориглосон барааг байршуулж болохгүй. Платформ шаардлагатай тохиолдолд барааг шалгах, нуух, устгах боломжтой байна.</p>
+</details>
+<details>
+<summary>11. Маргаан шийдвэрлэх</summary>
+<p>Худалдан авагч, нийлүүлэгч эхлээд харилцан зөвшилцөж асуудлаа шийдвэрлэхийг эрмэлзэнэ. Шаардлагатай үед платформ гомдол, захиалгын бүртгэлд үндэслэн зуучлах боломжтой. Хуулиар олгогдсон эрхийг хязгаарлахгүй.</p>
+</details>
+<details>
+<summary>12. Платформын хязгаарлалт</summary>
+<p>Туршилтын хувилбарт зарим үйлдэл зөвхөн үзүүлэн байдлаар ажиллана. Сервер, мэдээллийн сан, төлбөрийн API, хэрэглэгчийн баталгаажуулалт холбогдохоос өмнө захиалга, төлбөр, шимтгэл, шилжүүлэг бодитой бүртгэгдсэн гэж үзэхгүй.</p>
+</details>
+</section>
+</main>
 
 <footer>
-<h2>MONGOL MARKET</h2>
-<p>Монголын бүх төрлийн бараа бүтээгдэхүүний нэгдсэн худалдааны платформ.</p>
-<small>© 2026 MONGOL MARKET</small>
+<div class="logo">MONGOL <span>MARKET</span></div>
+<p>Монголын нэгдсэн цахим зах зээл 🇲🇳</p>
+<p>Худалдан авагч • Нийлүүлэгч • Нэг зах зээл</p>
+<p>© 2026 MONGOL MARKET</p>
 </footer>
 
 <script>
-const items=[
-{name:"Гар угаагч шингэн",price:6500,cat:"Ариун цэвэр",pic:"🧴"},
-{name:"Ариун цэврийн цаас",price:4500,cat:"Ариун цэвэр",pic:"🧻"},
-{name:"Шал угаагч",price:8000,cat:"Цэвэрлэгээ",pic:"🧹"},
-{name:"Хогийн уут",price:3500,cat:"Цэвэрлэгээ",pic:"🗑️"},
-{name:"Дэвтэр",price:2500,cat:"Бичиг хэрэг",pic:"📒"},
-{name:"Үзэг",price:1000,cat:"Бичиг хэрэг",pic:"🖊️"},
-{name:"Цаасан аяга",price:5000,cat:"Сав баглаа",pic:"🥤"},
-{name:"Хоолны сав",price:7000,cat:"Ресторан",pic:"🍱"},
-{name:"Гал тогооны хэрэгсэл",price:12000,cat:"Ресторан",pic:"🍴"},
-{name:"Хуванцар сав",price:6000,cat:"Гэр ахуй",pic:"🫙"},
-{name:"LED гэрэл",price:9000,cat:"Цахилгаан",pic:"💡"}
+const categories=["Бүгд","Ариун цэвэр","Цэвэрлэгээ","Бичиг хэрэг","Сав баглаа","Ресторан, гал тогоо","Гэр ахуй","Цахилгаан бараа"];
+const products=[
+{id:1,name:"Ариун цэврийн цаас",price:4500,cat:"Ариун цэвэр",emoji:"🧻"},
+{id:2,name:"Гар угаагч шингэн",price:6500,cat:"Ариун цэвэр",emoji:"🧴"},
+{id:3,name:"Цэвэрлэгээний бодис",price:8500,cat:"Цэвэрлэгээ",emoji:"🧹"},
+{id:4,name:"Шал угаагч",price:7500,cat:"Цэвэрлэгээ",emoji:"🪣"},
+{id:5,name:"Бичгийн дэвтэр",price:2500,cat:"Бичиг хэрэг",emoji:"📒"},
+{id:6,name:"Бал үзэг",price:1000,cat:"Бичиг хэрэг",emoji:"🖊️"},
+{id:7,name:"Цаасан аяга",price:5500,cat:"Сав баглаа",emoji:"🥤"},
+{id:8,name:"Хүнсний сав",price:8000,cat:"Сав баглаа",emoji:"📦"},
+{id:9,name:"Гал тогооны хэрэгсэл",price:12000,cat:"Ресторан, гал тогоо",emoji:"🍽️"},
+{id:10,name:"Хайруулын таваг",price:25000,cat:"Ресторан, гал тогоо",emoji:"🍳"},
+{id:11,name:"Хадгалах сав",price:9000,cat:"Гэр ахуй",emoji:"🏠"},
+{id:12,name:"Ширээний гэрэл",price:18000,cat:"Цахилгаан бараа",emoji:"💡"}
 ];
-
-let cart=[];
-let category="";
-
-function showProducts(){
-let q=document.getElementById("search").value.toLowerCase();
-let filtered=items.filter(p=>
-(!category||p.cat===category)&&p.name.toLowerCase().includes(q)
-);
-
-document.getElementById("products").innerHTML=
-filtered.map(p=>`
-<div class="product">
-<div class="pic">${p.pic}</div>
-<h3>${p.name}</h3>
-<div class="price">${p.price.toLocaleString()} ₮</div>
-<button onclick="addCart('${p.name}')">Сагсанд нэмэх</button>
-</div>
-`).join("")||"Бараа олдсонгүй.";
+let selected="Бүгд";
+let cart=JSON.parse(localStorage.getItem("mmcart")||"{}");
+const money=n=>Number(n).toLocaleString("mn-MN")+"₮";
+function save(){localStorage.setItem("mmcart",JSON.stringify(cart));}
+function drawCategories(){
+ document.getElementById("categories").innerHTML=categories.map(c=>`<button class="cat ${selected===c?"active":""}" onclick="choose('${c}')">${c}</button>`).join("");
 }
-
-function filter(cat){
-category=category===cat?"":cat;
-showProducts();
+function choose(c){selected=c;drawCategories();render();}
+function render(){
+ const q=document.getElementById("search").value.toLowerCase();
+ const list=products.filter(p=>(selected==="Бүгд"||p.cat===selected)&&p.name.toLowerCase().includes(q));
+ document.getElementById("products").innerHTML=list.length?list.map(p=>`
+ <article class="product">
+ <div class="photo">${p.emoji}</div>
+ <div class="details">
+ <h3>${p.name}</h3><small>${p.cat}</small>
+ <div class="price">${money(p.price)}</div>
+ <button class="add" onclick="add(${p.id})">＋ Сагсанд нэмэх</button>
+ </div></article>`).join(""):`<div class="note">Бараа олдсонгүй.</div>`;
 }
-
-function addCart(name){
-cart.push(name);
-document.getElementById("cart").innerText=
-cart.join(", ")+" — "+cart.length+" бараа";
+function count(){return Object.values(cart).reduce((a,b)=>a+b,0);}
+function add(id){cart[id]=(cart[id]||0)+1;save();drawCart();}
+function change(id,n){cart[id]=(cart[id]||0)+n;if(cart[id]<=0)delete cart[id];save();drawCart();}
+function drawCart(){
+ document.getElementById("count").textContent=count();
+ const entries=products.filter(p=>cart[p.id]);
+ document.getElementById("items").innerHTML=entries.length?entries.map(p=>`
+ <div class="cartitem">
+ <div><b>${p.emoji} ${p.name}</b><br><small>${money(p.price)}</small></div>
+ <div class="qty">
+ <button onclick="change(${p.id},-1)">−</button>
+ <b>${cart[p.id]}</b>
+ <button onclick="change(${p.id},1)">＋</button>
+ <button class="remove" onclick="change(${p.id},-${cart[p.id]})">✕</button>
+ </div></div>`).join(""):`<p class="note">Таны сагс хоосон байна. Бараа сонгоорой.</p>`;
+ const total=entries.reduce((a,p)=>a+p.price*cart[p.id],0);
+ document.getElementById("totals").innerHTML=entries.length?`
+ <div class="total"><span>Барааны нийт үнэ</span><b>${money(total)}</b></div>
+ <div class="total"><span>5%-ийн шимтгэлийн тооцоо</span><b>${money(total*.05)}</b></div>
+ <div class="total"><span>Нийлүүлэгчид үлдэх 95%-ийн тооцоо</span><b>${money(total*.95)}</b></div>
+ <div class="total final"><span>Нийт дүн</span><span>${money(total)}</span></div>`:"";
+ document.getElementById("checkout").hidden=!entries.length;
 }
-
-showProducts();
+function showCart(){document.getElementById("cart").scrollIntoView({behavior:"smooth"});}
+function order(){
+ const name=document.getElementById("buyer").value.trim();
+ const phone=document.getElementById("phone").value.trim();
+ const address=document.getElementById("address").value.trim();
+ if(!name||!phone||!address){alert("Нэр, утас, хаягаа бүрэн оруулна уу.");return;}
+ const entries=products.filter(p=>cart[p.id]);
+ const total=entries.reduce((a,p)=>a+p.price*cart[p.id],0);
+ let msg="MONGOL MARKET ЗАХИАЛГА\n"+name+"\nУтас: "+phone+"\nХаяг: "+address+"\n";
+ entries.forEach(p=>msg+=p.name+" x "+cart[p.id]+" = "+money(p.price*cart[p.id])+"\n");
+ msg+="Нийт: "+money(total);
+ document.getElementById("result").innerHTML='<p class="note">Захиалгын мэдээлэл бэлэн боллоо. Одоогоор серверт илгээгдээгүй.</p><button class="primary" onclick="copyOrder()">📋 Захиалгыг хуулах</button>';
+ window.orderText=msg;
+}
+function copyOrder(){
+ if(navigator.clipboard&&navigator.clipboard.writeText){
+ navigator.clipboard.writeText(window.orderText).then(()=>alert("Захиалгыг хууллаа."));
+ }else{prompt("Захиалгаа хуулна уу:",window.orderText);}
+}
+drawCategories();render();drawCart();
 </script>
-
 </body>
 </html>
-
