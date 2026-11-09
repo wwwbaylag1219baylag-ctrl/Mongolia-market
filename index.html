@@ -8,7 +8,7 @@
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f5f6f8;color:#20252b}
-header{background:#123c32;color:white;padding:20px 15px}
+header{background:#123c32;color:white;padding:22px 15px}
 .logo{font-size:27px;font-weight:bold;letter-spacing:1px}
 header p{margin:7px 0 0;color:#d4e8df}
 .search{padding:15px;background:white}
@@ -23,10 +23,12 @@ h2{font-size:19px}
 .product .pic{font-size:42px;text-align:center;background:#edf3ef;padding:17px;border-radius:8px}
 .product h3{font-size:15px;margin:10px 0}
 .price{color:#14734c;font-weight:bold}
-button{background:#146b4b;color:white;border:0;padding:11px;border-radius:7px;width:100%;margin-top:9px;font-weight:bold}
+button{background:#146b4b;color:white;border:0;padding:12px;border-radius:7px;width:100%;margin-top:9px;font-weight:bold;font-size:14px}
 .section{background:white;padding:18px;margin-top:18px;border-radius:10px}
+.section p{line-height:1.6}
+.secondary{background:#234b80}
 footer{background:#123c32;color:white;padding:25px 15px;margin-top:25px}
-small{color:#777}
+small{color:#aaa}
 </style>
 </head>
 <body>
@@ -41,6 +43,7 @@ small{color:#777}
 </div>
 
 <div class="container">
+
 <h2>Барааны ангилал</h2>
 <div class="categories">
 <div class="cat" onclick="filter('Ариун цэвэр')">🧼 Ариун цэврийн бараа</div>
@@ -50,6 +53,7 @@ small{color:#777}
 <div class="cat" onclick="filter('Ресторан')">🍽️ Ресторан, гал тогоо</div>
 <div class="cat" onclick="filter('Гэр ахуй')">🏠 Гэр ахуйн бараа</div>
 <div class="cat" onclick="filter('Цахилгаан')">💡 Цахилгаан бараа</div>
+<div class="cat" onclick="filter('Бусад')">🛍️ Бусад бүх бараа</div>
 </div>
 
 <h2>Онцлох бараанууд</h2>
@@ -57,19 +61,30 @@ small{color:#777}
 
 <div class="section">
 <h2>🏪 Нийлүүлэгч болох</h2>
-<p>Та өөрийн бараа бүтээгдэхүүнийг MONGOL MARKET-ээр дамжуулан худалдаалаарай.</p>
-<button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdjHVcErBq_D6UAfafBoV1MtsXLLfSUZUFG_XXwUjO0T3I50g/viewform','_blank')">Нийлүүлэгчээр бүртгүүлэх</button>
+<p>Та өөрийн бизнес, бараа бүтээгдэхүүнээ MONGOL MARKET-д бүртгүүлээрэй.</p>
+<button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdjHVcErBq_D6UAfafBoV1MtsXLLfSUZUFG_XXwUjO0T3I50g/viewform','_blank')">
+Нийлүүлэгчээр бүртгүүлэх
+</button>
+</div>
+
+<div class="section">
+<h2>📦 Бараа нэмэх</h2>
+<p>Барааныхаа нэр, үнэ, зураг, тайлбарыг оруулж худалдаанд байршуулах хүсэлт илгээнэ үү.</p>
+<button class="secondary" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSelNRs6XBF99agGRVI4F7YmcJqmgAsDNxVe4lPymmvnyORj6g/viewform','_blank')">
+Бараа нэмэх
+</button>
 </div>
 
 <div class="section">
 <h2>🛒 Миний сагс</h2>
 <p id="cart">Таны сагс хоосон байна.</p>
 </div>
+
 </div>
 
 <footer>
 <h2>MONGOL MARKET</h2>
-<p>Монголын бизнес эрхлэгчдийг холбох нэгдсэн худалдааны платформ.</p>
+<p>Монголын бүх төрлийн бараа бүтээгдэхүүний нэгдсэн худалдааны платформ.</p>
 <small>© 2026 MONGOL MARKET</small>
 </footer>
 
@@ -87,28 +102,41 @@ const items=[
 {name:"Хуванцар сав",price:6000,cat:"Гэр ахуй",pic:"🫙"},
 {name:"LED гэрэл",price:9000,cat:"Цахилгаан",pic:"💡"}
 ];
+
 let cart=[];
 let category="";
+
 function showProducts(){
 let q=document.getElementById("search").value.toLowerCase();
-let filtered=items.filter(p=>(!category||p.cat===category)&&p.name.toLowerCase().includes(q));
-document.getElementById("products").innerHTML=filtered.map((p,i)=>`
+let filtered=items.filter(p=>
+(!category||p.cat===category)&&p.name.toLowerCase().includes(q)
+);
+
+document.getElementById("products").innerHTML=
+filtered.map(p=>`
 <div class="product">
 <div class="pic">${p.pic}</div>
 <h3>${p.name}</h3>
 <div class="price">${p.price.toLocaleString()} ₮</div>
 <button onclick="addCart('${p.name}')">Сагсанд нэмэх</button>
-</div>`).join("")||"Бараа олдсонгүй.";
+</div>
+`).join("")||"Бараа олдсонгүй.";
 }
+
 function filter(cat){
 category=category===cat?"":cat;
 showProducts();
 }
+
 function addCart(name){
 cart.push(name);
-document.getElementById("cart").innerText=cart.join(", ")+" — "+cart.length+" бараа";
+document.getElementById("cart").innerText=
+cart.join(", ")+" — "+cart.length+" бараа";
 }
+
 showProducts();
 </script>
+
 </body>
 </html>
+
