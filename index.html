@@ -10,15 +10,14 @@
 :root{--g:#123b30;--g2:#205b43;--gold:#e8b85c;--cream:#f7f6f0;--ink:#203128;--muted:#718078}
 *{box-sizing:border-box}
 body{margin:0;background:var(--cream);color:var(--ink);font-family:Arial,sans-serif}
-button,input{font:inherit}
-button{cursor:pointer}
+button,input{font:inherit}button{cursor:pointer}
 header{background:var(--g);color:white;padding:15px}
 .top{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:10px}
 .logo{font-weight:900;font-size:23px;letter-spacing:1px}
 .logo span{color:var(--gold)}
 .tag{font-size:10px;color:#d4e4d9;margin-top:4px}
 .cartbtn{border:0;border-radius:12px;background:var(--gold);padding:12px;font-weight:bold;color:var(--g)}
-.hero{min-height:270px;background:linear-gradient(90deg,rgba(10,40,30,.85),rgba(10,40,30,.15)),url('mongol-market-banner.png') center/cover no-repeat;display:flex;align-items:center;color:white}
+.hero{min-height:270px;background:linear-gradient(90deg,rgba(10,40,30,.88),rgba(10,40,30,.25)),url('mongol-market-banner.png') center/cover no-repeat;display:flex;align-items:center;color:white}
 .hero-inner{width:1100px;margin:auto;padding:35px 20px}
 .hero h1{font-size:clamp(30px,6vw,48px);margin:0 0 10px}
 .hero h1 span{color:var(--gold)}
@@ -29,9 +28,12 @@ header{background:var(--g);color:white;padding:15px}
 .welcome h2{margin:0 0 8px}
 .welcome p{font-size:13px;line-height:1.6;color:#e1eee5;margin:0}
 .heading{font-size:21px;margin:23px 0 14px}
-.categories{display:flex;gap:9px;overflow-x:auto;padding-bottom:12px}
-.cat{white-space:nowrap;border:1px solid #dce2d9;background:white;color:var(--g);padding:11px 15px;border-radius:25px}
-.cat.active{background:var(--g);color:white}
+.categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.cat{border:1px solid #dce2d9;background:white;color:var(--g);padding:12px 9px;border-radius:12px;text-align:left;font-size:13px;min-height:48px}
+.cat.active{background:var(--g);color:white;border-color:var(--g)}
+.subcategories{display:flex;gap:8px;overflow-x:auto;padding:12px 0}
+.subcat{white-space:nowrap;border:1px solid #dce2d9;background:#fff;padding:9px 13px;border-radius:20px;color:var(--g);font-size:12px}
+.subcat.active{background:var(--gold);border-color:var(--gold)}
 .products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .product{background:white;border-radius:16px;overflow:hidden;border:1px solid #e7e9e2;box-shadow:0 4px 15px #1a352010}
 .photo{height:125px;background:linear-gradient(145deg,#e2eee4,#f8edcf);display:grid;place-items:center;font-size:52px}
@@ -51,18 +53,19 @@ header{background:var(--g);color:white;padding:15px}
 .qty{display:flex;align-items:center;gap:8px}
 .qty button{border:0;border-radius:7px;padding:7px 10px;background:#e9f0e9}
 .remove{background:none!important;color:#b33}
-.total{display:flex;justify-content:space-between;padding:8px 0;font-size:14px}
+.total{display:flex;justify-content:space-between;padding:8px 0;font-size:14px;gap:8px}
 .final{font-size:19px;font-weight:bold;color:var(--g);border-top:1px solid #ddd;padding-top:13px}
 .field{width:100%;padding:13px;border:1px solid #dce2da;border-radius:10px;margin:6px 0 12px}
 .primary{width:100%;padding:14px;background:var(--g);color:white;border:0;border-radius:10px;font-weight:bold}
 .note{font-size:12px;color:var(--muted);line-height:1.7}
+.empty{background:white;border-radius:14px;padding:22px;text-align:center;color:var(--muted);font-size:14px;line-height:1.7}
 .terms details{border-bottom:1px solid #e7e9e2;padding:13px 0}
 .terms summary{font-weight:bold;cursor:pointer;font-size:14px}
 .terms p{font-size:13px;line-height:1.75;color:#58675e}
 footer{background:#102c24;color:white;text-align:center;padding:25px 15px}
 footer p{font-size:12px;color:#c9d9ce;line-height:1.7}
-@media(min-width:650px){.products{grid-template-columns:repeat(3,1fr)}.photo{height:165px}}
-@media(min-width:950px){.products{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:650px){.categories{grid-template-columns:repeat(3,1fr)}.products{grid-template-columns:repeat(3,1fr)}.photo{height:165px}}
+@media(min-width:950px){.categories{grid-template-columns:repeat(4,1fr)}.products{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
@@ -80,29 +83,30 @@ footer p{font-size:12px;color:#c9d9ce;line-height:1.7}
 <section class="hero">
  <div class="hero-inner">
   <h1>Монголын зах зээл<br><span>Нэг дор.</span></h1>
-  <p>Худалдан авагч, нийлүүлэгч хоёрыг холбосон Монголын нэгдсэн цахим зах зээл.</p>
-  <input class="search" id="search" placeholder="🔍 Бараа хайх..." oninput="render()">
+  <p>Худалдан авагч, нийлүүлэгч хоёрыг холбосон Монголын бүх төрлийн барааны нэгдсэн цахим зах зээл.</p>
+  <input class="search" id="search" placeholder="🔍 Бараа, ангилал хайх..." oninput="render()">
  </div>
 </section>
 
 <main class="wrap">
 <section class="welcome">
  <h2>Тавтай морил! 🇲🇳</h2>
- <p>Хүссэн бараагаа нэг дороос хайж олоорой. Нийлүүлэгч бол бараагаа байршуулж, худалдан авагчдаа хүргээрэй.</p>
+ <p>Хүссэн бараагаа нэг дороос хайж олоорой. Нийлүүлэгч бол бараагаа байршуулж, Монгол даяар худалдан авагчдаа хүргээрэй.</p>
 </section>
 
-<h2 class="heading">🛍️ Барааны ангилал</h2>
+<h2 class="heading">🛍️ Барааны бүх ангилал</h2>
 <div class="categories" id="categories"></div>
+<div class="subcategories" id="subcategories"></div>
 
-<h2 class="heading">✨ Бүх бараа</h2>
+<h2 class="heading" id="productHeading">✨ Бүх бараа</h2>
 <div class="products" id="products"></div>
 
 <section class="panel">
 <h2>🤝 Нийлүүлэгч болох</h2>
 <p class="note">MONGOL MARKET-д бүртгүүлж бараагаа Монгол даяар танилцуулаарай. Бүртгэл болон бараа байршуулалт үнэ төлбөргүй.</p>
 <div class="links">
-<a class="link" target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSdjHVcErBq_D6UAfafBoV1MtsXLLfSUZUFG_XXwUjO0T3I50g/viewform?usp=dialog">Нийлүүлэгч бүртгүүлэх</a>
-<a class="link gold" target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSelNRs6XBF99agGRVI4F7YmcJqmgAsDNxVe4lPymmvnyORj6g/viewform?usp=dialog">Бараа нэмэх</a>
+<a class="link" target="_blank" rel="noopener" href="https://docs.google.com/forms/d/e/1FAIpQLSdjHVcErBq_D6UAfafBoV1MtsXLLfSUZUFG_XXwUjO0T3I50g/viewform?usp=dialog">Нийлүүлэгч бүртгүүлэх</a>
+<a class="link gold" target="_blank" rel="noopener" href="https://docs.google.com/forms/d/e/1FAIpQLSelNRs6XBF99agGRVI4F7YmcJqmgAsDNxVe4lPymmvnyORj6g/viewform?usp=dialog">Бараа нэмэх</a>
 </div>
 </section>
 
@@ -122,54 +126,30 @@ footer p{font-size:12px;color:#c9d9ce;line-height:1.7}
 
 <section class="panel terms">
 <h2>📜 Үйлчилгээний нөхцөл</h2>
-<details>
-<summary>1. Платформын үйл ажиллагаа</summary>
-<p>MONGOL MARKET нь худалдан авагч болон нийлүүлэгчийг холбох цахим платформ юм. Одоогийн хувилбар нь демо бөгөөд бодит төлбөр хүлээн авах, хадгалах, шилжүүлэх үйлчилгээ идэвхжээгүй.</p>
-</details>
-<details>
-<summary>2. Нийлүүлэгчийн бүртгэл ба гэрээ</summary>
-<p>Нийлүүлэгч бүртгүүлэхдээ үнэн зөв мэдээлэл өгнө. Цахим гэрээний нөхцөлийг уншиж зөвшөөрсөн тохиолдолд бүртгэл баталгаажна. Бүртгэл, бараа байршуулалт үнэ төлбөргүй байна.</p>
-</details>
-<details>
-<summary>3. Барааны мэдээлэл ба чанар</summary>
-<p>Нийлүүлэгч барааны нэр, зураг, үнэ, үлдэгдэл, тайлбар, хүргэлтийн мэдээллийг үнэн зөв оруулна. Барааны чанар, аюулгүй байдал, гарал үүсэл, зөв тоо хэмжээ болон хуульд нийцлийг нийлүүлэгч хариуцна.</p>
-</details>
-<details>
-<summary>4. Платформын 5%-ийн шимтгэл</summary>
-<p>Амжилттай биелсэн борлуулалтын үнийн дүнгийн 5%-ийг платформын үйлчилгээний шимтгэлээр тооцохоор төлөвлөсөн. Үлдсэн 95%-ийг нийлүүлэгчид олгоно. Бодит шимтгэл хураалт нь гэрээ, татвар, төлбөрийн үйлчилгээний шаардлага хангагдаж, систем идэвхжсэний дараа хэрэгжинэ. Цуцлагдсан болон амжилтгүй захиалгад шимтгэл тооцохгүй.</p>
-</details>
-<details>
-<summary>5. Төлбөр ба мөнгөн шилжүүлэг</summary>
-<p>Бодит төлбөрийн систем холбогдсон үед төлбөрийг QPay эсвэл эрх бүхий төлбөрийн үйлчилгээ үзүүлэгчийн баталгаажуулалтаар шалгана. Шимтгэл суутгах, нийлүүлэгчид үлдэгдэл төлөх, буцаалт хийх нөхцөл, хугацааг гэрээ болон холбогдох хуульд нийцүүлнэ. Одоогийн демо хувилбарт бодит төлбөр хийгдэхгүй.</p>
-</details>
-<details>
-<summary>6. Хүргэлт</summary>
-<p>Хүргэлтийн үнэ, хугацаа, нөхцөлийг худалдан авагчид урьдчилан мэдээлнэ. Хүргэлтийг нийлүүлэгч өөрөө зохион байгуулж, барааг тохирсон газар, хугацаанд хүргэх үүрэгтэй.</p>
-</details>
-<details>
-<summary>7. Буцаалт, буцаан олголт, гомдол</summary>
-<p>Бараа гэмтэлтэй, буруу, дутуу, тайлбартай зөрүүтэй бол худалдан авагч хуульд заасан эрхээ эдэлнэ. Буцаалт, солилт, буцаан олголтыг хэрэглэгчийн эрхийг хамгаалах хууль тогтоомжид нийцүүлэн шийдвэрлэнэ. Платформ гомдлыг бүртгэж, талуудын шийдвэрлэлтийг хянах боломжтой байхаар хөгжүүлнэ.</p>
-</details>
-<details>
-<summary>8. Захиалга цуцлах</summary>
-<p>Захиалга биелж эхлэхээс өмнө цуцлах хүсэлт гаргаж болно. Цуцлалт, төлбөр буцаах ажиллагааг төлбөрийн үйлчилгээний нөхцөл болон хэрэглэгчийн хууль ёсны эрхэд нийцүүлнэ.</p>
-</details>
-<details>
-<summary>9. Хувийн мэдээлэл</summary>
-<p>Хэрэглэгч, нийлүүлэгчийн мэдээллийг зөвхөн бүртгэл, захиалга, хүргэлт, үйлчилгээний зорилгоор шаардлагатай хэмжээнд ашиглана. Нууц үг, төлбөрийн мэдээллийг хамгаалалтын шаардлагад нийцүүлэн боловсруулах ёстой. Зөвшөөрөлгүй гуравдагч этгээдэд мэдээлэл дамжуулахгүй, хуульд заасан тохиолдлыг эс тооцно.</p>
-</details>
-<details>
-<summary>10. Хориглосон бараа</summary>
-<p>Хууль бус, хуурамч, хулгайн, зөвшөөрөлгүй, аюултай болон хууль тогтоомжоор худалдаалахыг хориглосон барааг байршуулж болохгүй. Платформ шаардлагатай тохиолдолд барааг шалгах, нуух, устгах боломжтой байна.</p>
-</details>
-<details>
-<summary>11. Маргаан шийдвэрлэх</summary>
-<p>Худалдан авагч, нийлүүлэгч эхлээд харилцан зөвшилцөж асуудлаа шийдвэрлэхийг эрмэлзэнэ. Шаардлагатай үед платформ гомдол, захиалгын бүртгэлд үндэслэн зуучлах боломжтой. Хуулиар олгогдсон эрхийг хязгаарлахгүй.</p>
-</details>
-<details>
-<summary>12. Платформын хязгаарлалт</summary>
-<p>Туршилтын хувилбарт зарим үйлдэл зөвхөн үзүүлэн байдлаар ажиллана. Сервер, мэдээллийн сан, төлбөрийн API, хэрэглэгчийн баталгаажуулалт холбогдохоос өмнө захиалга, төлбөр, шимтгэл, шилжүүлэг бодитой бүртгэгдсэн гэж үзэхгүй.</p>
-</details>
+<details><summary>1. Платформын үйл ажиллагаа</summary>
+<p>MONGOL MARKET нь худалдан авагч болон нийлүүлэгчийг холбох цахим платформ юм. Одоогийн хувилбар нь демо бөгөөд бодит төлбөр хүлээн авах, хадгалах, шилжүүлэх үйлчилгээ идэвхжээгүй.</p></details>
+<details><summary>2. Нийлүүлэгчийн бүртгэл ба гэрээ</summary>
+<p>Нийлүүлэгч бүртгүүлэхдээ үнэн зөв мэдээлэл өгнө. Цахим гэрээний нөхцөлийг уншиж зөвшөөрсөн тохиолдолд бүртгэл баталгаажна. Бүртгэл, бараа байршуулалт үнэ төлбөргүй байна.</p></details>
+<details><summary>3. Барааны мэдээлэл ба чанар</summary>
+<p>Нийлүүлэгч барааны нэр, зураг, үнэ, үлдэгдэл, тайлбар, хүргэлтийн мэдээллийг үнэн зөв оруулна. Барааны чанар, аюулгүй байдал, гарал үүсэл, зөв тоо хэмжээ болон хуульд нийцлийг нийлүүлэгч хариуцна.</p></details>
+<details><summary>4. Платформын 5%-ийн шимтгэл</summary>
+<p>Амжилттай биелсэн борлуулалтын үнийн дүнгийн 5%-ийг платформын үйлчилгээний шимтгэлээр тооцохоор төлөвлөсөн. Үлдсэн 95%-ийг нийлүүлэгчид олгоно. Бодит шимтгэл хураалт нь гэрээ, татвар, төлбөрийн үйлчилгээний шаардлага хангагдаж, систем идэвхжсэний дараа хэрэгжинэ. Цуцлагдсан болон амжилтгүй захиалгад шимтгэл тооцохгүй.</p></details>
+<details><summary>5. Төлбөр ба мөнгөн шилжүүлэг</summary>
+<p>Бодит төлбөрийн систем холбогдсон үед төлбөрийг QPay эсвэл эрх бүхий төлбөрийн үйлчилгээ үзүүлэгчийн баталгаажуулалтаар шалгана. Шимтгэл суутгах, нийлүүлэгчид үлдэгдэл төлөх, буцаалт хийх нөхцөл, хугацааг гэрээ болон холбогдох хуульд нийцүүлнэ. Одоогийн демо хувилбарт бодит төлбөр хийгдэхгүй.</p></details>
+<details><summary>6. Хүргэлт</summary>
+<p>Хүргэлтийн үнэ, хугацаа, нөхцөлийг худалдан авагчид урьдчилан мэдээлнэ. Хүргэлтийг нийлүүлэгч өөрөө зохион байгуулж, барааг тохирсон газар, хугацаанд хүргэх үүрэгтэй.</p></details>
+<details><summary>7. Буцаалт, буцаан олголт, гомдол</summary>
+<p>Бараа гэмтэлтэй, буруу, дутуу, тайлбартай зөрүүтэй бол худалдан авагч хуульд заасан эрхээ эдэлнэ. Буцаалт, солилт, буцаан олголтыг хэрэглэгчийн эрхийг хамгаалах хууль тогтоомжид нийцүүлэн шийдвэрлэнэ. Платформ гомдлыг бүртгэж, талуудын шийдвэрлэлтийг хянах боломжтой байхаар хөгжүүлнэ.</p></details>
+<details><summary>8. Захиалга цуцлах</summary>
+<p>Захиалга биелж эхлэхээс өмнө цуцлах хүсэлт гаргаж болно. Цуцлалт, төлбөр буцаах ажиллагааг төлбөрийн үйлчилгээний нөхцөл болон хэрэглэгчийн хууль ёсны эрхэд нийцүүлнэ.</p></details>
+<details><summary>9. Хувийн мэдээлэл</summary>
+<p>Хэрэглэгч, нийлүүлэгчийн мэдээллийг зөвхөн бүртгэл, захиалга, хүргэлт, үйлчилгээний зорилгоор шаардлагатай хэмжээнд ашиглана. Нууц үг, төлбөрийн мэдээллийг хамгаалалтын шаардлагад нийцүүлэн боловсруулах ёстой. Зөвшөөрөлгүй гуравдагч этгээдэд мэдээлэл дамжуулахгүй, хуульд заасан тохиолдлыг эс тооцно.</p></details>
+<details><summary>10. Хориглосон бараа</summary>
+<p>Хууль бус, хуурамч, хулгайн, зөвшөөрөлгүй, аюултай болон хууль тогтоомжоор худалдаалахыг хориглосон барааг байршуулж болохгүй. Платформ шаардлагатай тохиолдолд барааг шалгах, нуух, устгах боломжтой байна.</p></details>
+<details><summary>11. Маргаан шийдвэрлэх</summary>
+<p>Худалдан авагч, нийлүүлэгч эхлээд харилцан зөвшилцөж асуудлаа шийдвэрлэхийг эрмэлзэнэ. Шаардлагатай үед платформ гомдол, захиалгын бүртгэлд үндэслэн зуучлах боломжтой. Хуулиар олгогдсон эрхийг хязгаарлахгүй.</p></details>
+<details><summary>12. Платформын хязгаарлалт</summary>
+<p>Туршилтын хувилбарт зарим үйлдэл зөвхөн үзүүлэн байдлаар ажиллана. Сервер, мэдээллийн сан, төлбөрийн API, хэрэглэгчийн баталгаажуулалт холбогдохоос өмнө захиалга, төлбөр, шимтгэл, шилжүүлэг бодитой бүртгэгдсэн гэж үзэхгүй.</p></details>
 </section>
 </main>
 
@@ -181,42 +161,94 @@ footer p{font-size:12px;color:#c9d9ce;line-height:1.7}
 </footer>
 
 <script>
-const categories=["Бүгд","Ариун цэвэр","Цэвэрлэгээ","Бичиг хэрэг","Сав баглаа","Ресторан, гал тогоо","Гэр ахуй","Цахилгаан бараа"];
-const products=[
-{id:1,name:"Ариун цэврийн цаас",price:4500,cat:"Ариун цэвэр",emoji:"🧻"},
-{id:2,name:"Гар угаагч шингэн",price:6500,cat:"Ариун цэвэр",emoji:"🧴"},
-{id:3,name:"Цэвэрлэгээний бодис",price:8500,cat:"Цэвэрлэгээ",emoji:"🧹"},
-{id:4,name:"Шал угаагч",price:7500,cat:"Цэвэрлэгээ",emoji:"🪣"},
-{id:5,name:"Бичгийн дэвтэр",price:2500,cat:"Бичиг хэрэг",emoji:"📒"},
-{id:6,name:"Бал үзэг",price:1000,cat:"Бичиг хэрэг",emoji:"🖊️"},
-{id:7,name:"Цаасан аяга",price:5500,cat:"Сав баглаа",emoji:"🥤"},
-{id:8,name:"Хүнсний сав",price:8000,cat:"Сав баглаа",emoji:"📦"},
-{id:9,name:"Гал тогооны хэрэгсэл",price:12000,cat:"Ресторан, гал тогоо",emoji:"🍽️"},
-{id:10,name:"Хайруулын таваг",price:25000,cat:"Ресторан, гал тогоо",emoji:"🍳"},
-{id:11,name:"Хадгалах сав",price:9000,cat:"Гэр ахуй",emoji:"🏠"},
-{id:12,name:"Ширээний гэрэл",price:18000,cat:"Цахилгаан бараа",emoji:"💡"}
+const categoryData=[
+{name:"📱 Гар утас, ухаалаг төхөөрөмж",subs:["Ухаалаг утас","Товчлууртай утас","Ухаалаг цаг","Чихэвч","Утасны гэр","Цэнэглэгч","Дэлгэц хамгаалагч"]},
+{name:"💻 Компьютер, ноутбук",subs:["Ноутбук","Суурин компьютер","Дэлгэц","Гар, хулгана","Принтер","Компьютерийн эд анги","Сүлжээний төхөөрөмж"]},
+{name:"📺 Цахилгаан бараа, техник",subs:["Телевизор","Хөргөгч","Угаалгын машин","Тоос сорогч","Агааржуулагч","Халаагуур","Жижиг цахилгаан хэрэгсэл"]},
+{name:"🚗 Автомашин, авто сэлбэг",subs:["Суудлын автомашин","Мотор","Кроп","Дугуй, обуд","Аккумлятор","Гэрэл","Кузов","Тос, тосолгоо","Авто дагалдах хэрэгсэл"]},
+{name:"🏍️ Мотоцикл, унадаг дугуй",subs:["Мотоцикл","Скутер","Унадаг дугуй","Мото сэлбэг","Дугуйн хэрэгсэл","Хамгаалалтын хэрэгсэл"]},
+{name:"🪑 Тавилга, интерьер",subs:["Буйдан","Ор, матрас","Ширээ","Сандал","Шүүгээ","Гал тогооны тавилга","Гэрэлтүүлэг","Чимэглэл"]},
+{name:"👕 Хувцас, гутал, цүнх",subs:["Эрэгтэй хувцас","Эмэгтэй хувцас","Хүүхдийн хувцас","Гутал","Цүнх","Малгай","Өвлийн хувцас","Ажлын хувцас"]},
+{name:"💄 Гоо сайхан, үнэртэн",subs:["Нүүр арчилгаа","Бие арчилгаа","Үс арчилгаа","Нүүр будалт","Үнэртэн","Арьс арчилгааны хэрэгсэл"]},
+{name:"🧸 Хүүхэд, нярай, тоглоом",subs:["Нярайн бараа","Хүүхдийн хувцас","Хүүхдийн тэрэг","Тоглоом","Сургалтын тоглоом","Хүүхдийн тавилга"]},
+{name:"🍚 Хүнс, ундаа",subs:["Хүнсний бүтээгдэхүүн","Мах, махан бүтээгдэхүүн","Сүү, сүүн бүтээгдэхүүн","Жимс, ногоо","Амттан","Ундаа","Цай, кофе"]},
+{name:"🧻 Ариун цэвэр, цэвэрлэгээ",subs:["Ариун цэврийн цаас","Саван, шампунь","Угаалгын бодис","Цэвэрлэгээний хэрэгсэл","Ахуйн химийн бүтээгдэхүүн"]},
+{name:"🍳 Ресторан, гал тогоо",subs:["Хоол үйлдвэрлэлийн тоног төхөөрөмж","Аяга таваг","Сав суулга","Хайруулын таваг","Хүнсний сав","Нэг удаагийн хэрэгсэл"]},
+{name:"🏗️ Барилгын материал",subs:["Цемент","Тоосго","Мод, банз","Дулаалга","Будаг","Шал, плита","Хаалга, цонх","Дээврийн материал"]},
+{name:"🔧 Багаж, тоног төхөөрөмж",subs:["Гар багаж","Цахилгаан багаж","Гагнуурын аппарат","Компрессор","Үйлдвэрийн тоног төхөөрөмж","Хэмжих багаж"]},
+{name:"⚽ Спорт, фитнес, аялал",subs:["Фитнес хэрэгсэл","Спорт хувцас","Бөмбөг","Дугуй, гүйлтийн хэрэгсэл","Майхан","Аяллын хэрэгсэл","Загас агнуур"]},
+{name:"🐄 Мал аж ахуй, газар тариалан",subs:["Малын тэжээл","Малын хэрэгсэл","ХАА-н техник","Үр, суулгац","Бордоо","Усалгааны төхөөрөмж","Хүлэмж"]},
+{name:"🐾 Амьтан, тэжээл, хэрэгсэл",subs:["Нохойн хэрэгсэл","Муурын хэрэгсэл","Амьтны хоол","Тор, байр","Арчилгааны хэрэгсэл"]},
+{name:"🏥 Эмнэлгийн хэрэгсэл",subs:["Эмнэлгийн тоног төхөөрөмж","Боолт, хэрэгсэл","Хэмжих төхөөрөмж","Асаргааны хэрэгсэл"]},
+{name:"📚 Ном, бичиг хэрэг",subs:["Ном","Дэвтэр","Бал, үзэг","Оффис хэрэгсэл","Сургалтын материал","Уран бичлэг"]},
+{name:"💍 Үнэт эдлэл, цаг",subs:["Алт, мөнгөн эдлэл","Ээмэг, бөгж","Бугуйн цаг","Гоёл чимэглэл","Бэлэг дурсгал"]},
+{name:"🎸 Хөгжим, урлаг",subs:["Хөгжмийн зэмсэг","Гитар","Төгөлдөр хуур","Дууны төхөөрөмж","Зургийн хэрэгсэл","Урлагийн материал"]},
+{name:"🎮 Тоглоом, gaming",subs:["Тоглоомын төхөөрөмж","PlayStation","Xbox","Компьютер тоглоомын хэрэгсэл","Gaming сандал","Удирдлага"]},
+{name:"🏢 Оффис, байгууллагын хангамж",subs:["Оффис тавилга","Принтерийн хор","Цаас","Бичиг хэрэг","Аж ахуйн бараа","Хамгаалах хэрэгсэл"]},
+{name:"🏕️ Аялал, кемпинг",subs:["Майхан","Үүргэвч","Аяллын хувцас","Гэрэлтүүлэг","Хийн хэрэгсэл","Загас агнуурын хэрэгсэл"]},
+{name:"💡 Цахилгаан, сантехник",subs:["Цахилгааны утас","Залгуур, унтраалга","Автомат таслуур","Гэрэл","Сантехникийн хэрэгсэл","Хоолой, холбох хэрэгсэл"]},
+{name:"🎄 Улирлын, баярын бараа",subs:["Шинэ жилийн чимэглэл","Баярын бэлэг","Төрсөн өдрийн хэрэгсэл","Улирлын бараа"]},
+{name:"🎁 Бэлэг дурсгал, гар урлал",subs:["Гар урлал","Монгол бэлэг дурсгал","Арьсан эдлэл","Модон эдлэл","Чимэглэл"]},
+{name:"🏠 Гэр ахуйн бараа",subs:["Хадгалах сав","Гэр ахуйн хэрэгсэл","Ор дэрний хэрэглэл","Гэрийн чимэглэл","Гал тогооны жижиг хэрэгсэл"]},
+{name:"📦 Бусад бүх төрлийн бараа",subs:["Бусад бараа","Шинэ төрлийн бүтээгдэхүүн"]}
 ];
+
+const products=[
+{id:1,name:"Ариун цэврийн цаас",price:4500,cat:"🧻 Ариун цэвэр, цэвэрлэгээ",sub:"Ариун цэврийн цаас",emoji:"🧻"},
+{id:2,name:"Гар угаагч шингэн",price:6500,cat:"🧻 Ариун цэвэр, цэвэрлэгээ",sub:"Саван, шампунь",emoji:"🧴"},
+{id:3,name:"Цэвэрлэгээний бодис",price:8500,cat:"🧻 Ариун цэвэр, цэвэрлэгээ",sub:"Цэвэрлэгээний хэрэгсэл",emoji:"🧹"},
+{id:4,name:"Шал угаагч",price:7500,cat:"🧻 Ариун цэвэр, цэвэрлэгээ",sub:"Цэвэрлэгээний хэрэгсэл",emoji:"🪣"},
+{id:5,name:"Бичгийн дэвтэр",price:2500,cat:"📚 Ном, бичиг хэрэг",sub:"Дэвтэр",emoji:"📒"},
+{id:6,name:"Бал үзэг",price:1000,cat:"📚 Ном, бичиг хэрэг",sub:"Бал, үзэг",emoji:"🖊️"},
+{id:7,name:"Цаасан аяга",price:5500,cat:"🍳 Ресторан, гал тогоо",sub:"Нэг удаагийн хэрэгсэл",emoji:"🥤"},
+{id:8,name:"Хүнсний сав",price:8000,cat:"🍳 Ресторан, гал тогоо",sub:"Хүнсний сав",emoji:"📦"},
+{id:9,name:"Гал тогооны хэрэгсэл",price:12000,cat:"🍳 Ресторан, гал тогоо",sub:"Сав суулга",emoji:"🍽️"},
+{id:10,name:"Хайруулын таваг",price:25000,cat:"🍳 Ресторан, гал тогоо",sub:"Хайруулын таваг",emoji:"🍳"},
+{id:11,name:"Хадгалах сав",price:9000,cat:"🏠 Гэр ахуйн бараа",sub:"Хадгалах сав",emoji:"🏠"},
+{id:12,name:"Ширээний гэрэл",price:18000,cat:"💡 Цахилгаан, сантехник",sub:"Гэрэл",emoji:"💡"}
+];
+
 let selected="Бүгд";
-let cart=JSON.parse(localStorage.getItem("mmcart")||"{}");
+let selectedSub="Бүгд";
+let cart={};
+try{cart=JSON.parse(localStorage.getItem("mmcart")||"{}")||{};}catch(e){cart={};}
 const money=n=>Number(n).toLocaleString("mn-MN")+"₮";
 function save(){localStorage.setItem("mmcart",JSON.stringify(cart));}
+
 function drawCategories(){
- document.getElementById("categories").innerHTML=categories.map(c=>`<button class="cat ${selected===c?"active":""}" onclick="choose('${c}')">${c}</button>`).join("");
+ const all='<button class="cat '+(selected==="Бүгд"?"active":"")+'" onclick="choose(\'Бүгд\')">🌐 Бүх ангилал</button>';
+ document.getElementById("categories").innerHTML=all+categoryData.map(c=>
+ `<button class="cat ${selected===c.name?"active":""}" onclick="choose(${JSON.stringify(c.name)})">${c.name}</button>`
+ ).join("");
 }
-function choose(c){selected=c;drawCategories();render();}
+function drawSubs(){
+ const box=document.getElementById("subcategories");
+ if(selected==="Бүгд"){box.innerHTML="";return;}
+ const cat=categoryData.find(c=>c.name===selected);
+ if(!cat){box.innerHTML="";return;}
+ box.innerHTML='<button class="subcat '+(selectedSub==="Бүгд"?"active":"")+'" onclick="chooseSub(\'Бүгд\')">Бүгд</button>'+
+ cat.subs.map(s=>`<button class="subcat ${selectedSub===s?"active":""}" onclick="chooseSub(${JSON.stringify(s)})">${s}</button>`).join("");
+}
+function choose(c){selected=c;selectedSub="Бүгд";drawCategories();drawSubs();render();}
+function chooseSub(s){selectedSub=s;drawSubs();render();}
 function render(){
- const q=document.getElementById("search").value.toLowerCase();
- const list=products.filter(p=>(selected==="Бүгд"||p.cat===selected)&&p.name.toLowerCase().includes(q));
+ const q=document.getElementById("search").value.trim().toLowerCase();
+ const list=products.filter(p=>
+ (selected==="Бүгд"||p.cat===selected)&&
+ (selectedSub==="Бүгд"||p.sub===selectedSub)&&
+ (p.name.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q)||p.sub.toLowerCase().includes(q))
+ );
+ document.getElementById("productHeading").textContent=selected==="Бүгд"?"✨ Бүх бараа":"✨ "+selected;
  document.getElementById("products").innerHTML=list.length?list.map(p=>`
  <article class="product">
  <div class="photo">${p.emoji}</div>
  <div class="details">
- <h3>${p.name}</h3><small>${p.cat}</small>
+ <h3>${p.name}</h3><small>${p.cat} · ${p.sub}</small>
  <div class="price">${money(p.price)}</div>
  <button class="add" onclick="add(${p.id})">＋ Сагсанд нэмэх</button>
- </div></article>`).join(""):`<div class="note">Бараа олдсонгүй.</div>`;
+ </div></article>`).join(""):`<div class="empty">Одоогоор энэ ангилалд бараа байршаагүй байна.<br>Та нийлүүлэгчээр бүртгүүлж бараагаа нэмээрэй.</div>`;
 }
-function count(){return Object.values(cart).reduce((a,b)=>a+b,0);}
+function count(){return Object.values(cart).reduce((a,b)=>a+Number(b),0);}
 function add(id){cart[id]=(cart[id]||0)+1;save();drawCart();}
 function change(id,n){cart[id]=(cart[id]||0)+n;if(cart[id]<=0)delete cart[id];save();drawCart();}
 function drawCart(){
@@ -258,7 +290,8 @@ function copyOrder(){
  navigator.clipboard.writeText(window.orderText).then(()=>alert("Захиалгыг хууллаа."));
  }else{prompt("Захиалгаа хуулна уу:",window.orderText);}
 }
-drawCategories();render();drawCart();
+drawCategories();drawSubs();render();drawCart();
 </script>
 </body>
 </html>
+
