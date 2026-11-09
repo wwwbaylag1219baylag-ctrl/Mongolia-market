@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="mn">
 <head>
@@ -6,96 +7,108 @@
 <title>MONGOL MARKET</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f4f6f9;color:#222}
-header{background:#123b63;color:white;padding:20px;text-align:center}
-header h1{margin:0;font-size:28px}
-header p{margin:7px 0 0}
-.search{padding:15px}
-input{width:100%;padding:14px;border:1px solid #ddd;border-radius:9px;font-size:16px}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f6f8;color:#20252b}
+header{background:#123c32;color:white;padding:20px 15px}
+.logo{font-size:27px;font-weight:bold;letter-spacing:1px}
+header p{margin:7px 0 0;color:#d4e8df}
+.search{padding:15px;background:white}
+.search input{width:100%;padding:14px;border:1px solid #ddd;border-radius:9px;font-size:16px}
 .container{padding:15px}
-h2{color:#123b63}
+h2{font-size:19px}
 .categories{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.cat{background:white;padding:16px;border-radius:10px;text-align:center;font-weight:bold;box-shadow:0 2px 6px #ddd}
+.cat{background:white;padding:17px 10px;border-radius:10px;text-align:center;font-weight:bold;border:1px solid #eee;cursor:pointer}
+.cat:active{background:#dceee6}
 .products{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.product{background:white;padding:15px;border-radius:10px;text-align:center}
-.product button,.mainbtn{background:#123b63;color:white;border:0;padding:12px;border-radius:8px;width:100%;margin-top:10px}
-.price{color:#e66b20;font-weight:bold}
-section{margin-bottom:25px}
-footer{background:#123b63;color:white;text-align:center;padding:20px}
+.product{background:white;border-radius:10px;padding:13px}
+.product .pic{font-size:42px;text-align:center;background:#edf3ef;padding:17px;border-radius:8px}
+.product h3{font-size:15px;margin:10px 0}
+.price{color:#14734c;font-weight:bold}
+button{background:#146b4b;color:white;border:0;padding:11px;border-radius:7px;width:100%;margin-top:9px;font-weight:bold}
+.section{background:white;padding:18px;margin-top:18px;border-radius:10px}
+footer{background:#123c32;color:white;padding:25px 15px;margin-top:25px}
+small{color:#777}
 </style>
 </head>
 <body>
 
 <header>
-<h1>🇲🇳 MONGOL MARKET</h1>
-<p>Монголын нэгдсэн худалдааны платформ</p>
+<div class="logo">MONGOL MARKET</div>
+<p>Монголын худалдааны нэгдсэн платформ</p>
 </header>
 
 <div class="search">
-<input id="search" placeholder="🔍 Бараа хайх..." oninput="searchProducts()">
+<input id="search" placeholder="Бараа хайх..." oninput="showProducts()">
 </div>
 
 <div class="container">
-<section>
 <h2>Барааны ангилал</h2>
 <div class="categories">
-<div class="cat">🧴 Ариун цэвэр</div>
-<div class="cat">🧹 Цэвэрлэгээ</div>
-<div class="cat">📚 Бичиг хэрэг</div>
-<div class="cat">📦 Сав баглаа боодол</div>
-<div class="cat">🍳 Ресторан, гал тогоо</div>
-<div class="cat">🏠 Гэр ахуй</div>
-<div class="cat">🔌 Цахилгаан бараа</div>
+<div class="cat" onclick="filter('Ариун цэвэр')">🧼 Ариун цэврийн бараа</div>
+<div class="cat" onclick="filter('Цэвэрлэгээ')">🧹 Цэвэрлэгээний хэрэгсэл</div>
+<div class="cat" onclick="filter('Бичиг хэрэг')">📚 Бичиг хэрэг</div>
+<div class="cat" onclick="filter('Сав баглаа')">📦 Сав баглаа боодол</div>
+<div class="cat" onclick="filter('Ресторан')">🍽️ Ресторан, гал тогоо</div>
+<div class="cat" onclick="filter('Гэр ахуй')">🏠 Гэр ахуйн бараа</div>
+<div class="cat" onclick="filter('Цахилгаан')">💡 Цахилгаан бараа</div>
 </div>
-</section>
 
-<section>
-<h2>Онцлох бараа</h2>
-<div class="products" id="products">
-<div class="product">
-<h3>Ариун цэврийн цаас</h3>
-<p class="price">Үнэ: Холбоо барьж авна</p>
-<button onclick="alert('Барааны дэлгэрэнгүй удахгүй')">Дэлгэрэнгүй</button>
-</div>
-<div class="product">
-<h3>Шингэн саван</h3>
-<p class="price">Үнэ: Холбоо барьж авна</p>
-<button onclick="alert('Барааны дэлгэрэнгүй удахгүй')">Дэлгэрэнгүй</button>
-</div>
-<div class="product">
-<h3>Хогийн уут</h3>
-<p class="price">Үнэ: Холбоо барьж авна</p>
-<button onclick="alert('Барааны дэлгэрэнгүй удахгүй')">Дэлгэрэнгүй</button>
-</div>
-<div class="product">
-<h3>Нэг удаагийн сав</h3>
-<p class="price">Үнэ: Холбоо барьж авна</p>
-<button onclick="alert('Барааны дэлгэрэнгүй удахгүй')">Дэлгэрэнгүй</button>
-</div>
-</div>
-</section>
+<h2>Онцлох бараанууд</h2>
+<div class="products" id="products"></div>
 
-<section>
-<h2>Нийлүүлэгч болох</h2>
-<p>Та бараа бүтээгдэхүүнээ MONGOL MARKET-ээр дамжуулан борлуулах боломжтой.</p>
-<button class="mainbtn" onclick="alert('Нийлүүлэгчийн бүртгэл удахгүй нээгдэнэ')">Нийлүүлэгчээр бүртгүүлэх</button>
-</section>
+<div class="section">
+<h2>🏪 Нийлүүлэгч болох</h2>
+<p>Та өөрийн бараа бүтээгдэхүүнийг MONGOL MARKET-ээр дамжуулан худалдаалаарай.</p>
+<button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdjHVcErBq_D6UAfafBoV1MtsXLLfSUZUFG_XXwUjO0T3I50g/viewform','_blank')">Нийлүүлэгчээр бүртгүүлэх</button>
+</div>
+
+<div class="section">
+<h2>🛒 Миний сагс</h2>
+<p id="cart">Таны сагс хоосон байна.</p>
+</div>
 </div>
 
 <footer>
-<h3>MONGOL MARKET</h3>
-<p>Монголын худалдааг нэг дороос</p>
-<p>© 2026 MONGOL MARKET</p>
+<h2>MONGOL MARKET</h2>
+<p>Монголын бизнес эрхлэгчдийг холбох нэгдсэн худалдааны платформ.</p>
+<small>© 2026 MONGOL MARKET</small>
 </footer>
 
 <script>
-function searchProducts(){
-let q=document.getElementById('search').value.toLowerCase();
-document.querySelectorAll('.product').forEach(p=>{
-p.style.display=p.innerText.toLowerCase().includes(q)?'block':'none';
-});
+const items=[
+{name:"Гар угаагч шингэн",price:6500,cat:"Ариун цэвэр",pic:"🧴"},
+{name:"Ариун цэврийн цаас",price:4500,cat:"Ариун цэвэр",pic:"🧻"},
+{name:"Шал угаагч",price:8000,cat:"Цэвэрлэгээ",pic:"🧹"},
+{name:"Хогийн уут",price:3500,cat:"Цэвэрлэгээ",pic:"🗑️"},
+{name:"Дэвтэр",price:2500,cat:"Бичиг хэрэг",pic:"📒"},
+{name:"Үзэг",price:1000,cat:"Бичиг хэрэг",pic:"🖊️"},
+{name:"Цаасан аяга",price:5000,cat:"Сав баглаа",pic:"🥤"},
+{name:"Хоолны сав",price:7000,cat:"Ресторан",pic:"🍱"},
+{name:"Гал тогооны хэрэгсэл",price:12000,cat:"Ресторан",pic:"🍴"},
+{name:"Хуванцар сав",price:6000,cat:"Гэр ахуй",pic:"🫙"},
+{name:"LED гэрэл",price:9000,cat:"Цахилгаан",pic:"💡"}
+];
+let cart=[];
+let category="";
+function showProducts(){
+let q=document.getElementById("search").value.toLowerCase();
+let filtered=items.filter(p=>(!category||p.cat===category)&&p.name.toLowerCase().includes(q));
+document.getElementById("products").innerHTML=filtered.map((p,i)=>`
+<div class="product">
+<div class="pic">${p.pic}</div>
+<h3>${p.name}</h3>
+<div class="price">${p.price.toLocaleString()} ₮</div>
+<button onclick="addCart('${p.name}')">Сагсанд нэмэх</button>
+</div>`).join("")||"Бараа олдсонгүй.";
 }
+function filter(cat){
+category=category===cat?"":cat;
+showProducts();
+}
+function addCart(name){
+cart.push(name);
+document.getElementById("cart").innerText=cart.join(", ")+" — "+cart.length+" бараа";
+}
+showProducts();
 </script>
-
 </body>
 </html>
