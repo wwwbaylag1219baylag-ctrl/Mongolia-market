@@ -421,9 +421,19 @@ function render(){
     <h3>${p.name}</h3>
     <small>${p.cat}</small>
     <p class="price">${money(p.price)} ₮</p>
-    <button class="add" onclick="window.add(${p.id})">
-     ＋ Сагсанд нэмэх
-    </button>
+    ${p.image ? `
+<div style="display:flex;gap:6px;margin-bottom:8px">
+ <button onclick="editProduct(${p.id})"
+ style="flex:1;padding:9px;background:#E5AD38;border:0;border-radius:8px">
+ ✏️ Засах
+ </button>
+ <button onclick="deleteProduct(${p.id})"
+ style="flex:1;padding:9px;background:#A83F0D;color:white;border:0;border-radius:8px">
+ 🗑 Устгах
+ </button>
+</div>
+` : ""}
+<button class="add" onclick="add(${p.id})">＋ Сагсанд нэмэх</button>
    </div>`;
   list.appendChild(div);
  });
