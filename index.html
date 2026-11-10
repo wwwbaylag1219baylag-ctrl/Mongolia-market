@@ -868,34 +868,33 @@ if(category!=="Ажлын зар")sector.value="";
 }
 
 function togglePublishAd(){
-const workspace=document.getElementById("adsWorkspace");
-const formArea=document.getElementById("adFormArea");
-const button=document.getElementById("mainPublishButton");
+  const workspace = document.getElementById("adsWorkspace");
+  const formArea = document.getElementById("adFormArea");
+  const button = document.getElementById("mainPublishButton");
 
-const isOpen=formArea.style.display==="block";
+  const isOpen = workspace.style.display === "block";
 
-if(isOpen){
-formArea.style.display="none";
-button.textContent="＋ ЗАР НИЙТЛЭХ";
-return;
+  if (isOpen) {
+    workspace.style.display = "none";
+    formArea.style.display = "none";
+    button.textContent = "＋ ЗАР НИЙТЛЭХ";
+    return;
+  }
+
+  workspace.style.display = "block";
+  formArea.style.display = "block";
+
+  document.getElementById("jobSectorArea").style.display = "none";
+  document.getElementById("classifiedAdList").innerHTML = "";
+  document.getElementById("adsHeading").textContent = "＋ Зар нийтлэх";
+
+  document.getElementById("adForm").reset();
+  document.getElementById("adType").value = "";
+  document.getElementById("jobAdSectorArea").style.display = "none";
+
+  button.textContent = "－ ЗАРЫН МАЯГТ ХААХ";
+  workspace.scrollIntoView({behavior:"smooth", block:"start"});
 }
-
-workspace.style.display="block";
-formArea.style.display="block";
-
-document.getElementById("jobSectorArea").style.display="none";
-document.getElementById("classifiedAdList").innerHTML="";
-document.getElementById("adsHeading").textContent="＋ Зар нийтлэх";
-
-document.getElementById("adForm").reset();
-document.getElementById("adType").value="";
-document.getElementById("jobAdSectorArea").style.display="none";
-
-button.textContent="－ ЗАРЫН МАЯГТ ХААХ";
-
-workspace.scrollIntoView({behavior:"smooth",block:"start"});
-}
-
 function publishAd(event){
 event.preventDefault();
 
