@@ -1062,7 +1062,8 @@ function openAds(category) {
   type.value = category;
   list.innerHTML = "";
 
-  if (formArea) formArea.style.display = "none";
+  const categoryArea = document.getElementById("standaloneAdCategoryArea");
+if (categoryArea) categoryArea.style.display = "none";
   if (jobArea) jobArea.style.display = "none";
 
   if (category === "Ажлын зар") {
