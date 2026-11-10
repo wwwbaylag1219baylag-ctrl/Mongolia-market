@@ -376,7 +376,6 @@ window.add = function(id) {
  alert(p.name + " сагсанд нэмэгдлээ.");
 };
 
-  
 function change(id,delta){
  const item=cart.find(x=>x.id===id);
  if(!item)return;
@@ -400,10 +399,22 @@ function drawCart(){
  document.getElementById("cartTotal").textContent="Нийт: "+money(cart.reduce((s,x)=>s+x.price*x.qty,0));
 }
 window.showCart = function(){
- drawCart();document.getElementById("cartModal").style.display="block";
-}
-function closeCart(){document.getElementById("cartModal").style.display="none"}
-function order(){
+ const modal = document.getElementById("cartModal");
+ if (!modal) {
+  alert("Сагсны цонх олдсонгүй.");
+  return;
+ }
+
+ modal.style.display = "block";
+
+ try {
+  drawCart();
+ } catch(error) {
+  document.getElementById("cartItems").innerHTML =
+   '<div class="empty">Сагсны мэдээлэл уншихад алдаа гарлаа.</div>';
+  console.error(error);
+ }
+};
  if(!cart.length){alert("Сагс хоосон байна.");return}
  const name=document.getElementById("buyerName").value.trim();
  const phone=document.getElementById("buyerPhone").value.trim();
