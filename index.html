@@ -1014,6 +1014,21 @@ function openAds(category) {
   });
 }
 
+function selectJobSector(sector) {
+  const type = document.getElementById("adType");
+  const heading = document.getElementById("adsHeading");
+  const jobArea = document.getElementById("jobSectorArea");
+  const formArea = document.getElementById("adFormArea");
+
+  type.value = "Ажлын зар - " + sector;
+  heading.textContent = "💼 " + sector + " — Ажлын зар";
+
+  if (jobArea) jobArea.style.display = "none";
+  if (formArea) formArea.style.display = "block";
+
+  renderClassifiedAds();
+}
+
 function getClassifiedAds() {
   try {
     return JSON.parse(
