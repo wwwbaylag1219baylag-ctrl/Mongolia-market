@@ -317,7 +317,18 @@ const products = [
  {id:11,name:"Гал тогооны хэрэгсэл",cat:"Гал тогоо",sub:"Хэрэгсэл",price:20000,emoji:"🍳"},
  {id:12,name:"Үүргэвч",cat:"Хувцас",sub:"Цүнх",price:35000,emoji:"🎒"}
 ];
-
+try{
+ const saved=JSON.parse(
+  localStorage.getItem("nexoraProducts")||"[]"
+ );
+ if(Array.isArray(saved)){
+  saved.forEach(p=>{
+   if(!products.some(x=>x.id===p.id)){
+    products.push(p);
+   }
+  });
+ } 
+}catch(e){}
 let selectedCat="Бүгд";
 let selectedSub="Бүгд";
 let cart=[];
