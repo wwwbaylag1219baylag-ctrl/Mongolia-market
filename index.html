@@ -956,6 +956,144 @@ drawCategories();
 drawSubs();
 render();
 updateCount();
+// ===== NEXORA ЗАРЫН СИСТЕМ =====
+
+function openAds(category) {
+  const workspace = document.getElementById("adsWorkspace");
+  const type = document.getElementById("adType");
+  const heading = document.getElementById("adsHeading");
+
+  if (!workspace || !type || !heading) return;
+
+  type.value = category;
+  heading.textContent = "📢 " + category + " — Зар нийтлэх";
+
+  workspace.style.display = "block";
+  renderClassifiedAds();
+
+  workspace.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+function getClassifiedAds() {
+  try {
+    return JSON.parse(
+      localStorage.getItem("nexoraClassifieds") || "[]"
+    );
+  } catch (error) {
+    return [];
+  }
+}
+
+function publishAd(event) {
+  event.preventDefault();
+
+  const ad = {
+    id: Date.now(),
+    type: document.getElementById("adType").value,
+    title: document.getElementById("adTitle").value.trim(),
+    price: document.getElementById("adPrice").value.trim(),
+    location: document.getElementById("adLocation").value.trim(),
+    phone: document.getElementById("adPhone").value.trim(),
+    description: document.getElementById("adDescription").value.trim(),
+    createdAt: new Date().toISOString()
+  };
+
+  if (!ad.title || !ad.phone || !ad.description) {
+    alert("Шаардлагатай мэдээллээ бүрэн оруулна уу.");
+    return;
+  }
+
+  const ads = getClassifiedAds();
+  ads.unshift(ad);
+
+  try {
+    localStorage.setItem(
+      "nexoraClassifieds",
+      JSON.stringify(ads)
+    );
+  } catch (error) {
+    alert("Зар хадгалахад алдаа гарлаа.");
+    return;
+  }
+
+  document.getElementById("adForm").reset();
+  document.getElementById("adType").value = ad.type;
+
+  renderClassifiedAds();
+
+  alert("Зар амжилттай нийтлэгдлээ!");
+}
+
+function renderClassifiedAds() {
+  const list = document.getElementById("classifiedAdList");
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  const category = document.getElementById("adType").value;
+  const ads = getClassifiedAds().filter(ad => ad.type === category);
+
+  if (ads.length === 0) {
+    list.textContent = "Одоогоор энэ ангилалд зар алга.";
+    return;
+  }
+
+  ads.forEach(ad => {
+    const card = document.createElement("div");
+    card.className = "product";
+
+    const title = document.createElement("h3");
+    title.textContent = ad.title;
+
+    const type = document.createElement("p");
+    type.textContent = "Ангилал: " + ad.type;
+
+    const price = document.createElement("p");
+    price.textContent = "Үнэ / Цалин: " + (ad.price || "Тохиролцоно");
+
+    const location = document.createElement("p");
+    location.textContent = "Байршил: " + (ad.location || "Тодорхойгүй");
+
+    const phone = document.createElement("p");
+    phone.textContent = "Утас: " + ad.phone;
+
+    const description = document.createElement("p");
+    description.textContent = ad.description;
+
+    const remove = document.createElement("button");
+    remove.className = "add";
+    remove.textContent = "🗑️ Зар устгах";
+    remove.onclick = () => deleteClassifiedAd(ad.id);
+
+    card.append(
+      title,
+      type,
+      price,
+      location,
+      phone,
+      description,
+      remove
+    );
+
+    list.appendChild(card);
+  });
+}
+
+function deleteClassifiedAd(id) {
+  if (!confirm("Энэ зарыг устгах уу?")) return;
+
+  const ads = getClassifiedAds().filter(ad => ad.id !== id);
+
+  localStorage.setItem(
+    "nexoraClassifieds",
+    JSON.stringify(ads)
+  );
+
+  renderClassifiedAds();
+    }
 </script>
 </body>
 </html>
