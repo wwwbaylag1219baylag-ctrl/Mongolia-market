@@ -190,39 +190,58 @@ summary{font-weight:700;cursor:pointer}
 </section>
 
 <section class="panel" id="adsWorkspace" style="display:none;">
-  <h2 id="adsHeading">📢 Зар нийтлэх</h2>
 
-  <form id="adForm" onsubmit="publishAd(event)">
+  <h2 id="adsHeading">📢 Зар мэдээлэл</h2>
 
-    <label>Зарын төрөл</label>
-    <input class="field" id="adType" readonly required>
+  <!-- Ажлын салбар сонгох хэсэг -->
+  <div id="jobSectorArea" style="display:none;">
+    <h3>💼 Ажлын салбараа сонгоно уу</h3>
 
-    <label>Зарын гарчиг</label>
-    <input class="field" id="adTitle" type="text"
-      placeholder="Жишээ: Гадаад аяллын багц" required>
+    <div class="categories">
+      <button class="cat" onclick="selectJobSector('Барилга, уул уурхай')">🏗️ Барилга, уул уурхай</button>
+      <button class="cat" onclick="selectJobSector('Үйлдвэрлэл')">🏭 Үйлдвэрлэл</button>
+      <button class="cat" onclick="selectJobSector('Худалдаа, үйлчилгээ')">🛒 Худалдаа, үйлчилгээ</button>
+      <button class="cat" onclick="selectJobSector('Тээвэр, ложистик')">🚚 Тээвэр, ложистик</button>
+      <button class="cat" onclick="selectJobSector('Оффис, захиргаа')">🏢 Оффис, захиргаа</button>
+      <button class="cat" onclick="selectJobSector('Боловсрол')">🎓 Боловсрол</button>
+      <button class="cat" onclick="selectJobSector('Эрүүл мэнд')">🏥 Эрүүл мэнд</button>
+      <button class="cat" onclick="selectJobSector('IT, технологи')">💻 IT, технологи</button>
+      <button class="cat" onclick="selectJobSector('Хөдөө аж ахуй')">🌾 Хөдөө аж ахуй</button>
+      <button class="cat" onclick="selectJobSector('Бусад')">📌 Бусад</button>
+    </div>
+  </div>
 
-    <label>Үнэ / Цалин</label>
-    <input class="field" id="adPrice" type="text"
-      placeholder="Жишээ: 500000₮">
+  <!-- Зар нийтлэх форм -->
+  <div id="adFormArea" style="display:none;">
 
-    <label>Байршил</label>
-    <input class="field" id="adLocation" type="text"
-      placeholder="Жишээ: Улаанбаатар">
+    <form id="adForm" onsubmit="publishAd(event)">
 
-    <label>Холбоо барих утас</label>
-    <input class="field" id="adPhone" type="tel"
-      placeholder="Утасны дугаар" required>
+      <label>Зарын төрөл</label>
+      <input class="field" id="adType" readonly required>
 
-    <label>Дэлгэрэнгүй мэдээлэл</label>
-    <textarea class="field" id="adDescription"
-      placeholder="Зарын дэлгэрэнгүй мэдээлэл..." required></textarea>
+      <label>Зарын гарчиг</label>
+      <input class="field" id="adTitle" type="text" required>
 
-    <button type="submit" class="add">Зар нийтлэх</button>
-  </form>
+      <label>Үнэ / Цалин</label>
+      <input class="field" id="adPrice" type="text">
+
+      <label>Байршил</label>
+      <input class="field" id="adLocation" type="text">
+
+      <label>Холбоо барих утас</label>
+      <input class="field" id="adPhone" type="tel" required>
+
+      <label>Дэлгэрэнгүй мэдээлэл</label>
+      <textarea class="field" id="adDescription" required></textarea>
+
+      <button type="submit" class="add">Зар нийтлэх</button>
+
+    </form>
+  </div>
 
   <div id="classifiedAdList"></div>
-</section>
 
+</section>
 <div class="searchbar">
 
     <input id="search" placeholder="🔍 Барааны нэрээр хайх..." oninput="render()">
