@@ -188,11 +188,12 @@ summary{font-weight:700;cursor:pointer}
   </div>
 </section>
 
+
 <section class="panel" id="adsWorkspace" style="display:none;">
 
-  <h2 id="adsHeading">📢 Зар мэдээлэл</h2>
+  <h2 id="adsHeading">💼 Ажлын зар</h2>
 
-  <!-- Ажлын салбар сонгох хэсэг -->
+  <!-- Ажлын салбарууд -->
   <div id="jobSectorArea" style="display:none;">
     <h3>💼 Ажлын салбараа сонгоно уу</h3>
 
@@ -210,8 +211,23 @@ summary{font-weight:700;cursor:pointer}
     </div>
   </div>
 
-  <!-- Зар нийтлэх форм -->
-  <div id="adFormArea" style="display:none;">
+  <!-- Ажлын зарын жагсаалт -->
+  <div id="classifiedAdList"></div>
+
+  <!-- Зар нийтлэх товч -->
+  <div id="jobPublishToggleArea" style="display:none; margin-top:18px;">
+    <button
+      type="button"
+      class="add"
+      id="jobPublishToggle"
+      onclick="toggleAdForm()"
+      style="width:100%; padding:15px; font-size:16px;">
+      ➕ Зар нийтлэх
+    </button>
+  </div>
+
+  <!-- Зар нийтлэх хүснэгт -->
+  <div id="adFormArea" style="display:none; margin-top:15px;">
 
     <form id="adForm" onsubmit="publishAd(event)">
 
@@ -238,7 +254,7 @@ summary{font-weight:700;cursor:pointer}
     </form>
   </div>
 
-  <div id="classifiedAdList"></div>
+</section>
 
 </section>
 <div class="searchbar">
