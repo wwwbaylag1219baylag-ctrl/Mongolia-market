@@ -1,4 +1,4 @@
-
+7
 <!DOCTYPE html>
 <html lang="mn">
 <head>
@@ -1246,7 +1246,9 @@ function renderClassifiedAds() {
   list.innerHTML = "";
 
   const category = document.getElementById("adType").value;
-  const ads = getClassifiedAds().filter(ad => ad.type === category);
+  const ads = getClassifiedAds().filter(ad =>
+  ad.type === category || ad.type.startsWith(category + " - ")
+);
 
   if (ads.length === 0) {
     list.textContent = "Одоогоор энэ ангилалд зар алга.";
