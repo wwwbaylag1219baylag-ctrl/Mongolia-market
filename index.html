@@ -359,15 +359,24 @@ function render(){
   box.appendChild(div);
  });
 }
-window.add = function(id);
- const p=products.find(x=>x.id===id);
- if(!p)return;
- const old=cart.find(x=>x.id===id);
- if(old)old.qty++;
- else cart.push({...p,qty:1});
+
+window.add = function(id) {
+ const p = products.find(x => x.id === id);
+ if (!p) return;
+
+ const old = cart.find(x => x.id === id);
+
+ if (old) {
+  old.qty++;
+ } else {
+  cart.push({...p, qty: 1});
+ }
+
  save();
- alert(p.name+" сагсанд нэмэгдлээ.");
-}
+ alert(p.name + " сагсанд нэмэгдлээ.");
+};
+
+  
 function change(id,delta){
  const item=cart.find(x=>x.id===id);
  if(!item)return;
