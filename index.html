@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="mn">
 <head>
@@ -6,697 +5,690 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#211810">
 <title>NEXORA — Худалдааны шинэ эрин</title>
+
 <style>
-#adForm .field {
-  display: block;
-  width: 100%;
-  min-width: 0;
-  min-height: 46px;
-  padding: 12px;
-  margin: 7px 0 15px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: #fff;
-  box-sizing: border-box;
-}
-
-#adForm textarea.field {
-  min-height: 120px;
-  resize: vertical;
-}
-
-#adForm .add {
-  width: 100%;
-}
 :root{
-  --orange:#D95B16;--deep:#A83F0D;--gold:#E5AD38;
-  --cream:#FFF8EF;--ink:#211810;--muted:#806E60;
-  --white:#fff;--line:#EDE1D5;
+--orange:#D95B16;
+--deep:#A83F0D;
+--gold:#E5AD38;
+--cream:#FFF8EF;
+--ink:#211810;
+--muted:#806E60;
+--white:#fff;
+--line:#EDE1D5;
 }
 *{box-sizing:border-box}
-body{margin:0;background:#FAF7F2;color:var(--ink);
-font-family:Arial,"Segoe UI",sans-serif}
+body{
+margin:0;
+background:#FAF7F2;
+color:var(--ink);
+font-family:Arial,"Segoe UI",sans-serif
+}
 button,input,select,textarea{font:inherit}
-butto2n{cursor:pointer}
-header{background:#211810;color:white;padding:14px 5%;
-display:flex;align-items:center;justify-content:space-between;gap:12px;
-position:sticky;top:0;z-index:10;box-shadow:0 3px 15px #0002}
+button{cursor:pointer}
+header{
+background:#211810;
+color:white;
+padding:14px 5%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+position:sticky;
+top:0;
+z-index:10;
+box-shadow:0 3px 15px #0002
+}
 .brand{display:flex;align-items:center;gap:10px}
-.logo{width:43px;height:43px;border-radius:13px;
+.logo{
+width:43px;height:43px;border-radius:13px;
 background:linear-gradient(135deg,var(--gold),var(--orange));
-display:grid;place-items:center;color:white;font-size:27px;font-weight:900}
+display:grid;place-items:center;color:white;
+font-size:27px;font-weight:900
+}
 .brand-name{font-size:23px;font-weight:900;letter-spacing:2px}
 .brand-sub{font-size:9px;color:#E9B75E;letter-spacing:1.5px}
-.cart-btn,.main-btn{border:0;border-radius:12px;padding:12px 16px;
-background:var(--orange);color:white;font-weight:700}
+.cart-btn,.main-btn{
+border:0;border-radius:12px;padding:12px 16px;
+background:var(--orange);color:white;font-weight:700
+}
 .cart-btn{background:#3B2B20}
-.hero{margin:18px auto;max-width:1200px;padding:38px 25px;
+.hero{
+margin:18px auto;max-width:1200px;padding:38px 25px;
 border-radius:22px;color:white;
 background:linear-gradient(110deg,#211810ee,#8F370Bdb),
 url("mongol-market-banner.png") center/cover;
-min-height:220px;display:flex;flex-direction:column;justify-content:center}
+min-height:220px;display:flex;flex-direction:column;
+justify-content:center
+}
 .hero small{color:#F2C66D;letter-spacing:2px;font-weight:bold}
 .hero h1{font-size:clamp(30px,6vw,48px);margin:12px 0}
 .hero p{max-width:600px;line-height:1.6;color:#F9E8D6}
 .wrap{max-width:1200px;margin:auto;padding:0 16px}
-.welcome{background:#FFF0DD;border:1px solid #F1D4B2;padding:17px;
-border-radius:15px;margin:18px 0;line-height:1.6}
+.welcome{
+background:#FFF0DD;border:1px solid #F1D4B2;
+padding:17px;border-radius:15px;margin:18px 0;line-height:1.6
+}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
-.secondary{background:#34251C;color:white;border:0;border-radius:11px;
-padding:12px 15px;font-weight:700}
+.secondary{
+background:#34251C;color:white;border:0;
+border-radius:11px;padding:12px 15px;font-weight:700
+}
 .searchbar{display:flex;gap:8px;margin:18px 0}
-.searchbar input{flex:1;min-width:0;padding:14px;border:1px solid var(--line);
-border-radius:12px;background:white}
+.searchbar input{
+flex:1;min-width:0;padding:14px;
+border:1px solid var(--line);border-radius:12px;background:white
+}
 .section-title{font-size:22px;margin:25px 0 14px}
-.categories{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));
-gap:9px}
-.cat{background:white;border:1px solid var(--line);border-radius:12px;
-padding:13px 8px;text-align:center;color:var(--ink);font-weight:600}
+.categories{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(135px,1fr));
+gap:9px
+}
+.cat{
+background:white;border:1px solid var(--line);
+border-radius:12px;padding:13px 8px;
+text-align:center;color:var(--ink);font-weight:600
+}
 .cat.active{border:2px solid var(--orange);background:#FFF0E5}
 .subs{display:flex;gap:8px;flex-wrap:wrap;margin:13px 0}
-.sub{border:1px solid var(--line);background:white;border-radius:30px;
-padding:8px 13px;color:var(--ink)}
+.sub{
+border:1px solid var(--line);background:white;
+border-radius:30px;padding:8px 13px;color:var(--ink)
+}
 .sub.active{background:var(--orange);color:white;border-color:var(--orange)}
-.products{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));
-gap:13px;margin-bottom:30px}
-.product{background:white;border:1px solid var(--line);border-radius:15px;
-overflow:hidden}
-.product-art{height:115px;background:linear-gradient(140deg,#FFF0DD,#F9D7B5);
-display:grid;place-items:center;font-size:55px}
+.products{
+display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));
+gap:13px;margin-bottom:30px
+}
+.product{
+background:white;border:1px solid var(--line);
+border-radius:15px;overflow:hidden;padding:12px
+}
+.product-art{
+height:115px;background:linear-gradient(140deg,#FFF0DD,#F9D7B5);
+display:grid;place-items:center;font-size:55px;overflow:hidden
+}
 .product-info{padding:12px}
 .product-info h3{font-size:15px;margin:0 0 7px}
 .price{color:var(--deep);font-weight:900;font-size:18px}
 .product-info small{color:var(--muted)}
 .add{
- width:100%;
- display:block;
- background:var(--orange);
- color:white;
- border:none;
- border-radius:10px;
- padding:12px 8px;
- font-size:14px;
- font-weight:800;
- cursor:pointer;
- margin-top:12px;
+width:100%;display:block;background:var(--orange);
+color:white;border:none;border-radius:10px;
+padding:12px 8px;font-size:14px;font-weight:800;
+cursor:pointer;margin-top:12px
 }
-.add:active{
- transform:scale(.97);
+.add:active{transform:scale(.97)}
+.add:hover{background:var(--deep)}
+.panel{
+background:white;border:1px solid var(--line);
+border-radius:16px;padding:18px;margin:22px 0
 }
-.add:hover{
- background:var(--deep);
-}
-.add{width:100%;margin-top:10px;border:0;border-radius:9px;
-padding:10px;background:var(--orange);color:white;font-weight:bold}
-.panel{background:white;border:1px solid var(--line);border-radius:16px;
-padding:18px;margin:22px 0}
 .panel h2{margin-top:0}
-.supplier{background:linear-gradient(120deg,#211810,#6E2B0B);
-color:white;border-radius:18px;padding:23px;margin:24px 0}
+.supplier{
+background:linear-gradient(120deg,#211810,#6E2B0B);
+color:white;border-radius:18px;padding:23px;margin:24px 0
+}
 .supplier p{color:#F3DDC8;line-height:1.6}
-footer{background:#211810;color:#EBDCCB;padding:28px 16px;margin-top:35px}
+footer{
+background:#211810;color:#EBDCCB;
+padding:28px 16px;margin-top:35px
+}
 footer a{color:#F1BD62}
-.modal{display:none;position:fixed;inset:0;background:#0009;z-index:30;
-padding:15px;overflow:auto}
-.modal-box{background:white;max-width:600px;margin:35px auto;
-padding:20px;border-radius:18px}
-.modal-head{display:flex;justify-content:space-between;align-items:center}
-.close{border:0;background:#EEE;border-radius:50%;width:35px;height:35px}
-.cart-row{display:flex;justify-content:space-between;gap:8px;
-padding:12px 0;border-bottom:1px solid var(--line);align-items:center}
-.cart-row button{border:0;background:#F4E7DC;border-radius:7px;padding:6px 9px}
-.field{width:100%;padding:12px;border:1px solid var(--line);
-border-radius:10px;margin:6px 0 13px}
+.modal{
+display:none;position:fixed;inset:0;background:#0009;
+z-index:30;padding:15px;overflow:auto
+}
+.modal-box{
+background:white;max-width:600px;
+margin:35px auto;padding:20px;border-radius:18px
+}
+.modal-head{
+display:flex;justify-content:space-between;align-items:center
+}
+.close{
+border:0;background:#EEE;border-radius:50%;
+width:35px;height:35px
+}
+.cart-row{
+display:flex;justify-content:space-between;gap:8px;
+padding:12px 0;border-bottom:1px solid var(--line);
+align-items:center
+}
+.cart-row button{
+border:0;background:#F4E7DC;border-radius:7px;padding:6px 9px
+}
+.field{
+display:block;width:100%;min-width:0;min-height:46px;
+padding:12px;border:1px solid var(--line);
+border-radius:10px;margin:7px 0 15px;background:white
+}
+textarea.field{min-height:120px;resize:vertical}
 label{font-weight:700;font-size:14px}
 .total{font-size:20px;font-weight:900;color:var(--deep);margin:16px 0}
-details{background:white;border:1px solid var(--line);border-radius:11px;
-padding:13px;margin:9px 0;line-height:1.6}
+details{
+background:white;border:1px solid var(--line);
+border-radius:11px;padding:13px;margin:9px 0;line-height:1.6
+}
 summary{font-weight:700;cursor:pointer}
 .notice{font-size:12px;color:var(--muted);line-height:1.6}
 .empty{text-align:center;padding:25px;color:var(--muted)}
 @media(max-width:550px){
- header{padding:10px 12px}.brand-name{font-size:19px}
- .hero{margin:12px 0;padding:25px 18px;min-height:190px}
- .products{grid-template-columns:repeat(2,minmax(0,1fr))}
- .categories{grid-template-columns:repeat(2,minmax(0,1fr))}
+header{padding:10px 12px}
+.brand-name{font-size:19px}
+.hero{margin:12px 0;padding:25px 18px;min-height:190px}
+.products{grid-template-columns:repeat(2,minmax(0,1fr))}
+.categories{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 </style>
 </head>
+
 <body>
 
 <header>
-  <div class="brand">
-    <div class="logo">N</div>
-    <div>
-      <div class="brand-name">NEXORA</div>
-      <div class="brand-sub">NEXT GENERATION MARKETPLACE</div>
-    </div>
-  </div>
-  <button class="cart-btn" onclick="window.showCart()">
-    🛒 Сагс (<span id="cartCount">0</span>)
-  </button>
+<div class="brand">
+<div class="logo">N</div>
+<div>
+<div class="brand-name">NEXORA</div>
+<div class="brand-sub">NEXT GENERATION MARKETPLACE</div>
+</div>
+</div>
+<button class="cart-btn" onclick="window.showCart()">
+🛒 Сагс (<span id="cartCount">0</span>)
+</button>
 </header>
 
 <main class="wrap">
-  <section class="hero">
-    <small>МОНГОЛЫН НЭГДСЭН ЦАХИМ ЗАХ ЗЭЭЛ</small>
-    <h1>Худалдааны шинэ эрин.</h1>
-    <p>Монголын бүх төрлийн бараа, нэг нэгдсэн зах зээл. Хайж, сонгож, сагслаад захиалгаа үүсгээрэй.</p>
-  </section>
 
-  <div class="welcome">
-    <strong>🇲🇳 NEXORA-д тавтай морил!</strong><br>
-    Худалдан авагч болон нийлүүлэгчдийг нэг дор холбох Монголын цахим худалдааны платформ.
-  </div>
+<section class="hero">
+<small>МОНГОЛЫН НЭГДСЭН ЦАХИМ ЗАХ ЗЭЭЛ</small>
+<h1>Худалдааны шинэ эрин.</h1>
+<p>Монголын бүх төрлийн бараа, нэг нэгдсэн зах зээл. Хайж, сонгож, сагслаад захиалгаа үүсгээрэй.</p>
+</section>
 
-  <div class="actions">
-    <button class="main-btn" onclick="document.getElementById('supplier').scrollIntoView({behavior:'smooth'})">＋ Нийлүүлэгч болох</button>
-    <button class="secondary" onclick="document.getElementById('terms').scrollIntoView({behavior:'smooth'})">Үйлчилгээний нөхцөл</button>
+<div class="welcome">
+<strong>🇲🇳 NEXORA-д тавтай морил!</strong><br>
+Худалдан авагч болон нийлүүлэгчдийг нэг дор холбох Монголын цахим худалдааны платформ.
 </div>
 
+<div class="actions">
+<button class="main-btn" onclick="document.getElementById('supplier').scrollIntoView({behavior:'smooth'})">
+＋ Нийлүүлэгч болох
+</button>
+<button class="secondary" onclick="document.getElementById('terms').scrollIntoView({behavior:'smooth'})">
+Үйлчилгээний нөхцөл
+</button>
+</div>
 
+<!-- ЗАРЫН ҮНДСЭН ХЭСЭГ -->
 <section class="panel" id="classifieds">
-  <h2>📢 NEXORA — Зар мэдээлэл</h2>
-  <p>Бүх төрлийн зар, үйлчилгээ, саналыг нэг дороос.</p>
+<h2>📢 NEXORA — Зар мэдээлэл</h2>
+<p>Бүх төрлийн зар, үйлчилгээ, саналыг нэг дороос.</p>
 
-  <div class="categories">
-    <button class="cat" onclick="openAds('Ажлын зар')">💼 Ажлын зар</button>
-    <button class="cat" onclick="openAds('Автомашин')">🚗 Автомашин</button>
-    <button class="cat" onclick="openAds('Үл хөдлөх хөрөнгө')">🏠 Үл хөдлөх</button>
-    <button class="cat" onclick="openAds('Аялал')">✈️ Аялал</button>
-    <button class="cat" onclick="openAds('Сургалт, дамжаа')">🎓 Сургалт, дамжаа</button>
-    <button class="cat" onclick="openAds('Бусад зар')">📣 Бусад зар</button>
-  </div>
+<div class="categories">
+<button class="cat" onclick="openAds('Ажлын зар')">💼 Ажлын зар</button>
+<button class="cat" onclick="openAds('Автомашин')">🚗 Автомашин</button>
+<button class="cat" onclick="openAds('Үл хөдлөх хөрөнгө')">🏠 Үл хөдлөх</button>
+<button class="cat" onclick="openAds('Аялал')">✈️ Аялал</button>
+<button class="cat" onclick="openAds('Сургалт, дамжаа')">🎓 Сургалт, дамжаа</button>
+<button class="cat" onclick="openAds('Бусад зар')">📣 Бусад зар</button>
+</div>
 
-  <div style="margin-top:20px;">
-  <button
-    type="button"
-    class="cat"
-    style="width:100%; background:#D95B16; color:white; padding:16px; font-size:17px;"
-    onclick="togglePublishAd()">
-    ＋ ЗАР НИЙТЛЭХ>
-  </button>
+<div style="margin-top:20px;">
+<button
+type="button"
+id="mainPublishButton"
+class="cat"
+style="width:100%;background:#D95B16;color:white;padding:16px;font-size:17px;"
+onclick="togglePublishAd()">
+＋ ЗАР НИЙТЛЭХ
+</button>
 </div>
 </section>
 
-
+<!-- ЗАРЫН ЖАГСААЛТ БОЛОН НЭГ Л МАЯГТ -->
 <section class="panel" id="adsWorkspace" style="display:none;">
 
-  <h2 id="adsHeading">💼 Ажлын зар</h2>
+<h2 id="adsHeading">Зар мэдээлэл</h2>
 
-  <!-- Ажлын салбарууд -->
-  <div id="jobSectorArea" style="display:none;">
-    <h3>💼 Ажлын салбараа сонгоно уу</h3>
+<div id="jobSectorArea" style="display:none;">
+<h3>💼 Ажлын салбараа сонгоно уу</h3>
+<div class="categories">
+<button class="cat" onclick="selectJobSector('Барилга, уул уурхай')">🏗️ Барилга, уул уурхай</button>
+<button class="cat" onclick="selectJobSector('Үйлдвэрлэл')">🏭 Үйлдвэрлэл</button>
+<button class="cat" onclick="selectJobSector('Худалдаа, үйлчилгээ')">🛒 Худалдаа, үйлчилгээ</button>
+<button class="cat" onclick="selectJobSector('Тээвэр, ложистик')">🚚 Тээвэр, ложистик</button>
+<button class="cat" onclick="selectJobSector('Оффис, захиргаа')">🏢 Оффис, захиргаа</button>
+<button class="cat" onclick="selectJobSector('Боловсрол')">🎓 Боловсрол</button>
+<button class="cat" onclick="selectJobSector('Эрүүл мэнд')">🏥 Эрүүл мэнд</button>
+<button class="cat" onclick="selectJobSector('IT, технологи')">💻 IT, технологи</button>
+<button class="cat" onclick="selectJobSector('Хөдөө аж ахуй')">🌾 Хөдөө аж ахуй</button>
+<button class="cat" onclick="selectJobSector('Бусад')">📌 Бусад</button>
+</div>
+</div>
 
-    <div class="categories">
-      <button class="cat" onclick="selectJobSector('Барилга, уул уурхай')">🏗️ Барилга, уул уурхай</button>
-      <button class="cat" onclick="selectJobSector('Үйлдвэрлэл')">🏭 Үйлдвэрлэл</button>
-      <button class="cat" onclick="selectJobSector('Худалдаа, үйлчилгээ')">🛒 Худалдаа, үйлчилгээ</button>
-      <button class="cat" onclick="selectJobSector('Тээвэр, ложистик')">🚚 Тээвэр, ложистик</button>
-      <button class="cat" onclick="selectJobSector('Оффис, захиргаа')">🏢 Оффис, захиргаа</button>
-      <button class="cat" onclick="selectJobSector('Боловсрол')">🎓 Боловсрол</button>
-      <button class="cat" onclick="selectJobSector('Эрүүл мэнд')">🏥 Эрүүл мэнд</button>
-      <button class="cat" onclick="selectJobSector('IT, технологи')">💻 IT, технологи</button>
-      <button class="cat" onclick="selectJobSector('Хөдөө аж ахуй')">🌾 Хөдөө аж ахуй</button>
-      <button class="cat" onclick="selectJobSector('Бусад')">📌 Бусад</button>
-    </div>
-  </div>
+<div id="classifiedAdList"></div>
 
-  <!-- Ажлын зарын жагсаалт -->
-  <div id="classifiedAdList"></div>
+<!-- ЗАР НИЙТЛЭХ ЦОРЫН ГАНЦ МАЯГТ -->
+<div id="adFormArea" style="display:none;margin-top:15px;">
 
-  <!-- Зар нийтлэх товч -->
-  <div id="jobPublishToggleArea" style="display:none; margin-top:18px;">
-   <button class="cat"
-  type="button"
-  style="width:100%; background:#D95B16; color:white; padding:16px; font-size:17px;"
-  onclick="togglePublishAd()">
-  ＋ ЗАР НИЙТЛЭХ
-</button> 
-  </div>
+<form id="adForm" onsubmit="publishAd(event)">
 
-  <!-- Зар нийтлэх хүснэгт -->
-  <div id="adFormArea" style="display:none; margin-top:15px;">
+<label>Зарын төрөл сонгох</label>
+<select class="field" id="adCategory" required onchange="changeAdCategory()">
+<option value="">-- Төрөл сонгох --</option>
+<option value="Ажлын зар">💼 Ажлын зар</option>
+<option value="Автомашин">🚗 Автомашин</option>
+<option value="Үл хөдлөх хөрөнгө">🏠 Үл хөдлөх хөрөнгө</option>
+<option value="Аялал">✈️ Аялал</option>
+<option value="Сургалт, дамжаа">🎓 Сургалт, дамжаа</option>
+<option value="Бусад зар">📣 Бусад зар</option>
+</select>
 
-    <form id="adForm" onsubmit="publishAd(event)">
-
-     <div id="standaloneAdCategoryArea" style="display:none;">
-  <label>Зарын төрөл сонгох</label>
-  <select class="field" id="adCategory"
-    onchange="
-      document.getElementById('adType').value=this.value;
-      document.getElementById('jobAdSectorArea').style.display=
-      this.value==='Ажлын зар'?'block':'none';
-    ">
-    <option value="">-- Төрөл сонгох --</option>
-    <option value="Ажлын зар">💼 Ажлын зар</option>
-    <option value="Автомашин">🚗 Автомашин</option>
-    <option value="Үл хөдлөх хөрөнгө">🏠 Үл хөдлөх хөрөнгө</option>
-    <option value="Аялал">✈️ Аялал</option>
-    <option value="Сургалт, дамжаа">🎓 Сургалт, дамжаа</option>
-    <option value="Бусад зар">📣 Бусад зар</option>
-  </select>
-
-  <div id="jobAdSectorArea" style="display:none;">
-    <label>Ажлын салбар сонгох</label>
-    <select class="field" id="jobAdSector">
-      <option value="">-- Салбар сонгох --</option>
-      <option value="Барилга, уул уурхай">🏗️ Барилга, уул уурхай</option>
-      <option value="Үйлдвэрлэл">🏭 Үйлдвэрлэл</option>
-      <option value="Худалдаа, үйлчилгээ">🛒 Худалдаа, үйлчилгээ</option>
-      <option value="Тээвэр, ложистик">🚚 Тээвэр, ложистик</option>
-      <option value="Оффис, захиргаа">🏢 Оффис, захиргаа</option>
-      <option value="Боловсрол">🎓 Боловсрол</option>
-      <option value="Эрүүл мэнд">🏥 Эрүүл мэнд</option>
-      <option value="IT, технологи">💻 IT, технологи</option>
-      <option value="Хөдөө аж ахуй">🌾 Хөдөө аж ахуй</option>
-      <option value="Бусад">📌 Бусад</option>
-    </select>
-  </div>
+<div id="jobAdSectorArea" style="display:none;">
+<label>Ажлын салбар сонгох</label>
+<select class="field" id="jobAdSector">
+<option value="">-- Салбар сонгох --</option>
+<option value="Барилга, уул уурхай">🏗️ Барилга, уул уурхай</option>
+<option value="Үйлдвэрлэл">🏭 Үйлдвэрлэл</option>
+<option value="Худалдаа, үйлчилгээ">🛒 Худалдаа, үйлчилгээ</option>
+<option value="Тээвэр, ложистик">🚚 Тээвэр, ложистик</option>
+<option value="Оффис, захиргаа">🏢 Оффис, захиргаа</option>
+<option value="Боловсрол">🎓 Боловсрол</option>
+<option value="Эрүүл мэнд">🏥 Эрүүл мэнд</option>
+<option value="IT, технологи">💻 IT, технологи</option>
+<option value="Хөдөө аж ахуй">🌾 Хөдөө аж ахуй</option>
+<option value="Бусад">📌 Бусад</option>
+</select>
 </div>
 
 <input class="field" id="adType" type="hidden">
-      <label>Зарын гарчиг</label>
-      <input class="field" id="adTitle" type="text" required>
 
-      <label>Үнэ / Цалин</label>
-      <input class="field" id="adPrice" type="text">
+<label>Зарын гарчиг</label>
+<input class="field" id="adTitle" type="text" required>
 
-      <label>Байршил</label>
-      <input class="field" id="adLocation" type="text">
+<label>Үнэ / Цалин</label>
+<input class="field" id="adPrice" type="text">
 
-      <label>Холбоо барих утас</label>
-      <input class="field" id="adPhone" type="tel" required>
+<label>Байршил</label>
+<input class="field" id="adLocation" type="text">
 
-      <label>Дэлгэрэнгүй мэдээлэл</label>
-      <textarea class="field" id="adDescription" required></textarea>
+<label>Холбоо барих утас</label>
+<input class="field" id="adPhone" type="tel" required>
 
-      <button type="submit" class="add">Зар нийтлэх</button>
+<label>Дэлгэрэнгүй мэдээлэл</label>
+<textarea class="field" id="adDescription" required></textarea>
 
-    </form>
-  </div>
+<button type="submit" class="add">Зар нийтлэх</button>
 
-</section>
-
-<div class="searchbar">
-  <span style="font-size:22px;">🔍</span>
-  <input id="search"
-         placeholder="Барааны нэрээр хайх..."
-         oninput="render()">
+</form>
 </div>
 
-  <h2 class="section-title">🛍️ Барааны ангилал</h2>
-  <div class="categories" id="categories"></div>
-  <div class="subs" id="subCategories"></div>
-
-  <h2 class="section-title" id="productHeading">Онцлох бараанууд</h2>
- <div class="products" id="productList"></div> 
-<section class="panel" id="publishProduct">
-  <h2>📸 Бараа нийтлэх</h2>
-  <p>Нийлүүлэгч өөрийн барааг NEXORA-д бүртгүүлнэ.</p>
-
-  <label>Барааны зураг</label>
-  <input class="field" type="file" id="productImage" accept="image/*">
-
-  <label>Барааны нэр</label>
-  <input class="field" id="newProductName" placeholder="Барааны нэр">
-
-  <label>Ангилал</label>
-  <select class="field" id="newProductCat">
-    <option>Электрон бараа</option>
-    <option>Гар утас</option>
-    <option>Компьютер</option>
-    <option>Гэр ахуй</option>
-    <option>Гал тогоо</option>
-    <option>Хувцас</option>
-    <option>Гутал</option>
-    <option>Гоо сайхан</option>
-    <option>Тоглоом</option>
-    <option>Спорт</option>
-    <option>Бусад</option>
-  </select>
-
-  <label>Үнэ (₮)</label>
-  <input class="field" type="number" id="newProductPrice" placeholder="Үнэ">
-
-  <label>Барааны тайлбар</label>
-  <textarea class="field" id="newProductDesc"
-    placeholder="Барааныхаа тухай бичнэ үү"></textarea>
-
-  <button class="main-btn" style="width:100%"
-    onclick="window.publishProduct()">
-    ＋ Бараа нийтлэх
-  </button>
 </section>
-  <section class="supplier" id="supplier">
-    <h2>🤝 NEXORA-д нийлүүлэгчээр нэгдээрэй</h2>
-    <p>Бараагаа цахимаар бүртгүүлж, Монгол даяар худалдан авагчдад хүргээрэй. Бараа байршуулах бүртгэл үнэ төлбөргүй.</p>
-    <p><strong>Амжилттай хийгдсэн борлуулалтаас 5%-ийн шимтгэл тооцох загвартай.</strong> Энэ нь одоогоор танилцуулгын нөхцөл бөгөөд бодит төлбөрийн систем хараахан холбогдоогүй.</p>
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdjHVcErBq_D6UAfafBoV1MtsXLLfSUZUFG_XXwUjO0T3I50g/viewform?usp=dialog" target="_blank" rel="noopener">
-      <button class="main-btn">Нийлүүлэгчээр бүртгүүлэх →</button>
-    </a>
-    <p class="notice">Нийлүүлэгчийн бүртгэлийн маягт Google Forms дээр нээгдэнэ.</p>
-  </section>
 
-  <section class="panel">
-    <h2>📦 Бараа байршуулах</h2>
-    <p>Бараагаа платформд байршуулах хүсэлтээ илгээнэ үү.</p>
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSelNRs6XBF99agGRVI4F7YmcJqmgAsDNxVe4lPymmvnyORj6g/viewform?usp=dialog" target="_blank" rel="noopener">
-      <button class="main-btn">Бараа бүртгүүлэх →</button>
-    </a>
-  </section>
+<!-- БАРАА ХАЙХ -->
+<div class="searchbar">
+<span style="font-size:22px;">🔍</span>
+<input id="search" placeholder="Барааны нэрээр хайх..." oninput="render()">
+</div>
 
-  <section class="panel" id="terms">
-    <h2>📜 NEXORA үйлчилгээний нөхцөл</h2>
-    <p class="notice">Доорх нөхцөл нь платформын танилцуулга, туршилтын хувилбарт зориулагдсан. Бодит үйл ажиллагаа эхлэхээс өмнө хууль зүйн хяналт хийж, төлбөрийн болон гэрээний системийг холбох шаардлагатай.</p>
+<h2 class="section-title">🛍️ Барааны ангилал</h2>
+<div class="categories" id="categories"></div>
+<div class="subs" id="subCategories"></div>
 
-    <details><summary>1. Платформын үйл ажиллагаа</summary>
-    NEXORA нь худалдан авагч болон нийлүүлэгчийг холбох цахим худалдааны платформын загвар юм. Одоогийн хувилбар нь туршилтын горимтой бөгөөд захиалгын бодит төлбөр, автомат баталгаажуулалт хийгдэхгүй.</details>
+<h2 class="section-title" id="productHeading">Онцлох бараанууд</h2>
+<div class="products" id="productList"></div>
 
-    <details><summary>2. Нийлүүлэгчийн бүртгэл ба цахим гэрээ</summary>
-    Нийлүүлэгч бүртгүүлэхдээ үнэн зөв мэдээлэл өгнө. Платформын нөхцөлийг цахимаар танилцаж, зөвшөөрсөн тохиолдолд хамтын ажиллагааны гэрээ байгуулах боломжтой байна. Одоогийн бүртгэлийн маягт нь хүсэлт цуглуулах зориулалттай.</details>
+<!-- БАРАА НИЙТЛЭХ -->
+<section class="panel" id="publishProduct">
+<h2>📸 Бараа нийтлэх</h2>
+<p>Нийлүүлэгч өөрийн барааг NEXORA-д бүртгүүлнэ.</p>
 
-    <details><summary>3. Барааны мэдээлэл ба чанар</summary>
-    Нийлүүлэгч барааны нэр, үнэ, зураг, гарал үүсэл, хэмжээ, чанар болон бусад мэдээллийг үнэн зөв оруулах үүрэгтэй. Барааны чанар, аюулгүй байдал, хууль ёсны байдлыг нийлүүлэгч хариуцна.</details>
+<label>Барааны зураг</label>
+<input class="field" type="file" id="productImage" accept="image/*">
 
-    <details><summary>4. Шимтгэлийн нөхцөл</summary>
-    Бараа байршуулах бүртгэл үнэ төлбөргүй. Амжилттай хийгдэж, төлбөр нь баталгаажсан борлуулалтаас 5%-ийн шимтгэл тооцохоор төлөвлөсөн. Буцаалт, цуцлалт болон маргаантай гүйлгээний шимтгэлийг гэрээгээр нарийвчлан зохицуулна. Одоогоор бодит шимтгэл суутгал хийгдэхгүй.</details>
+<label>Барааны нэр</label>
+<input class="field" id="newProductName" placeholder="Барааны нэр">
 
-    <details><summary>5. Төлбөр баталгаажуулалт ба тооцоо</summary>
-    Бодит үйл ажиллагаанд төлбөрийн эрх бүхий үйлчилгээ үзүүлэгчтэй холбогдож, гүйлгээг баталгаажуулсны дараа нийлүүлэгчид төлбөр шилжүүлэх журам хэрэгжинэ. QPay болон банкны төлбөрийн шийдлийг холбох шаардлагатай. Одоогийн хувилбар төлбөр хүлээн авахгүй.</details>
+<label>Ангилал</label>
+<select class="field" id="newProductCat">
+<option>Электрон бараа</option>
+<option>Гар утас</option>
+<option>Компьютер</option>
+<option>Гэр ахуй</option>
+<option>Гал тогоо</option>
+<option>Хувцас</option>
+<option>Гутал</option>
+<option>Гоо сайхан</option>
+<option>Тоглоом</option>
+<option>Спорт</option>
+<option>Бусад</option>
+</select>
 
-    <details><summary>6. Хүргэлтийн нөхцөл</summary>
-    Барааг савлах, хүргэх, хүргэлтийн хугацаа болон хүргэлтийн явцын мэдээллийг нийлүүлэгч хариуцна. Хүргэлтийн төлбөр, хугацааг худалдан авагчид урьдчилан мэдээлнэ.</details>
+<label>Үнэ (₮)</label>
+<input class="field" type="number" id="newProductPrice" placeholder="Үнэ">
 
-    <details><summary>7. Буцаалт, төлбөр буцаалт, гомдол</summary>
-    Бараа буцаах, солих, төлбөр буцаах болон гомдол шийдвэрлэх асуудлыг Монгол Улсын хэрэглэгчийн эрхийг хамгаалах холбогдох хууль тогтоомж, талуудын гэрээний дагуу зохицуулна.</details>
+<label>Барааны тайлбар</label>
+<textarea class="field" id="newProductDesc" placeholder="Барааныхаа тухай бичнэ үү"></textarea>
 
-    <details><summary>8. Захиалга цуцлах</summary>
-    Захиалга баталгаажаагүй үед цуцлах хүсэлтийг хүлээн авах боломжтой. Баталгаажсан захиалгын цуцлалт, буцаалтын нөхцөлийг нийлүүлэгч болон худалдан авагчийн тохиролцоо, хууль тогтоомжийн дагуу шийдвэрлэнэ.</details>
+<button class="main-btn" style="width:100%" onclick="window.publishProduct()">
+＋ Бараа нийтлэх
+</button>
+</section>
 
-    <details><summary>9. Хувийн мэдээлэл ба нууцлал</summary>
-    Хэрэглэгчийн нэр, холбоо барих мэдээлэл, хүргэлтийн мэдээллийг зөвхөн үйлчилгээ үзүүлэх шаардлагын хүрээнд ашиглана. Мэдээллийг хамгаалах, хадгалах, устгах журам болон гуравдагч талд дамжуулах нөхцөлийг нууцлалын бодлогоор нарийвчлан тогтооно.</details>
+<section class="supplier" id="supplier">
+<h2>🤝 NEXORA-д нийлүүлэгчээр нэгдээрэй</h2>
+<p>Бараагаа цахимаар бүртгүүлж, Монгол даяар худалдан авагчдад хүргээрэй. Бараа байршуулах бүртгэл үнэ төлбөргүй.</p>
+<p><strong>Амжилттай хийгдсэн борлуулалтаас 5%-ийн шимтгэл тооцох загвартай.</strong> Энэ нь одоогоор танилцуулгын нөхцөл бөгөөд бодит төлбөрийн систем хараахан холбогдоогүй.</p>
+<a href="https://docs.google.com/forms/d/e/1FAIpQLSdjHVcErBq_D6UAfafBoV1MtsXLLfSUZUFG_XXwUjO0T3I50g/viewform?usp=dialog" target="_blank" rel="noopener">
+<button class="main-btn">Нийлүүлэгчээр бүртгүүлэх →</button>
+</a>
+<p class="notice">Нийлүүлэгчийн бүртгэлийн маягт Google Forms дээр нээгдэнэ.</p>
+</section>
 
-    <details><summary>10. Хориглосон бараа</summary>
-    Хууль бус, хуурамч, хулгайн, аюултай, зөвшөөрөлгүй худалдаалах бараа болон холбогдох хууль тогтоомжоор хориглосон бүтээгдэхүүнийг байршуулахыг хориглоно.</details>
+<section class="panel">
+<h2>📦 Бараа байршуулах</h2>
+<p>Бараагаа платформд байршуулах хүсэлтээ илгээнэ үү.</p>
+<a href="https://docs.google.com/forms/d/e/1FAIpQLSelNRs6XBF99agGRVI4F7YmcJqmgAsDNxVe4lPymmvnyORj6g/viewform?usp=dialog" target="_blank" rel="noopener">
+<button class="main-btn">Бараа бүртгүүлэх →</button>
+</a>
+</section>
 
-    <details><summary>11. Маргаан шийдвэрлэх</summary>
-    Худалдан авагч, нийлүүлэгчийн хооронд үүссэн маргааныг эхлээд харилцан тохиролцож шийдвэрлэхийг зорих бөгөөд шаардлагатай тохиолдолд эрх бүхий байгууллага, шүүхэд хандана.</details>
+<section class="panel" id="terms">
+<h2>📜 NEXORA үйлчилгээний нөхцөл</h2>
+<p class="notice">Доорх нөхцөл нь платформын танилцуулга, туршилтын хувилбарт зориулагдсан. Бодит үйл ажиллагаа эхлэхээс өмнө хууль зүйн хяналт хийж, төлбөрийн болон гэрээний системийг холбох шаардлагатай.</p>
 
-    <details><summary>12. Платформын хязгаарлалт</summary>
-    NEXORA нь одоогоор туршилтын хувилбар. Барааны жагсаалт, сагс, захиалгын мэдээлэл нь энэ төхөөрөмжийн хөтөч дээр ажиллах демо боломжууд юм. Сервер, хэрэглэгчийн бүртгэл, бодит төлбөр, автомат хүргэлт, захиалгын удирдлага хараахан холбогдоогүй.</details>
-  </section>
+<details><summary>1. Платформын үйл ажиллагаа</summary>
+NEXORA нь худалдан авагч болон нийлүүлэгчийг холбох цахим худалдааны платформын загвар юм. Одоогийн хувилбар нь туршилтын горимтой бөгөөд захиалгын бодит төлбөр, автомат баталгаажуулалт хийгдэхгүй.</details>
+
+<details><summary>2. Нийлүүлэгчийн бүртгэл ба цахим гэрээ</summary>
+Нийлүүлэгч бүртгүүлэхдээ үнэн зөв мэдээлэл өгнө. Платформын нөхцөлийг цахимаар танилцаж, зөвшөөрсөн тохиолдолд хамтын ажиллагааны гэрээ байгуулах боломжтой байна. Одоогийн бүртгэлийн маягт нь хүсэлт цуглуулах зориулалттай.</details>
+
+<details><summary>3. Барааны мэдээлэл ба чанар</summary>
+Нийлүүлэгч барааны нэр, үнэ, зураг, гарал үүсэл, хэмжээ, чанар болон бусад мэдээллийг үнэн зөв оруулах үүрэгтэй. Барааны чанар, аюулгүй байдал, хууль ёсны байдлыг нийлүүлэгч хариуцна.</details>
+
+<details><summary>4. Шимтгэлийн нөхцөл</summary>
+Бараа байршуулах бүртгэл үнэ төлбөргүй. Амжилттай хийгдэж, төлбөр нь баталгаажсан борлуулалтаас 5%-ийн шимтгэл тооцохоор төлөвлөсөн. Буцаалт, цуцлалт болон маргаантай гүйлгээний шимтгэлийг гэрээгээр нарийвчлан зохицуулна. Одоогоор бодит шимтгэл суутгал хийгдэхгүй.</details>
+
+<details><summary>5. Төлбөр баталгаажуулалт ба тооцоо</summary>
+Бодит үйл ажиллагаанд төлбөрийн эрх бүхий үйлчилгээ үзүүлэгчтэй холбогдож, гүйлгээг баталгаажуулсны дараа нийлүүлэгчид төлбөр шилжүүлэх журам хэрэгжинэ. QPay болон банкны төлбөрийн шийдлийг холбох шаардлагатай. Одоогийн хувилбар төлбөр хүлээн авахгүй.</details>
+
+<details><summary>6. Хүргэлтийн нөхцөл</summary>
+Барааг савлах, хүргэх, хүргэлтийн хугацаа болон хүргэлтийн явцын мэдээллийг нийлүүлэгч хариуцна. Хүргэлтийн төлбөр, хугацааг худалдан авагчид урьдчилан мэдээлнэ.</details>
+
+<details><summary>7. Буцаалт, төлбөр буцаалт, гомдол</summary>
+Бараа буцаах, солих, төлбөр буцаах болон гомдол шийдвэрлэх асуудлыг Монгол Улсын хэрэглэгчийн эрхийг хамгаалах холбогдох хууль тогтоомж, талуудын гэрээний дагуу зохицуулна.</details>
+
+<details><summary>8. Захиалга цуцлах</summary>
+Захиалга баталгаажаагүй үед цуцлах хүсэлтийг хүлээн авах боломжтой. Баталгаажсан захиалгын цуцлалт, буцаалтын нөхцөлийг нийлүүлэгч болон худалдан авагчийн тохиролцоо, хууль тогтоомжийн дагуу шийдвэрлэнэ.</details>
+
+<details><summary>9. Хувийн мэдээлэл ба нууцлал</summary>
+Хэрэглэгчийн нэр, холбоо барих мэдээлэл, хүргэлтийн мэдээллийг зөвхөн үйлчилгээ үзүүлэх шаардлагын хүрээнд ашиглана. Мэдээллийг хамгаалах, хадгалах, устгах журам болон гуравдагч талд дамжуулах нөхцөлийг нууцлалын бодлогоор нарийвчлан тогтооно.</details>
+
+<details><summary>10. Хориглосон бараа</summary>
+Хууль бус, хуурамч, хулгайн, аюултай, зөвшөөрөлгүй худалдаалах бараа болон холбогдох хууль тогтоомжоор хориглосон бүтээгдэхүүнийг байршуулахыг хориглоно.</details>
+
+<details><summary>11. Маргаан шийдвэрлэх</summary>
+Худалдан авагч, нийлүүлэгчийн хооронд үүссэн маргааныг эхлээд харилцан тохиролцож шийдвэрлэхийг зорих бөгөөд шаардлагатай тохиолдолд эрх бүхий байгууллага, шүүхэд хандана.</details>
+
+<details><summary>12. Платформын хязгаарлалт</summary>
+NEXORA нь одоогоор туршилтын хувилбар. Барааны жагсаалт, сагс, захиалгын мэдээлэл нь энэ төхөөрөмжийн хөтөч дээр ажиллах демо боломжууд юм. Сервер, хэрэглэгчийн бүртгэл, бодит төлбөр, автомат хүргэлт, захиалгын удирдлага хараахан холбогдоогүй.</details>
+</section>
+
 </main>
 
 <footer>
-  <div class="wrap">
-    <div class="brand">
-      <div class="logo">N</div>
-      <div><div class="brand-name">NEXORA</div>
-      <div class="brand-sub">ХУДАЛДААНЫ ШИНЭ ЭРИН</div></div>
-    </div>
-    <p>Монголын нэгдсэн цахим зах зээл 🇲🇳</p>
-    <p class="notice">© 2026 NEXORA. Бүх эрх хуулиар хамгаалагдсан.</p>
-  </div>
+<div class="wrap">
+<div class="brand">
+<div class="logo">N</div>
+<div>
+<div class="brand-name">NEXORA</div>
+<div class="brand-sub">ХУДАЛДААНЫ ШИНЭ ЭРИН</div>
+</div>
+</div>
+<p>Монголын нэгдсэн цахим зах зээл 🇲🇳</p>
+<p class="notice">© 2026 NEXORA. Бүх эрх хуулиар хамгаалагдсан.</p>
+</div>
 </footer>
 
 <div class="modal" id="cartModal">
-  <div class="modal-box">
-    <div class="modal-head">
-      <h2>🛒 Миний сагс</h2>
-      <button class="close" onclick="window.closeCart()">✕</button>
-    </div>
-    <div id="cartItems"></div>
-    <div class="total" id="cartTotal">Нийт: 0₮</div>
-    <h3>Захиалагчийн мэдээлэл</h3>
-    <label>Овог, нэр</label>
-    <input class="field" id="buyerName" placeholder="Нэрээ бичнэ үү">
-    <label>Утасны дугаар</label>
-    <input class="field" id="buyerPhone" placeholder="Утасны дугаар">
-    <label>Хүргэлтийн хаяг</label>
-    <textarea class="field" id="buyerAddress" placeholder="Дэлгэрэнгүй хаяг"></textarea>
-    <button class="main-btn" style="width:100%" onclick="window.order()">Захиалгын мэдээлэл үүсгэх</button>
-    <button class="secondary" style="width:100%;margin-top:9px" onclick="window.copyOrder()">Захиалгыг хуулах</button>
-    <p class="notice">Демо хувилбар: захиалга үүсгэхэд мэдээлэл зөвхөн энэ хөтөчид боловсруулагдана. Бодит захиалга, төлбөр илгээгдэхгүй.</p>
-  </div>
+<div class="modal-box">
+<div class="modal-head">
+<h2>🛒 Миний сагс</h2>
+<button class="close" onclick="window.closeCart()">✕</button>
 </div>
+<div id="cartItems"></div>
+<div class="total" id="cartTotal">Нийт: 0₮</div>
+<h3>Захиалагчийн мэдээлэл</h3>
+<label>Овог, нэр</label>
+<input class="field" id="buyerName" placeholder="Нэрээ бичнэ үү">
+<label>Утасны дугаар</label>
+<input class="field" id="buyerPhone" placeholder="Утасны дугаар">
+<label>Хүргэлтийн хаяг</label>
+<textarea class="field" id="buyerAddress" placeholder="Дэлгэрэнгүй хаяг"></textarea>
+<button class="main-btn" style="width:100%" onclick="window.order()">Захиалгын мэдээлэл үүсгэх</button>
+<button class="secondary" style="width:100%;margin-top:9px" onclick="window.copyOrder()">Захиалгыг хуулах</button>
+<p class="notice">Демо хувилбар: захиалга үүсгэхэд мэдээлэл зөвхөн энэ хөтөчид боловсруулагдана. Бодит захиалга, төлбөр илгээгдэхгүй.</p>
+</div>
+</div>
+
 <script>
-const categories = [
- "Бүгд","Электрон бараа","Гар утас","Компьютер",
- "Гэр ахуй","Гал тогоо","Хувцас","Гутал",
- "Гоо сайхан","Хүүхдийн бараа","Тоглоом","Спорт",
- "Автомашин","Барилгын материал","Бичиг хэрэг",
- "Хүнс","Ундаа","Тавилга","Гэрэлтүүлэг",
- "Цахилгаан хэрэгсэл","Амьтан","Ном","Бэлэг",
- "Аялал","Хобби","Үйлчилгээ","Бусад"
+const categories=[
+"Бүгд","Электрон бараа","Гар утас","Компьютер",
+"Гэр ахуй","Гал тогоо","Хувцас","Гутал",
+"Гоо сайхан","Хүүхдийн бараа","Тоглоом","Спорт",
+"Автомашин","Барилгын материал","Бичиг хэрэг",
+"Хүнс","Ундаа","Тавилга","Гэрэлтүүлэг",
+"Цахилгаан хэрэгсэл","Амьтан","Ном","Бэлэг",
+"Аялал","Хобби","Үйлчилгээ","Бусад"
 ];
 
-const products = [
- {id:1,name:"Ухаалаг цаг",cat:"Электрон бараа",sub:"Цаг",price:45000,emoji:"⌚"},
- {id:2,name:"Bluetooth чихэвч",cat:"Электрон бараа",sub:"Чихэвч",price:28000,emoji:"🎧"},
- {id:3,name:"Гар утасны гэр",cat:"Гар утас",sub:"Дагалдах хэрэгсэл",price:12000,emoji:"📱"},
- {id:4,name:"Утасны цэнэглэгч",cat:"Гар утас",sub:"Дагалдах хэрэгсэл",price:18000,emoji:"🔌"},
- {id:5,name:"Ширээний гэрэл",cat:"Гэр ахуй",sub:"Гэрэлтүүлэг",price:25000,emoji:"💡"},
- {id:6,name:"Усны сав",cat:"Гэр ахуй",sub:"Өдөр тутмын хэрэглээ",price:15000,emoji:"🧴"},
- {id:7,name:"Эрэгтэй футболк",cat:"Хувцас",sub:"Эрэгтэй",price:22000,emoji:"👕"},
- {id:8,name:"Спорт гутал",cat:"Гутал",sub:"Спорт",price:85000,emoji:"👟"},
- {id:9,name:"Хүүхдийн тоглоом",cat:"Тоглоом",sub:"Хүүхэд",price:18000,emoji:"🧸"},
- {id:10,name:"Спортын бөмбөг",cat:"Спорт",sub:"Бөмбөг",price:30000,emoji:"⚽"},
- {id:11,name:"Гал тогооны хэрэгсэл",cat:"Гал тогоо",sub:"Хэрэгсэл",price:20000,emoji:"🍳"},
- {id:12,name:"Үүргэвч",cat:"Хувцас",sub:"Цүнх",price:35000,emoji:"🎒"}
+const products=[
+{id:1,name:"Ухаалаг цаг",cat:"Электрон бараа",sub:"Цаг",price:45000,emoji:"⌚"},
+{id:2,name:"Bluetooth чихэвч",cat:"Электрон бараа",sub:"Чихэвч",price:28000,emoji:"🎧"},
+{id:3,name:"Гар утасны гэр",cat:"Гар утас",sub:"Дагалдах хэрэгсэл",price:12000,emoji:"📱"},
+{id:4,name:"Утасны цэнэглэгч",cat:"Гар утас",sub:"Дагалдах хэрэгсэл",price:18000,emoji:"🔌"},
+{id:5,name:"Ширээний гэрэл",cat:"Гэр ахуй",sub:"Гэрэлтүүлэг",price:25000,emoji:"💡"},
+{id:6,name:"Усны сав",cat:"Гэр ахуй",sub:"Өдөр тутмын хэрэглээ",price:15000,emoji:"🧴"},
+{id:7,name:"Эрэгтэй футболк",cat:"Хувцас",sub:"Эрэгтэй",price:22000,emoji:"👕"},
+{id:8,name:"Спорт гутал",cat:"Гутал",sub:"Спорт",price:85000,emoji:"👟"},
+{id:9,name:"Хүүхдийн тоглоом",cat:"Тоглоом",sub:"Хүүхэд",price:18000,emoji:"🧸"},
+{id:10,name:"Спортын бөмбөг",cat:"Спорт",sub:"Бөмбөг",price:30000,emoji:"⚽"},
+{id:11,name:"Гал тогооны хэрэгсэл",cat:"Гал тогоо",sub:"Хэрэгсэл",price:20000,emoji:"🍳"},
+{id:12,name:"Үүргэвч",cat:"Хувцас",sub:"Цүнх",price:35000,emoji:"🎒"}
 ];
+
 try{
- const saved=JSON.parse(
-  localStorage.getItem("nexoraProducts")||"[]"
- );
- if(Array.isArray(saved)){
-  saved.forEach(p=>{
-   if(!products.some(x=>x.id===p.id)){
-    products.push(p);
-   }
-  });
- } 
+const saved=JSON.parse(localStorage.getItem("nexoraProducts")||"[]");
+if(Array.isArray(saved)){
+saved.forEach(p=>{
+if(!products.some(x=>x.id===p.id))products.push(p);
+});
+}
 }catch(e){}
+
 let selectedCat="Бүгд";
 let selectedSub="Бүгд";
 let cart=[];
 let lastOrder="";
 
 try{
- cart=JSON.parse(localStorage.getItem("mmcart")||"[]");
- if(!Array.isArray(cart))cart=[];
+cart=JSON.parse(localStorage.getItem("mmcart")||"[]");
+if(!Array.isArray(cart))cart=[];
 }catch(e){cart=[];}
 
 function money(n){
- return Number(n||0).toLocaleString("mn-MN");
+return Number(n||0).toLocaleString("mn-MN");
 }
 
 function save(){
- try{
-  localStorage.setItem("mmcart",JSON.stringify(cart));
- }catch(e){}
+try{localStorage.setItem("mmcart",JSON.stringify(cart));}catch(e){}
 }
 
 function updateCount(){
- const el=document.getElementById("cartCount");
- if(el){
-  el.textContent=cart.reduce((s,x)=>s+Number(x.qty||0),0);
- }
+const el=document.getElementById("cartCount");
+if(el)el.textContent=cart.reduce((s,x)=>s+Number(x.qty||0),0);
 }
 
 function drawCategories(){
- const el=document.getElementById("categories");
- if(!el)return;
- el.innerHTML="";
- categories.forEach(cat=>{
-  const btn=document.createElement("button");
-  btn.textContent=cat;
-  btn.className="cat"+(cat===selectedCat?" active":"");
-  btn.onclick=()=>choose(cat);
-  el.appendChild(btn);
- });
+const el=document.getElementById("categories");
+if(!el)return;
+el.innerHTML="";
+categories.forEach(cat=>{
+const btn=document.createElement("button");
+btn.textContent=cat;
+btn.className="cat"+(cat===selectedCat?" active":"");
+btn.onclick=()=>choose(cat);
+el.appendChild(btn);
+});
 }
 
 function drawSubs(){
- const el=document.getElementById("subCategories");
- if(!el)return;
- el.innerHTML="";
- const subs=[...new Set(products
-  .filter(p=>selectedCat==="Бүгд"||p.cat===selectedCat)
-  .map(p=>p.sub))];
- subs.forEach(sub=>{
-  const btn=document.createElement("button");
-  btn.textContent=sub;
- btn.className="sub"+(sub===selectedSub?" active":""); 
-  btn.onclick=()=>chooseSub(sub);
-  el.appendChild(btn);
- });
+const el=document.getElementById("subCategories");
+if(!el)return;
+el.innerHTML="";
+const subs=[...new Set(products
+.filter(p=>selectedCat==="Бүгд"||p.cat===selectedCat)
+.map(p=>p.sub))];
+subs.forEach(sub=>{
+const btn=document.createElement("button");
+btn.textContent=sub;
+btn.className="sub"+(sub===selectedSub?" active":"");
+btn.onclick=()=>chooseSub(sub);
+el.appendChild(btn);
+});
 }
 
 function choose(cat){
- selectedCat=cat;
- selectedSub="Бүгд";
- drawCategories();
- drawSubs();
- render();
+selectedCat=cat;
+selectedSub="Бүгд";
+drawCategories();
+drawSubs();
+render();
 }
 
 function chooseSub(sub){
- selectedSub=sub;
- render();
+selectedSub=sub;
+drawSubs();
+render();
 }
 
-
 function render(){
- const list=document.getElementById("productList");
- if(!list)return;
- list.innerHTML="";
+const list=document.getElementById("productList");
+if(!list)return;
+list.innerHTML="";
 
- const searchText=document.getElementById("search")
-  ? document.getElementById("search").value.trim().toLowerCase()
-  : "";
+const searchText=document.getElementById("search")
+?document.getElementById("search").value.trim().toLowerCase():"";
 
- const filtered=products.filter(p=>
-  (selectedCat==="Бүгд"||p.cat===selectedCat)&&
-  (selectedSub==="Бүгд"||p.sub===selectedSub)&&
-  (
-   !searchText||
-   String(p.name||"").toLowerCase().includes(searchText)||
-   String(p.cat||"").toLowerCase().includes(searchText)||
-   String(p.sub||"").toLowerCase().includes(searchText)||
-   String(p.desc||"").toLowerCase().includes(searchText)
-  )
- );
+const filtered=products.filter(p=>
+(selectedCat==="Бүгд"||p.cat===selectedCat)&&
+(selectedSub==="Бүгд"||p.sub===selectedSub)&&
+(!searchText||
+String(p.name||"").toLowerCase().includes(searchText)||
+String(p.cat||"").toLowerCase().includes(searchText)||
+String(p.sub||"").toLowerCase().includes(searchText)||
+String(p.desc||"").toLowerCase().includes(searchText))
+);
 
- filtered.forEach(p=>{
-  const div=document.createElement("div");
-  div.className="product";
-  div.innerHTML=`
-   <div class="product-art">
- ${p.image
- ? `<img src="${p.image}" style="width:100%;height:100%;object-fit:cover">`
- : p.emoji}
+filtered.forEach(p=>{
+const div=document.createElement("div");
+div.className="product";
+div.innerHTML=`
+<div class="product-art">
+${p.image?`<img src="${p.image}" style="width:100%;height:100%;object-fit:cover">`:p.emoji}
 </div>
-   <div class="product-info">
-    <h3>${p.name}</h3>
-    <small>${p.cat}</small>
-    <p class="price">${money(p.price)} ₮</p>
-    ${p.image ? `
+<div class="product-info">
+<h3>${p.name}</h3>
+<small>${p.cat}</small>
+<p class="price">${money(p.price)} ₮</p>
+${p.image?`
 <div style="display:flex;gap:6px;margin-bottom:8px">
- <button onclick="editProduct(${p.id})"
- style="flex:1;padding:9px;background:#E5AD38;border:0;border-radius:8px">
- ✏️ Засах
- </button>
- <button onclick="deleteProduct(${p.id})"
- style="flex:1;padding:9px;background:#A83F0D;color:white;border:0;border-radius:8px">
- 🗑 Устгах
- </button>
-</div>
-` : ""}
+<button onclick="editProduct(${p.id})">✏️ Засах</button>
+<button onclick="deleteProduct(${p.id})">🗑 Устгах</button>
+</div>`:""}
 <button class="add" onclick="add(${p.id})">＋ Сагсанд нэмэх</button>
-   </div>`;
-  list.appendChild(div);
- });
+</div>`;
+list.appendChild(div);
+});
 
- if(!filtered.length){
-  list.innerHTML="<p>Бараа олдсонгүй.</p>";
- }
+if(!filtered.length)list.innerHTML="<p>Бараа олдсонгүй.</p>";
 }
 
 window.add=function(id){
- const p=products.find(x=>x.id===id);
- if(!p)return;
-
- const old=cart.find(x=>x.id===id);
- if(old){
-  old.qty++;
- }else{
-  cart.push({...p,qty:1});
- }
- save();
- updateCount();
- alert("Сагсанд нэмэгдлээ.");
+const p=products.find(x=>x.id===id);
+if(!p)return;
+const old=cart.find(x=>x.id===id);
+if(old)old.qty++;
+else cart.push({...p,qty:1});
+save();
+updateCount();
+alert("Сагсанд нэмэгдлээ.");
 };
 
 window.change=function(id,n){
- const item=cart.find(x=>x.id===id);
- if(!item)return;
- item.qty+=n;
- if(item.qty<=0){
-  cart=cart.filter(x=>x.id!==id);
- }
- save();
- updateCount();
- drawCart();
+const item=cart.find(x=>x.id===id);
+if(!item)return;
+item.qty+=n;
+if(item.qty<=0)cart=cart.filter(x=>x.id!==id);
+save();
+updateCount();
+drawCart();
 };
 
 function drawCart(){
- const el=document.getElementById("cartItems");
- const totalEl=document.getElementById("cartTotal");
- if(!el)return;
+const el=document.getElementById("cartItems");
+const totalEl=document.getElementById("cartTotal");
+if(!el)return;
+el.innerHTML="";
+let total=0;
 
- el.innerHTML="";
- let total=0;
+if(!cart.length){
+el.innerHTML="<p>Сагс хоосон байна.</p>";
+if(totalEl)totalEl.textContent="0 ₮";
+return;
+}
 
- if(!cart.length){
-  el.innerHTML="<p>Сагс хоосон байна.</p>";
-  if(totalEl)totalEl.textContent="0 ₮";
-  return;
- }
-
- cart.forEach(item=>{
-  total+=item.price*item.qty;
-  const div=document.createElement("div");
-  div.className="cart-item";
-  div.innerHTML=`
-   <div>
-    <strong>${item.name}</strong>
-    <p>${money(item.price)} ₮</p>
-   </div>
-   <div>
-    <button onclick="window.change(${item.id},-1)">−</button>
-    ${item.qty}
-    <button onclick="window.change(${item.id},1)">＋</button>
-   </div>`;
-  el.appendChild(div);
- });
-
- if(totalEl)totalEl.textContent=money(total)+" ₮";
+cart.forEach(item=>{
+total+=item.price*item.qty;
+const div=document.createElement("div");
+div.className="cart-row";
+div.innerHTML=`
+<div><strong>${item.name}</strong><p>${money(item.price)} ₮</p></div>
+<div>
+<button onclick="window.change(${item.id},-1)">−</button>
+${item.qty}
+<button onclick="window.change(${item.id},1)">＋</button>
+</div>`;
+el.appendChild(div);
+});
+if(totalEl)totalEl.textContent=money(total)+" ₮";
 }
 
 window.showCart=function(){
- const modal=document.getElementById("cartModal");
- if(!modal)return alert("Сагсны цонх олдсонгүй.");
- modal.style.display="block";
- drawCart();
+const modal=document.getElementById("cartModal");
+if(!modal)return;
+modal.style.display="block";
+drawCart();
 };
 
 window.closeCart=function(){
- const modal=document.getElementById("cartModal");
- if(modal)modal.style.display="none";
+const modal=document.getElementById("cartModal");
+if(modal)modal.style.display="none";
 };
 
 window.order=function(){
- if(!cart.length){
-  alert("Сагс хоосон байна.");
-  return;
- }
+if(!cart.length){alert("Сагс хоосон байна.");return;}
+const name=document.getElementById("buyerName").value.trim();
+const phone=document.getElementById("buyerPhone").value.trim();
+const address=document.getElementById("buyerAddress").value.trim();
+if(!name||!phone||!address){alert("Мэдээллээ бүрэн оруулна уу.");return;}
 
- const name=document.getElementById("buyerName")?.value.trim();
- const phone=document.getElementById("buyerPhone")?.value.trim();
- const address=document.getElementById("buyerAddress")?.value.trim();
+const total=cart.reduce((s,x)=>s+x.price*x.qty,0);
+const lines=cart.map(x=>`${x.name} - ${x.qty} ширхэг - ${money(x.price*x.qty)} ₮`);
 
- if(!name||!phone||!address){
-  alert("Мэдээллээ бүрэн оруулна уу.");
-  return;
- }
-
- const total=cart.reduce((s,x)=>s+x.price*x.qty,0);
- const lines=cart.map(x=>
-  `${x.name} - ${x.qty} ширхэг - ${money(x.price*x.qty)} ₮`
- );
-
- lastOrder=`NEXORA ЗАХИАЛГА
+lastOrder=`NEXORA ЗАХИАЛГА
 Нэр: ${name}
 Утас: ${phone}
 Хаяг: ${address}
@@ -707,635 +699,320 @@ ${lines.join("\n")}
 
 Тайлбар: Туршилтын захиалга`;
 
- const result=document.getElementById("orderResult");
- if(result)result.textContent=lastOrder;
-
- alert("Захиалгын мэдээлэл үүслээ.");
+alert("Захиалгын мэдээлэл үүслээ.");
 };
 
 window.copyOrder=function(){
- if(!lastOrder){
-  alert("Эхлээд захиалга үүсгэнэ үү.");
-  return;
- }
-
- const area=document.createElement("textarea");
- area.value=lastOrder;
- document.body.appendChild(area);
- area.select();
-
- try{
-  document.execCommand("copy");
-  alert("Захиалгын мэдээлэл хууллаа.");
- }catch(e){
-  alert("Хуулах боломжгүй байна.");
- }
-
- area.remove();
+if(!lastOrder){alert("Эхлээд захиалга үүсгэнэ үү.");return;}
+const area=document.createElement("textarea");
+area.value=lastOrder;
+document.body.appendChild(area);
+area.select();
+try{document.execCommand("copy");alert("Захиалгын мэдээлэл хууллаа.");}
+catch(e){alert("Хуулах боломжгүй байна.");}
+area.remove();
 };
 
 document.addEventListener("click",function(e){
- const modal=document.getElementById("cartModal");
- if(modal&&e.target===modal){
-  window.closeCart();
- }
+const modal=document.getElementById("cartModal");
+if(modal&&e.target===modal)window.closeCart();
 });
 
 document.addEventListener("keydown",function(e){
- if(e.key==="Escape")window.closeCart();
+if(e.key==="Escape")window.closeCart();
 });
-// Бараа засах
-window.editProduct=function(id){
 
- const p=products.find(x=>x.id===id);
- if(!p)return;
-
- const name=prompt("Барааны нэр:",p.name);
- if(name===null)return;
-
- const price=prompt("Барааны үнэ:",p.price);
- if(price===null)return;
-
- const desc=prompt("Барааны тайлбар:",p.desc||"");
- if(desc===null)return;
-
- if(!name.trim()||Number(price)<=0){
-  alert("Нэр болон зөв үнэ оруулна уу.");
-  return;
- }
-
- const fileInput=document.createElement("input");
- fileInput.type="file";
- fileInput.accept="image/*";
-
- fileInput.onchange=function(){
-
-  const file=fileInput.files[0];
-
-  if(!file){
-   updateProduct();
-   return;
-  }
-
-  if(!file.type.startsWith("image/")){
-   alert("Зөвхөн зураг сонгоно уу.");
-   return;
-  }
-
-  const reader=new FileReader();
-
-  reader.onload=function(e){
-   const img=new Image();
-
-   img.onload=function(){
-    const canvas=document.createElement("canvas");
-    const max=1000;
-    let w=img.width;
-    let h=img.height;
-
-    if(w>h&&w>max){
-     h=Math.round(h*max/w);
-     w=max;
-    }else if(h>max){
-     w=Math.round(w*max/h);
-     h=max;
-    }
-
-    canvas.width=w;
-    canvas.height=h;
-
-    canvas.getContext("2d").drawImage(img,0,0,w,h);
-
-    p.image=canvas.toDataURL("image/jpeg",0.80);
-    updateProduct();
-   };
-
-   img.onerror=()=>alert("Зураг уншигдсангүй.");
-   img.src=e.target.result;
-  };
-
-  reader.readAsDataURL(file);
- };
-
- function updateProduct(){
-  p.name=name.trim();
-  p.price=Number(price);
-  p.desc=desc.trim();
-
-  saveProducts();
-  render();
-
-  alert("Бараа амжилттай шинэчлэгдлээ!");
- }
-
- if(confirm("Барааны зургийг солих уу?")){
-  fileInput.click();
- }else{
-  updateProduct();
- }
-};
-// Бараа устгах
-window.deleteProduct=function(id){
- if(!confirm("Энэ барааг устгах уу?"))return;
-
- const index=products.findIndex(x=>x.id===id);
- if(index===-1)return;
-
- products.splice(index,1);
-
- localStorage.setItem("nexoraProducts",JSON.stringify(products));
- render();
-
- alert("Бараа устгагдлаа!");
-};
-
-// БАРАА ХАДГАЛАХ
 function saveProducts(){
- try{
-  localStorage.setItem(
-   "nexoraProducts",
-   JSON.stringify(products)
-  );
- }catch(e){
-  alert("Хадгалах сан дүүрсэн байна.");
- }
+try{
+localStorage.setItem("nexoraProducts",JSON.stringify(products));
+}catch(e){alert("Хадгалах сан дүүрсэн байна.");}
 }
 
-// БАРАА НИЙТЛЭХ
-window.publishProduct=function(){
-
- const file=document.getElementById("productImage").files[0];
- const name=document.getElementById("newProductName").value.trim();
- const cat=document.getElementById("newProductCat").value;
- const price=Number(document.getElementById("newProductPrice").value);
- const desc=document.getElementById("newProductDesc").value.trim();
-
- if(!file){
-  alert("Барааны зураг сонгоно уу.");
-  return;
- }
-
- if(!name||price<=0){
-  alert("Барааны нэр болон зөв үнэ оруулна уу.");
-  return;
- }
-
- if(!file.type.startsWith("image/")){
-  alert("Зөвхөн зураг оруулна уу.");
-  return;
- }
-
- const reader=new FileReader();
-
- reader.onload=function(e){
-
-  const img=new Image();
-
-  img.onload=function(){
-
-   const canvas=document.createElement("canvas");
-   const max=1000;
-
-   let w=img.width;
-   let h=img.height;
-
-   if(w>h&&w>max){
-    h=Math.round(h*max/w);
-    w=max;
-   }else if(h>max){
-    w=Math.round(w*max/h);
-    h=max;
-   }
-
-   canvas.width=w;
-   canvas.height=h;
-
-   const ctx=canvas.getContext("2d");
-   ctx.drawImage(img,0,0,w,h);
-
-   const image=canvas.toDataURL("image/jpeg",0.80);
-
-   const product={
-    id:Date.now(),
-    name:name,
-    cat:cat,
-    sub:"Бусад",
-    price:price,
-    desc:desc,
-    image:image,
-    emoji:"📦"
-   };
-
-   products.unshift(product);
-
-   saveProducts();
-
-   drawCategories();
-   drawSubs();
-   render();
-
-   document.getElementById("newProductName").value="";
-   document.getElementById("newProductPrice").value="";
-   document.getElementById("newProductDesc").value="";
-   document.getElementById("productImage").value="";
-
-   alert("Бараа амжилттай нийтлэгдлээ!");
-
-  };
-
-  img.onerror=function(){
-   alert("Зургийг унших боломжгүй байна.");
-  };
-
-  img.src=e.target.result;
- };
-
- reader.onerror=function(){
-  alert("Зураг уншихад алдаа гарлаа.");
- };
-
- reader.readAsDataURL(file);
-};
-
-
-// БАРАА ЗАСАХ
 window.editProduct=function(id){
-
- const p=products.find(x=>x.id===id);
- if(!p)return;
-
- const name=prompt("Барааны нэр:",p.name);
- if(name===null)return;
-
- const price=prompt("Барааны үнэ:",p.price);
- if(price===null)return;
-
- const desc=prompt("Барааны тайлбар:",p.desc||"");
- if(desc===null)return;
-
- if(!name.trim()||!Number.isFinite(Number(price))||Number(price)<=0){
-  alert("Зөв нэр болон үнэ оруулна уу.");
-  return;
- }
-
- p.name=name.trim();
- p.price=Number(price);
- p.desc=desc.trim();
-
- saveProducts();
- render();
-
- alert("Бараа засагдлаа!");
+const p=products.find(x=>x.id===id);
+if(!p)return;
+const name=prompt("Барааны нэр:",p.name);
+if(name===null)return;
+const price=prompt("Барааны үнэ:",p.price);
+if(price===null)return;
+const desc=prompt("Барааны тайлбар:",p.desc||"");
+if(desc===null)return;
+if(!name.trim()||Number(price)<=0){alert("Нэр болон зөв үнэ оруулна уу.");return;}
+p.name=name.trim();
+p.price=Number(price);
+p.desc=desc.trim();
+saveProducts();
+render();
+alert("Бараа засагдлаа!");
 };
 
-
-// БАРАА УСТГАХ
 window.deleteProduct=function(id){
-
- if(!confirm("Энэ барааг устгах уу?"))return;
-
- const index=products.findIndex(x=>x.id===id);
- if(index===-1)return;
-
- products.splice(index,1);
-
- saveProducts();
-
- let deleted=[];
-
- try{
-  deleted=JSON.parse(
-   localStorage.getItem("nexoraDeleted")||"[]"
-  );
- }catch(e){}
-
- if(!deleted.includes(id)){
-  deleted.push(id);
- }
-
- localStorage.setItem(
-  "nexoraDeleted",
-  JSON.stringify(deleted)
- );
-
- render();
- drawSubs();
-
- alert("Бараа устгагдлаа!");
+if(!confirm("Энэ барааг устгах уу?"))return;
+const index=products.findIndex(x=>x.id===id);
+if(index===-1)return;
+products.splice(index,1);
+saveProducts();
+render();
+drawSubs();
+alert("Бараа устгагдлаа!");
 };
 
+window.publishProduct=function(){
+const file=document.getElementById("productImage").files[0];
+const name=document.getElementById("newProductName").value.trim();
+const cat=document.getElementById("newProductCat").value;
+const price=Number(document.getElementById("newProductPrice").value);
+const desc=document.getElementById("newProductDesc").value.trim();
 
-// УСТГАСАН БАРААГ ДАХИН ГАРГАХГҮЙ БАЙХ
+if(!file){alert("Барааны зураг сонгоно уу.");return;}
+if(!name||price<=0){alert("Барааны нэр болон зөв үнэ оруулна уу.");return;}
+if(!file.type.startsWith("image/")){alert("Зөвхөн зураг оруулна уу.");return;}
+
+const reader=new FileReader();
+reader.onload=function(e){
+const img=new Image();
+img.onload=function(){
+const canvas=document.createElement("canvas");
+const max=1000;
+let w=img.width,h=img.height;
+if(w>h&&w>max){h=Math.round(h*max/w);w=max;}
+else if(h>max){w=Math.round(w*max/h);h=max;}
+canvas.width=w;canvas.height=h;
+canvas.getContext("2d").drawImage(img,0,0,w,h);
+
+products.unshift({
+id:Date.now(),
+name:name,
+cat:cat,
+sub:"Бусад",
+price:price,
+desc:desc,
+image:canvas.toDataURL("image/jpeg",0.80),
+emoji:"📦"
+});
+
+saveProducts();
+drawCategories();
+drawSubs();
+render();
+
+document.getElementById("newProductName").value="";
+document.getElementById("newProductPrice").value="";
+document.getElementById("newProductDesc").value="";
+document.getElementById("productImage").value="";
+alert("Бараа амжилттай нийтлэгдлээ!");
+};
+img.onerror=()=>alert("Зургийг унших боломжгүй байна.");
+img.src=e.target.result;
+};
+reader.onerror=()=>alert("Зураг уншихад алдаа гарлаа.");
+reader.readAsDataURL(file);
+};
+
+/* ЗАРЫН СИСТЕМ */
+
+function getClassifiedAds(){
 try{
- const deleted=JSON.parse(
-  localStorage.getItem("nexoraDeleted")||"[]"
- );
+const ads=JSON.parse(localStorage.getItem("nexoraClassifieds")||"[]");
+return Array.isArray(ads)?ads:[];
+}catch(e){return [];}
+}
 
- deleted.forEach(id=>{
-  const index=products.findIndex(x=>x.id===id);
-  if(index!==-1)products.splice(index,1);
- });
+function openAds(category){
+const workspace=document.getElementById("adsWorkspace");
+const formArea=document.getElementById("adFormArea");
+const jobArea=document.getElementById("jobSectorArea");
+const heading=document.getElementById("adsHeading");
+const list=document.getElementById("classifiedAdList");
 
-}catch(e){}
+workspace.style.display="block";
+formArea.style.display="none";
+jobArea.style.display="none";
+list.innerHTML="";
 
+document.getElementById("adCategory").value="";
+document.getElementById("jobAdSectorArea").style.display="none";
+document.getElementById("adType").value=category;
 
-// ЭХЛҮҮЛЭХ
+if(category==="Ажлын зар"){
+heading.textContent="💼 Ажлын зар";
+jobArea.style.display="block";
+list.textContent="Ажлын салбараа сонгоно уу.";
+}else if(category==="Автомашин"){
+heading.textContent="🚗 Автомашины зар";
+renderClassifiedAds();
+}else{
+heading.textContent="📢 "+category;
+renderClassifiedAds();
+}
+
+workspace.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function selectJobSector(sector){
+document.getElementById("adType").value="Ажлын зар - "+sector;
+document.getElementById("adsHeading").textContent="💼 "+sector+" — Ажлын зар";
+document.getElementById("jobSectorArea").style.display="none";
+renderClassifiedAds();
+}
+
+function changeAdCategory(){
+const category=document.getElementById("adCategory").value;
+const jobArea=document.getElementById("jobAdSectorArea");
+const sector=document.getElementById("jobAdSector");
+
+document.getElementById("adType").value=category;
+jobArea.style.display=category==="Ажлын зар"?"block":"none";
+
+if(category!=="Ажлын зар")sector.value="";
+}
+
+function togglePublishAd(){
+const workspace=document.getElementById("adsWorkspace");
+const formArea=document.getElementById("adFormArea");
+const button=document.getElementById("mainPublishButton");
+
+const isOpen=formArea.style.display==="block";
+
+if(isOpen){
+formArea.style.display="none";
+button.textContent="＋ ЗАР НИЙТЛЭХ";
+return;
+}
+
+workspace.style.display="block";
+formArea.style.display="block";
+
+document.getElementById("jobSectorArea").style.display="none";
+document.getElementById("classifiedAdList").innerHTML="";
+document.getElementById("adsHeading").textContent="＋ Зар нийтлэх";
+
+document.getElementById("adForm").reset();
+document.getElementById("adType").value="";
+document.getElementById("jobAdSectorArea").style.display="none";
+
+button.textContent="－ ЗАРЫН МАЯГТ ХААХ";
+
+workspace.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function publishAd(event){
+event.preventDefault();
+
+const category=document.getElementById("adCategory").value;
+const sector=document.getElementById("jobAdSector").value;
+
+if(!category){
+alert("Зарын төрлөө сонгоно уу.");
+return;
+}
+
+if(category==="Ажлын зар"&&!sector){
+alert("Ажлын салбараа сонгоно уу.");
+return;
+}
+
+let type=category;
+if(category==="Ажлын зар")type="Ажлын зар - "+sector;
+
+const ad={
+id:Date.now(),
+type:type,
+title:document.getElementById("adTitle").value.trim(),
+price:document.getElementById("adPrice").value.trim(),
+location:document.getElementById("adLocation").value.trim(),
+phone:document.getElementById("adPhone").value.trim(),
+description:document.getElementById("adDescription").value.trim(),
+createdAt:new Date().toISOString()
+};
+
+if(!ad.title||!ad.phone||!ad.description){
+alert("Шаардлагатай мэдээллээ бүрэн оруулна уу.");
+return;
+}
+
+const ads=getClassifiedAds();
+ads.unshift(ad);
+
+try{
+localStorage.setItem("nexoraClassifieds",JSON.stringify(ads));
+}catch(e){
+alert("Зар хадгалахад алдаа гарлаа.");
+return;
+}
+
+document.getElementById("adForm").reset();
+document.getElementById("adFormArea").style.display="none";
+document.getElementById("mainPublishButton").textContent="＋ ЗАР НИЙТЛЭХ";
+document.getElementById("adType").value=type;
+
+document.getElementById("adsHeading").textContent="📢 Зар амжилттай нийтлэгдлээ";
+renderClassifiedAds();
+
+alert("Зар амжилттай нийтлэгдлээ!");
+}
+
+function renderClassifiedAds(){
+const list=document.getElementById("classifiedAdList");
+if(!list)return;
+
+list.innerHTML="";
+const category=document.getElementById("adType").value;
+
+const ads=getClassifiedAds().filter(ad=>
+ad.type===category||ad.type.startsWith(category+" - ")
+);
+
+if(!ads.length){
+list.textContent="Одоогоор энэ ангилалд зар алга.";
+return;
+}
+
+ads.forEach(ad=>{
+const card=document.createElement("div");
+card.className="product";
+
+const title=document.createElement("h3");
+title.textContent=ad.title;
+
+const type=document.createElement("p");
+type.textContent="Ангилал: "+ad.type;
+
+const price=document.createElement("p");
+price.textContent="Үнэ / Цалин: "+(ad.price||"Тохиролцоно");
+
+const location=document.createElement("p");
+location.textContent="Байршил: "+(ad.location||"Тодорхойгүй");
+
+const phone=document.createElement("p");
+phone.textContent="Утас: "+ad.phone;
+
+const description=document.createElement("p");
+description.textContent=ad.description;
+
+const remove=document.createElement("button");
+remove.className="add";
+remove.textContent="🗑️ Зар устгах";
+remove.onclick=()=>deleteClassifiedAd(ad.id);
+
+card.append(title,type,price,location,phone,description,remove);
+list.appendChild(card);
+});
+}
+
+function deleteClassifiedAd(id){
+if(!confirm("Энэ зарыг устгах уу?"))return;
+const ads=getClassifiedAds().filter(ad=>ad.id!==id);
+localStorage.setItem("nexoraClassifieds",JSON.stringify(ads));
+renderClassifiedAds();
+}
+
+/* ЭХЛҮҮЛЭХ */
 drawCategories();
 drawSubs();
 render();
 updateCount();
-// ===== NEXORA ЗАРЫН СИСТЕМ =====
 
-
-
-function openAds(category) {
-  const workspace = document.getElementById("adsWorkspace");
-  const type = document.getElementById("adType");
-  const heading = document.getElementById("adsHeading");
-  const jobArea = document.getElementById("jobSectorArea");
-  const formArea = document.getElementById("adFormArea");
-  const list = document.getElementById("classifiedAdList");
-  const categoryArea = document.getElementById("standaloneAdCategoryArea");
-  const toggleArea = document.getElementById("jobPublishToggleArea");
-
-  if (!workspace || !type || !heading || !list) return;
-
-  workspace.style.display = "block";
-  type.value = category;
-  list.innerHTML = "";
-
-  if (formArea) formArea.style.display = "none";
-  if (categoryArea) categoryArea.style.display = "none";
-  if (jobArea) jobArea.style.display = "none";
-  if (toggleArea) toggleArea.style.display = "none";
-
-  if (category === "Ажлын зар") {
-    heading.textContent = "💼 Ажлын зар";
-    if (jobArea) jobArea.style.display = "block";
-    list.textContent = "Ажлын салбараа сонгоно уу.";
-
-  } else if (category === "Автомашин") {
-    heading.textContent = "🚗 Автомашин — Марк сонгох";
-    showVehicleBrands();
-
-  } else {
-    heading.textContent = "📢 " + category;
-    renderClassifiedAds();
-  }
-
-  workspace.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
-}
-
-function selectJobSector(sector) {
-  const type = document.getElementById("adType");
-  const heading = document.getElementById("adsHeading");
-  const jobArea = document.getElementById("jobSectorArea");
-  const formArea = document.getElementById("adFormArea");
-
-  type.value = "Ажлын зар - " + sector;
-  heading.textContent = "💼 " + sector + " — Ажлын зар";
-
-  if (jobArea) jobArea.style.display = "none";
-  if (formArea) formArea.style.display = "none";
-
-  renderClassifiedAds();
-}
-
-function getClassifiedAds() {
-  try {
-    return JSON.parse(
-      localStorage.getItem("nexoraClassifieds") || "[]"
-    );
-  } catch (error) {
-    return [];
-  }
-}
-
-
-function publishAd(event) {
-  event.preventDefault();
-
-  const ad = {
-    id: Date.now(),
-    type: document.getElementById("adType").value,
-    title: document.getElementById("adTitle").value.trim(),
-    price: document.getElementById("adPrice").value.trim(),
-    location: document.getElementById("adLocation").value.trim(),
-    phone: document.getElementById("adPhone").value.trim(),
-    description: document.getElementById("adDescription").value.trim(),
-    createdAt: new Date().toISOString()
-  };
-
-  if (!ad.title || !ad.phone || !ad.description) {
-    alert("Шаардлагатай мэдээллээ бүрэн оруулна уу.");
-    return;
-  }
-
-  const ads = getClassifiedAds();
-  ads.unshift(ad);
-
-  try {
-    localStorage.setItem(
-      "nexoraClassifieds",
-      JSON.stringify(ads)
-    );
-  } catch (error) {
-    alert("Зар хадгалахад алдаа гарлаа.");
-    return;
-  }
-
-  document.getElementById("adForm").reset();
-  document.getElementById("adType").value = ad.type;
-
-  document.getElementById("adFormArea").style.display = "none";
-
-  renderClassifiedAds();
-
-  alert("Зар амжилттай нийтлэгдлээ!");
-}
-
-
-const vehicleModels = {
-  "Toyota": ["Prius 20", "Prius 30", "Prius 40", "Aqua", "Harrier", "Land Cruiser 100", "Land Cruiser 200", "Land Cruiser 300", "RAV4", "Camry", "Corolla"],
-  "Lexus": ["RX 300", "RX 350", "RX 450h", "LX 570", "LX 600", "GS 300", "IS 250"],
-  "Mercedes-Benz": ["C-Class", "E-Class", "S-Class", "GLC", "GLE", "GLS"],
-  "BMW": ["3 Series", "5 Series", "7 Series", "X3", "X5", "X6"],
-  "Hyundai": ["Sonata", "Avante", "Tucson", "Santa Fe", "Palisade"],
-  "Kia": ["K5", "K7", "Sportage", "Sorento", "Morning"],
-  "Honda": ["Fit", "CR-V", "Civic", "Accord", "Vezel"],
-  "Nissan": ["X-Trail", "Leaf", "Note", "Patrol", "Juke"],
-  "Mitsubishi": ["Pajero", "Outlander", "Lancer", "Delica"],
-  "Subaru": ["Forester", "Legacy", "Outback", "Impreza"],
-  "Land Rover": ["Range Rover", "Discovery", "Defender"],
-  "Бусад марк": ["Бусад загвар"]
-};
-
-function showVehicleBrands() {
-  const list = document.getElementById("classifiedAdList");
-
-  list.innerHTML = "<h3>🚘 Автомашины маркаа сонгоно уу</h3>";
-
-  Object.keys(vehicleModels).forEach(brand => {
-    const button = document.createElement("button");
-    button.className = "cat";
-    button.type = "button";
-    button.textContent = brand;
-    button.onclick = () => selectVehicleBrand(brand);
-    list.appendChild(button);
-  });
-}
-
-function selectVehicleBrand(brand) {
-  const list = document.getElementById("classifiedAdList");
-  const heading = document.getElementById("adsHeading");
-
-  heading.textContent = "🚗 " + brand + " — Загвар сонгох";
-  list.innerHTML = "<h3>" + brand + " загвараа сонгоно уу</h3>";
-
-  vehicleModels[brand].forEach(model => {
-    const button = document.createElement("button");
-    button.className = "cat";
-    button.type = "button";
-    button.textContent = model;
-    button.onclick = () => selectVehicleModel(brand, model);
-    list.appendChild(button);
-  });
-}
-
-
-function selectVehicleModel(brand, model) {
-  const type = document.getElementById("adType");
-  const heading = document.getElementById("adsHeading");
-  const formArea = document.getElementById("adFormArea");
-
-  type.value = "Автомашин - " + brand + " - " + model;
-  heading.textContent = "🚗 " + brand + " " + model + " — Зар";
-
-  if (formArea) formArea.style.display = "none";
-
-  renderClassifiedAds();
-
-  const list = document.getElementById("classifiedAdList");
-  const addButton = document.createElement("button");
-
-  addButton.className = "add";
-  addButton.type = "button";
-  addButton.textContent = "＋ Энэ загвараар зар нийтлэх";
-
-  addButton.onclick = function() {
-    if (formArea) formArea.style.display = "block";
-    formArea.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-  };
-
-  list.prepend(addButton);
-}
-
-
-function renderClassifiedAds() {
-  const list = document.getElementById("classifiedAdList");
-  if (!list) return;
-
-  list.innerHTML = "";
-
-  const category = document.getElementById("adType").value;
-  const ads = getClassifiedAds().filter(ad =>
-  ad.type === category || ad.type.startsWith(category + " - ")
-);
-
-  if (ads.length === 0) {
-    list.textContent = "Одоогоор энэ ангилалд зар алга.";
-    return;
-  }
-
-  ads.forEach(ad => {
-    const card = document.createElement("div");
-    card.className = "product";
-
-    const title = document.createElement("h3");
-    title.textContent = ad.title;
-
-    const type = document.createElement("p");
-    type.textContent = "Ангилал: " + ad.type;
-
-    const price = document.createElement("p");
-    price.textContent = "Үнэ / Цалин: " + (ad.price || "Тохиролцоно");
-
-    const location = document.createElement("p");
-    location.textContent = "Байршил: " + (ad.location || "Тодорхойгүй");
-
-    const phone = document.createElement("p");
-    phone.textContent = "Утас: " + ad.phone;
-
-    const description = document.createElement("p");
-    description.textContent = ad.description;
-
-    const remove = document.createElement("button");
-    remove.className = "add";
-    remove.textContent = "🗑️ Зар устгах";
-    remove.onclick = () => deleteClassifiedAd(ad.id);
-
-    card.append(
-      title,
-      type,
-      price,
-      location,
-      phone,
-      description,
-      remove
-    );
-
-    list.appendChild(card);
-  });
-}
-
-function deleteClassifiedAd(id) {
-  if (!confirm("Энэ зарыг устгах уу?")) return;
-
-  const ads = getClassifiedAds().filter(ad => ad.id !== id);
-
-  localStorage.setItem(
-    "nexoraClassifieds",
-    JSON.stringify(ads)
-  );
-
-  renderClassifiedAds();
-  }
-
-function togglePublishAd() {
-  const workspace = document.getElementById("adsWorkspace");
-  const formArea = document.getElementById("adFormArea");
-  const categoryArea = document.getElementById("standaloneAdCategoryArea");
-  const jobSectorArea = document.getElementById("jobAdSectorArea");
-  const jobArea = document.getElementById("jobSectorArea");
-  const toggleArea = document.getElementById("jobPublishToggleArea");
-
-  if (!workspace || !formArea || !categoryArea) return;
-
-  workspace.style.display = "block";
-  formArea.style.display = "block";
-  categoryArea.style.display = "block";
-
-  if (jobSectorArea) jobSectorArea.style.display = "none";
-  if (jobArea) jobArea.style.display = "none";
-  if (toggleArea) toggleArea.style.display = "none";
-
-  document.getElementById("adsHeading").textContent = "＋ Зар нийтлэх";
-  document.getElementById("adCategory").value = "";
-  document.getElementById("jobAdSector").value = "";
-  document.getElementById("adType").value = "";
-
-  workspace.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
-}
- 
 </script>
 </body>
 </html>
