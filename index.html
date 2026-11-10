@@ -976,58 +976,35 @@ render();
 updateCount();
 // ===== NEXORA ЗАРЫН СИСТЕМ =====
 
+
 function openAds(category) {
-  function selectJobSector(sector) {
-  const type = document.getElementById("adType");
-  const heading = document.getElementById("adsHeading");
-
-  type.value = "Ажлын зар - " + sector;
-  heading.textContent = "💼 " + sector + " — Ажлын зар";
-
-  renderClassifiedAds();
-}
   const workspace = document.getElementById("adsWorkspace");
   const type = document.getElementById("adType");
   const heading = document.getElementById("adsHeading");
+  const jobArea = document.getElementById("jobSectorArea");
+  const formArea = document.getElementById("adFormArea");
+  const list = document.getElementById("classifiedAdList");
 
-  if (!workspace || !type || !heading) return;
+  if (!workspace || !type || !heading || !list) return;
+
+  workspace.style.display = "block";
+  if (formArea) formArea.style.display = "none";
+  if (jobArea) jobArea.style.display = "none";
+
+  type.value = category;
+  list.innerHTML = "";
 
   if (category === "Ажлын зар") {
     heading.textContent = "💼 Ажлын зар — Салбар сонгох";
+    if (jobArea) jobArea.style.display = "block";
 
-    const sectors = [
-      "Барилга, уул уурхай",
-      "Үйлдвэрлэл",
-      "Худалдаа, үйлчилгээ",
-      "Тээвэр, ложистик",
-      "Оффис, захиргаа",
-      "Боловсрол",
-      "Эрүүл мэнд",
-      "IT, технологи",
-      "Хөдөө аж ахуй",
-      "Бусад"
-    ];
-
-    workspace.style.display = "block";
-
-    const list = document.getElementById("classifiedAdList");
-
-    list.innerHTML = `
-      <h3>Ажлын салбараа сонгоно уу</h3>
-      <div class="categories">
-        ${sectors.map(s => `
-          <button class="cat" type="button"
-            onclick="selectJobSector('${s}')">
-            ${s}
-          </button>
-        `).join("")}
-      </div>
-    `;
+  } else if (category === "Автомашин") {
+    heading.textContent = "🚗 Автомашин — Марк сонгох";
+    showVehicleBrands();
 
   } else {
-    type.value = category;
     heading.textContent = "📢 " + category + " — Зар нийтлэх";
-    workspace.style.display = "block";
+    if (formArea) formArea.style.display = "block";
     renderClassifiedAds();
   }
 
@@ -1036,6 +1013,7 @@ function openAds(category) {
     block: "start"
   });
 }
+
 function getClassifiedAds() {
   try {
     return JSON.parse(
@@ -1084,7 +1062,7 @@ function publishAd(event) {
   renderClassifiedAds();
 
   alert("Зар амжилттай нийтлэгдлээ!");
-}
+
 
 function renderClassifiedAds() {
   const list = document.getElementById("classifiedAdList");
