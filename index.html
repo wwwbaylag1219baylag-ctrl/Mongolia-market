@@ -1304,34 +1304,36 @@ function deleteClassifiedAd(id) {
 
   renderClassifiedAds();
   }
- function togglePublishAd() {
+
+function togglePublishAd() {
   const workspace = document.getElementById("adsWorkspace");
   const formArea = document.getElementById("adFormArea");
+  const categoryArea = document.getElementById("standaloneAdCategoryArea");
+  const jobSectorArea = document.getElementById("jobAdSectorArea");
   const jobArea = document.getElementById("jobSectorArea");
   const toggleArea = document.getElementById("jobPublishToggleArea");
 
-  if (!workspace || !formArea) return;
+  if (!workspace || !formArea || !categoryArea) return;
 
-  const isOpen = workspace.style.display !== "none";
+  workspace.style.display = "block";
+  formArea.style.display = "block";
+  categoryArea.style.display = "block";
 
-  if (isOpen) {
-    workspace.style.display = "none";
-  } else {
-    workspace.style.display = "block";
-    formArea.style.display = "block";
+  if (jobSectorArea) jobSectorArea.style.display = "none";
+  if (jobArea) jobArea.style.display = "none";
+  if (toggleArea) toggleArea.style.display = "none";
 
-    if (jobArea) jobArea.style.display = "none";
-    if (toggleArea) toggleArea.style.display = "none";
+  document.getElementById("adsHeading").textContent = "＋ Зар нийтлэх";
+  document.getElementById("adCategory").value = "";
+  document.getElementById("jobAdSector").value = "";
+  document.getElementById("adType").value = "";
 
-    document.getElementById("adsHeading").textContent = "＋ Зар нийтлэх";
-    document.getElementById("adType").value = "";
-
-    workspace.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-  }
+  workspace.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
 }
+ 
 </script>
 </body>
 </html>
