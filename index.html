@@ -159,10 +159,10 @@ summary{font-weight:700;cursor:pointer}
 
   <h2 class="section-title">🛍️ Барааны ангилал</h2>
   <div class="categories" id="categories"></div>
-  <div class="subs" id="subs"></div>
+  <div class="subs" id="subCategories"></div>
 
   <h2 class="section-title" id="productHeading">Онцлох бараанууд</h2>
-  <div class="products" id="products"></div>
+ <div class="products" id="productList"></div> 
 
   <section class="supplier" id="supplier">
     <h2>🤝 NEXORA-д нийлүүлэгчээр нэгдээрэй</h2>
@@ -316,7 +316,7 @@ function drawCategories(){
  categories.forEach(cat=>{
   const btn=document.createElement("button");
   btn.textContent=cat;
-  btn.className="category";
+  btn.className="cat"+(cat===selectedCat?" active":"");
   btn.onclick=()=>choose(cat);
   el.appendChild(btn);
  });
@@ -332,7 +332,7 @@ function drawSubs(){
  subs.forEach(sub=>{
   const btn=document.createElement("button");
   btn.textContent=sub;
-  btn.className="sub-category";
+ btn.className="sub"+(sub===selectedSub?" active":""); 
   btn.onclick=()=>chooseSub(sub);
   el.appendChild(btn);
  });
