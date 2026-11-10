@@ -1064,6 +1064,66 @@ function publishAd(event) {
   alert("Зар амжилттай нийтлэгдлээ!");
 
 
+const vehicleModels = {
+  "Toyota": ["Prius 20", "Prius 30", "Prius 40", "Aqua", "Harrier", "Land Cruiser 100", "Land Cruiser 200", "Land Cruiser 300", "RAV4", "Camry", "Corolla"],
+  "Lexus": ["RX 300", "RX 350", "RX 450h", "LX 570", "LX 600", "GS 300", "IS 250"],
+  "Mercedes-Benz": ["C-Class", "E-Class", "S-Class", "GLC", "GLE", "GLS"],
+  "BMW": ["3 Series", "5 Series", "7 Series", "X3", "X5", "X6"],
+  "Hyundai": ["Sonata", "Avante", "Tucson", "Santa Fe", "Palisade"],
+  "Kia": ["K5", "K7", "Sportage", "Sorento", "Morning"],
+  "Honda": ["Fit", "CR-V", "Civic", "Accord", "Vezel"],
+  "Nissan": ["X-Trail", "Leaf", "Note", "Patrol", "Juke"],
+  "Mitsubishi": ["Pajero", "Outlander", "Lancer", "Delica"],
+  "Subaru": ["Forester", "Legacy", "Outback", "Impreza"],
+  "Land Rover": ["Range Rover", "Discovery", "Defender"],
+  "Бусад марк": ["Бусад загвар"]
+};
+
+function showVehicleBrands() {
+  const list = document.getElementById("classifiedAdList");
+
+  list.innerHTML = "<h3>🚘 Автомашины маркаа сонгоно уу</h3>";
+
+  Object.keys(vehicleModels).forEach(brand => {
+    const button = document.createElement("button");
+    button.className = "cat";
+    button.type = "button";
+    button.textContent = brand;
+    button.onclick = () => selectVehicleBrand(brand);
+    list.appendChild(button);
+  });
+}
+
+function selectVehicleBrand(brand) {
+  const list = document.getElementById("classifiedAdList");
+  const heading = document.getElementById("adsHeading");
+
+  heading.textContent = "🚗 " + brand + " — Загвар сонгох";
+  list.innerHTML = "<h3>" + brand + " загвараа сонгоно уу</h3>";
+
+  vehicleModels[brand].forEach(model => {
+    const button = document.createElement("button");
+    button.className = "cat";
+    button.type = "button";
+    button.textContent = model;
+    button.onclick = () => selectVehicleModel(brand, model);
+    list.appendChild(button);
+  });
+}
+
+function selectVehicleModel(brand, model) {
+  const type = document.getElementById("adType");
+  const heading = document.getElementById("adsHeading");
+  const formArea = document.getElementById("adFormArea");
+
+  type.value = "Автомашин - " + brand + " - " + model;
+  heading.textContent = "🚗 " + brand + " " + model;
+
+  if (formArea) formArea.style.display = "block";
+
+  renderClassifiedAds();
+}
+
 function renderClassifiedAds() {
   const list = document.getElementById("classifiedAdList");
   if (!list) return;
