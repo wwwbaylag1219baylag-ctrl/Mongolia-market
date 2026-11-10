@@ -248,9 +248,6 @@ summary{font-weight:700;cursor:pointer}
          oninput="render()">
 </div>
 
-    <input id="search" placeholder="🔍 Барааны нэрээр хайх..." oninput="render()">
-  </div>
-
   <h2 class="section-title">🛍️ Барааны ангилал</h2>
   <div class="categories" id="categories"></div>
   <div class="subs" id="subCategories"></div>
@@ -1004,6 +1001,7 @@ function openAds(category) {
   if (!workspace || !type || !heading || !list) return;
 
   workspace.style.display = "block";
+
   if (formArea) formArea.style.display = "none";
   if (jobArea) jobArea.style.display = "none";
 
@@ -1011,8 +1009,12 @@ function openAds(category) {
   list.innerHTML = "";
 
   if (category === "Ажлын зар") {
-    heading.textContent = "💼 Ажлын зар — Салбар сонгох";
+    heading.textContent = "💼 Ажлын зар";
+
     if (jobArea) jobArea.style.display = "block";
+    if (formArea) formArea.style.display = "block";
+
+    renderClassifiedAds();
 
   } else if (category === "Автомашин") {
     heading.textContent = "🚗 Автомашин — Марк сонгох";
@@ -1020,7 +1022,9 @@ function openAds(category) {
 
   } else {
     heading.textContent = "📢 " + category + " — Зар нийтлэх";
+
     if (formArea) formArea.style.display = "block";
+
     renderClassifiedAds();
   }
 
@@ -1029,7 +1033,6 @@ function openAds(category) {
     block: "start"
   });
 }
-
 function selectJobSector(sector) {
   const type = document.getElementById("adType");
   const heading = document.getElementById("adsHeading");
