@@ -399,7 +399,7 @@ function drawCart(){
  });
  document.getElementById("cartTotal").textContent="Нийт: "+money(cart.reduce((s,x)=>s+x.price*x.qty,0));
 }
-function showCart(){
+window.showCart = function(){
  drawCart();document.getElementById("cartModal").style.display="block";
 }
 function closeCart(){document.getElementById("cartModal").style.display="none"}
