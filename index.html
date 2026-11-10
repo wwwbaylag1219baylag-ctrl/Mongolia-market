@@ -225,14 +225,12 @@ summary{font-weight:700;cursor:pointer}
 
   <!-- Зар нийтлэх товч -->
   <div id="jobPublishToggleArea" style="display:none; margin-top:18px;">
-    <button
-      type="button"
-      class="add"
-      id="jobPublishToggle"
-      onclick="toggleAdForm()"
-      style="width:100%; padding:15px; font-size:16px;">
-      ➕ Зар нийтлэх
-    </button>
+   <button class="cat"
+  type="button"
+  style="width:100%; background:#D95B16; color:white; padding:16px; font-size:17px;"
+  onclick="togglePublishAd()">
+  ＋ ЗАР НИЙТЛЭХ
+</button> 
   </div>
 
   <!-- Зар нийтлэх хүснэгт -->
@@ -1270,15 +1268,34 @@ function deleteClassifiedAd(id) {
   );
 
   renderClassifiedAds();
-    }function togglePublishAd() {
-  const area = document.getElementById('adFormArea');
+  }
+ function togglePublishAd() {
+  const workspace = document.getElementById("adsWorkspace");
+  const formArea = document.getElementById("adFormArea");
+  const jobArea = document.getElementById("jobSectorArea");
+  const toggleArea = document.getElementById("jobPublishToggleArea");
 
-  if (!area) return;
+  if (!workspace || !formArea) return;
 
-  area.style.display =
-    area.style.display === 'none' || area.style.display === ''
-      ? 'block'
-      : 'none';
+  const isOpen = workspace.style.display !== "none";
+
+  if (isOpen) {
+    workspace.style.display = "none";
+  } else {
+    workspace.style.display = "block";
+    formArea.style.display = "block";
+
+    if (jobArea) jobArea.style.display = "none";
+    if (toggleArea) toggleArea.style.display = "none";
+
+    document.getElementById("adsHeading").textContent = "＋ Зар нийтлэх";
+    document.getElementById("adType").value = "";
+
+    workspace.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
 }
 </script>
 </body>
