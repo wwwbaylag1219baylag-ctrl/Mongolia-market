@@ -1039,6 +1039,7 @@ function getClassifiedAds() {
   }
 }
 
+
 function publishAd(event) {
   event.preventDefault();
 
@@ -1074,9 +1075,12 @@ function publishAd(event) {
   document.getElementById("adForm").reset();
   document.getElementById("adType").value = ad.type;
 
+  document.getElementById("adFormArea").style.display = "none";
+
   renderClassifiedAds();
 
   alert("Зар амжилттай нийтлэгдлээ!");
+}
 
 
 const vehicleModels = {
