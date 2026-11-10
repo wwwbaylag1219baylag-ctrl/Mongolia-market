@@ -112,7 +112,9 @@ summary{font-weight:700;cursor:pointer}
       <div class="brand-sub">NEXT GENERATION MARKETPLACE</div>
     </div>
   </div>
-<button class="cart-btn" onclick="window.showCart()">  🛒 Сагс (<span id="cartCount">0</span>)</button>
+  <button class="cart-btn" onclick="window.showCart()">
+    🛒 Сагс (<span id="cartCount">0</span>)
+  </button>
 </header>
 
 <main class="wrap">
@@ -219,7 +221,7 @@ summary{font-weight:700;cursor:pointer}
   <div class="modal-box">
     <div class="modal-head">
       <h2>🛒 Миний сагс</h2>
-      <button class="close" onclick="closeCart()">✕</button>
+      <button class="close" onclick="window.closeCart()">✕</button>
     </div>
     <div id="cartItems"></div>
     <div class="total" id="cartTotal">Нийт: 0₮</div>
@@ -230,222 +232,8 @@ summary{font-weight:700;cursor:pointer}
     <input class="field" id="buyerPhone" placeholder="Утасны дугаар">
     <label>Хүргэлтийн хаяг</label>
     <textarea class="field" id="buyerAddress" placeholder="Дэлгэрэнгүй хаяг"></textarea>
-    <button class="main-btn" style="width:100%" onclick="order()">Захиалгын мэдээлэл үүсгэх</button>
-    <button class="secondary" style="width:100%;margin-top:9px" onclick="copyOrder()">Захиалгыг хуулах</button>
+    <button class="main-btn" style="width:100%" onclick="window.order()">Захиалгын мэдээлэл үүсгэх</button>
+    <button class="secondary" style="width:100%;margin-top:9px" onclick="window.copyOrder()">Захиалгыг хуулах</button>
     <p class="notice">Демо хувилбар: захиалга үүсгэхэд мэдээлэл зөвхөн энэ хөтөчид боловсруулагдана. Бодит захиалга, төлбөр илгээгдэхгүй.</p>
   </div>
 </div>
-
-<script>
-const categories=[
-["📱","Гар утас, таблет",["Ухаалаг утас","Таблет","Дагалдах хэрэгсэл"]],
-["💻","Компьютер, технологи",["Зөөврийн компьютер","Суурин компьютер","Дагалдах хэрэгсэл"]],
-["📺","Цахилгаан бараа",["Телевизор","Аудио","Гэр ахуйн цахилгаан"]],
-["🚗","Автомашин, сэлбэг",["Автомашины сэлбэг","Дугуй","Тос тосолгоо"]],
-["🏍️","Мотоцикл, унадаг дугуй",["Мотоцикл","Унадаг дугуй","Сэлбэг"]],
-["👕","Хувцас",["Эрэгтэй хувцас","Эмэгтэй хувцас","Хүүхдийн хувцас"]],
-["👟","Гутал",["Пүүз","Өдөр тутмын гутал","Ажлын гутал"]],
-["👜","Цүнх, аксессуар",["Гар цүнх","Үүргэвч","Бүс, түрийвч"]],
-["💄","Гоо сайхан",["Арьс арчилгаа","Үс арчилгаа","Гоо сайхны хэрэгсэл"]],
-["🧴","Ариун цэвэр, цэвэрлэгээ",["Ариун цэврийн цаас","Саван, шампунь","Цэвэрлэгээний хэрэгсэл"]],
-["🍎","Хүнс, ундаа",["Хүнсний бүтээгдэхүүн","Ундаа","Амттан"]],
-["🍳","Ресторан, гал тогоо",["Нэг удаагийн хэрэгсэл","Хүнсний сав","Сав суулга"]],
-["🏠","Гэр ахуйн бараа",["Хадгалах сав","Гэр ахуйн хэрэгсэл","Чимэглэл"]],
-["🛋️","Тавилга",["Ширээ","Сандал","Ор, матрас"]],
-["💡","Цахилгаан, сантехник",["Гэрэл","Кабель, утас","Сантехникийн хэрэгсэл"]],
-["🔧","Багаж, тоног төхөөрөмж",["Гар багаж","Цахилгаан багаж","Үйлдвэрийн тоног төхөөрөмж"]],
-["🧱","Барилгын материал",["Цемент, элс","Будаг","Дулаалга"]],
-["📚","Ном, бичиг хэрэг",["Дэвтэр","Бал, үзэг","Ном"]],
-["🧸","Хүүхдийн бараа",["Тоглоом","Хүүхдийн хэрэгсэл","Сургалтын хэрэгсэл"]],
-["⚽","Спорт, аялал",["Спортын хэрэгсэл","Аяллын хэрэгсэл","Фитнес"]],
-["🐶","Амьтны хэрэгсэл",["Амьтны хоол","Тоглоом","Арчилгаа"]],
-["🌱","Цэцэрлэг, газар тариалан",["Үр, суулгац","Цэцэрлэгийн багаж","Усалгааны хэрэгсэл"]],
-["🏥","Эмнэлэг, эрүүл мэнд",["Эмнэлгийн хэрэгсэл","Асаргааны хэрэгсэл","Эрүүл мэндийн бараа"]],
-["🏢","Оффис, байгууллага",["Оффисын хэрэгсэл","Ажлын байрны тоноглол","Байгууллагын хангамж"]],
-["🎁","Бэлэг, дурсгал",["Бэлэг дурсгал","Гар урлал","Баярын чимэглэл"]],
-["🎮","Тоглоом, электроник",["Видео тоглоом","Тоглоомын төхөөрөмж","Дагалдах хэрэгсэл"]],
-["💍","Үнэт эдлэл, гоёл",["Бугуйвч","Зүүлт","Цаг"]],
-["📦","Бусад бараа",["Бусад бүтээгдэхүүн","Тусгай захиалга"]]
-];
-
-const products=[
-{id:1,name:"Ариун цэврийн цаас",price:4500,cat:"Ариун цэвэр, цэвэрлэгээ",sub:"Ариун цэврийн цаас",emoji:"🧻"},
-{id:2,name:"Гар угаагч шингэн",price:6500,cat:"Ариун цэвэр, цэвэрлэгээ",sub:"Саван, шампунь",emoji:"🧴"},
-{id:3,name:"Цэвэрлэгээний бодис",price:8500,cat:"Ариун цэвэр, цэвэрлэгээ",sub:"Цэвэрлэгээний хэрэгсэл",emoji:"🧹"},
-{id:4,name:"Шал угаагч",price:7500,cat:"Ариун цэвэр, цэвэрлэгээ",sub:"Цэвэрлэгээний хэрэгсэл",emoji:"🪣"},
-{id:5,name:"Бичгийн дэвтэр",price:2500,cat:"Ном, бичиг хэрэг",sub:"Дэвтэр",emoji:"📒"},
-{id:6,name:"Бал үзэг",price:1000,cat:"Ном, бичиг хэрэг",sub:"Бал, үзэг",emoji:"🖊️"},
-{id:7,name:"Цаасан аяга",price:5500,cat:"Ресторан, гал тогоо",sub:"Нэг удаагийн хэрэгсэл",emoji:"🥤"},
-{id:8,name:"Хүнсний сав",price:8000,cat:"Ресторан, гал тогоо",sub:"Хүнсний сав",emoji:"📦"},
-{id:9,name:"Гал тогооны хэрэгсэл",price:12000,cat:"Ресторан, гал тогоо",sub:"Сав суулга",emoji:"🍽️"},
-{id:10,name:"Хайруулын таваг",price:25000,cat:"Ресторан, гал тогоо",sub:"Сав суулга",emoji:"🍳"},
-{id:11,name:"Хадгалах сав",price:9000,cat:"Гэр ахуйн бараа",sub:"Хадгалах сав",emoji:"🏠"},
-{id:12,name:"Ширээний гэрэл",price:18000,cat:"Цахилгаан, сантехник",sub:"Гэрэл",emoji:"💡"}
-];
-
-let selectedCat="Бүгд";
-let selectedSub="Бүгд";
-let cart=JSON.parse(localStorage.getItem("mmcart")||"[]");
-let lastOrder="";
-
-function money(n){return Number(n).toLocaleString("mn-MN")+"₮"}
-function save(){
- localStorage.setItem("mmcart",JSON.stringify(cart));
- updateCount();
-}
-function updateCount(){
- document.getElementById("cartCount").textContent=cart.reduce((s,x)=>s+x.qty,0);
-}
-function drawCategories(){
- const box=document.getElementById("categories");
- box.innerHTML="";
- const all=document.createElement("button");
- all.className="cat"+(selectedCat==="Бүгд"?" active":"");
- all.textContent="🌐 Бүх бараа";
- all.onclick=()=>choose("Бүгд");
- box.appendChild(all);
- categories.forEach(c=>{
-  const b=document.createElement("button");
-  b.className="cat"+(selectedCat===c[1]?" active":"");
-  b.textContent=c[0]+" "+c[1];
-  b.onclick=()=>choose(c[1]);
-  box.appendChild(b);
- });
-}
-function drawSubs(){
- const box=document.getElementById("subs");
- box.innerHTML="";
- if(selectedCat==="Бүгд")return;
- const cat=categories.find(c=>c[1]===selectedCat);
- if(!cat)return;
- ["Бүгд",...cat[2]].forEach(s=>{
-  const b=document.createElement("button");
-  b.className="sub"+(selectedSub===s?" active":"");
-  b.textContent=s;b.onclick=()=>chooseSub(s);
-  box.appendChild(b);
- });
-}
-function choose(cat){
- selectedCat=cat;selectedSub="Бүгд";
- drawCategories();drawSubs();render();
-}
-function chooseSub(sub){
- selectedSub=sub;drawSubs();render();
-}
-function render(){
- const q=document.getElementById("search").value.toLowerCase().trim();
- const list=products.filter(p=>
-  (selectedCat==="Бүгд"||p.cat===selectedCat)&&
-  (selectedSub==="Бүгд"||p.sub===selectedSub)&&
-  p.name.toLowerCase().includes(q)
- );
- const box=document.getElementById("products");
- box.innerHTML="";
- document.getElementById("productHeading").textContent=
-  selectedCat==="Бүгд"?"Онцлох бараанууд":selectedCat;
- if(!list.length){
-  box.innerHTML='<div class="empty">Одоогоор энэ ангилалд бараа алга байна.</div>';
-  return;
- }
- list.forEach(p=>{
-  const div=document.createElement("div");
-  div.className="product";
-  div.innerHTML=`<div class="product-art">${p.emoji}</div>
-   <div class="product-info">
-   <h3>${p.name}</h3><small>${p.cat}</small>
-   <p class="price">${money(p.price)}</p>
-  <button class="add" onclick="window.add(${p.id})">＋ Сагсанд нэмэх</button> 
-   </div>`;
-  box.appendChild(div);
- });
-}
-
-window.add = function(id) {
- const p = products.find(x => x.id === id);
- if (!p) return;
-
- const old = cart.find(x => x.id === id);
-
- if (old) {
-  old.qty++;
- } else {
-  cart.push({...p, qty: 1});
- }
-
- save();
- alert(p.name + " сагсанд нэмэгдлээ.");
-};
-
-function change(id,delta){
- const item=cart.find(x=>x.id===id);
- if(!item)return;
- item.qty+=delta;
- if(item.qty<=0)cart=cart.filter(x=>x.id!==id);
- save();drawCart();
-}
-function drawCart(){
- const box=document.getElementById("cartItems");
- box.innerHTML="";
- if(!cart.length)box.innerHTML='<div class="empty">Таны сагс хоосон байна 🛒</div>';
- cart.forEach(x=>{
-  const row=document.createElement("div");
-  row.className="cart-row";
-  row.innerHTML=`<div><strong>${x.emoji} ${x.name}</strong><br>
-  <small>${money(x.price)} × ${x.qty}</small></div>
-  <div><button onclick="change(${x.id},-1)">−</button>
-  <strong> ${x.qty} </strong><button onclick="change(${x.id},1)">＋</button></div>`;
-  box.appendChild(row);
- });
- document.getElementById("cartTotal").textContent="Нийт: "+money(cart.reduce((s,x)=>s+x.price*x.qty,0));
-}
-window.showCart = function(){
- const modal = document.getElementById("cartModal");
- if (!modal) {
-  alert("Сагсны цонх олдсонгүй.");
-  return;
- }
-
- modal.style.display = "block";
-
- try {
-  drawCart();
- } catch(error) {
-  document.getElementById("cartItems").innerHTML =
-   '<div class="empty">Сагсны мэдээлэл уншихад алдаа гарлаа.</div>';
-  console.error(error);
- }
-};
- if(!cart.length){alert("Сагс хоосон байна.");return}
- const name=document.getElementById("buyerName").value.trim();
- const phone=document.getElementById("buyerPhone").value.trim();
- const address=document.getElementById("buyerAddress").value.trim();
- if(!name||!phone||!address){alert("Нэр, утас, хаягаа бүрэн оруулна уу.");return}
- const lines=cart.map(x=>`${x.name} — ${x.qty} ширхэг × ${money(x.price)} = ${money(x.price*x.qty)}`).join("\n");
- const total=cart.reduce((s,x)=>s+x.price*x.qty,0);
- lastOrder=`NEXORA ЗАХИАЛГЫН МЭДЭЭЛЭЛ\n\nЗахиалагч: ${name}\nУтас: ${phone}\nХаяг: ${address}\n\nБараа:\n${lines}\n\nНийт дүн: ${money(total)}\n\nТайлбар: Энэ нь туршилтын захиалгын мэдээлэл бөгөөд бодит төлбөр, захиалга илгээгдээгүй.`;
- alert("Захиалгын мэдээлэл үүслээ. 'Захиалгыг хуулах' товчоор хуулна уу.");
-}
-function copyOrder(){
- if(!lastOrder){alert("Эхлээд захиалгын мэдээллээ үүсгэнэ үү.");return}
- if(navigator.clipboard&&navigator.clipboard.writeText){
-  navigator.clipboard.writeText(lastOrder).then(()=>alert("Захиалгын мэдээлэл хуулагдлаа."))
-  .catch(()=>fallbackCopy());
- }else fallbackCopy();
-}
-function fallbackCopy(){
- const t=document.createElement("textarea");t.value=lastOrder;
- document.body.appendChild(t);t.select();
- try{document.execCommand("copy");alert("Захиалгын мэдээлэл хуулагдлаа.")}
- catch(e){alert("Хуулах боломжгүй байна.")}
- t.remove();
-}
-document.getElementById("cartModal").addEventListener("click",e=>{
- if(e.target.id==="cartModal")closeCart();
-});
-drawCategories();
-drawSubs();
-render();
-updateCount();
-</script>
-</body>
-</html>
