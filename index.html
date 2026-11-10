@@ -237,3 +237,278 @@ summary{font-weight:700;cursor:pointer}
     <p class="notice">Демо хувилбар: захиалга үүсгэхэд мэдээлэл зөвхөн энэ хөтөчид боловсруулагдана. Бодит захиалга, төлбөр илгээгдэхгүй.</p>
   </div>
 </div>
+<script>
+const categories = [
+ "Бүгд","Электрон бараа","Гар утас","Компьютер",
+ "Гэр ахуй","Гал тогоо","Хувцас","Гутал",
+ "Гоо сайхан","Хүүхдийн бараа","Тоглоом","Спорт",
+ "Автомашин","Барилгын материал","Бичиг хэрэг",
+ "Хүнс","Ундаа","Тавилга","Гэрэлтүүлэг",
+ "Цахилгаан хэрэгсэл","Амьтан","Ном","Бэлэг",
+ "Аялал","Хобби","Үйлчилгээ","Бусад"
+];
+
+const products = [
+ {id:1,name:"Ухаалаг цаг",cat:"Электрон бараа",sub:"Цаг",price:45000,emoji:"⌚"},
+ {id:2,name:"Bluetooth чихэвч",cat:"Электрон бараа",sub:"Чихэвч",price:28000,emoji:"🎧"},
+ {id:3,name:"Гар утасны гэр",cat:"Гар утас",sub:"Дагалдах хэрэгсэл",price:12000,emoji:"📱"},
+ {id:4,name:"Утасны цэнэглэгч",cat:"Гар утас",sub:"Дагалдах хэрэгсэл",price:18000,emoji:"🔌"},
+ {id:5,name:"Ширээний гэрэл",cat:"Гэр ахуй",sub:"Гэрэлтүүлэг",price:25000,emoji:"💡"},
+ {id:6,name:"Усны сав",cat:"Гэр ахуй",sub:"Өдөр тутмын хэрэглээ",price:15000,emoji:"🧴"},
+ {id:7,name:"Эрэгтэй футболк",cat:"Хувцас",sub:"Эрэгтэй",price:22000,emoji:"👕"},
+ {id:8,name:"Спорт гутал",cat:"Гутал",sub:"Спорт",price:85000,emoji:"👟"},
+ {id:9,name:"Хүүхдийн тоглоом",cat:"Тоглоом",sub:"Хүүхэд",price:18000,emoji:"🧸"},
+ {id:10,name:"Спортын бөмбөг",cat:"Спорт",sub:"Бөмбөг",price:30000,emoji:"⚽"},
+ {id:11,name:"Гал тогооны хэрэгсэл",cat:"Гал тогоо",sub:"Хэрэгсэл",price:20000,emoji:"🍳"},
+ {id:12,name:"Үүргэвч",cat:"Хувцас",sub:"Цүнх",price:35000,emoji:"🎒"}
+];
+
+let selectedCat="Бүгд";
+let selectedSub="Бүгд";
+let cart=[];
+let lastOrder="";
+
+try{
+ cart=JSON.parse(localStorage.getItem("mmcart")||"[]");
+ if(!Array.isArray(cart))cart=[];
+}catch(e){cart=[];}
+
+function money(n){
+ return Number(n||0).toLocaleString("mn-MN");
+}
+
+function save(){
+ try{
+  localStorage.setItem("mmcart",JSON.stringify(cart));
+ }catch(e){}
+}
+
+function updateCount(){
+ const el=document.getElementById("cartCount");
+ if(el){
+  el.textContent=cart.reduce((s,x)=>s+Number(x.qty||0),0);
+ }
+}
+
+function drawCategories(){
+ const el=document.getElementById("categories");
+ if(!el)return;
+ el.innerHTML="";
+ categories.forEach(cat=>{
+  const btn=document.createElement("button");
+  btn.textContent=cat;
+  btn.className="category";
+  btn.onclick=()=>choose(cat);
+  el.appendChild(btn);
+ });
+}
+
+function drawSubs(){
+ const el=document.getElementById("subCategories");
+ if(!el)return;
+ el.innerHTML="";
+ const subs=[...new Set(products
+  .filter(p=>selectedCat==="Бүгд"||p.cat===selectedCat)
+  .map(p=>p.sub))];
+ subs.forEach(sub=>{
+  const btn=document.createElement("button");
+  btn.textContent=sub;
+  btn.className="sub-category";
+  btn.onclick=()=>chooseSub(sub);
+  el.appendChild(btn);
+ });
+}
+
+function choose(cat){
+ selectedCat=cat;
+ selectedSub="Бүгд";
+ drawCategories();
+ drawSubs();
+ render();
+}
+
+function chooseSub(sub){
+ selectedSub=sub;
+ render();
+}
+
+function render(){
+ const list=document.getElementById("productList");
+ if(!list)return;
+ list.innerHTML="";
+
+ const filtered=products.filter(p=>
+  (selectedCat==="Бүгд"||p.cat===selectedCat)&&
+  (selectedSub==="Бүгд"||p.sub===selectedSub)
+ );
+
+ filtered.forEach(p=>{
+  const div=document.createElement("div");
+  div.className="product";
+  div.innerHTML=`
+   <div class="product-art">${p.emoji}</div>
+   <div class="product-info">
+    <h3>${p.name}</h3>
+    <small>${p.cat}</small>
+    <p class="price">${money(p.price)} ₮</p>
+    <button class="add" onclick="window.add(${p.id})">
+     ＋ Сагсанд нэмэх
+    </button>
+   </div>`;
+  list.appendChild(div);
+ });
+
+ if(!filtered.length){
+  list.innerHTML="<p>Бараа олдсонгүй.</p>";
+ }
+}
+
+window.add=function(id){
+ const p=products.find(x=>x.id===id);
+ if(!p)return;
+
+ const old=cart.find(x=>x.id===id);
+ if(old){
+  old.qty++;
+ }else{
+  cart.push({...p,qty:1});
+ }
+ save();
+ updateCount();
+ alert("Сагсанд нэмэгдлээ.");
+};
+
+window.change=function(id,n){
+ const item=cart.find(x=>x.id===id);
+ if(!item)return;
+ item.qty+=n;
+ if(item.qty<=0){
+  cart=cart.filter(x=>x.id!==id);
+ }
+ save();
+ updateCount();
+ drawCart();
+};
+
+function drawCart(){
+ const el=document.getElementById("cartItems");
+ const totalEl=document.getElementById("cartTotal");
+ if(!el)return;
+
+ el.innerHTML="";
+ let total=0;
+
+ if(!cart.length){
+  el.innerHTML="<p>Сагс хоосон байна.</p>";
+  if(totalEl)totalEl.textContent="0 ₮";
+  return;
+ }
+
+ cart.forEach(item=>{
+  total+=item.price*item.qty;
+  const div=document.createElement("div");
+  div.className="cart-item";
+  div.innerHTML=`
+   <div>
+    <strong>${item.name}</strong>
+    <p>${money(item.price)} ₮</p>
+   </div>
+   <div>
+    <button onclick="window.change(${item.id},-1)">−</button>
+    ${item.qty}
+    <button onclick="window.change(${item.id},1)">＋</button>
+   </div>`;
+  el.appendChild(div);
+ });
+
+ if(totalEl)totalEl.textContent=money(total)+" ₮";
+}
+
+window.showCart=function(){
+ const modal=document.getElementById("cartModal");
+ if(!modal)return alert("Сагсны цонх олдсонгүй.");
+ modal.style.display="block";
+ drawCart();
+};
+
+window.closeCart=function(){
+ const modal=document.getElementById("cartModal");
+ if(modal)modal.style.display="none";
+};
+
+window.order=function(){
+ if(!cart.length){
+  alert("Сагс хоосон байна.");
+  return;
+ }
+
+ const name=document.getElementById("buyerName")?.value.trim();
+ const phone=document.getElementById("buyerPhone")?.value.trim();
+ const address=document.getElementById("buyerAddress")?.value.trim();
+
+ if(!name||!phone||!address){
+  alert("Мэдээллээ бүрэн оруулна уу.");
+  return;
+ }
+
+ const total=cart.reduce((s,x)=>s+x.price*x.qty,0);
+ const lines=cart.map(x=>
+  `${x.name} - ${x.qty} ширхэг - ${money(x.price*x.qty)} ₮`
+ );
+
+ lastOrder=`NEXORA ЗАХИАЛГА
+Нэр: ${name}
+Утас: ${phone}
+Хаяг: ${address}
+
+${lines.join("\n")}
+
+Нийт: ${money(total)} ₮
+
+Тайлбар: Туршилтын захиалга`;
+
+ const result=document.getElementById("orderResult");
+ if(result)result.textContent=lastOrder;
+
+ alert("Захиалгын мэдээлэл үүслээ.");
+};
+
+window.copyOrder=function(){
+ if(!lastOrder){
+  alert("Эхлээд захиалга үүсгэнэ үү.");
+  return;
+ }
+
+ const area=document.createElement("textarea");
+ area.value=lastOrder;
+ document.body.appendChild(area);
+ area.select();
+
+ try{
+  document.execCommand("copy");
+  alert("Захиалгын мэдээлэл хууллаа.");
+ }catch(e){
+  alert("Хуулах боломжгүй байна.");
+ }
+
+ area.remove();
+};
+
+document.addEventListener("click",function(e){
+ const modal=document.getElementById("cartModal");
+ if(modal&&e.target===modal){
+  window.closeCart();
+ }
+});
+
+document.addEventListener("keydown",function(e){
+ if(e.key==="Escape")window.closeCart();
+});
+
+drawCategories();
+drawSubs();
+render();
+updateCount();
+</script>
+</body>
+</html>
