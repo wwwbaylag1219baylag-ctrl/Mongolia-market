@@ -628,7 +628,49 @@ window.deleteProduct=function(id){
  alert("Бараа устгагдлаа!");
 };
 
- 
+// Бараа засах
+window.editProduct=function(id){
+ const p=products.find(x=>x.id===id);
+ if(!p)return;
+
+ const name=prompt("Барааны нэр:",p.name);
+ if(name===null)return;
+
+ const price=prompt("Барааны үнэ:",p.price);
+ if(price===null)return;
+
+ const desc=prompt("Барааны тайлбар:",p.desc||"");
+ if(desc===null)return;
+
+ if(!name.trim()||Number(price)<=0){
+  alert("Нэр болон зөв үнэ оруулна уу.");
+  return;
+ }
+
+ p.name=name.trim();
+ p.price=Number(price);
+ p.desc=desc.trim();
+
+ localStorage.setItem("nexoraProducts",JSON.stringify(products));
+ render();
+
+ alert("Бараа амжилттай засагдлаа!");
+};
+
+// Бараа устгах
+window.deleteProduct=function(id){
+ if(!confirm("Энэ барааг устгах уу?"))return;
+
+ const index=products.findIndex(x=>x.id===id);
+ if(index===-1)return;
+
+ products.splice(index,1);
+
+ localStorage.setItem("nexoraProducts",JSON.stringify(products));
+ render();
+
+ alert("Бараа устгагдлаа!");
+}; 
 
   drawCategories();
   drawSubs();
