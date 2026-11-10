@@ -488,14 +488,26 @@ function chooseSub(sub){
  render();
 }
 
+
 function render(){
  const list=document.getElementById("productList");
  if(!list)return;
  list.innerHTML="";
 
+ const searchText=document.getElementById("search")
+  ? document.getElementById("search").value.trim().toLowerCase()
+  : "";
+
  const filtered=products.filter(p=>
   (selectedCat==="Бүгд"||p.cat===selectedCat)&&
-  (selectedSub==="Бүгд"||p.sub===selectedSub)
+  (selectedSub==="Бүгд"||p.sub===selectedSub)&&
+  (
+   !searchText||
+   String(p.name||"").toLowerCase().includes(searchText)||
+   String(p.cat||"").toLowerCase().includes(searchText)||
+   String(p.sub||"").toLowerCase().includes(searchText)||
+   String(p.desc||"").toLowerCase().includes(searchText)
+  )
  );
 
  filtered.forEach(p=>{
