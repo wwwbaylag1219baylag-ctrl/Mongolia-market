@@ -191,7 +191,7 @@ summary{font-weight:700;cursor:pointer}
   <div style="margin-top:20px;">
     <button class="cat"
       style="width:100%; background:#D95B16; color:white; padding:16px; font-size:17px;"
-      onclick="openAds('Зар нийтлэх')">
+      onclick="togglePublishAd()"
       ＋ ЗАР НИЙТЛЭХ
     </button>
   </div>
@@ -1270,7 +1270,16 @@ function deleteClassifiedAd(id) {
   );
 
   renderClassifiedAds();
-    }
+    }function togglePublishAd() {
+  const area = document.getElementById('adFormArea');
+
+  if (!area) return;
+
+  area.style.display =
+    area.style.display === 'none' || area.style.display === ''
+      ? 'block'
+      : 'none';
+}
 </script>
 </body>
 </html>
