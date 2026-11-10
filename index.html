@@ -152,7 +152,36 @@ summary{font-weight:700;cursor:pointer}
     <button class="main-btn" onclick="document.getElementById('supplier').scrollIntoView({behavior:'smooth'})">＋ Нийлүүлэгч болох</button>
     <button class="secondary" onclick="document.getElementById('terms').scrollIntoView({behavior:'smooth'})">Үйлчилгээний нөхцөл</button>
   </div>
+<section class="panel" id="classifieds">
+  <h2>📢 NEXORA — Зар мэдээлэл</h2>
+  <p>Бүх төрлийн зар, үйлчилгээ, саналыг нэг дороос.</p>
 
+  <div class="categories">
+    <button class="cat" onclick="openAds('Ажлын зар')">
+      💼 Ажлын зар
+    </button>
+
+    <button class="cat" onclick="openAds('Автомашин')">
+      🚗 Автомашин
+    </button>
+
+    <button class="cat" onclick="openAds('Үл хөдлөх хөрөнгө')">
+      🏠 Үл хөдлөх
+    </button>
+
+    <button class="cat" onclick="openAds('Аялал')">
+      ✈️ Аялал
+    </button>
+
+    <button class="cat" onclick="openAds('Сургалт, дамжаа')">
+      🎓 Сургалт, дамжаа
+    </button>
+
+    <button class="cat" onclick="openAds('Бусад зар')">
+      📣 Бусад зар
+    </button>
+  </div>
+</section>
   <div class="searchbar">
     <input id="search" placeholder="🔍 Барааны нэрээр хайх..." oninput="render()">
   </div>
