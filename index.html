@@ -163,7 +163,43 @@ summary{font-weight:700;cursor:pointer}
 
   <h2 class="section-title" id="productHeading">Онцлох бараанууд</h2>
  <div class="products" id="productList"></div> 
+<section class="panel" id="publishProduct">
+  <h2>📸 Бараа нийтлэх</h2>
+  <p>Нийлүүлэгч өөрийн барааг NEXORA-д бүртгүүлнэ.</p>
 
+  <label>Барааны зураг</label>
+  <input class="field" type="file" id="productImage" accept="image/*">
+
+  <label>Барааны нэр</label>
+  <input class="field" id="newProductName" placeholder="Барааны нэр">
+
+  <label>Ангилал</label>
+  <select class="field" id="newProductCat">
+    <option>Электрон бараа</option>
+    <option>Гар утас</option>
+    <option>Компьютер</option>
+    <option>Гэр ахуй</option>
+    <option>Гал тогоо</option>
+    <option>Хувцас</option>
+    <option>Гутал</option>
+    <option>Гоо сайхан</option>
+    <option>Тоглоом</option>
+    <option>Спорт</option>
+    <option>Бусад</option>
+  </select>
+
+  <label>Үнэ (₮)</label>
+  <input class="field" type="number" id="newProductPrice" placeholder="Үнэ">
+
+  <label>Барааны тайлбар</label>
+  <textarea class="field" id="newProductDesc"
+    placeholder="Барааныхаа тухай бичнэ үү"></textarea>
+
+  <button class="main-btn" style="width:100%"
+    onclick="window.publishProduct()">
+    ＋ Бараа нийтлэх
+  </button>
+</section>
   <section class="supplier" id="supplier">
     <h2>🤝 NEXORA-д нийлүүлэгчээр нэгдээрэй</h2>
     <p>Бараагаа цахимаар бүртгүүлж, Монгол даяар худалдан авагчдад хүргээрэй. Бараа байршуулах бүртгэл үнэ төлбөргүй.</p>
