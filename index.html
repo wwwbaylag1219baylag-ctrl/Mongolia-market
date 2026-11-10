@@ -1001,20 +1001,18 @@ function openAds(category) {
   if (!workspace || !type || !heading || !list) return;
 
   workspace.style.display = "block";
+  type.value = category;
+  list.innerHTML = "";
 
   if (formArea) formArea.style.display = "none";
   if (jobArea) jobArea.style.display = "none";
-
-  type.value = category;
-  list.innerHTML = "";
 
   if (category === "Ажлын зар") {
     heading.textContent = "💼 Ажлын зар";
 
     if (jobArea) jobArea.style.display = "block";
-    if (formArea) formArea.style.display = "block";
 
-    renderClassifiedAds();
+    list.textContent = "Ажлын зар харахын тулд салбараа сонгоно уу.";
 
   } else if (category === "Автомашин") {
     heading.textContent = "🚗 Автомашин — Марк сонгох";
