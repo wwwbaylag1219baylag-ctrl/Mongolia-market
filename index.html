@@ -1,4 +1,4 @@
-7
+
 <!DOCTYPE html>
 <html lang="mn">
 <head>
@@ -1048,6 +1048,7 @@ updateCount();
 // ===== NEXORA ЗАРЫН СИСТЕМ =====
 
 
+
 function openAds(category) {
   const workspace = document.getElementById("adsWorkspace");
   const type = document.getElementById("adType");
@@ -1055,6 +1056,7 @@ function openAds(category) {
   const jobArea = document.getElementById("jobSectorArea");
   const formArea = document.getElementById("adFormArea");
   const list = document.getElementById("classifiedAdList");
+  const categoryArea = document.getElementById("standaloneAdCategoryArea");
   const toggleArea = document.getElementById("jobPublishToggleArea");
 
   if (!workspace || !type || !heading || !list) return;
@@ -1063,26 +1065,22 @@ function openAds(category) {
   type.value = category;
   list.innerHTML = "";
 
-  const categoryArea = document.getElementById("standaloneAdCategoryArea");
-if (categoryArea) categoryArea.style.display = "none";
+  if (formArea) formArea.style.display = "none";
+  if (categoryArea) categoryArea.style.display = "none";
   if (jobArea) jobArea.style.display = "none";
+  if (toggleArea) toggleArea.style.display = "none";
 
   if (category === "Ажлын зар") {
     heading.textContent = "💼 Ажлын зар";
-
     if (jobArea) jobArea.style.display = "block";
-
-    list.textContent = "Ажлын зар харахын тулд салбараа сонгоно уу.";
+    list.textContent = "Ажлын салбараа сонгоно уу.";
 
   } else if (category === "Автомашин") {
     heading.textContent = "🚗 Автомашин — Марк сонгох";
     showVehicleBrands();
 
-  else {
+  } else {
     heading.textContent = "📢 " + category;
-
-    if (formArea) formArea.style.display = "none";
-
     renderClassifiedAds();
   }
 
@@ -1091,6 +1089,7 @@ if (categoryArea) categoryArea.style.display = "none";
     block: "start"
   });
 }
+
 function selectJobSector(sector) {
   const type = document.getElementById("adType");
   const heading = document.getElementById("adsHeading");
