@@ -354,7 +354,7 @@ function render(){
    <div class="product-info">
    <h3>${p.name}</h3><small>${p.cat}</small>
    <p class="price">${money(p.price)}</p>
-   <button class="add" onclick="add(${p.id})">＋ Сагсанд нэмэх</button>
+  <button class="add" onclick="window.add(${p.id})">＋ Сагсанд нэмэх</button> 
    </div>`;
   box.appendChild(div);
  });
