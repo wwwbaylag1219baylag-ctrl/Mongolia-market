@@ -240,9 +240,21 @@ summary{font-weight:700;cursor:pointer}
 
     <form id="adForm" onsubmit="publishAd(event)">
 
-      <label>Зарын төрөл</label>
-      <input class="field" id="adType" readonly required>
+     <div id="standaloneAdCategoryArea" style="display:none;">
+  <label>Ямар төрлийн зар вэ?</label>
+  <select class="field" id="adCategory"
+    onchange="document.getElementById('adType').value=this.value">
+    <option value="">-- Зарын төрлөө сонгоно уу --</option>
+    <option value="Ажлын зар">💼 Ажлын зар</option>
+    <option value="Автомашин">🚗 Автомашин</option>
+    <option value="Үл хөдлөх хөрөнгө">🏠 Үл хөдлөх хөрөнгө</option>
+    <option value="Аялал">✈️ Аялал</option>
+    <option value="Сургалт, дамжаа">🎓 Сургалт, дамжаа</option>
+    <option value="Бусад зар">📣 Бусад зар</option>
+  </select>
+</div>
 
+<input class="field" id="adType" type="hidden" required> 
       <label>Зарын гарчиг</label>
       <input class="field" id="adTitle" type="text" required>
 
