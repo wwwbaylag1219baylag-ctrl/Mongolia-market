@@ -16,7 +16,7 @@
 body{margin:0;background:#FAF7F2;color:var(--ink);
 font-family:Arial,"Segoe UI",sans-serif}
 button,input,select,textarea{font:inherit}
-button{cursor:pointer}
+butto2n{cursor:pointer}
 header{background:#211810;color:white;padding:14px 5%;
 display:flex;align-items:center;justify-content:space-between;gap:12px;
 position:sticky;top:0;z-index:10;box-shadow:0 3px 15px #0002}
@@ -586,6 +586,7 @@ document.addEventListener("keydown",function(e){
 });
 // Бараа засах
 window.editProduct=function(id){
+
  const p=products.find(x=>x.id===id);
  if(!p)return;
 
@@ -603,89 +604,282 @@ window.editProduct=function(id){
   return;
  }
 
- p.name=name.trim();
- p.price=Number(price);
- p.desc=desc.trim();
+ const fileInput=document.createElement("input");
+ fileInput.type="file";
+ fileInput.accept="image/*";
 
- localStorage.setItem("nexoraProducts",JSON.stringify(products));
- render();
+ fileInput.onchange=function(){
 
- alert("Бараа амжилттай засагдлаа!");
-};
+  const file=fileInput.files[0];
 
-// Бараа устгах
-window.deleteProduct=function(id){
- if(!confirm("Энэ барааг устгах уу?"))return;
+  if(!file){
+   updateProduct();
+   return;
+  }
 
- const index=products.findIndex(x=>x.id===id);
- if(index===-1)return;
+  if(!file.type.startsWith("image/")){
+   alert("Зөвхөн зураг сонгоно уу.");
+   return;
+  }
 
- products.splice(index,1);
+  const reader=new FileReader();
 
- localStorage.setItem("nexoraProducts",JSON.stringify(products));
- render();
+  reader.onload=function(e){
+   const img=new Image();
 
- alert("Бараа устгагдлаа!");
-};
+   img.onload=function(){
+    const canvas=document.createElement("canvas");
+    const max=1000;
+    let w=img.width;
+    let h=img.height;
 
-// Бараа засах
-window.editProduct=function(id){
- const p=products.find(x=>x.id===id);
- if(!p)return;
+    if(w>h&&w>max){
+     h=Math.round(h*max/w);
+     w=max;
+    }else if(h>max){
+     w=Math.round(w*max/h);
+     h=max;
+    }
 
- const name=prompt("Барааны нэр:",p.name);
- if(name===null)return;
+    canvas.width=w;
+    canvas.height=h;
 
- const price=prompt("Барааны үнэ:",p.price);
- if(price===null)return;
+    canvas.getContext("2d").drawImage(img,0,0,w,h);
 
- const desc=prompt("Барааны тайлбар:",p.desc||"");
- if(desc===null)return;
+    p.image=canvas.toDataURL("image/jpeg",0.80);
+    updateProduct();
+   };
 
- if(!name.trim()||Number(price)<=0){
-  alert("Нэр болон зөв үнэ оруулна уу.");
-  return;
- }
+   img.onerror=()=>alert("Зураг уншигдсангүй.");
+   img.src=e.target.result;
+  };
 
- p.name=name.trim();
- p.price=Number(price);
- p.desc=desc.trim();
+  reader.readAsDataURL(file);
+ };
 
- localStorage.setItem("nexoraProducts",JSON.stringify(products));
- render();
+ function updateProduct(){
+  p.name=name.trim();
+  p.price=Number(price);
+  p.desc=desc.trim();
 
- alert("Бараа амжилттай засагдлаа!");
-};
-
-// Бараа устгах
-window.deleteProduct=function(id){
- if(!confirm("Энэ барааг устгах уу?"))return;
-
- const index=products.findIndex(x=>x.id===id);
- if(index===-1)return;
-
- products.splice(index,1);
-
- localStorage.setItem("nexoraProducts",JSON.stringify(products));
- render();
-
- alert("Бараа устгагдлаа!");
-}; 
-
-  drawCategories();
-  drawSubs();
+  saveProducts();
   render();
 
-  document.getElementById("newProductName").value="";
-  document.getElementById("newProductPrice").value="";
-  document.getElementById("newProductDesc").value="";
-  document.getElementById("productImage").value="";
+  alert("Бараа амжилттай шинэчлэгдлээ!");
+ }
 
-  alert("Бараа амжилттай нийтлэгдлээ!");
+ if(confirm("Барааны зургийг солих уу?")){
+  fileInput.click();
+ }else{
+  updateProduct();
+ }
+};
+// Бараа устгах
+window.deleteProduct=function(id){
+ if(!confirm("Энэ барааг устгах уу?"))return;
+
+ const index=products.findIndex(x=>x.id===id);
+ if(index===-1)return;
+
+ products.splice(index,1);
+
+ localStorage.setItem("nexoraProducts",JSON.stringify(products));
+ render();
+
+ alert("Бараа устгагдлаа!");
+};
+
+// БАРАА ХАДГАЛАХ
+function saveProducts(){
+ try{
+  localStorage.setItem(
+   "nexoraProducts",
+   JSON.stringify(products)
+  );
+ }catch(e){
+  alert("Хадгалах сан дүүрсэн байна.");
+ }
+}
+
+// БАРАА НИЙТЛЭХ
+window.publishProduct=function(){
+
+ const file=document.getElementById("productImage").files[0];
+ const name=document.getElementById("newProductName").value.trim();
+ const cat=document.getElementById("newProductCat").value;
+ const price=Number(document.getElementById("newProductPrice").value);
+ const desc=document.getElementById("newProductDesc").value.trim();
+
+ if(!file){
+  alert("Барааны зураг сонгоно уу.");
+  return;
+ }
+
+ if(!name||price<=0){
+  alert("Барааны нэр болон зөв үнэ оруулна уу.");
+  return;
+ }
+
+ if(!file.type.startsWith("image/")){
+  alert("Зөвхөн зураг оруулна уу.");
+  return;
+ }
+
+ const reader=new FileReader();
+
+ reader.onload=function(e){
+
+  const img=new Image();
+
+  img.onload=function(){
+
+   const canvas=document.createElement("canvas");
+   const max=1000;
+
+   let w=img.width;
+   let h=img.height;
+
+   if(w>h&&w>max){
+    h=Math.round(h*max/w);
+    w=max;
+   }else if(h>max){
+    w=Math.round(w*max/h);
+    h=max;
+   }
+
+   canvas.width=w;
+   canvas.height=h;
+
+   const ctx=canvas.getContext("2d");
+   ctx.drawImage(img,0,0,w,h);
+
+   const image=canvas.toDataURL("image/jpeg",0.80);
+
+   const product={
+    id:Date.now(),
+    name:name,
+    cat:cat,
+    sub:"Бусад",
+    price:price,
+    desc:desc,
+    image:image,
+    emoji:"📦"
+   };
+
+   products.unshift(product);
+
+   saveProducts();
+
+   drawCategories();
+   drawSubs();
+   render();
+
+   document.getElementById("newProductName").value="";
+   document.getElementById("newProductPrice").value="";
+   document.getElementById("newProductDesc").value="";
+   document.getElementById("productImage").value="";
+
+   alert("Бараа амжилттай нийтлэгдлээ!");
+
+  };
+
+  img.onerror=function(){
+   alert("Зургийг унших боломжгүй байна.");
+  };
+
+  img.src=e.target.result;
+ };
+
+ reader.onerror=function(){
+  alert("Зураг уншихад алдаа гарлаа.");
  };
 
  reader.readAsDataURL(file);
 };
+
+
+// БАРАА ЗАСАХ
+window.editProduct=function(id){
+
+ const p=products.find(x=>x.id===id);
+ if(!p)return;
+
+ const name=prompt("Барааны нэр:",p.name);
+ if(name===null)return;
+
+ const price=prompt("Барааны үнэ:",p.price);
+ if(price===null)return;
+
+ const desc=prompt("Барааны тайлбар:",p.desc||"");
+ if(desc===null)return;
+
+ if(!name.trim()||!Number.isFinite(Number(price))||Number(price)<=0){
+  alert("Зөв нэр болон үнэ оруулна уу.");
+  return;
+ }
+
+ p.name=name.trim();
+ p.price=Number(price);
+ p.desc=desc.trim();
+
+ saveProducts();
+ render();
+
+ alert("Бараа засагдлаа!");
+};
+
+
+// БАРАА УСТГАХ
+window.deleteProduct=function(id){
+
+ if(!confirm("Энэ барааг устгах уу?"))return;
+
+ const index=products.findIndex(x=>x.id===id);
+ if(index===-1)return;
+
+ products.splice(index,1);
+
+ saveProducts();
+
+ let deleted=[];
+
+ try{
+  deleted=JSON.parse(
+   localStorage.getItem("nexoraDeleted")||"[]"
+  );
+ }catch(e){}
+
+ if(!deleted.includes(id)){
+  deleted.push(id);
+ }
+
+ localStorage.setItem(
+  "nexoraDeleted",
+  JSON.stringify(deleted)
+ );
+
+ render();
+ drawSubs();
+
+ alert("Бараа устгагдлаа!");
+};
+
+
+// УСТГАСАН БАРААГ ДАХИН ГАРГАХГҮЙ БАЙХ
+try{
+ const deleted=JSON.parse(
+  localStorage.getItem("nexoraDeleted")||"[]"
+ );
+
+ deleted.forEach(id=>{
+  const index=products.findIndex(x=>x.id===id);
+  if(index!==-1)products.splice(index,1);
+ });
+
+}catch(e){}
+
+
+// ЭХЛҮҮЛЭХ
 drawCategories();
 drawSubs();
 render();
