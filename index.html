@@ -153,35 +153,7 @@ summary{font-weight:700;cursor:pointer}
     <button class="secondary" onclick="document.getElementById('terms').scrollIntoView({behavior:'smooth'})">Үйлчилгээний нөхцөл</button>
   </div>
 
-  <section class="panel" id="classifieds">
-  <!-- Энд эхний зарын ангиллын товчнууд байна -->
-</section>
- <section class="panel" id="adsWorkspace" style="display:none;"> 
-  <h2 id="adsHeading">📢 Зар нийтлэх</h2>
-
-  <form id="adForm" onsubmit="publishAd(event)">
-    <label<>Зарын төрөл</label>
-    <input id="adType" readonly required>
-
-    <label>Зарын гарчиг</label>
-    <input id="adTitle" type="text" placeholder="Жишээ: Гадаад аяллын багц" required>
-
-    <label>Үнэ / Цалин</label>
-    <input id="adPrice" type="text" placeholder="Жишээ: 500000₮">
-
-    <label>Байршил</label>
-    <input id="adLocation" type="text" placeholder="Жишээ: Улаанбаатар">
-
-    <label>Холбоо барих утас</label>
-    <input id="adPhone" type="tel" placeholder="Утасны дугаар" required>
-
-    <label>Дэлгэрэнгүй мэдээлэл</label>
-    <textarea id="adDescription" placeholder="Зарын дэлгэрэнгүй мэдээлэл..." required></textarea>
-
-    <button type="submit" class="add">Зар нийтлэх</button>
-  </form>
-
-  <div id="classifiedAdList"></div>
+  
 <section class="panel" id="classifieds">
   <h2>📢 NEXORA — Зар мэдээлэл</h2>
   <p>Бүх төрлийн зар, үйлчилгээ, саналыг нэг дороос.</p>
@@ -196,38 +168,42 @@ summary{font-weight:700;cursor:pointer}
   </div>
 </section>
 
+<section class="panel" id="adsWorkspace" style="display:none;">
+  <h2 id="adsHeading">📢 Зар нийтлэх</h2>
 
+  <form id="adForm" onsubmit="publishAd(event)">
+
+    <label>Зарын төрөл</label>
+    <input class="field" id="adType" readonly required>
+
+    <label>Зарын гарчиг</label>
+    <input class="field" id="adTitle" type="text"
+      placeholder="Жишээ: Гадаад аяллын багц" required>
+
+    <label>Үнэ / Цалин</label>
+    <input class="field" id="adPrice" type="text"
+      placeholder="Жишээ: 500000₮">
+
+    <label>Байршил</label>
+    <input class="field" id="adLocation" type="text"
+      placeholder="Жишээ: Улаанбаатар">
+
+    <label>Холбоо барих утас</label>
+    <input class="field" id="adPhone" type="tel"
+      placeholder="Утасны дугаар" required>
+
+    <label>Дэлгэрэнгүй мэдээлэл</label>
+    <textarea class="field" id="adDescription"
+      placeholder="Зарын дэлгэрэнгүй мэдээлэл..." required></textarea>
+
+    <button type="submit" class="add">Зар нийтлэх</button>
+  </form>
+
+  <div id="classifiedAdList"></div>
 </section>
-  <h2>📢 NEXORA — Зар мэдээлэл</h2>
-  <p>Бүх төрлийн зар, үйлчилгээ, саналыг нэг дороос.</p>
 
-  <div class="categories">
-    <button class="cat" onclick="openAds('Ажлын зар')">
-      💼 Ажлын зар
-    </button>
+<div class="searchbar">
 
-    <button class="cat" onclick="openAds('Автомашин')">
-      🚗 Автомашин
-    </button>
-
-    <button class="cat" onclick="openAds('Үл хөдлөх хөрөнгө')">
-      🏠 Үл хөдлөх
-    </button>
-
-    <button class="cat" onclick="openAds('Аялал')">
-      ✈️ Аялал
-    </button>
-
-    <button class="cat" onclick="openAds('Сургалт, дамжаа')">
-      🎓 Сургалт, дамжаа
-    </button>
-
-    <button class="cat" onclick="openAds('Бусад зар')">
-      📣 Бусад зар
-    </button>
-  </div>
-</section>
-  <div class="searchbar">
     <input id="search" placeholder="🔍 Барааны нэрээр хайх..." oninput="render()">
   </div>
 
