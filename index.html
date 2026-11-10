@@ -584,57 +584,51 @@ document.addEventListener("click",function(e){
 document.addEventListener("keydown",function(e){
  if(e.key==="Escape")window.closeCart();
 });
-// Нийлүүлэгчийн бараа нийтлэх
-window.publishProduct=function(){
+// Бараа засах
+window.editProduct=function(id){
+ const p=products.find(x=>x.id===id);
+ if(!p)return;
 
- const name=document.getElementById("newProductName").value.trim();
- const cat=document.getElementById("newProductCat").value;
- const price=Number(document.getElementById("newProductPrice").value);
- const desc=document.getElementById("newProductDesc").value.trim();
- const file=document.getElementById("productImage").files[0];
+ const name=prompt("Барааны нэр:",p.name);
+ if(name===null)return;
 
- if(!name||!price||price<=0||!file){
-  alert("Нэр, үнэ болон зураг заавал оруулна уу.");
+ const price=prompt("Барааны үнэ:",p.price);
+ if(price===null)return;
+
+ const desc=prompt("Барааны тайлбар:",p.desc||"");
+ if(desc===null)return;
+
+ if(!name.trim()||Number(price)<=0){
+  alert("Нэр болон зөв үнэ оруулна уу.");
   return;
  }
 
- if(!file.type.startsWith("image/")){
-  alert("Зөвхөн зураг сонгоно уу.");
-  return;
- }
+ p.name=name.trim();
+ p.price=Number(price);
+ p.desc=desc.trim();
 
- if(file.size>5*1024*1024){
- alert("Зургийн хэмжээ 5MB-аас бага байх ёстой."); 
-  return;
- }
+ localStorage.setItem("nexoraProducts",JSON.stringify(products));
+ render();
 
- const reader=new FileReader();
+ alert("Бараа амжилттай засагдлаа!");
+};
 
- reader.onload=function(e){
+// Бараа устгах
+window.deleteProduct=function(id){
+ if(!confirm("Энэ барааг устгах уу?"))return;
 
-  const product={
-   id:Date.now(),
-   name:name,
-   cat:cat,
-   sub:"Бусад",
-   price:price,
-   emoji:"📦",
-   image:e.target.result,
-   desc:desc
-  };
+ const index=products.findIndex(x=>x.id===id);
+ if(index===-1)return;
 
-  products.push(product);
+ products.splice(index,1);
 
-  try{
-   localStorage.setItem("nexoraProducts",JSON.stringify(products));
-  }catch(err){
-   products.pop();
-   alert("Хадгалах зай хүрэлцэхгүй байна.");
-   return;
-  }
+ localStorage.setItem("nexoraProducts",JSON.stringify(products));
+ render();
 
-  selectedCat="Бүгд";
-  selectedSub="Бүгд";
+ alert("Бараа устгагдлаа!");
+};
+
+ 
 
   drawCategories();
   drawSubs();
