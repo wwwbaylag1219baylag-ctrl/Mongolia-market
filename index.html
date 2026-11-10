@@ -241,10 +241,14 @@ summary{font-weight:700;cursor:pointer}
     <form id="adForm" onsubmit="publishAd(event)">
 
      <div id="standaloneAdCategoryArea" style="display:none;">
-  <label>Ямар төрлийн зар вэ?</label>
+  <label>Зарын төрөл сонгох</label>
   <select class="field" id="adCategory"
-    onchange="document.getElementById('adType').value=this.value">
-    <option value="">-- Зарын төрлөө сонгоно уу --</option>
+    onchange="
+      document.getElementById('adType').value=this.value;
+      document.getElementById('jobAdSectorArea').style.display=
+      this.value==='Ажлын зар'?'block':'none';
+    ">
+    <option value="">-- Төрөл сонгох --</option>
     <option value="Ажлын зар">💼 Ажлын зар</option>
     <option value="Автомашин">🚗 Автомашин</option>
     <option value="Үл хөдлөх хөрөнгө">🏠 Үл хөдлөх хөрөнгө</option>
@@ -252,9 +256,26 @@ summary{font-weight:700;cursor:pointer}
     <option value="Сургалт, дамжаа">🎓 Сургалт, дамжаа</option>
     <option value="Бусад зар">📣 Бусад зар</option>
   </select>
+
+  <div id="jobAdSectorArea" style="display:none;">
+    <label>Ажлын салбар сонгох</label>
+    <select class="field" id="jobAdSector">
+      <option value="">-- Салбар сонгох --</option>
+      <option value="Барилга, уул уурхай">🏗️ Барилга, уул уурхай</option>
+      <option value="Үйлдвэрлэл">🏭 Үйлдвэрлэл</option>
+      <option value="Худалдаа, үйлчилгээ">🛒 Худалдаа, үйлчилгээ</option>
+      <option value="Тээвэр, ложистик">🚚 Тээвэр, ложистик</option>
+      <option value="Оффис, захиргаа">🏢 Оффис, захиргаа</option>
+      <option value="Боловсрол">🎓 Боловсрол</option>
+      <option value="Эрүүл мэнд">🏥 Эрүүл мэнд</option>
+      <option value="IT, технологи">💻 IT, технологи</option>
+      <option value="Хөдөө аж ахуй">🌾 Хөдөө аж ахуй</option>
+      <option value="Бусад">📌 Бусад</option>
+    </select>
+  </div>
 </div>
 
-<input class="field" id="adType" type="hidden" required> 
+<input class="field" id="adType" type="hidden">
       <label>Зарын гарчиг</label>
       <input class="field" id="adTitle" type="text" required>
 
