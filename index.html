@@ -1126,18 +1126,37 @@ function selectVehicleBrand(brand) {
   });
 }
 
+
 function selectVehicleModel(brand, model) {
   const type = document.getElementById("adType");
   const heading = document.getElementById("adsHeading");
   const formArea = document.getElementById("adFormArea");
 
   type.value = "Автомашин - " + brand + " - " + model;
-  heading.textContent = "🚗 " + brand + " " + model;
+  heading.textContent = "🚗 " + brand + " " + model + " — Зар";
 
-  if (formArea) formArea.style.display = "block";
+  if (formArea) formArea.style.display = "none";
 
   renderClassifiedAds();
+
+  const list = document.getElementById("classifiedAdList");
+  const addButton = document.createElement("button");
+
+  addButton.className = "add";
+  addButton.type = "button";
+  addButton.textContent = "＋ Энэ загвараар зар нийтлэх";
+
+  addButton.onclick = function() {
+    if (formArea) formArea.style.display = "block";
+    formArea.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  };
+
+  list.prepend(addButton);
 }
+
 
 function renderClassifiedAds() {
   const list = document.getElementById("classifiedAdList");
