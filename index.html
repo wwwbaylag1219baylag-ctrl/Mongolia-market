@@ -236,15 +236,28 @@ header{padding:10px 12px}
 </div>
 <section class="panel" id="classifieds">
 
-<div style="margin-top:20px;">
-<button
-type="button"
-id="mainPublishButton"
-class="cat"
-style="width:100%;background:#D95B16;color:white;padding:16px;font-size:17px;"
-onclick="togglePublishAd()">
-＋ ЗАР НИЙТЛЭХ
-</button>
+<div style="margin-top:20px;position:relative;">
+
+  <button
+    type="button"
+    id="mainPublishButton"
+    class="cat"
+    style="width:100%;background:#D95B16;color:white;padding:16px;font-size:17px;"
+    onclick="togglePublishAd()">
+    ＋ ЗАР НИЙТЛЭХ
+  </button>
+
+  <div id="publishCategoryMenu"
+       style="display:none;margin-top:8px;padding:10px;background:#fff;border:1px solid #ddd;border-radius:10px;">
+
+    <button type="button" class="cat" style="width:100%;" onclick="selectPublishCategory('Ажлын зар')">💼 Ажлын зар</button>
+    <button type="button" class="cat" style="width:100%;" onclick="selectPublishCategory('Автомашин')">🚗 Автомашин</button>
+    <button type="button" class="cat" style="width:100%;" onclick="selectPublishCategory('Үл хөдлөх хөрөнгө')">🏠 Үл хөдлөх хөрөнгө</button>
+    <button type="button" class="cat" style="width:100%;" onclick="selectPublishCategory('Аялал')">✈️ Аялал</button>
+    <button type="button" class="cat" style="width:100%;" onclick="selectPublishCategory('Сургалт, дамжаа')">🎓 Сургалт, дамжаа</button>
+    <button type="button" class="cat" style="width:100%;" onclick="selectPublishCategory('Бусад зар')">📣 Бусад зар</button>
+
+  </div>
 </div>
   
 <!-- ЗАРЫН ЖАГСААЛТ БОЛОН НЭГ Л МАЯГТ -->
