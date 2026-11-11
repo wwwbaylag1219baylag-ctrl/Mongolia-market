@@ -948,29 +948,25 @@ jobArea.style.display=category==="Ажлын зар"?"block":"none";
 if(category!=="Ажлын зар")sector.value="";
 }
 
-
-
-
 function togglePublishAd(){
   const menu = document.getElementById("publishCategoryMenu");
   const form = document.getElementById("adFormArea");
-  const button = document.getElementById("mainPublishButton");
 
+  // Зарын маягт нээлттэй бол хумина
   if (form.style.display === "block") {
     form.style.display = "none";
     menu.style.display = "none";
-    button.textContent = "＋ ЗАР НИЙТЛЭХ";
-    button.scrollIntoView({behavior:"smooth",block:"center"});
     return;
   }
 
+  // Дугуй ангилал нээлттэй бол хаана
   if (menu.style.display === "flex") {
     menu.style.display = "none";
-    button.textContent = "＋ ЗАР НИЙТЛЭХ";
-  } else {
-    menu.style.display = "flex";
-    button.textContent = "－ ЗАРЫН ТӨРӨЛ ХААХ";
+    return;
   }
+
+  // Хоёулаа хаалттай бол ангилал нээнэ
+  menu.style.display = "flex";
 }
 
 function selectPublishCategory(category){
