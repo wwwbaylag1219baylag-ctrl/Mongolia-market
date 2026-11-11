@@ -948,24 +948,27 @@ jobArea.style.display=category==="Ажлын зар"?"block":"none";
 if(category!=="Ажлын зар")sector.value="";
 }
 
+
 function togglePublishAd(){
   const menu = document.getElementById("publishCategoryMenu");
   const form = document.getElementById("adFormArea");
+  const workspace = document.getElementById("adsWorkspace");
 
-  // Зарын маягт нээлттэй бол хумина
+  // Маягт нээлттэй бол бүх цагаан хэсгийг хумина
   if (form.style.display === "block") {
     form.style.display = "none";
+    workspace.style.display = "none";
     menu.style.display = "none";
     return;
   }
 
-  // Дугуй ангилал нээлттэй бол хаана
+  // Ангилал сонгох цэс нээлттэй бол хаана
   if (menu.style.display === "flex") {
     menu.style.display = "none";
     return;
   }
 
-  // Хоёулаа хаалттай бол ангилал нээнэ
+  // Хаалттай бол ангилал сонгох цэс нээнэ
   menu.style.display = "flex";
 }
 
