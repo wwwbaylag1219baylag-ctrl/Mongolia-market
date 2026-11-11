@@ -949,26 +949,27 @@ if(category!=="Ажлын зар")sector.value="";
 }
 
 
+
 function togglePublishAd(){
   const menu = document.getElementById("publishCategoryMenu");
-  const form = document.getElementById("adFormArea");
   const workspace = document.getElementById("adsWorkspace");
+  const form = document.getElementById("adFormArea");
 
-  // Маягт нээлттэй бол бүх цагаан хэсгийг хумина
-  if (form.style.display === "block") {
+  // Зар нийтлэх хэсэг нээлттэй бол бүхэлд нь хаана
+  if (workspace.style.display === "block") {
     form.style.display = "none";
     workspace.style.display = "none";
     menu.style.display = "none";
     return;
   }
 
-  // Ангилал сонгох цэс нээлттэй бол хаана
+  // Төрөл сонгох цэс нээлттэй бол хаана
   if (menu.style.display === "flex") {
     menu.style.display = "none";
     return;
   }
 
-  // Хаалттай бол ангилал сонгох цэс нээнэ
+  // Хаалттай бол төрөл сонгох цэс нээнэ
   menu.style.display = "flex";
 }
 
