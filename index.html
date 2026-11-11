@@ -958,9 +958,19 @@ if(category!=="Ажлын зар")sector.value="";
 
 
 
+
 function togglePublishAd(){
   const menu = document.getElementById("publishCategoryMenu");
+  const form = document.getElementById("adFormArea");
   const button = document.getElementById("mainPublishButton");
+
+  if (form.style.display === "block") {
+    form.style.display = "none";
+    menu.style.display = "none";
+    button.textContent = "＋ ЗАР НИЙТЛЭХ";
+    button.scrollIntoView({behavior:"smooth",block:"center"});
+    return;
+  }
 
   if (menu.style.display === "flex") {
     menu.style.display = "none";
