@@ -947,18 +947,44 @@ if(category!=="Ажлын зар")sector.value="";
 }
 
 
+
 function togglePublishAd(){
   const menu = document.getElementById("publishCategoryMenu");
   const button = document.getElementById("mainPublishButton");
 
-  if (menu.style.display === "block") {
+  if (menu.style.display === "flex") {
     menu.style.display = "none";
     button.textContent = "＋ ЗАР НИЙТЛЭХ";
   } else {
-    menu.style.display = "block";
+    menu.style.display = "flex";
     button.textContent = "－ ЗАРЫН ТӨРӨЛ ХААХ";
   }
 }
+
+function selectPublishCategory(category){
+  const menu = document.getElementById("publishCategoryMenu");
+  const button = document.getElementById("mainPublishButton");
+
+  menu.style.display = "none";
+  button.textContent = "＋ ЗАР НИЙТЛЭХ";
+
+  openAds(category);
+
+  document.getElementById("jobSectorArea").style.display = "none";
+  document.getElementById("adFormArea").style.display = "block";
+  document.getElementById("adCategory").value = category;
+
+  changeAdCategory();
+
+  document.getElementById("adsHeading").textContent =
+    "＋ " + category + " — Зар нийтлэх";
+
+  document.getElementById("adFormArea").scrollIntoView({
+    behavior:"smooth",
+    block:"start"
+  });
+}
+
 function publishAd(event){
 event.preventDefault();
 
