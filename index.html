@@ -247,18 +247,83 @@ header{padding:10px 12px}
     ＋ ЗАР НИЙТЛЭХ
   </button>
 
-  <div id="publishCategoryMenu"
-       style="display:none;margin-top:8px;padding:10px;background:#fff;border:1px solid #ddd;border-radius:10px;">
+  
+<div id="publishCategoryMenu"
+     style="display:none;position:fixed;inset:0;z-index:50;
+     background:rgba(0,0,0,0.82);padding:18px;
+     align-items:center;justify-content:center;">
 
-    <button type="button" class="cat" style="width:100%;" onclick="selectPublishCategory('Ажлын зар')">💼 Ажлын зар</button>
-    <button type="button" class="cat" style="width:100%;" onclick="selectPublishCategory('Автомашин')">🚗 Автомашин</button>
-    <button type="button" class="cat" style="width:100%;" onclick="selectPublishCategory('Үл хөдлөх хөрөнгө')">🏠 Үл хөдлөх хөрөнгө</button>
-    <button type="button" class="cat" style="width:100%;" onclick="selectPublishCategory('Аялал')">✈️ Аялал</button>
-    <button type="button" class="cat" style="width:100%;" onclick="selectPublishCategory('Сургалт, дамжаа')">🎓 Сургалт, дамжаа</button>
-    <button type="button" class="cat" style="width:100%;" onclick="selectPublishCategory('Бусад зар')">📣 Бусад зар</button>
+  <div style="width:100%;max-width:480px;background:#211810;
+       color:white;border:1px solid #6b4931;border-radius:22px;
+       padding:22px 16px;">
 
+    <div style="display:flex;justify-content:space-between;
+         align-items:center;margin-bottom:22px;">
+      <h2 style="margin:0;font-size:19px;color:#F2C66D;">
+        Зарын төрлөө сонгоно уу
+      </h2>
+      <button type="button" onclick="togglePublishAd()"
+        style="border:0;border-radius:50%;width:36px;height:36px;
+        background:#493326;color:white;font-size:20px;">
+        ✕
+      </button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+         gap:18px 8px;">
+
+      <button type="button" onclick="selectPublishCategory('Ажлын зар')"
+        style="background:transparent;border:0;color:white;">
+        <span style="display:grid;place-items:center;width:82px;height:82px;
+          max-width:100%;margin:auto;border-radius:50%;
+          background:#493326;border:2px solid #D95B16;font-size:34px;">💼</span>
+        <span style="display:block;margin-top:9px;font-size:13px;">Ажил</span>
+      </button>
+
+      <button type="button" onclick="selectPublishCategory('Автомашин')"
+        style="background:transparent;border:0;color:white;">
+        <span style="display:grid;place-items:center;width:82px;height:82px;
+          max-width:100%;margin:auto;border-radius:50%;
+          background:#493326;border:2px solid #D95B16;font-size:34px;">🚗</span>
+        <span style="display:block;margin-top:9px;font-size:13px;">Машин</span>
+      </button>
+
+      <button type="button" onclick="selectPublishCategory('Үл хөдлөх хөрөнгө')"
+        style="background:transparent;border:0;color:white;">
+        <span style="display:grid;place-items:center;width:82px;height:82px;
+          max-width:100%;margin:auto;border-radius:50%;
+          background:#493326;border:2px solid #D95B16;font-size:34px;">🏠</span>
+        <span style="display:block;margin-top:9px;font-size:13px;">Байр</span>
+      </button>
+
+      <button type="button" onclick="selectPublishCategory('Аялал')"
+        style="background:transparent;border:0;color:white;">
+        <span style="display:grid;place-items:center;width:82px;height:82px;
+          max-width:100%;margin:auto;border-radius:50%;
+          background:#493326;border:2px solid #D95B16;font-size:34px;">✈️</span>
+        <span style="display:block;margin-top:9px;font-size:13px;">Аялал</span>
+      </button>
+
+      <button type="button" onclick="selectPublishCategory('Сургалт, дамжаа')"
+        style="background:transparent;border:0;color:white;">
+        <span style="display:grid;place-items:center;width:82px;height:82px;
+          max-width:100%;margin:auto;border-radius:50%;
+          background:#493326;border:2px solid #D95B16;font-size:34px;">🎓</span>
+        <span style="display:block;margin-top:9px;font-size:13px;">Сургалт</span>
+      </button>
+
+      <button type="button" onclick="selectPublishCategory('Бусад зар')"
+        style="background:transparent;border:0;color:white;">
+        <span style="display:grid;place-items:center;width:82px;height:82px;
+          max-width:100%;margin:auto;border-radius:50%;
+          background:#493326;border:2px solid #D95B16;font-size:34px;">📣</span>
+        <span style="display:block;margin-top:9px;font-size:13px;">Бусад</span>
+      </button>
+
+    </div>
   </div>
 </div>
+
   
 <!-- ЗАРЫН ЖАГСААЛТ БОЛОН НЭГ Л МАЯГТ -->
 <section class="panel" id="adsWorkspace" style="display:none;">
