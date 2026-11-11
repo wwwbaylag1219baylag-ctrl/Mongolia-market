@@ -387,56 +387,7 @@ header{padding:10px 12px}
 <option value="Бусад зар">📣 Бусад зар</option>
 </select>
 
-<div id="jobSectorArea" style="
-  display:none;position:fixed;inset:0;z-index:60;
-  background:rgba(15,10,7,.94);padding:18px;
-  overflow-y:auto;align-items:center;justify-content:center;
-">
-  <div style="
-    width:100%;max-width:500px;margin:auto;
-    background:#211810;color:white;
-    border:1px solid #725034;border-radius:24px;
-    padding:22px 15px;
-  ">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;">
-      <h3 id="classifiedCategoryTitle" style="margin:0;color:#F2C66D;font-size:19px;">
-        Ангиллаа сонгоно уу
-      </h3>
-      <button type="button" onclick="closeClassifiedCategoryMenu()" style="
-        border:0;border-radius:50%;width:38px;height:38px;
-        background:#493326;color:white;font-size:20px;
-      ">✕</button>
-    </div>
 
-    <div id="jobSectorGrid" style="
-      display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:20px 8px;
-    ">
-      <button type="button" onclick="selectJobSector('Барилга, уул уурхай')" class="circle-choice"><span>🏗️</span><small>Барилга, уул уурхай</small></button>
-      <button type="button" onclick="selectJobSector('Үйлдвэрлэл')" class="circle-choice"><span>🏭</span><small>Үйлдвэрлэл</small></button>
-      <button type="button" onclick="selectJobSector('Худалдаа, үйлчилгээ')" class="circle-choice"><span>🛒</span><small>Худалдаа, үйлчилгээ</small></button>
-      <button type="button" onclick="selectJobSector('Тээвэр, ложистик')" class="circle-choice"><span>🚚</span><small>Тээвэр, ложистик</small></button>
-      <button type="button" onclick="selectJobSector('Оффис, захиргаа')" class="circle-choice"><span>🏢</span><small>Оффис, захиргаа</small></button>
-      <button type="button" onclick="selectJobSector('Боловсрол')" class="circle-choice"><span>🎓</span><small>Боловсрол</small></button>
-      <button type="button" onclick="selectJobSector('Эрүүл мэнд')" class="circle-choice"><span>🏥</span><small>Эрүүл мэнд</small></button>
-      <button type="button" onclick="selectJobSector('IT, технологи')" class="circle-choice"><span>💻</span><small>IT, технологи</small></button>
-      <button type="button" onclick="selectJobSector('Хөдөө аж ахуй')" class="circle-choice"><span>🌾</span><small>Хөдөө аж ахуй</small></button>
-      <button type="button" onclick="selectJobSector('Бусад')" class="circle-choice"><span>📌</span><small>Бусад</small></button>
-    </div>
-
-    <div id="carCategoryGrid" style="
-      display:none;grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:20px 8px;
-    ">
-      <button type="button" onclick="selectCarCategory('Суудлын машин')" class="circle-choice"><span>🚘</span><small>Суудлын машин</small></button>
-      <button type="button" onclick="selectCarCategory('Жийп')" class="circle-choice"><span>🚙</span><small>Жийп</small></button>
-      <button type="button" onclick="selectCarCategory('Ачааны машин')" class="circle-choice"><span>🚛</span><small>Ачааны машин</small></button>
-      <button type="button" onclick="selectCarCategory('Автобус')" class="circle-choice"><span>🚌</span><small>Автобус</small></button>
-      <button type="button" onclick="selectCarCategory('Мотоцикл')" class="circle-choice"><span>🏍️</span><small>Мотоцикл</small></button>
-      <button type="button" onclick="selectCarCategory('Сэлбэг хэрэгсэл')" class="circle-choice"><span>⚙️</span><small>Сэлбэг хэрэгсэл</small></button>
-    </div>
-  </div>
-</div>
 <input class="field" id="adType" type="hidden">
 
 <label>Зарын гарчиг</label>
@@ -962,11 +913,11 @@ const list=document.getElementById("classifiedAdList");
 
 workspace.style.display="block";
 formArea.style.display="none";
-jobArea.style.display="none";
+if(jobArea) jobArea.style.display="none";
 list.innerHTML="";
 
 document.getElementById("adCategory").value="";
-document.getElementById("jobAdSectorArea").style.display="none";
+
 document.getElementById("adType").value=category;
 
 if(category==="Ажлын зар"){
@@ -1014,14 +965,19 @@ renderClassifiedAds();
 }
 
 function changeAdCategory(){
-const category=document.getElementById("adCategory").value;
-const jobArea=document.getElementById("jobAdSectorArea");
-const sector=document.getElementById("jobAdSector");
+  const category = document.getElementById("adCategory").value;
+  const jobArea = document.getElementById("jobAdSectorArea");
+  const sector = document.getElementById("jobAdSector");
 
-document.getElementById("adType").value=category;
-jobArea.style.display=category==="Ажлын зар"?"block":"none";
+  document.getElementById("adType").value = category;
 
-if(category!=="Ажлын зар")sector.value="";
+  if(jobArea){
+    jobArea.style.display = category === "Ажлын зар" ? "block" : "none";
+  }
+
+  if(sector && category !== "Ажлын зар"){
+    sector.value = "";
+  }
 }
 
 
@@ -1058,7 +1014,8 @@ function selectPublishCategory(category){
 
   openAds(category);
 
-  document.getElementById("jobSectorArea").style.display = "none";
+  const jobArea = document.getElementById("jobSectorArea");
+if(jobArea) jobArea.style.display = "none";
   document.getElementById("adFormArea").style.display = "block";
   document.getElementById("adCategory").value = category;
 
