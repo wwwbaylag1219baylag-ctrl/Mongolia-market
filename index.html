@@ -868,15 +868,15 @@ jobArea.style.display=category==="Ажлын зар"?"block":"none";
 if(category!=="Ажлын зар")sector.value="";
 }
 
+
 function togglePublishAd(){
   const workspace = document.getElementById("adsWorkspace");
   const formArea = document.getElementById("adFormArea");
   const button = document.getElementById("mainPublishButton");
 
-  const isOpen = workspace.style.display === "block";
+  const isFormOpen = formArea.style.display === "block";
 
-  if (isOpen) {
-    workspace.style.display = "none";
+  if (isFormOpen) {
     formArea.style.display = "none";
     button.textContent = "＋ ЗАР НИЙТЛЭХ";
     return;
@@ -896,6 +896,7 @@ function togglePublishAd(){
   button.textContent = "－ ЗАРЫН МАЯГТ ХААХ";
   workspace.scrollIntoView({behavior:"smooth", block:"start"});
 }
+
 function publishAd(event){
 event.preventDefault();
 
