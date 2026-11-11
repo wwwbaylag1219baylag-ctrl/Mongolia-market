@@ -330,20 +330,28 @@ header{padding:10px 12px}
 
 <h2 id="adsHeading">Зар мэдээлэл</h2>
 
+
 <div id="jobSectorArea" style="display:none;">
-<h3>💼 Ажлын салбараа сонгоно уу</h3>
-<div class="categories">
-<button class="cat" onclick="selectJobSector('Барилга, уул уурхай')">🏗️ Барилга, уул уурхай</button>
-<button class="cat" onclick="selectJobSector('Үйлдвэрлэл')">🏭 Үйлдвэрлэл</button>
-<button class="cat" onclick="selectJobSector('Худалдаа, үйлчилгээ')">🛒 Худалдаа, үйлчилгээ</button>
-<button class="cat" onclick="selectJobSector('Тээвэр, ложистик')">🚚 Тээвэр, ложистик</button>
-<button class="cat" onclick="selectJobSector('Оффис, захиргаа')">🏢 Оффис, захиргаа</button>
-<button class="cat" onclick="selectJobSector('Боловсрол')">🎓 Боловсрол</button>
-<button class="cat" onclick="selectJobSector('Эрүүл мэнд')">🏥 Эрүүл мэнд</button>
-<button class="cat" onclick="selectJobSector('IT, технологи')">💻 IT, технологи</button>
-<button class="cat" onclick="selectJobSector('Хөдөө аж ахуй')">🌾 Хөдөө аж ахуй</button>
-<button class="cat" onclick="selectJobSector('Бусад')">📌 Бусад</button>
-</div>
+  <h3 style="text-align:center;margin:10px 0 18px;color:#A83F0D;">
+    💼 Ажлын салбараа сонгоно уу
+  </h3>
+
+  <div class="categories" style="
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+  ">
+    <button class="cat" onclick="selectJobSector('Барилга, уул уурхай')" style="border-radius:18px;padding:20px 8px;min-height:105px;font-size:15px;">🏗️<br>Барилга, уул уурхай</button>
+    <button class="cat" onclick="selectJobSector('Үйлдвэрлэл')" style="border-radius:18px;padding:20px 8px;min-height:105px;font-size:15px;">🏭<br>Үйлдвэрлэл</button>
+    <button class="cat" onclick="selectJobSector('Худалдаа, үйлчилгээ')" style="border-radius:18px;padding:20px 8px;min-height:105px;font-size:15px;">🛒<br>Худалдаа, үйлчилгээ</button>
+    <button class="cat" onclick="selectJobSector('Тээвэр, ложистик')" style="border-radius:18px;padding:20px 8px;min-height:105px;font-size:15px;">🚚<br>Тээвэр, ложистик</button>
+    <button class="cat" onclick="selectJobSector('Оффис, захиргаа')" style="border-radius:18px;padding:20px 8px;min-height:105px;font-size:15px;">🏢<br>Оффис, захиргаа</button>
+    <button class="cat" onclick="selectJobSector('Боловсрол')" style="border-radius:18px;padding:20px 8px;min-height:105px;font-size:15px;">🎓<br>Боловсрол</button>
+    <button class="cat" onclick="selectJobSector('Эрүүл мэнд')" style="border-radius:18px;padding:20px 8px;min-height:105px;font-size:15px;">🏥<br>Эрүүл мэнд</button>
+    <button class="cat" onclick="selectJobSector('IT, технологи')" style="border-radius:18px;padding:20px 8px;min-height:105px;font-size:15px;">💻<br>IT, технологи</button>
+    <button class="cat" onclick="selectJobSector('Хөдөө аж ахуй')" style="border-radius:18px;padding:20px 8px;min-height:105px;font-size:15px;">🌾<br>Хөдөө аж ахуй</button>
+    <button class="cat" onclick="selectJobSector('Бусад')" style="border-radius:18px;padding:20px 8px;min-height:105px;font-size:15px;">📌<br>Бусад</button>
+  </div>
 </div>
 
 <div id="classifiedAdList"></div>
