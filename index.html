@@ -467,35 +467,49 @@ function renderCart() {
   });
 }
 
-/* БАРАА БОЛОН ЗАР ХАЙХ */
+
+/* NEXORA НЭГДСЭН ХАЙЛТ */
 function searchAll() {
-  const query = document.getElementById("searchInput")
-    .value.trim().toLowerCase();
+  const input = document.getElementById("searchInput");
+  const query = input.value.trim().toLowerCase();
 
-  let productCount = 0;
-  let adCount = 0;
+  if (!query) {
+    alert("Хайх үгээ бичнэ үү.");
+    return;
+  }
 
-  document.querySelectorAll(".product").forEach(item => {
-    const match = item.textContent.toLowerCase().includes(query);
-    item.style.display = match ? "" : "none";
+  const sections = [
+    { id: "market", selectors: ".product" },
+    { id: "ads", selectors: ".ad-card" },
+    { id: "services", selectors: ".category" },
+    { id: "news", selectors: ".category" }
+  ];
 
-    if (match) productCount++;
+  let found = 0;
+  let firstSection = "";
+
+  sections.forEach(section => {
+    const parent = document.getElementById(section.id);
+    if (!parent) return;
+
+    parent.querySelectorAll(section.selectors).forEach(item => {
+      const match = item.textContent.toLowerCase().includes(query);
+
+      item.style.display = match ? "" : "none";
+
+      if (match) {
+        found++;
+        if (!firstSection) firstSection = section.id;
+      }
+    });
   });
 
-  document.querySelectorAll(".ad-card").forEach(item => {
-    const match = item.textContent.toLowerCase().includes(query);
-    item.style.display = match ? "" : "none";
-
-    if (match) adCount++;
-  });
-
-  if (productCount > 0 || query === "") {
-    switchTab("market");
-  } else if (adCount > 0) {
-    switchTab("ads");
+  if (found > 0) {
+    switchTab(firstSection);
+    alert("Нийт " + found + " үр дүн олдлоо.");
   } else {
     switchTab("market");
-    alert("Тохирох бараа, зар олдсонгүй.");
+    alert("Тохирох мэдээлэл олдсонгүй.");
   }
 }
 
