@@ -54,180 +54,256 @@ footer strong{color:#38bdf8;font-size:25px}
 }
 </style>
 <style>
-/* NEXORA NEO TECH PREMIUM */
+
+
+/* NEXORA GREEN NEON PREMIUM */
 :root {
---nx-bg:#06120b;
---nx-card:#0b1b11;
---nx-blue:#39ff14;
---nx-text:#effff0;
---nx-muted:#91a99a; 
+  --nx-bg:#071b10;
+  --nx-card:#0d2918;
+  --nx-blue:#39ff14;
+  --nx-text:#effff0;
+  --nx-muted:#a4c5ad;
 }
+
+* {
+  box-sizing:border-box;
+}
+
 body {
-  background:var(--nx-bg);
-  color:var(--nx-text);
+  background:#071b10 !important;
+  color:#effff0;
   font-family:Arial,sans-serif;
   font-size:14px;
 }
+
 header {
-  background:#111824;
+  background:#091b10 !important;
+  border-bottom:1px solid #245b32;
   padding:9px 12px;
-  border-bottom:1px solid #26364b;
 }
+
 .logo {
   font-size:22px;
-  color:#35a4ff;
+  color:#39ff14 !important;
   letter-spacing:1px;
+  text-shadow:0 0 9px #39ff1466;
 }
+
 .logo small {
+  color:#b5d8bd;
   font-size:8px;
   letter-spacing:1.5px;
-  color:#9aabc0;
 }
+
 .cart {
-  background:#202d40;
-  border:1px solid #344963;
+  background:#102c19 !important;
+  color:#baffaa;
+  border:1px solid #39ff14 !important;
+  box-shadow:0 0 8px #39ff1433;
   padding:8px 11px;
   font-size:12px;
+  border-radius:7px;
 }
+
 .hero {
+  background:linear-gradient(120deg,#0b2815,#123b20) !important;
+  border-bottom:1px solid #245b32;
   padding:22px 12px;
-  background:linear-gradient(120deg,#111c2c,#123d67);
 }
+
 .hero h1 {
+  color:#d9ffd9;
   font-size:19px;
   margin-bottom:7px;
 }
+
 .hero p {
+  color:#b5d8bd;
   font-size:12px;
   line-height:1.5;
 }
+
 .container {
   padding:12px;
 }
+
 .section-title {
+  color:#baffaa;
   font-size:16px;
   margin:17px 0 10px;
 }
+
+button,
+.primary-btn,
+.dark-btn {
+  background:#102c19 !important;
+  color:#baffaa !important;
+  border:1px solid #39ff14 !important;
+  border-radius:7px;
+  padding:9px 12px;
+  font-size:12px;
+  font-weight:bold;
+  box-shadow:0 0 5px #39ff1422;
+  transition:0.2s;
+}
+
+button:active {
+  background:#214b2b !important;
+  box-shadow:0 0 12px #39ff1488;
+}
+
 .search-box {
   gap:6px;
   margin:10px 0;
 }
-.search-box input,.field {
+
+.search-box input,
+.field {
   padding:10px;
-  border-radius:8px;
-  background:#1a2230;
-  color:white;
-  border:1px solid #34445a;
+  border-radius:7px;
+  background:#102719 !important;
+  color:#effff0 !important;
+  border:1px solid #28643a !important;
   font-size:13px;
 }
-button {
-  padding:9px 12px;
-  border-radius:7px;
-  font-size:12px;
+
+input::placeholder,
+textarea::placeholder {
+  color:#91ad98;
 }
-.primary-btn {
-  background:#168cff;
-  color:white;
-}
-.dark-btn {
-  background:#29384b;
-  color:white;
-}
+
 .categories {
   grid-template-columns:repeat(auto-fit,minmax(76px,1fr));
   gap:7px;
 }
+
 .category {
-  background:#1a2230;
-  color:#e4edfa;
-  border:1px solid #2b3b50;
+  background:#0d2918 !important;
+  color:#d9f5df !important;
+  border:1px solid #245b32 !important;
   border-radius:8px;
   padding:10px 5px;
   font-size:11px;
   box-shadow:none;
 }
+
 .category span {
   font-size:21px;
   margin-bottom:4px;
 }
+
 .category.active {
-  outline:1px solid #168cff;
-  color:#50b2ff;
-  background:#172d45;
+  outline:1px solid #39ff14;
+  color:#39ff14 !important;
+  background:#173b20 !important;
+  box-shadow:0 0 8px #39ff1444;
 }
-.products,.ad-grid {
+
+.products,
+.ad-grid {
   gap:9px;
 }
-.product,.ad-card,.panel {
-  background:#1a2230;
-  border:1px solid #2a394e;
-  border-radius:10px;
+
+.product,
+.ad-card,
+.panel {
+  background:#0d2918 !important;
+  color:#effff0;
+  border:1px solid #245b32 !important;
+  border-radius:9px;
   padding:10px;
-  box-shadow:0 3px 12px #0003;
+  box-shadow:0 3px 12px #0005;
 }
+
 .product-image {
   height:110px;
-  background:#222f40;
+  background:#102719 !important;
+  border:1px solid #1e482a;
   border-radius:7px;
   font-size:36px;
 }
-.product h3,.ad-card h3 {
+
+.product h3,
+.ad-card h3 {
   font-size:13px;
-  color:#edf4ff;
+  color:#effff0 !important;
 }
+
 .price {
-  color:#48adff;
+  color:#39ff14 !important;
   font-size:14px;
 }
+
+.product button {
+  width:100%;
+}
+
 .tabs {
   gap:6px;
   margin:13px 0;
 }
+
 .tab {
-  background:#1a2230;
-  color:#dce8f7;
-  border:1px solid #2c3b50;
+  background:#102719 !important;
+  color:#d9f5df !important;
+  border:1px solid #245b32 !important;
   border-radius:7px;
   padding:10px 5px;
   font-size:11px;
 }
+
 .tab.active {
-  background:#12375a;
-  color:#55b5ff;
-  border-color:#168cff;
+  background:#173b20 !important;
+  color:#39ff14 !important;
+  border-color:#39ff14 !important;
+  box-shadow:0 0 8px #39ff1433;
 }
+
 .panel p {
-  color:#b5c3d5;
+  color:#b5d8bd;
   font-size:12px;
   line-height:1.6;
 }
+
 footer {
-  background:#111824;
-  border-top:1px solid #26364b;
+  background:#091b10 !important;
+  border-top:1px solid #245b32;
+  color:#d9f5df;
 }
+
 footer strong {
-  color:#35a4ff;
+  color:#39ff14 !important;
 }
+
 .mobile-nav {
-  background:#141d2a;
-  border-top:1px solid #304158;
+  background:#091b10 !important;
+  border-top:1px solid #39ff14 !important;
 }
+
 .mobile-nav button {
-  color:#a9bad0;
+  background:transparent !important;
+  color:#baffaa !important;
+  border:0 !important;
+  box-shadow:none !important;
   font-size:17px;
 }
+
 .mobile-nav small {
+  color:#a4c5ad;
   font-size:9px;
 }
+
 @media(max-width:600px) {
   .container {padding:10px}
   .hero {padding:19px 10px}
   .hero h1 {font-size:17px}
-  .products,.ad-grid {
+  .products,
+  .ad-grid {
     grid-template-columns:repeat(2,minmax(0,1fr));
     gap:7px;
   }
-  .product,.ad-card {padding:8px}
+  .product,
+  .ad-card {padding:8px}
   .product-image {height:95px}
   .product h3 {font-size:12px}
   .price {font-size:13px}
@@ -235,8 +311,7 @@ footer strong {
   .tabs {grid-template-columns:repeat(3,1fr)}
   .tab {padding:9px 3px}
 }
-</style>
-
+</style>  
 </head>
 
 <body>
