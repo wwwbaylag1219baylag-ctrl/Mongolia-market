@@ -340,7 +340,65 @@ let selectedCategory = "Бүгд";
     main.remove();
   }
 })();
+/* NEXORA БАРАА НИЙТЛЭХ */
+function publishProduct() {
+  const title = document.getElementById("productTitle").value.trim();
+  const category = document.getElementById("productCategory").value;
+  const price = document.getElementById("productPrice").value;
+  const description = document.getElementById("productDescription").value.trim();
+  const phone = document.getElementById("productPhone").value.trim();
+  const imageInput = document.getElementById("productImage");
 
+  if (!title || !category || !price || !description || !phone) {
+    alert("Бүх талбарыг бүрэн бөглөнө үү.");
+    return;
+  }
+
+  if (Number(price) <= 0) {
+    alert("Үнийг зөв оруулна уу.");
+    return;
+  }
+
+  const saveProduct = (image) => {
+    const products = JSON.parse(localStorage.getItem("nexoraProducts") || "[]");
+
+    products.push({
+      id: Date.now(),
+      title,
+      category,
+      price,
+      description,
+      phone,
+      image,
+      date: new Date().toLocaleDateString("mn-MN")
+    });
+
+    localStorage.setItem("nexoraProducts", JSON.stringify(products));
+
+    alert("Бараа амжилттай хадгалагдлаа!");
+
+    document.getElementById("productTitle").value = "";
+    document.getElementById("productCategory").value = "";
+    document.getElementById("productPrice").value = "";
+    document.getElementById("productDescription").value = "";
+    document.getElementById("productPhone").value = "";
+    imageInput.value = "";
+
+    document.getElementById("productFormArea").classList.add("hidden");
+  };
+
+  if (imageInput.files.length > 0) {
+    const reader = new FileReader();
+
+    reader.onload = function () {
+      saveProduct(reader.result);
+    };
+
+    reader.readAsDataURL(imageInput.files[0]);
+  } else {
+    saveProduct("");
+  }
+}
 /* САГСАНД НЭМЭХ */
 function addToCart(button) {
   const product = button.closest(".product");
