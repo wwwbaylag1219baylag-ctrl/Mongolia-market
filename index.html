@@ -129,8 +129,54 @@ footer strong{color:#38bdf8;font-size:25px}
 <div id="market" class="tab-content">
   <h2 class="section-title">🛍️ Барааны зах зээл</h2>
   <p>Монголын бүх төрлийн барааг нэг дороос.</p>
-</div>
 
+  <div class="panel">
+    <h3>📦 Бараа худалдаанд гаргах</h3>
+    <p>Өөрийн барааг NEXORA-д нийтлээрэй.</p>
+    <button class="primary-btn"
+      onclick="showSection('productFormArea')">
+      ＋ Бараа нийтлэх
+    </button>
+  </div>
+
+  <div id="productFormArea" class="panel hidden">
+    <h3>Шинэ бараа нийтлэх</h3>
+    <input class="field" id="productTitle"
+      placeholder="Барааны нэр">
+
+    <select class="field" id="productCategory">
+      <option value="">Ангилал сонгох</option>
+      <option>Электрон бараа</option>
+      <option>Хувцас</option>
+      <option>Гутал</option>
+      <option>Гэр ахуй</option>
+      <option>Автомашин</option>
+      <option>Хүүхдийн бараа</option>
+      <option>Гоо сайхан</option>
+      <option>Багаж</option>
+      <option>Хүнс</option>
+      <option>Бусад</option>
+    </select>
+
+    <input class="field" id="productPrice"
+      type="number" placeholder="Үнэ (₮)">
+
+    <input class="field" id="productImage"
+      type="file" accept="image/*">
+
+    <textarea class="field" id="productDescription"
+      placeholder="Барааны тайлбар"></textarea>
+
+    <input class="field" id="productPhone"
+      type="tel" placeholder="Холбоо барих утас">
+
+    <button class="primary-btn"
+      onclick="publishProduct()">Нийтлэх</button>
+
+    <button class="dark-btn"
+      onclick="showSection('')">Болих</button>
+  </div>
+</div>
 <div id="ads" class="tab-content hidden">
   <h2 class="section-title">📢 Зар мэдээлэл</h2>
   <div class="categories">
