@@ -556,13 +556,15 @@ footer strong {
 <details class="panel" id="supplierRegister">
   <summary>📝 Нийлүүлэгчээр бүртгүүлэх</summary>
 
-  <label>Бүртгэлийн төрөл</label>
-  
+ 
+<label>Бүртгэлийн төрөл</label>
+<select id="supplierType"
   onchange="
     document.getElementById('supplierFormFields').classList.toggle('hidden', this.value === '');
     document.getElementById('supplierNameLabel').textContent = this.value === 'company' ? 'Байгууллагын нэр' : 'Нэр';
     document.getElementById('supplierRegisterLabel').textContent = this.value === 'company' ? 'Байгууллагын регистр' : 'Регистрийн дугаар';
   ">
+ 
 
     <option value="">Сонгоно уу</option>
     <option value="individual">Хувь хүн</option>
