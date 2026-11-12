@@ -606,11 +606,25 @@ function publishAd() {
   const cost = document.createElement("p");
   cost.textContent = price ? "Үнэ: " + price + "₮" : "Үнэ тохирно";
 
-  const contact = document.createElement("p");
-  contact.textContent = "Утас: " + phone;
 
-  card.append(heading, type, detail, cost, contact);
-  document.getElementById("adList").prepend(card);
+const contact = document.createElement("p");
+contact.textContent = "Утас: " + phone;
+
+// ЗАР УСТГАХ ТОВЧ
+const deleteButton = document.createElement("button");
+deleteButton.className = "dark-btn";
+deleteButton.textContent = "🗑️ Устгах";
+
+deleteButton.onclick = function () {
+  if (confirm("Энэ зарыг устгах уу?")) {
+    card.remove();
+    alert("Зар устгагдлаа.");
+  }
+};
+
+card.append(heading, type, detail, cost, contact, deleteButton);
+document.getElementById("adList").prepend(card);
+  
 
   document.getElementById("adTitle").value = "";
   document.getElementById("adCategory").value = "";
