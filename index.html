@@ -1,6 +1,191 @@
 
 <!DOCTYPE html>
 <html lang="mn">
+ 
+<style>
+/* NEXORA NEO TECH PREMIUM */
+:root {
+  --nx-bg:#10141d;
+  --nx-card:#1a2230;
+  --nx-blue:#168cff;
+  --nx-text:#edf4ff;
+  --nx-muted:#91a1b7;
+}
+body {
+  background:var(--nx-bg);
+  color:var(--nx-text);
+  font-family:Arial,sans-serif;
+  font-size:14px;
+}
+header {
+  background:#111824;
+  padding:9px 12px;
+  border-bottom:1px solid #26364b;
+}
+.logo {
+  font-size:22px;
+  color:#35a4ff;
+  letter-spacing:1px;
+}
+.logo small {
+  font-size:8px;
+  letter-spacing:1.5px;
+  color:#9aabc0;
+}
+.cart {
+  background:#202d40;
+  border:1px solid #344963;
+  padding:8px 11px;
+  font-size:12px;
+}
+.hero {
+  padding:22px 12px;
+  background:linear-gradient(120deg,#111c2c,#123d67);
+}
+.hero h1 {
+  font-size:19px;
+  margin-bottom:7px;
+}
+.hero p {
+  font-size:12px;
+  line-height:1.5;
+}
+.container {
+  padding:12px;
+}
+.section-title {
+  font-size:16px;
+  margin:17px 0 10px;
+}
+.search-box {
+  gap:6px;
+  margin:10px 0;
+}
+.search-box input,.field {
+  padding:10px;
+  border-radius:8px;
+  background:#1a2230;
+  color:white;
+  border:1px solid #34445a;
+  font-size:13px;
+}
+button {
+  padding:9px 12px;
+  border-radius:7px;
+  font-size:12px;
+}
+.primary-btn {
+  background:#168cff;
+  color:white;
+}
+.dark-btn {
+  background:#29384b;
+  color:white;
+}
+.categories {
+  grid-template-columns:repeat(auto-fit,minmax(76px,1fr));
+  gap:7px;
+}
+.category {
+  background:#1a2230;
+  color:#e4edfa;
+  border:1px solid #2b3b50;
+  border-radius:8px;
+  padding:10px 5px;
+  font-size:11px;
+  box-shadow:none;
+}
+.category span {
+  font-size:21px;
+  margin-bottom:4px;
+}
+.category.active {
+  outline:1px solid #168cff;
+  color:#50b2ff;
+  background:#172d45;
+}
+.products,.ad-grid {
+  gap:9px;
+}
+.product,.ad-card,.panel {
+  background:#1a2230;
+  border:1px solid #2a394e;
+  border-radius:10px;
+  padding:10px;
+  box-shadow:0 3px 12px #0003;
+}
+.product-image {
+  height:110px;
+  background:#222f40;
+  border-radius:7px;
+  font-size:36px;
+}
+.product h3,.ad-card h3 {
+  font-size:13px;
+  color:#edf4ff;
+}
+.price {
+  color:#48adff;
+  font-size:14px;
+}
+.tabs {
+  gap:6px;
+  margin:13px 0;
+}
+.tab {
+  background:#1a2230;
+  color:#dce8f7;
+  border:1px solid #2c3b50;
+  border-radius:7px;
+  padding:10px 5px;
+  font-size:11px;
+}
+.tab.active {
+  background:#12375a;
+  color:#55b5ff;
+  border-color:#168cff;
+}
+.panel p {
+  color:#b5c3d5;
+  font-size:12px;
+  line-height:1.6;
+}
+footer {
+  background:#111824;
+  border-top:1px solid #26364b;
+}
+footer strong {
+  color:#35a4ff;
+}
+.mobile-nav {
+  background:#141d2a;
+  border-top:1px solid #304158;
+}
+.mobile-nav button {
+  color:#a9bad0;
+  font-size:17px;
+}
+.mobile-nav small {
+  font-size:9px;
+}
+@media(max-width:600px) {
+  .container {padding:10px}
+  .hero {padding:19px 10px}
+  .hero h1 {font-size:17px}
+  .products,.ad-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:7px;
+  }
+  .product,.ad-card {padding:8px}
+  .product-image {height:95px}
+  .product h3 {font-size:12px}
+  .price {font-size:13px}
+  .category {padding:9px 3px}
+  .tabs {grid-template-columns:repeat(3,1fr)}
+  .tab {padding:9px 3px}
+}
+</style>
+ 
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
