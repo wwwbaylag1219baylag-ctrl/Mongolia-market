@@ -948,7 +948,6 @@ function loadPublishedProducts() {
   const products = JSON.parse(
     localStorage.getItem("nexoraProducts") || "[]"
   );
-loadPublishedProducts();
   const list = document.getElementById("productList");
 
   products.forEach(item => {
