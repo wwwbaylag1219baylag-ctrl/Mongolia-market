@@ -275,13 +275,14 @@ footer strong{color:#38bdf8;font-size:25px}
 }
 </style>
 
+  
 <script>
-/* NEXORA - НЭГДСЭН ҮНДСЭН JAVASCRIPT */
+/* NEXORA - НЭГДСЭН JAVASCRIPT */
 
 let cart = [];
 let selectedCategory = "Бүгд";
 
-/* НҮҮРНИЙ ХЭСГҮҮДИЙГ БАРААНЫ ЦЭСЭНД БАЙРЛУУЛАХ */
+/* НҮҮРНИЙ ХЭСГҮҮДИЙГ БАРААНЫ ЦЭСЭНД ХОЛБОХ */
 (function () {
   const main = document.querySelector("main");
   const market = document.getElementById("market");
@@ -294,7 +295,7 @@ let selectedCategory = "Бүгд";
   }
 })();
 
-/* САГСЛАХ */
+/* САГСАНД НЭМЭХ */
 function addToCart(button) {
   const product = button.closest(".product");
   if (!product) return;
@@ -303,8 +304,8 @@ function addToCart(button) {
   const price = product.querySelector(".price").textContent;
 
   cart.push({ name, price });
-  document.getElementById("cartCount").textContent = cart.length;
 
+  document.getElementById("cartCount").textContent = cart.length;
   alert(name + " сагсанд нэмэгдлээ!");
 }
 
@@ -362,7 +363,7 @@ function renderCart() {
   });
 }
 
-/* БАРАА, ЗАР ХАЙХ */
+/* БАРАА БОЛОН ЗАР ХАЙХ */
 function searchAll() {
   const query = document.getElementById("searchInput")
     .value.trim().toLowerCase();
@@ -373,12 +374,14 @@ function searchAll() {
   document.querySelectorAll(".product").forEach(item => {
     const match = item.textContent.toLowerCase().includes(query);
     item.style.display = match ? "" : "none";
+
     if (match) productCount++;
   });
 
   document.querySelectorAll(".ad-card").forEach(item => {
     const match = item.textContent.toLowerCase().includes(query);
     item.style.display = match ? "" : "none";
+
     if (match) adCount++;
   });
 
@@ -429,7 +432,8 @@ function switchTab(name, element) {
     element.classList.add("active");
   } else {
     document.querySelectorAll(".tabs .tab").forEach(tab => {
-      if (tab.getAttribute("onclick")?.includes("'" + name + "'")) {
+      const action = tab.getAttribute("onclick") || "";
+      if (action.includes("'" + name + "'")) {
         tab.classList.add("active");
       }
     });
@@ -439,7 +443,7 @@ function switchTab(name, element) {
   document.querySelector(".tabs").parentElement.classList.remove("hidden");
 }
 
-/* ЗАРЫН ФОРМ НЭЭХ, ХААХ */
+/* ЗАРЫН ФОРМ */
 function showSection(id) {
   document.getElementById("adFormArea").classList.add("hidden");
 
@@ -492,7 +496,7 @@ function publishAd() {
   alert("Зар энэ төхөөрөмж дээр түр нийтлэгдлээ.");
 }
 
-/* НЭВТРЭХ ДЕМО */
+/* НЭВТРЭХ */
 function loginDemo() {
   const phone = document.getElementById("loginPhone").value.trim();
   const password = document.getElementById("loginPassword").value;
@@ -502,19 +506,18 @@ function loginDemo() {
     return;
   }
 
-  alert("Бодит хэрэглэгчийн бүртгэл, нэвтрэх сервер хараахан холбогдоогүй байна.");
+  alert("Бодит нэвтрэх сервер хараахан холбогдоогүй байна.");
 }
 
-/* БҮРТГҮҮЛЭХ ДЕМО */
+/* БҮРТГҮҮЛЭХ */
 function registerDemo() {
-  alert("Хэрэглэгчийн бодит бүртгэлийн систем дараагийн хөгжүүлэлтээр холбогдоно.");
+  alert("Бодит бүртгэлийн систем дараагийн хөгжүүлэлтээр холбогдоно.");
 }
 
 /* АНХНЫ ЦЭС */
 switchTab("market");
 </script>
-
-
+  
 <style>
 /* NEXORA NAVIGATION FIX */
 #market .section-title:first-child {
@@ -547,94 +550,7 @@ switchTab("market");
 }
 </style>
 
-<script>
-/* НҮҮРНИЙ БАРААНЫ ХЭСГИЙГ ЗӨВ БАЙРЛУУЛАХ */
-(function() {
-  const main = document.querySelector("main");
-  const market = document.getElementById("market");
 
-  if (main && market) {
-    while (main.firstChild) {
-      market.appendChild(main.firstChild);
-    }
-    main.remove();
-  }
-})();
-
-/* ЦЭС СОЛИХ */
-function switchTab(name, element) {
-  document.querySelectorAll(".tab-content").forEach(section => {
-    section.classList.add("hidden");
-  });
-
-  const target = document.getElementById(name);
-  if (target) {
-    target.classList.remove("hidden");
-  }
-
-  document.querySelectorAll(".tabs .tab").forEach(tab => {
-    tab.classList.remove("active");
-  });
-
-  if (element) {
-    element.classList.add("active");
-  } else {
-    document.querySelectorAll(".tabs .tab").forEach(tab => {
-      if (tab.getAttribute("onclick")?.includes("'" + name + "'")) {
-        tab.classList.add("active");
-      }
-    });
-  }
-
-  document.getElementById("cartArea").classList.add("hidden");
-}
-
-/* ХАЙЛТ */
-function searchAll() {
-  const query = document.getElementById("searchInput")
-    .value.trim().toLowerCase();
-
-  let count = 0;
-
-  document.querySelectorAll(".product, .ad-card").forEach(item => {
-    const match = item.textContent.toLowerCase().includes(query);
-    item.style.display = match ? "" : "none";
-    if (match) count++;
-  });
-
-  if (document.querySelectorAll(".ad-card").length > 0 &&
-      [...document.querySelectorAll(".ad-card")]
-      .some(item => item.style.display !== "none")) {
-    switchTab("ads");
-  } else {
-    switchTab("market");
-  }
-
-  if (count === 0) {
-    alert("Тохирох бараа, зар олдсонгүй.");
-  }
-}
-
-/* САГС ХАРАХ */
-function showCart() {
-  document.querySelectorAll(".tab-content").forEach(section => {
-    section.classList.add("hidden");
-  });
-
-  document.querySelector(".tabs").parentElement.classList.add("hidden");
-  document.getElementById("cartArea").classList.remove("hidden");
-
-  renderCart();
-}
-
-/* САГСНААС БУЦАХ */
-function closeCart() {
-  document.getElementById("cartArea").classList.add("hidden");
-  document.querySelector(".tabs").parentElement.classList.remove("hidden");
-  switchTab("market");
-}
-
-</script>
 
 </body>
       </html>
