@@ -526,7 +526,41 @@ footer strong {
    <div id="supplier" class="tab-content hidden">
 
   <h2 class="section-title">🏪 Нийлүүлэгчийн удирдлагын самбар</h2>
+<div class="panel" id="supplierRegister">
+  <h3>📝 Нийлүүлэгчээр бүртгүүлэх</h3>
 
+  <label>Бүртгэлийн төрөл</label>
+  <select id="supplierType">
+    <option value="">Сонгоно уу</option>
+    <option value="individual">Хувь хүн</option>
+    <option value="company">Байгууллага</option>
+  </select>
+
+  <label>Нэр / Байгууллагын нэр</label>
+  <input type="text" id="supplierName"
+         placeholder="Нэрээ оруулна уу">
+
+  <label>Регистр / Байгууллагын регистр</label>
+  <input type="text" id="supplierRegisterNo"
+         placeholder="Регистрийн дугаар">
+
+  <label>Утасны дугаар</label>
+  <input type="tel" id="supplierPhone"
+         placeholder="Утасны дугаар">
+
+  <label>И-мэйл</label>
+  <input type="email" id="supplierEmail"
+         placeholder="И-мэйл хаяг">
+
+  <label>Байршил, хаяг</label>
+  <input type="text" id="supplierAddress"
+         placeholder="Аймаг, хот, дүүрэг">
+
+  <button class="dark-btn" type="button"
+          onclick="registerSupplier()">
+    Бүртгүүлэх
+  </button>
+</div>
   <div class="panel">
     <h3>👤 Миний мэдээлэл</h3>
     <p>Нийлүүлэгчийн бүртгэл, мэдээлэл</p>
@@ -942,6 +976,48 @@ function loginDemo() {
 /* БҮРТГҮҮЛЭХ */
 function registerDemo() {
   alert("Бодит бүртгэлийн систем дараагийн хөгжүүлэлтээр холбогдоно.");
+}
+ /* НИЙЛҮҮЛЭГЧИЙН БҮРТГЭЛ */
+function registerSupplier() {
+  const type = document.getElementById("supplierType").value;
+  const name = document.getElementById("supplierName").value.trim();
+  const regNo = document.getElementById("supplierRegisterNo").value.trim();
+  const phone = document.getElementById("supplierPhone").value.trim();
+  const email = document.getElementById("supplierEmail").value.trim();
+  const address = document.getElementById("supplierAddress").value.trim();
+
+  if (!type || !name || !phone || !address) {
+    alert("Заавал бөглөх мэдээллээ оруулна уу.");
+    return;
+  }
+
+  const supplier = {
+    type,
+    name,
+    regNo,
+    phone,
+    email,
+    address,
+    status: "Хянагдаж байна",
+    date: new Date().toLocaleDateString()
+  };
+
+  localStorage.setItem("nexoraSupplier", JSON.stringify(supplier));
+
+  alert("Нийлүүлэгчийн хүсэлт амжилттай илгээгдлээ. Админы шалгалтыг хүлээнэ үү.");
+}
+ /* НИЙЛҮҮЛЭГЧИЙН МЭДЭЭЛЭЛ ХАРУУЛАХ */
+function loadSupplierInfo() {
+  const data = JSON.parse(
+    localStorage.getItem("nexoraSupplier") || "null"
+  );
+
+  if (!data) return;
+
+  document.getElementById("supplierName").value = data.name || "";
+  document.getElementById("supplierPhone").value = data.phone || "";
+  document.getElementById("supplierEmail").value = data.email || "";
+  document.getElementById("supplierAddress").value = data.address || "";
 }
 /* NEXORA НИЙТЭЛСЭН БАРААГ ХАРУУЛАХ */
 function loadPublishedProducts() {
