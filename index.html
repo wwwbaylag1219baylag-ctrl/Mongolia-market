@@ -559,13 +559,14 @@ footer strong {
   <label>Бүртгэлийн төрөл</label>
   <select id="supplierType"
   
+
 <select id="supplierType"
   onchange="
     document.getElementById('supplierFormFields').classList.toggle('hidden', this.value === '');
     document.getElementById('supplierNameLabel').textContent = this.value === 'company' ? 'Байгууллагын нэр' : 'Нэр';
     document.getElementById('supplierRegisterLabel').textContent = this.value === 'company' ? 'Байгууллагын регистр' : 'Регистрийн дугаар';
   ">
- 
+
     <option value="">Сонгоно уу</option>
     <option value="individual">Хувь хүн</option>
     <option value="company">Байгууллага</option>
@@ -574,12 +575,16 @@ footer strong {
   <div id="supplierFormFields" class="hidden">
 
     
+
 <label id="supplierNameLabel">Нэр</label>
+
 
     <input type="text" id="supplierName"
       placeholder="Нэрээ оруулна уу">
 
-    <label>Регистр / Байгууллагын регистр</label>
+   
+<label id="supplierRegisterLabel">Регистрийн дугаар</label>
+ 
     <input type="text" id="supplierRegisterNo"
       placeholder="Регистрийн дугаар">
 
