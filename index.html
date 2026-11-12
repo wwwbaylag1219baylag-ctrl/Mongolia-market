@@ -552,42 +552,48 @@ footer strong {
    <div id="supplier" class="tab-content hidden">
 
   <h2 class="section-title">🏪 Нийлүүлэгчийн удирдлагын самбар</h2>
-<div class="panel" id="supplierRegister">
-  <h3>📝 Нийлүүлэгчээр бүртгүүлэх</h3>
+
+<details class="panel" id="supplierRegister">
+  <summary>📝 Нийлүүлэгчээр бүртгүүлэх</summary>
 
   <label>Бүртгэлийн төрөл</label>
-  <select id="supplierType">
+  <select id="supplierType"
+    onchange="document.getElementById('supplierFormFields').classList.toggle('hidden', this.value === '')">
     <option value="">Сонгоно уу</option>
     <option value="individual">Хувь хүн</option>
     <option value="company">Байгууллага</option>
   </select>
 
-  <label>Нэр / Байгууллагын нэр</label>
-  <input type="text" id="supplierName"
-         placeholder="Нэрээ оруулна уу">
+  <div id="supplierFormFields" class="hidden">
 
-  <label>Регистр / Байгууллагын регистр</label>
-  <input type="text" id="supplierRegisterNo"
-         placeholder="Регистрийн дугаар">
+    <label>Нэр / Байгууллагын нэр</label>
+    <input type="text" id="supplierName"
+      placeholder="Нэрээ оруулна уу">
 
-  <label>Утасны дугаар</label>
-  <input type="tel" id="supplierPhone"
-         placeholder="Утасны дугаар">
+    <label>Регистр / Байгууллагын регистр</label>
+    <input type="text" id="supplierRegisterNo"
+      placeholder="Регистрийн дугаар">
 
-  <label>И-мэйл</label>
-  <input type="email" id="supplierEmail"
-         placeholder="И-мэйл хаяг">
+    <label>Утасны дугаар</label>
+    <input type="tel" id="supplierPhone"
+      placeholder="Утасны дугаар">
 
-  <label>Байршил, хаяг</label>
-  <input type="text" id="supplierAddress"
-         placeholder="Аймаг, хот, дүүрэг">
+    <label>И-мэйл</label>
+    <input type="email" id="supplierEmail"
+      placeholder="И-мэйл хаяг">
 
-  <button class="dark-btn" type="button"
-          onclick="registerSupplier()">
-    Бүртгүүлэх
-  </button>
-</div>
- 
+    <label>Байршил, хаяг</label>
+    <input type="text" id="supplierAddress"
+      placeholder="Аймаг, хот, дүүрэг">
+
+    <button class="dark-btn" type="button"
+      onclick="registerSupplier()">
+      Бүртгүүлэх
+    </button>
+
+  </div>
+</details>
+
 <details class="panel">
   <summary>👤 Миний мэдээлэл</summary>
   <p>Нийлүүлэгчийн бүртгэл, мэдээлэл</p>
