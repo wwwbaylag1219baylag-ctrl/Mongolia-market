@@ -560,14 +560,21 @@ function switchTab(name, element) {
   document.querySelector(".tabs").parentElement.classList.remove("hidden");
 }
 
-/* ЗАРЫН ФОРМ */
+
+/* БАРАА БОЛОН ЗАРЫН ФОРМ НЭЭХ, ХААХ */
 function showSection(id) {
   document.getElementById("adFormArea").classList.add("hidden");
+  document.getElementById("productFormArea").classList.add("hidden");
 
   if (id) {
-    document.getElementById(id).classList.remove("hidden");
+    const section = document.getElementById(id);
+    if (section) {
+      section.classList.remove("hidden");
+    }
   }
 }
+
+
 
 /* ЗАР НИЙТЛЭХ */
 function publishAd() {
