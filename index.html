@@ -538,8 +538,22 @@ footer strong {
   <h2 class="section-title">👤 Миний булан</h2>
   <div class="panel">
     <p>Хэрэглэгчийн бүртгэл, нэвтрэх хэсэг</p>
-    <input class="field" id="loginPhone" placeholder="Утасны дугаар">
-    <input class="field" id="loginPassword" type="password" placeholder="Нууц үг">
+
+    <select class="field" id="loginMethod"
+      onchange="
+        document.getElementById('loginPhone').placeholder =
+        this.value === 'email' ? 'И-мэйл хаяг' : 'Утасны дугаар';
+      ">
+      <option value="phone">Утасны дугаараар</option>
+      <option value="email">И-мэйлээр</option>
+    </select>
+
+    <input class="field" id="loginPhone" type="text"
+      placeholder="Утасны дугаар">
+
+    <input class="field" id="loginPassword"
+      type="password" placeholder="Нууц үг">
+
     <button class="primary-btn" onclick="loginDemo()">Нэвтрэх</button>
     <button class="dark-btn" onclick="registerDemo()">Бүртгүүлэх</button>
   </div>
