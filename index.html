@@ -3,6 +3,7 @@
 <html lang="mn">
  
 <head>
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#101827">
@@ -1064,7 +1065,11 @@ function loadSupplierInfo() {
   document.getElementById("supplierPhone").value = data.phone || "";
   document.getElementById("supplierEmail").value = data.email || "";
   document.getElementById("supplierAddress").value = data.address || "";
-}
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+ 
 /* NEXORA НИЙТЭЛСЭН БАРААГ ХАРУУЛАХ */
 function loadPublishedProducts() {
   const products = JSON.parse(
@@ -1134,7 +1139,10 @@ function loadPublishedProducts() {
     list.prepend(card);
   });
 }
-
+/* SUPABASE ХОЛБОЛТ */
+const SUPABASE_URL = "https://grbpbmowhkbtuxostfny.supabase.co";
+const SUPABASE_KEY = "ӨМНӨ АВСАН PUBLISHABLE KEY"; 
+sb_publishable_lsaO5bgEUrSibZdfRbPjRA_8kFIrT11
 loadPublishedProducts();
 /* АНХНЫ ЦЭС */
 switchTab("market");
