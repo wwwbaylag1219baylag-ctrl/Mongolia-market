@@ -571,6 +571,23 @@ footer strong {
     <p>❤️ Хадгалсан бараа</p>
     <p>🛒 Миний захиалга</p>
     <p>🔔 Мэдэгдэл</p>
+   
+<div class="profile-box">
+  <h3>👤 Миний профайл</h3>
+
+  <input class="field" id="profileFullName"
+    type="text"
+    placeholder="Овог, нэр">
+
+  <input class="field" id="profilePhone"
+    type="tel"
+    placeholder="Утасны дугаар">
+
+  <button class="primary-btn" onclick="saveProfile()">
+    Профайл хадгалах
+  </button>
+</div>
+   
    </div>
 </div>
    <div id="supplier" class="tab-content hidden">
@@ -1077,6 +1094,43 @@ if (profileError) {
 }
 }
 alert("Амжилттай нэвтэрлээ!");
+}
+ /* ПРОФАЙЛ ХАДГАЛАХ */
+async function saveProfile() {
+  const { data: authData } = await supabaseClient.auth.getUser();
+
+  if (!authData.user) {
+    alert("Эхлээд нэвтэрнэ үү.");
+    return;
+  }
+
+  const fullName = document.getElementById("profileFullName").value.trim();
+  const phone = document.getElementById("profilePhone").value.trim();
+
+  if (!fullName || !phone) {
+    alert("Овог нэр болон утасны дугаараа оруулна уу.");
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from("profiles")
+    .upsert(
+      {
+        id: authData.user.id,
+        full: fullName,
+        phone: phone
+      },
+      {
+        onConflict: "id"
+      }
+    );
+
+  if (error) {
+    alert("Профайл хадгалахад алдаа гарлаа: " + error.message);
+    return;
+  }
+
+  alert("Профайл амжилттай хадгалагдлаа!");
 }
 /* БҮРТГҮҮЛЭХ */
 async function registerDemo() {
