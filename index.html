@@ -1020,23 +1020,67 @@ document.getElementById("adList").prepend(card);
 
   alert("Зар энэ төхөөрөмж дээр түр нийтлэгдлээ.");
 }
-
+ 
 /* НЭВТРЭХ */
-function loginDemo() {
-  const phone = document.getElementById("loginPhone").value.trim();
+async function loginDemo() {
+  const method = document.getElementById("loginMethod").value;
+  const value = document.getElementById("loginPhone").value.trim();
   const password = document.getElementById("loginPassword").value;
 
-  if (!phone || !password) {
-    alert("Утас болон нууц үгээ оруулна уу.");
+  if (!value || !password) {
+    alert("И-мэйл болон нууц үгээ оруулна уу.");
     return;
   }
 
-  alert("Бодит нэвтрэх сервер хараахан холбогдоогүй байна.");
+  if (method === "phone") {
+    alert("Утасны нэвтрэлт одоогоор холбогдоогүй байна.");
+    return;
+  }
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email: value,
+    password: password
+  });
+
+  if (error) {
+    alert("Нэвтрэхэд алдаа гарлаа: " + error.message);
+    return;
+  }
+
+  alert("Амжилттай нэвтэрлээ!");
 }
 
 /* БҮРТГҮҮЛЭХ */
-function registerDemo() {
-  alert("Бодит бүртгэлийн систем дараагийн хөгжүүлэлтээр холбогдоно.");
+async function registerDemo() {
+  const method = document.getElementById("loginMethod").value;
+  const value = document.getElementById("loginPhone").value.trim();
+  const password = document.getElementById("loginPassword").value;
+
+  if (!value || !password) {
+    alert("И-мэйл болон нууц үгээ оруулна уу.");
+    return;
+  }
+
+  if (method === "phone") {
+    alert("Утасны бүртгэл одоогоор холбогдоогүй байна.");
+    return;
+  }
+
+  const { data, error } = await supabaseClient.auth.signUp({
+    email: value,
+    password: password
+  });
+
+  if (error) {
+    alert("Бүртгүүлэхэд алдаа гарлаа: " + error.message);
+    return;
+  }
+
+  alert(
+    data.session
+      ? "Бүртгэл амжилттай үүслээ!"
+      : "Бүртгэл үүслээ. И-мэйлээ шалгаж баталгаажуулна уу."
+  );
 }
  /* НИЙЛҮҮЛЭГЧИЙН БҮРТГЭЛ */
 function registerSupplier() {
