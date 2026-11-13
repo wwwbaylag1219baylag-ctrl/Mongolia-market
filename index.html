@@ -1064,12 +1064,9 @@ function loadSupplierInfo() {
   document.getElementById("supplierName").value = data.name || "";
   document.getElementById("supplierPhone").value = data.phone || "";
   document.getElementById("supplierEmail").value = data.email || "";
-  document.getElementById("supplierAddress").value = data.address || "";
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
- 
+   document.getElementById("supplierAddress").value = data.address || "";
+}
+
 /* NEXORA НИЙТЭЛСЭН БАРААГ ХАРУУЛАХ */
 function loadPublishedProducts() {
   const products = JSON.parse(
@@ -1141,7 +1138,7 @@ function loadPublishedProducts() {
 }
 /* SUPABASE ХОЛБОЛТ */
 const SUPABASE_URL = "https://grbpbmowhkbtuxostfny.supabase.co";
-const SUPABASE_KEY = "https://grbpbmowhkbtuxostfny.supabase.co/rest/v1/";
+const SUPABASE_KEY = 
 loadPublishedProducts();
 /* АНХНЫ ЦЭС */
 switchTab("market");
