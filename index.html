@@ -1046,7 +1046,12 @@ async function loginDemo() {
     alert("Нэвтрэхэд алдаа гарлаа: " + error.message);
     return;
   }
+const emailDisplay = document.getElementById("loggedInEmail");
 
+if (emailDisplay) {
+  emailDisplay.textContent = "Нэвтэрсэн хэрэглэгч: " + data.user.email;
+  emailDisplay.style.display = "block";
+ }
   alert("Амжилттай нэвтэрлээ!");
 }
 
