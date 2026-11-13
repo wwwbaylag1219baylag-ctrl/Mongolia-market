@@ -1117,7 +1117,7 @@ async function saveProfile() {
     .upsert(
       {
         id: authData.user.id,
-        full_name: fullName,
+        full: fullName,
         phone: phone
       },
       {
