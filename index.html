@@ -1138,7 +1138,11 @@ function loadPublishedProducts() {
 }
 /* SUPABASE ХОЛБОЛТ */
 const SUPABASE_URL = "https://grbpbmowhkbtuxostfny.supabase.co";
-const SUPABASE_KEY = 
+const SUPABASE_KEY = "sb_publishable_wspX-C4VBPJMmvWuQgsMTw_h40w8O3x";
+ const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 loadPublishedProducts();
 /* АНХНЫ ЦЭС */
 switchTab("market");
