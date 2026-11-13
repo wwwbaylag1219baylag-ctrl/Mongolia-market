@@ -363,16 +363,16 @@ footer strong {
 
 <main class="container">
 
-<div class="search-box">
- <input
-  type="search"
-  id="searchInput"
-  name="nexora_market_search"
-  autocomplete="new-password"
-  autocapitalize="off"
-  placeholder="Бараа, зар, үйлчилгээ хайх..."
-> 
-  <button class="primary-btn" onclick="searchAll()">Хайх</button>
+<div class="search-box" role="search">
+  <input
+    type="search"
+    id="searchInput"
+    name="nexora_search"
+    autocomplete="off"
+    data-form-type="other"
+    placeholder="Бараа, зар, үйлчилгээ хайх..."
+  >
+  <button class="primary-btn" type="button" onclick="searchAll()">Хайх</button>
 </div>
 <h2 class="section-title">📂 Худалдааны ангилал</h2>
 
