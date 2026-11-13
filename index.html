@@ -1067,9 +1067,12 @@ async function registerDemo() {
   }
 
   const { data, error } = await supabaseClient.auth.signUp({
-    email: value,
-    password: password
-  });
+  email: value,
+  password: password,
+  options: {
+    emailRedirectTo: "https://wwwbaylag1219baylag-ctrl.github.io/Mongolia-market/"
+  }
+});
 
   if (error) {
     alert("Бүртгүүлэхэд алдаа гарлаа: " + error.message);
