@@ -554,12 +554,15 @@ footer strong {
       <option value="email">И-мэйлээр</option>
     </select>
 
-    <input class="field" id="loginPhone" type="text"
-      placeholder="Утасны дугаар">
+   <input class="field" id="loginPhone"
+  type="text"
+  autocomplete="username"
+  placeholder="Утасны дугаар">
 
-    <input class="field" id="loginPassword"
-      type="password" placeholder="Нууц үг">
-
+<input class="field" id="loginPassword"
+  type="password"
+  autocomplete="current-password"
+  placeholder="Нууц үг"> 
     <button class="primary-btn" onclick="loginDemo()">Нэвтрэх</button>
     <button class="dark-btn" onclick="registerDemo()">Бүртгүүлэх</button>
   </div>
