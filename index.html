@@ -1051,7 +1051,8 @@ const emailDisplay = document.getElementById("loggedInEmail");
 if (emailDisplay) {
   emailDisplay.textContent = "Нэвтэрсэн хэрэглэгч: " + data.user.email;
   emailDisplay.style.display = "block";
-  document.getElementById("account").prepend(emailDisplay);
+  
+document.querySelector("#account .section-title").after(emailDisplay);
 }
 alert("Амжилттай нэвтэрлээ!");
 }
