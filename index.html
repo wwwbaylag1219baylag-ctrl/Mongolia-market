@@ -1129,8 +1129,10 @@ function toggleAdForm() {
  }
 let currentAdIdForPayment = null;
 let selectedAdPackage = null;
+ let selectedBankAccount = null;
  
- async function selectAdPackage(days, amount) {
+
+async function selectAdPackage(days, amount) {
   if (!currentAdIdForPayment) {
     alert("Зараа эхлээд нийтэлнэ үү.");
     return;
@@ -1141,13 +1143,19 @@ let selectedAdPackage = null;
     amount: amount
   };
 
+  selectedBankAccount = null;
+
+  document.getElementById("adPackageArea").classList.add("hidden");
+
   const area = document.getElementById("adBankArea");
   const list = document.getElementById("adBankList");
   const details = document.getElementById("adBankDetails");
+  const receiptArea = document.getElementById("adReceiptArea");
 
   area.classList.remove("hidden");
   list.textContent = "Банкны мэдээлэл ачаалж байна...";
   details.textContent = "";
+  receiptArea.classList.add("hidden");
 
   const { data, error } = await supabaseClient
     .from("bank_accounts")
@@ -1174,17 +1182,27 @@ let selectedAdPackage = null;
     button.textContent = account.bank_name;
 
     button.onclick = function () {
+      selectedBankAccount = account;
+
       details.textContent =
-        account.bank_name + " | Данс: " +
-        account.account_number +
-        " | Эзэмшигч: " +
-        account.account_holder +
+        account.bank_name +
+        " | Данс: " + account.account_number +
+        " | Эзэмшигч: " + account.account_holder +
         " | Төлөх дүн: " +
         selectedAdPackage.amount.toLocaleString("mn-MN") + "₮";
+
+      receiptArea.classList.remove("hidden");
     };
 
     list.appendChild(button);
   });
+}
+
+function backToAdPackages() {
+  document.getElementById("adBankArea").classList.add("hidden");
+  document.getElementById("adPackageArea").classList.remove("hidden");
+}
+ 
                }
 /* ЗАР НИЙТЛЭХ */
 async function publishAd() {
