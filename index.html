@@ -1164,9 +1164,7 @@ alert("Амжилттай нэвтэрлээ!");
 
 
 let selectedProfileImage = null;
-
-/* ПРОФАЙЛ ЗУРАГ УРЬДЧИЛАН ХАРУУЛАХ */
-function previewProfileImage(event) {
+async function previewProfileImage(event) {
   const file = event.target.files[0];
   if (!file) return;
 
@@ -1177,6 +1175,7 @@ function previewProfileImage(event) {
 
   selectedProfileImage = file;
 
+  // Профайл дээр шууд харуулах
   const reader = new FileReader();
 
   reader.onload = function () {
@@ -1186,6 +1185,50 @@ function previewProfileImage(event) {
   };
 
   reader.readAsDataURL(file);
+
+  // Нэвтэрсэн хэрэглэгчийг шалгах
+  const { data: authData } = await supabaseClient.auth.getUser();
+
+  if (!authData.user) {
+    alert("Эхлээд нэвтэрнэ үү.");
+    return;
+  }
+
+  const user = authData.user;
+  const fileExt = file.name.split(".").pop() || "jpg";
+  const avatarPath = user.id + "/avatar-" + Date.now() + "." + fileExt;
+
+  // Зургийг автоматаар хадгалах
+  const { error: uploadError } = await supabaseClient.storage
+    .from("avatars")
+    .upload(avatarPath, file);
+
+  if (uploadError) {
+    alert("Зураг хадгалахад алдаа гарлаа: " + uploadError.message);
+    return;
+  }
+
+  // Профайлын зурагны замыг хадгалах
+  const { error: profileError } = await supabaseClient
+    .from("profiles")
+    .upsert({
+      id: user.id,
+      avatar_path: avatarPath
+    }, {
+      onConflict: "id"
+    });
+
+  if (profileError) {
+    alert("Профайл зураг хадгалахад алдаа гарлаа: " + profileError.message);
+    return;
+  }
+
+  selectedProfileImage = null;
+
+  // Дээд талын дүрсийг шууд шинэчлэх
+  await loadHeaderProfileImage();
+
+  alert("Профайл зураг амжилттай солигдлоо!");
 }
 
 /* ПРОФАЙЛ ХАДГАЛАХ */
