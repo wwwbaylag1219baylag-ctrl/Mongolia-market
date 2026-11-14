@@ -614,6 +614,28 @@ footer strong {
     placeholder="Утасны дугаар">
 
   <button class="primary-btn" onclick="saveProfile()">
+   
+/* ПРОФАЙЛ ЗУРАГ УРЬДЧИЛАН ХАРУУЛАХ */
+function previewProfileImage(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    alert("Зургийн файл сонгоно уу.");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function () {
+    document.getElementById("profilePreview").src = reader.result;
+    document.getElementById("profilePreview").style.display = "block";
+    document.getElementById("profileDefault").style.display = "none";
+  };
+
+  reader.readAsDataURL(file);
+}
+
     Профайл хадгалах
   </button>
 </div>
