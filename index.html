@@ -815,7 +815,15 @@ let selectedCategory = "Бүгд";
   }
 })();
 /* NEXORA БАРАА НИЙТЛЭХ */
-function publishProduct() {
+async function publishProduct() {
+   const { data: authData } = await supabaseClient.auth.getUser();
+
+  if (!authData.user) {
+    alert("Бараа нийтлэхийн тулд эхлээд нэвтэрнэ үү.");
+    return;
+  }
+
+  const ownerId = authData.user.id;
   const title = document.getElementById("productTitle").value.trim();
   const category = document.getElementById("productCategory").value;
   const price = document.getElementById("productPrice").value;
@@ -837,8 +845,10 @@ function publishProduct() {
     const products = JSON.parse(localStorage.getItem("nexoraProducts") || "[]");
 
     products.push({
-      id: Date.now(),
-      title,
+     id: Date.now(),
+ownerId,
+title,
+     
       category,
       price,
       description,
