@@ -550,11 +550,47 @@ footer strong {
   </div>
 </div>
 
+
 <div id="account" class="tab-content hidden">
   <h2 class="section-title">👤 Миний булан</h2>
- <p id="loggedInEmail" style="display:none;"></p>
-  <div class="panel">
-    <p>Хэрэглэгчийн бүртгэл, нэвтрэх хэсэг</p>
+
+  <p id="loggedInEmail" style="display:none;"></p>
+
+  <details class="panel">
+    <summary>👤 Миний мэдээлэл</summary>
+
+    <div class="profile-box">
+      <div style="text-align:center;margin:15px 0;">
+        <img id="profilePreview" src="" alt="Профайл зураг"
+          style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:2px solid #39ff14;display:none;margin:0 auto 10px;">
+
+        <div style="font-size:48px;" id="profileDefault">👤</div>
+
+        <label for="profileImageInput"
+          style="display:inline-block;padding:10px 15px;border:1px solid #39ff14;border-radius:8px;color:#baffaa;cursor:pointer;">
+          📷 Профайл зураг сонгох
+        </label>
+
+        <input type="file" id="profileImageInput"
+          accept="image/*" style="display:none;"
+          onchange="previewProfileImage(event)">
+      </div>
+
+      <input class="field" id="profileFullName"
+        type="text" placeholder="Овог, нэр">
+
+      <input class="field" id="profilePhone"
+        type="tel" placeholder="Утасны дугаар">
+
+      <button class="primary-btn" onclick="saveProfile()">
+        Профайл хадгалах
+      </button>
+    </div>
+  </details>
+
+  <details class="panel">
+    <summary>🔐 Нэвтрэх / Бүртгүүлэх</summary>
+
     <select class="field" id="loginMethod"
       onchange="
         document.getElementById('loginPhone').placeholder =
@@ -564,62 +600,54 @@ footer strong {
       <option value="email">И-мэйлээр</option>
     </select>
 
-   <input class="field" id="loginPhone"
-  type="text"
-  autocomplete="username"
-  placeholder="Утасны дугаар">
+    <input class="field" id="loginPhone" type="text"
+      autocomplete="username" placeholder="Утасны дугаар">
 
-<input class="field" id="loginPassword"
-  type="password"
-  autocomplete="current-password"
-  placeholder="Нууц үг"> 
+    <input class="field" id="loginPassword" type="password"
+      autocomplete="current-password" placeholder="Нууц үг">
+
     <button class="primary-btn" onclick="loginDemo()">Нэвтрэх</button>
     <button class="dark-btn" onclick="registerDemo()">Бүртгүүлэх</button>
-  </div>
+  </details>
+
+  <details class="panel">
+    <summary>📢 Миний зарууд</summary>
+    <p>Нийтэлсэн зарууд харагдах хэсэг</p>
+  </details>
+
+  <details class="panel">
+    <summary>📦 Миний бараанууд</summary>
+    <p>Нийтэлсэн бараанууд харагдах хэсэг</p>
+  </details>
+
+  <details class="panel">
+    <summary>🛒 Миний захиалгууд</summary>
+    <p>Захиалгын мэдээлэл харагдах хэсэг</p>
+  </details>
+
+  <details class="panel">
+    <summary>💰 Орлого, зарлага</summary>
+    <p>Орлого, зарлагын мэдээлэл</p>
+  </details>
+
+  <details class="panel">
+    <summary>💳 Төлбөрийн түүх, үлдэгдэл</summary>
+    <p>Төлбөрийн мэдээлэл</p>
+  </details>
+
+  <details class="panel">
+    <summary>⚙️ Тохиргоо</summary>
+    <p>Хэрэглэгчийн тохиргоо</p>
+  </details>
+
   <div class="panel">
-    <p>📌 Миний зар</p>
-    <p>❤️ Хадгалсан бараа</p>
-    <p>🛒 Миний захиалга</p>
-    <p>🔔 Мэдэгдэл</p>
-   
-<div class="profile-box">
-  <h3>👤 Миний профайл</h3>
-
-  <div style="text-align:center;margin:15px 0;">
-    <img id="profilePreview"
-      src=""
-      alt="Профайл зураг"
-      style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:2px solid #39ff14;display:none;margin:0 auto 10px;">
-
-    <div style="font-size:48px;" id="profileDefault">👤</div>
-
-    <label for="profileImageInput"
-      style="display:inline-block;padding:10px 15px;border:1px solid #39ff14;border-radius:8px;color:#baffaa;cursor:pointer;">
-      📷 Профайл зураг сонгох
-    </label>
-
-    <input type="file" id="profileImageInput"
-      accept="image/*"
-      style="display:none;"
-      onchange="previewProfileImage(event)">
+    <button class="dark-btn" onclick="logoutNexora()">
+      🚪 Гарах
+    </button>
   </div>
-
-  <input class="field" id="profileFullName"
-    type="text"
-    placeholder="Овог, нэр">
-
-  <input class="field" id="profilePhone"
-    type="tel"
-    placeholder="Утасны дугаар">
-
-  <button class="primary-btn" onclick="saveProfile()">
-   
-    Профайл хадгалах
-  </button>
 </div>
-   
-   </div>
-</div>
+
+  
    <div id="supplier" class="tab-content hidden">
 
   <h2 class="section-title">🏪 Нийлүүлэгчийн удирдлагын самбар</h2>
