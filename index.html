@@ -537,6 +537,12 @@ footer strong {
     30 хоног — 15,000₮
   </button>
 </div>
+ <div id="adBankArea" class="panel hidden">
+  <h3>🏦 Банк сонгох</h3>
+  <p>Төлбөр шилжүүлэх банкаа сонгоно уу.</p>
+  <div id="adBankList"></div>
+  <div id="adBankDetails"></div>
+</div>
   <div id="adList" class="ad-grid"></div>
 </div>
 
@@ -1084,7 +1090,62 @@ function showSection(id) {
 
 let currentAdIdForPayment = null;
 let selectedAdPackage = null;
- 
+ async function selectAdPackage(days, amount) {
+  if (!currentAdIdForPayment) {
+    alert("Зараа эхлээд нийтэлнэ үү.");
+    return;
+  }
+
+  selectedAdPackage = {
+    days: days,
+    amount: amount
+  };
+
+  const area = document.getElementById("adBankArea");
+  const list = document.getElementById("adBankList");
+  const details = document.getElementById("adBankDetails");
+
+  area.classList.remove("hidden");
+  list.textContent = "Банкны мэдээлэл ачаалж байна...";
+  details.textContent = "";
+
+  const { data, error } = await supabaseClient
+    .from("bank_accounts")
+    .select("id, bank_name, account_number, account_holder")
+    .eq("is_active", true)
+    .order("display_order");
+
+  if (error) {
+    list.textContent = "Банкны мэдээлэл авахад алдаа гарлаа.";
+    console.error(error);
+    return;
+  }
+
+  list.innerHTML = "";
+
+  if (!data || data.length === 0) {
+    list.textContent = "Банкны дансны мэдээлэл хараахан бүртгэгдээгүй байна.";
+    return;
+  }
+
+  data.forEach(account => {
+    const button = document.createElement("button");
+    button.className = "primary-btn";
+    button.textContent = account.bank_name;
+
+    button.onclick = function () {
+      details.textContent =
+        account.bank_name + " | Данс: " +
+        account.account_number +
+        " | Эзэмшигч: " +
+        account.account_holder +
+        " | Төлөх дүн: " +
+        selectedAdPackage.amount.toLocaleString("mn-MN") + "₮";
+    };
+
+    list.appendChild(button);
+  });
+               }
 /* ЗАР НИЙТЛЭХ */
 async function publishAd() {
   const title = document.getElementById("adTitle").value.trim();
