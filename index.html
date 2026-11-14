@@ -357,11 +357,12 @@ footer strong {
       🛒 Сагс (<span id="cartCount">0</span>)
     </div>
 
-    <div onclick="switchTab('account')"
-      style="background:#102c19;border:1px solid #39ff14;border-radius:8px;padding:8px 11px;cursor:pointer;font-size:21px;">
-      👤
-    </div>
-
+   
+<div onclick="toggleAccount()"
+  style="background:#102c19;border:1px solid #39ff14;border-radius:8px;padding:8px 11px;cursor:pointer;font-size:21px;">
+  👤
+</div>
+ 
   </div>
 </div>
 </header>
@@ -1402,8 +1403,21 @@ const SUPABASE_KEY = "sb_publishable_wspX-C4VBPJMmvWuQgsMTw_h40w8O3x";
   SUPABASE_KEY
 );
 loadPublishedProducts();
+
 /* АНХНЫ ЦЭС */
 switchTab("market");
+
+/* ПРОФАЙЛ НЭЭХ, БУЦАХ */
+function toggleAccount() {
+  const account = document.getElementById("account");
+
+  if (account && !account.classList.contains("hidden")) {
+    switchTab("market");
+  } else {
+    switchTab("account");
+  }
+}
+
 </script>
   
 <style>
