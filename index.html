@@ -841,7 +841,7 @@ async function publishProduct() {
     return;
   }
 
-  const saveProduct = (image) => {
+  const saveProduct = async (image) => {
     const products = JSON.parse(localStorage.getItem("nexoraProducts") || "[]");
 
     products.push({
