@@ -975,6 +975,7 @@ document.querySelectorAll("#categories .category").forEach(category => {
     });
   });
 });
+
 /* ЦЭС СОЛИХ */
 function switchTab(name, element) {
   document.querySelectorAll(".tab-content").forEach(section => {
@@ -1000,7 +1001,11 @@ function switchTab(name, element) {
   }
 
   document.getElementById("cartArea").classList.add("hidden");
-  document.querySelector(".tabs").parentElement.classList.remove("hidden");
+
+  const isAccount = name === "account";
+
+  document.querySelector(".tabs").classList.toggle("hidden", isAccount);
+  document.querySelector(".mobile-nav").classList.toggle("hidden", isAccount);
 }
 
 
