@@ -1066,9 +1066,8 @@ function showSection(id) {
 }
 
 
-
 /* ЗАР НИЙТЛЭХ */
-function publishAd() {
+async function publishAd() {
   const title = document.getElementById("adTitle").value.trim();
   const category = document.getElementById("adCategory").value;
   const description = document.getElementById("adDescription").value.trim();
@@ -1080,50 +1079,89 @@ function publishAd() {
     return;
   }
 
-  const card = document.createElement("div");
-  card.className = "ad-card";
+  let priceValue = null;
 
-  const heading = document.createElement("h3");
-  heading.textContent = title;
+  if (price) {
+    priceValue = Number(price.replace(/,/g, ""));
 
-  const type = document.createElement("p");
-  type.textContent = "Ангилал: " + category;
-
-  const detail = document.createElement("p");
-  detail.textContent = description;
-
-  const cost = document.createElement("p");
-  cost.textContent = price ? "Үнэ: " + price + "₮" : "Үнэ тохирно";
-
-
-const contact = document.createElement("p");
-contact.textContent = "Утас: " + phone;
-
-// ЗАР УСТГАХ ТОВЧ
-const deleteButton = document.createElement("button");
-deleteButton.className = "dark-btn";
-deleteButton.textContent = "🗑️ Устгах";
-
-deleteButton.onclick = function () {
-  if (confirm("Энэ зарыг устгах уу?")) {
-    card.remove();
-    alert("Зар устгагдлаа.");
+    if (!Number.isFinite(priceValue) || priceValue < 0) {
+      alert("Үнийг зөв тоогоор оруулна уу.");
+      return;
+    }
   }
-};
 
-card.append(heading, type, detail, cost, contact, deleteButton);
-document.getElementById("adList").prepend(card);
-  
+  try {
+    const { data: authData, error: authError } =
+      await supabaseClient.auth.getUser();
 
-  document.getElementById("adTitle").value = "";
-  document.getElementById("adCategory").value = "";
-  document.getElementById("adDescription").value = "";
-  document.getElementById("adPrice").value = "";
-  document.getElementById("adPhone").value = "";
-  document.getElementById("adFormArea").classList.add("hidden");
+    if (authError || !authData.user) {
+      alert("Зар нийтлэхийн тулд эхлээд нэвтэрнэ үү.");
+      return;
+    }
 
-  alert("Зар энэ төхөөрөмж дээр түр нийтлэгдлээ.");
+    const { data, error } = await supabaseClient
+      .from("classified_ads")
+      .insert({
+        owner_id: authData.user.id,
+        title: title,
+        category: category,
+        description: description,
+        price: priceValue,
+        phone: phone,
+        image_path: null,
+        status: "pending_payment"
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Зар хадгалах алдаа:", error);
+      alert("Зар хадгалахад алдаа гарлаа: " + error.message);
+      return;
+    }
+
+    const card = document.createElement("div");
+    card.className = "ad-card";
+
+    const heading = document.createElement("h3");
+    heading.textContent = data.title;
+
+    const type = document.createElement("p");
+    type.textContent = "Ангилал: " + data.category;
+
+    const detail = document.createElement("p");
+    detail.textContent = data.description;
+
+    const cost = document.createElement("p");
+    cost.textContent = data.price !== null
+      ? "Үнэ: " + data.price + "₮"
+      : "Үнэ тохирно";
+
+    const contact = document.createElement("p");
+    contact.textContent = "Утас: " + data.phone;
+
+    const status = document.createElement("p");
+    status.textContent = "Төлөв: Төлбөр хүлээгдэж байна";
+
+    card.append(heading, type, detail, cost, contact, status);
+
+    document.getElementById("adList").prepend(card);
+
+    document.getElementById("adTitle").value = "";
+    document.getElementById("adCategory").value = "";
+    document.getElementById("adDescription").value = "";
+    document.getElementById("adPrice").value = "";
+    document.getElementById("adPhone").value = "";
+    document.getElementById("adFormArea").classList.add("hidden");
+
+    alert("Зар Supabase-д амжилттай хадгалагдлаа. Одоо төлбөр хүлээгдэж байна.");
+
+  } catch (err) {
+    console.error(err);
+    alert("Алдаа гарлаа. Дахин оролдоно уу.");
+  }
 }
+
  
 /* НЭВТРЭХ */
 async function loginDemo() {
