@@ -705,7 +705,14 @@ footer strong {
     <summary>⚙️ Тохиргоо</summary>
     <p>Хэрэглэгчийн тохиргоо</p>
   </details>
-
+  <!-- NEXORA ADMIN -->
+  <div id="adminPaymentArea" class="panel hidden">
+    <h3>🛡️ NEXORA админ</h3>
+    <button class="primary-btn" onclick="loadAdminPaymentRequests()">
+      Төлбөрийн хүсэлтүүд харах
+    </button>
+    <div id="adminPaymentRequests"></div>
+  </div>
   <div class="panel">
     <button class="dark-btn" onclick="logoutNexora()">
       🚪 Гарах
