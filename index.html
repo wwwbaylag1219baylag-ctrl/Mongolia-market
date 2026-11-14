@@ -721,7 +721,7 @@ footer strong {
    <button class="primary-btn" onclick="toggleAdminPaymentRequests()">
   Төлбөрийн хүсэлтүүд харах
 </button> 
-    <div id="adminPaymentRequests"></div>
+   <div id="adminPaymentRequests" class="hidden"></div> 
   </div>
   <div class="panel">
     <button class="dark-btn" onclick="logoutNexora()">
@@ -2153,6 +2153,8 @@ async function loadMyClassifiedAds() {
   });
 }
 </script>
+
+<style>
 #adminPaymentRequests {
   max-height: calc(100vh - 220px);
   max-height: calc(100dvh - 220px);
@@ -2161,9 +2163,7 @@ async function loadMyClassifiedAds() {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   touch-action: pan-y;
-}  
-<style>
-/
+}
  /* NEXORA БҮТЭН ДЭЛГЭЦИЙН ТӨЛБӨР */
 .payment-screen {
   position: fixed;
