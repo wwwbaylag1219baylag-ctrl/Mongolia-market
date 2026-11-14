@@ -343,14 +343,25 @@ footer strong {
 
 <body>
 
+
 <header>
 <div class="topbar">
   <div class="logo">
     NEXORA
     <small>NEXT GENERATION MARKETPLACE</small>
   </div>
-  <div class="cart" onclick="showCart()">
-    🛒 Сагс (<span id="cartCount">0</span>)
+
+  <div style="display:flex;align-items:center;gap:8px;margin-left:auto;">
+
+    <div class="cart" onclick="showCart()">
+      🛒 Сагс (<span id="cartCount">0</span>)
+    </div>
+
+    <div onclick="switchTab('account')"
+      style="background:#102c19;border:1px solid #39ff14;border-radius:8px;padding:8px 11px;cursor:pointer;font-size:21px;">
+      👤
+    </div>
+
   </div>
 </div>
 </header>
