@@ -537,12 +537,48 @@ footer strong {
     30 хоног — 15,000₮
   </button>
 </div>
- <div id="adBankArea" class="panel hidden payment-screen">
+ 
+<div id="adBankArea" class="panel hidden payment-screen">
   <h3>🏦 Банк сонгох</h3>
   <p>Төлбөр шилжүүлэх банкаа сонгоно уу.</p>
+
   <div id="adBankList"></div>
   <div id="adBankDetails"></div>
+
+  <div id="adReceiptArea" class="hidden">
+    <h3>🧾 Шилжүүлгийн баримт</h3>
+
+    <label>Гүйлгээний утга эсвэл дугаар</label>
+    <input
+      class="field"
+      id="adTransferReference"
+      placeholder="Гүйлгээний дугаараа оруулна уу"
+    >
+
+    <label>Шилжүүлгийн баримт зураг эсвэл PDF</label>
+    <input
+      class="field"
+      id="adReceiptFile"
+      type="file"
+      accept="image/*,.pdf"
+    >
+
+    <button
+      class="primary-btn"
+      onclick="submitAdPaymentRequest()"
+    >
+      Төлбөрийн хүсэлт илгээх
+    </button>
+  </div>
+
+  <button
+    class="dark-btn"
+    onclick="backToAdPackages()"
+  >
+    ← Багц сонгох руу буцах
+  </button>
 </div>
+
   <div id="adList" class="ad-grid"></div>
 </div>
 
@@ -1093,6 +1129,7 @@ function toggleAdForm() {
  }
 let currentAdIdForPayment = null;
 let selectedAdPackage = null;
+ 
  async function selectAdPackage(days, amount) {
   if (!currentAdIdForPayment) {
     alert("Зараа эхлээд нийтэлнэ үү.");
