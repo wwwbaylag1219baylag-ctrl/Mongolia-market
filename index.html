@@ -1381,105 +1381,117 @@ function loadSupplierInfo() {
    document.getElementById("supplierAddress").value = data.address || "";
 }
 
+
+
+  
 /* NEXORA НИЙТЭЛСЭН БАРААГ ХАРУУЛАХ */
 async function loadPublishedProducts() {
+  const { data: authData } = await supabaseClient.auth.getUser();
+  const currentUserId = authData.user ? authData.user.id : null;
+
   const products = JSON.parse(
     localStorage.getItem("nexoraProducts") || "[]"
   );
   const list = document.getElementById("productList");
 
   products.forEach(item => {
-    if (list.querySelector('[data-product-id="' + item.id + '"]')) {
-      return;
+    let card = list.querySelector(
+      '[data-product-id="' + item.id + '"]'
+    );
+
+    if (!card) {
+      card = document.createElement("div");
+      card.className = "product";
+      card.dataset.category = item.category;
+      card.dataset.productId = item.id;
+
+      const image = document.createElement("div");
+      image.className = "product-image";
+
+      if (item.image) {
+        const img = document.createElement("img");
+        img.src = item.image;
+        img.alt = item.title;
+        img.style.width = "100%";
+        img.style.height = "100%";
+        img.style.objectFit = "cover";
+        image.appendChild(img);
+      } else {
+        image.textContent = "📦";
+      }
+
+      const title = document.createElement("h3");
+      title.textContent = item.title;
+
+      const price = document.createElement("div");
+      price.className = "price";
+      price.textContent =
+        Number(item.price).toLocaleString("mn-MN") + "₮";
+
+      const description = document.createElement("p");
+      description.textContent = item.description;
+
+      const phone = document.createElement("p");
+      phone.textContent = "Утас: " + item.phone;
+
+      const date = document.createElement("p");
+      date.textContent = "Нийтэлсэн: " + item.date;
+
+      const cartButton = document.createElement("button");
+      cartButton.className = "primary-btn";
+      cartButton.textContent = "Сагслах";
+      cartButton.onclick = function () {
+        addToCart(cartButton);
+      };
+
+      card.append(
+        image,
+        title,
+        price,
+        description,
+        phone,
+        date,
+        cartButton
+      );
+
+      list.prepend(card);
     }
 
-    const card = document.createElement("div");
-    card.className = "product";
-    card.dataset.category = item.category;
-    card.dataset.productId = item.id;
+    // Зөвхөн өөрийн бараанд устгах товч харуулна
+    if (
+      currentUserId &&
+      item.ownerId === currentUserId &&
+      !card.querySelector(".delete-product-btn")
+    ) {
+      const deleteButton = document.createElement("button");
+      deleteButton.className = "dark-btn delete-product-btn";
+      deleteButton.textContent = "🗑️ Устгах";
 
-    const image = document.createElement("div");
-    image.className = "product-image";
+      deleteButton.onclick = function () {
+        if (!confirm("Энэ барааг устгах уу?")) return;
 
-    if (item.image) {
-      const img = document.createElement("img");
-      img.src = item.image;
-      img.alt = item.title;
-      img.style.width = "100%";
-      img.style.height = "100%";
-      img.style.objectFit = "cover";
-      image.appendChild(img);
-    } else {
-      image.textContent = "📦";
+        const savedProducts = JSON.parse(
+          localStorage.getItem("nexoraProducts") || "[]"
+        );
+
+        const updatedProducts = savedProducts.filter(
+          product => String(product.id) !== String(item.id)
+        );
+
+        localStorage.setItem(
+          "nexoraProducts",
+          JSON.stringify(updatedProducts)
+        );
+
+        card.remove();
+        alert("Таны бараа устгагдлаа.");
+      };
+
+      card.appendChild(deleteButton);
     }
-
-    const title = document.createElement("h3");
-    title.textContent = item.title;
-
-    const price = document.createElement("div");
-    price.className = "price";
-    price.textContent =
-      Number(item.price).toLocaleString("mn-MN") + "₮";
-
-    const description = document.createElement("p");
-    description.textContent = item.description;
-
-    const phone = document.createElement("p");
-    phone.textContent = "Утас: " + item.phone;
-
-    const date = document.createElement("p");
-    date.textContent = "Нийтэлсэн: " + item.date;
-
-    const cartButton = document.createElement("button");
-  // Зөвхөн барааны эзэнд устгах товч харуулах
-const { data: authData } = await supabaseClient.auth.getUser();
-
-if (authData.user && item.ownerId === authData.user.id) {
-  const deleteButton = document.createElement("button");
-  deleteButton.className = "dark-btn";
-  deleteButton.textContent = "🗑️ Устгах";
-
-  deleteButton.onclick = function () {
-    if (!confirm("Энэ барааг устгах уу?")) return;
-
-    const products = JSON.parse(
-      localStorage.getItem("nexoraProducts") || "[]"
-    );
-
-    const updatedProducts = products.filter(
-      product => String(product.id) !== String(item.id)
-    );
-
-    localStorage.setItem(
-      "nexoraProducts",
-      JSON.stringify(updatedProducts)
-    );
-
-    card.remove();
-    alert("Таны бараа устгагдлаа.");
-  };
-
-  card.appendChild(deleteButton);
-} 
-    cartButton.className = "primary-btn";
-    cartButton.textContent = "Сагслах";
-    cartButton.onclick = function () {
-      addToCart(cartButton);
-    };
-
-    card.append(
-      image,
-      title,
-      price,
-      description,
-      phone,
-      date,
-      cartButton
-    );
-
-    list.prepend(card);
   });
 }
+
 /* SUPABASE ХОЛБОЛТ */
 const SUPABASE_URL = "https://grbpbmowhkbtuxostfny.supabase.co";
 const SUPABASE_KEY = "sb_publishable_wspX-C4VBPJMmvWuQgsMTw_h40w8O3x";
