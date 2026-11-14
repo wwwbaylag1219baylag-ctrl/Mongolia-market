@@ -1245,15 +1245,49 @@ document.body.style.overflow = "hidden";
     button.onclick = function () {
       selectedBankAccount = account;
 
-      details.textContent =
-        account.bank_name +
-        " | Данс: " + account.account_number +
-        " | Эзэмшигч: " + account.account_holder +
-        " | Төлөх дүн: " +
-        selectedAdPackage.amount.toLocaleString("mn-MN") + "₮";
+    details.innerHTML = "";
 
-      receiptArea.classList.remove("hidden");
-    };
+const bankInfo = document.createElement("div");
+bankInfo.className = "ad-bank-info";
+
+const bankTitle = document.createElement("h3");
+bankTitle.textContent = account.bank_name;
+
+const accountNumber = document.createElement("p");
+accountNumber.innerHTML = "<strong>Дансны дугаар</strong>";
+
+const accountNumberValue = document.createElement("p");
+accountNumberValue.className = "ad-bank-value";
+accountNumberValue.textContent = account.account_number;
+
+const holder = document.createElement("p");
+holder.innerHTML = "<strong>Данс эзэмшигчийн овог, нэр</strong>";
+
+const holderValue = document.createElement("p");
+holderValue.className = "ad-bank-value";
+holderValue.textContent = account.account_holder;
+
+const amount = document.createElement("p");
+amount.innerHTML = "<strong>Төлөх дүн</strong>";
+
+const amountValue = document.createElement("p");
+amountValue.className = "ad-bank-amount";
+amountValue.textContent =
+  selectedAdPackage.amount.toLocaleString("mn-MN") + "₮";
+
+bankInfo.append(
+  bankTitle,
+  accountNumber,
+  accountNumberValue,
+  holder,
+  holderValue,
+  amount,
+  amountValue
+);
+
+details.appendChild(bankInfo);
+
+receiptArea.classList.remove("hidden");  
 
     list.appendChild(button);
   });
@@ -2155,6 +2189,39 @@ async function loadMyClassifiedAds() {
 </script>
 
 <style>
+ .ad-bank-info {
+  background: #102c19;
+  border: 1px solid #39ff14;
+  border-radius: 10px;
+  padding: 16px;
+  margin: 12px 0;
+  line-height: 1.7;
+}
+
+.ad-bank-info h3 {
+  color: #39ff14;
+  margin-bottom: 14px;
+  font-size: 17px;
+}
+
+.ad-bank-info strong {
+  color: #a4c5ad;
+  font-size: 12px;
+}
+
+.ad-bank-value {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  overflow-wrap: anywhere;
+}
+
+.ad-bank-amount {
+  color: #39ff14;
+  font-size: 21px;
+  font-weight: bold;
+}
 #adminPaymentRequests {
   max-height: calc(100vh - 220px);
   max-height: calc(100dvh - 220px);
