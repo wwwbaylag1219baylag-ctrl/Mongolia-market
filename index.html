@@ -1577,7 +1577,19 @@ async function saveProfile() {
   alert("Профайл амжилттай хадгалагдлаа!");
 }
 
+/* NEXORA-ГААС ГАРАХ */
+async function logoutNexora() {
+  const { error } = await supabaseClient.auth.signOut();
 
+  if (error) {
+    alert("Гарахад алдаа гарлаа: " + error.message);
+    return;
+  }
+
+  alert("Та системээс амжилттай гарлаа.");
+  switchTab("market");
+}
+ 
 /* БҮРТГҮҮЛЭХ */
 async function registerDemo() {
   const method = document.getElementById("loginMethod").value;
