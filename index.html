@@ -681,11 +681,10 @@ footer strong {
   <summary>📢 Миний зарууд</summary>
 
   <button class="primary-btn"
-    type="button"
-    onclick="loadMyClassifiedAds()">
-    🔄 Заруудаа харах
-  </button>
-
+  type="button"
+  onclick="toggleMyClassifiedAds(this)">
+  🔄 Заруудаа харах
+</button>
   <div id="myClassifiedAdsList">
     <p>Заруудаа харахын тулд товчийг дарна уу.</p>
   </div>
@@ -1194,6 +1193,7 @@ async function selectAdPackage(days, amount) {
   document.getElementById("adPackageArea").classList.add("hidden");
 
   const area = document.getElementById("adBankArea");
+ console.log("BANK AREA:", area);
   const list = document.getElementById("adBankList");
   const details = document.getElementById("adBankDetails");
   const receiptArea = document.getElementById("adReceiptArea");
@@ -2185,6 +2185,18 @@ async function loadMyClassifiedAds() {
     card.append(title, category, price, status, expiryText);
     area.appendChild(card);
   });
+}
+ function toggleMyClassifiedAds(button) {
+  const details = button.closest("details");
+
+  if (!details) return;
+
+  if (details.open) {
+    details.open = false;
+  } else {
+    details.open = true;
+    loadMyClassifiedAds();
+  }
 }
 </script>
 
