@@ -1082,7 +1082,8 @@ function showSection(id) {
   }
 }
 
-
+let currentAdIdForPayment = null;
+let selectedAdPackage = null;
 /* ЗАР НИЙТЛЭХ */
 async function publishAd() {
   const title = document.getElementById("adTitle").value.trim();
