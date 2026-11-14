@@ -1865,6 +1865,21 @@ supabaseClient.auth.onAuthStateChange(() => {
 });
 
 loadHeaderProfileImage();
+ /* NEXORA ADMIN ХЭСЭГ ХАРУУЛАХ */
+async function checkNexoraAdmin() {
+  const adminId = "627f4eea-4b3f-4860-a9a5-04ad5ec0b515";
+  const { data: authData } = await supabaseClient.auth.getUser();
+  const adminArea = document.getElementById("adminPaymentArea");
+
+  if (!adminArea) return;
+
+  if (authData.user?.id === adminId) {
+    adminArea.classList.remove("hidden");
+  } else {
+    adminArea.classList.add("hidden");
+  }
+}
+ checkNexoraAdmin();
 </script>
   
 <style>
