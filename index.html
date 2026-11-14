@@ -1146,8 +1146,33 @@ function showSection(id) {
 }
 function toggleAdForm() {
   const form = document.getElementById("adFormArea");
-  form.classList.toggle("hidden");
- }
+
+  if (form.classList.contains("hidden")) {
+    form.classList.remove("hidden");
+
+    Object.assign(form.style, {
+      position: "fixed",
+      top: "0",
+      left: "0",
+      right: "0",
+      bottom: "0",
+      width: "100vw",
+      height: "100vh",
+      zIndex: "999999",
+      margin: "0",
+      borderRadius: "0",
+      overflowY: "auto",
+      background: "#101827",
+      boxSizing: "border-box"
+    });
+
+    document.body.style.overflow = "hidden";
+  } else {
+    form.classList.add("hidden");
+    form.removeAttribute("style");
+    document.body.style.overflow = "";
+  }
+}
 let currentAdIdForPayment = null;
 let selectedAdPackage = null;
  let selectedBankAccount = null;
