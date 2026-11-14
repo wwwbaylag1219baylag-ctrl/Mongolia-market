@@ -1199,6 +1199,21 @@ async function selectAdPackage(days, amount) {
   const receiptArea = document.getElementById("adReceiptArea");
 
   area.classList.remove("hidden");
+ Object.assign(area.style, {
+  position: "fixed",
+  inset: "0",
+  width: "100vw",
+  height: "100vh",
+  maxHeight: "100vh",
+  zIndex: "999999",
+  margin: "0",
+  borderRadius: "0",
+  overflowY: "auto",
+  background: "#071b10",
+  boxSizing: "border-box",
+  padding: "24px 18px"
+});
+document.body.style.overflow = "hidden";
   list.textContent = "Банкны мэдээлэл ачаалж байна...";
   details.textContent = "";
   receiptArea.classList.add("hidden");
@@ -1245,8 +1260,28 @@ async function selectAdPackage(days, amount) {
 }
 
 function backToAdPackages() {
-  document.getElementById("adBankArea").classList.add("hidden");
-  document.getElementById("adPackageArea").classList.remove("hidden");
+  const bank = document.getElementById("adBankArea");
+  const pack = document.getElementById("adPackageArea");
+
+  bank.classList.add("hidden");
+  pack.classList.remove("hidden");
+
+  Object.assign(pack.style, {
+    position: "fixed",
+    inset: "0",
+    width: "100vw",
+    height: "100vh",
+    maxHeight: "100vh",
+    zIndex: "999999",
+    margin: "0",
+    borderRadius: "0",
+    overflowY: "auto",
+    background: "#071b10",
+    boxSizing: "border-box",
+    padding: "24px 18px"
+  });
+
+  document.body.style.overflow = "hidden";
 }
 function backToAdForm() {
   document.getElementById("adPackageArea").classList.add("hidden");
