@@ -1448,7 +1448,7 @@ async function loadHeaderProfileImage() {
 
   if (error || !data?.signedUrl) return;
 
-  img.src = data.signedUrl;
+  img.src = data.signedUrl + "&t=" + Date.now();
   img.style.display = "block";
   defaultIcon.style.display = "none";
 }
