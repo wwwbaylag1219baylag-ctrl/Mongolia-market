@@ -2011,7 +2011,80 @@ async function rejectPaymentRequest(requestId) {
   alert("Төлбөрийн хүсэлтээс татгалзлаа.");
   await loadAdminPaymentRequests();
 }
+/* NEXORA - ХЭРЭГЛЭГЧИЙН ӨӨРИЙН ЗАРУУД */
+async function loadMyClassifiedAds() {
+  const area = document.getElementById("myClassifiedAdsList");
 
+  area.textContent = "Таны заруудыг ачаалж байна...";
+
+  const { data: authData, error: authError } =
+    await supabaseClient.auth.getUser();
+
+  if (authError || !authData.user) {
+    area.textContent = "Заруудаа харахын тулд эхлээд нэвтэрнэ үү.";
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from("classified_ads")
+    .select("id, title, category, status, price, created_at, expires_at")
+    .eq("owner_id", authData.user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Миний заруудын алдаа:", error);
+    area.textContent = "Заруудыг ачаалахад алдаа гарлаа: " + error.message;
+    return;
+  }
+
+  area.innerHTML = "";
+
+  if (!data || data.length === 0) {
+    area.textContent = "Танд одоогоор нийтэлсэн зар алга.";
+    return;
+  }
+
+  data.forEach(ad => {
+    const card = document.createElement("div");
+    card.className = "panel";
+
+    const title = document.createElement("h3");
+    title.textContent = ad.title;
+
+    const category = document.createElement("p");
+    category.textContent = "Ангилал: " + ad.category;
+
+    const price = document.createElement("p");
+    price.textContent = ad.price !== null
+      ? "Үнэ: " + Number(ad.price).toLocaleString("mn-MN") + "₮"
+      : "Үнэ тохирно";
+
+    const status = document.createElement("p");
+    const expiry = ad.expires_at ? new Date(ad.expires_at) : null;
+
+    let statusText = ad.status;
+
+    if (ad.status === "active") {
+      statusText = expiry && expiry.getTime() <= Date.now()
+        ? "Хугацаа дууссан"
+        : "Идэвхтэй";
+    } else if (ad.status === "pending_payment") {
+      statusText = "Төлбөр хүлээгдэж байна";
+    } else if (ad.status === "rejected") {
+      statusText = "Татгалзсан";
+    }
+
+    status.textContent = "Төлөв: " + statusText;
+
+    const expiryText = document.createElement("p");
+    expiryText.textContent = expiry
+      ? "Дуусах огноо: " + expiry.toLocaleString("mn-MN")
+      : "Дуусах огноо хараахан тохируулагдаагүй";
+
+    card.append(title, category, price, status, expiryText);
+    area.appendChild(card);
+  });
+}
 </script>
   
 <style>
