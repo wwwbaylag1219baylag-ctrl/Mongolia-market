@@ -1881,6 +1881,7 @@ async function checkNexoraAdmin() {
 }
  checkNexoraAdmin();
  /* NEXORA ADMIN - ТӨЛБӨРИЙН ХҮСЭЛТ ХАРАХ */
+
 async function loadAdminPaymentRequests() {
   const adminId = "627f4eea-4b3f-4860-a9a5-04ad5ec0b515";
   const { data: authData } = await supabaseClient.auth.getUser();
@@ -1904,18 +1905,47 @@ async function loadAdminPaymentRequests() {
   const area = document.getElementById("adminPaymentRequests");
   if (!area) return;
 
-  area.innerHTML = data.length
-    ? data.map(item => `
+  const cards = await Promise.all(data.map(async item => {
+    let receiptHtml = "<p>Баримт хавсаргаагүй байна.</p>";
+
+    if (item.receipt_path) {
+      const { data: fileData, error: fileError } =
+        await supabaseClient.storage
+          .from("payment-receipts")
+          .createSignedUrl(item.receipt_path, 300);
+
+      if (!fileError && fileData?.signedUrl) {
+        receiptHtml = `
+          <a href="${fileData.signedUrl}" target="_blank">
+            <img src="${fileData.signedUrl}"
+              alt="Төлбөрийн баримт"
+              style="width:100%;max-width:320px;border-radius:12px;margin-top:10px;cursor:pointer;">
+          </a>
+          <p>Зураг дээр дарж томоор үзнэ үү.</p>
+        `;
+      } else {
+        receiptHtml = "<p>Баримт нээх боломжгүй байна. Storage эрхийг шалгана уу.</p>";
+        console.error(fileError);
+      }
+    }
+
+    return `
       <div class="panel">
         <p>Багц: ${item.package_days} хоног</p>
         <p>Дүн: ${Number(item.amount).toLocaleString("mn-MN")}₮</p>
         <p>Гүйлгээний утга: ${item.transfer_reference}</p>
         <p>Төлөв: ${item.status}</p>
         <p>Огноо: ${new Date(item.created_at).toLocaleString("mn-MN")}</p>
+        <div>${receiptHtml}</div>
       </div>
-    `).join("")
+    `;
+  }));
+
+  area.innerHTML = cards.length
+    ? cards.join("")
     : "<p>Одоогоор төлбөрийн хүсэлт алга.</p>";
 }
+
 </script>
   
 <style>
