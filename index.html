@@ -1862,6 +1862,44 @@ loadHeaderProfileImage();
   
 <style>
 /* NEXORA NAVIGATION FIX */
+ /* NEXORA ADMIN - ТӨЛБӨРИЙН ХҮСЭЛТ ХАРАХ */
+async function loadAdminPaymentRequests() {
+  const adminId = "627f4eea-4b3f-4860-a9a5-04ad5ec0b515";
+  const { data: authData } = await supabaseClient.auth.getUser();
+
+  if (authData.user?.id !== adminId) {
+    alert("Админ эрх шаардлагатай.");
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from("payment_requests")
+    .select("id, ad_id, user_id, package_days, amount, transfer_reference, receipt_path, status, created_at")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    alert("Хүсэлт ачаалахад алдаа гарлаа: " + error.message);
+    return;
+  }
+
+  const area = document.getElementById("adminPaymentRequests");
+  if (!area) {
+    alert("Админ хүсэлтийн хэсэг HTML-д хараахан нэмэгдээгүй байна.");
+    return;
+  }
+
+  area.innerHTML = data.length
+    ? data.map(item => `
+      <div class="panel">
+        <p>Багц: ${item.package_days} хоног</p>
+        <p>Дүн: ${Number(item.amount).toLocaleString()}₮</p>
+        <p>Гүйлгээний утга: ${item.transfer_reference}</p>
+        <p>Төлөв: ${item.status}</p>
+        <p>Огноо: ${new Date(item.created_at).toLocaleString("mn-MN")}</p>
+      </div>
+    `).join("")
+    : "<p>Одоогоор төлбөрийн хүсэлт алга.</p>";
+                   }
 #market .section-title:first-child {
   margin-top: 20px;
 }
