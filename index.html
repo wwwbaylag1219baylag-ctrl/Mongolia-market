@@ -1940,12 +1940,20 @@ async function loadAdminPaymentRequests() {
         <p>Гүйлгээний утга: ${item.transfer_reference}</p>
         <p>Төлөв: ${item.status}</p>
         <p>Огноо: ${new Date(item.created_at).toLocaleString("mn-MN")}</p>
-        ${item.status === "pending_review" ? `
+        
+${item.status === "pending_review" ? `
   <button class="primary-btn"
     onclick="approvePaymentRequest('${item.id}')">
     ✅ Баталгаажуулах
   </button>
+
+  <button class="primary-btn"
+    style="background:#b42318;"
+    onclick="rejectPaymentRequest('${item.id}')">
+    ❌ Татгалзах
+  </button>
 ` : ""}
+
         <div>${receiptHtml}</div>
       </div>
     `;
