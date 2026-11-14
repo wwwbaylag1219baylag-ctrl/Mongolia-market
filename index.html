@@ -359,8 +359,10 @@ footer strong {
 
    
 <div onclick="toggleAccount()"
-  style="background:#102c19;border:1px solid #39ff14;border-radius:8px;padding:8px 11px;cursor:pointer;font-size:21px;">
-  👤
+  style="width:42px;height:42px;background:#102c19;border:1px solid #39ff14;border-radius:8px;cursor:pointer;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+  <img id="headerProfileImage"
+    style="width:100%;height:100%;object-fit:cover;display:none;">
+  <span id="headerProfileDefault" style="font-size:21px;">👤</span>
 </div>
  
   </div>
