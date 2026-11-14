@@ -1891,11 +1891,13 @@ async function loadAdminPaymentRequests() {
     return;
   }
 
+ 
   const { data, error } = await supabaseClient
     .from("payment_requests")
     .select("id, ad_id, user_id, package_days, amount, transfer_reference, receipt_path, status, created_at")
+    .eq("status", "pending_review")
     .order("created_at", { ascending: false });
-
+ 
   if (error) {
     alert("Хүсэлт ачаалахад алдаа гарлаа: " + error.message);
     console.error(error);
