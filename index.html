@@ -1880,10 +1880,6 @@ async function checkNexoraAdmin() {
   }
 }
  checkNexoraAdmin();
-</script>
-  
-<style>
-/* NEXORA NAVIGATION FIX */
  /* NEXORA ADMIN - ТӨЛБӨРИЙН ХҮСЭЛТ ХАРАХ */
 async function loadAdminPaymentRequests() {
   const adminId = "627f4eea-4b3f-4860-a9a5-04ad5ec0b515";
@@ -1901,56 +1897,29 @@ async function loadAdminPaymentRequests() {
 
   if (error) {
     alert("Хүсэлт ачаалахад алдаа гарлаа: " + error.message);
+    console.error(error);
     return;
   }
-const adminArea = document.getElementById("adminPaymentArea");
-if (adminArea) adminArea.classList.remove("hidden");
+
   const area = document.getElementById("adminPaymentRequests");
-  if (!area) {
-    alert("Админ хүсэлтийн хэсэг HTML-д хараахан нэмэгдээгүй байна.");
-    return;
-  }
+  if (!area) return;
 
   area.innerHTML = data.length
     ? data.map(item => `
       <div class="panel">
         <p>Багц: ${item.package_days} хоног</p>
-        <p>Дүн: ${Number(item.amount).toLocaleString()}₮</p>
+        <p>Дүн: ${Number(item.amount).toLocaleString("mn-MN")}₮</p>
         <p>Гүйлгээний утга: ${item.transfer_reference}</p>
         <p>Төлөв: ${item.status}</p>
         <p>Огноо: ${new Date(item.created_at).toLocaleString("mn-MN")}</p>
       </div>
     `).join("")
     : "<p>Одоогоор төлбөрийн хүсэлт алга.</p>";
-                   }
-#market .section-title:first-child {
-  margin-top: 20px;
 }
-
-#market .products {
-  grid-template-columns: repeat(4,minmax(0,1fr));
-  gap: 10px;
-}
-
-@media(max-width:600px) {
-  #market .products {
-    grid-template-columns: repeat(2,minmax(0,1fr));
-    gap: 8px;
-  }
-
-  #market .product-image {
-    height: 95px;
-  }
-}
-
-#market .product {
-  min-width: 0;
-}
-
-#market .product button {
-  padding: 9px 5px;
-  font-size: 12px;
-}
+</script>
+  
+<style>
+/
  /* NEXORA БҮТЭН ДЭЛГЭЦИЙН ТӨЛБӨР */
 .payment-screen {
   position: fixed;
