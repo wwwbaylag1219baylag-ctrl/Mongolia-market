@@ -586,6 +586,25 @@ footer strong {
 <div class="profile-box">
   <h3>👤 Миний профайл</h3>
 
+  <div style="text-align:center;margin:15px 0;">
+    <img id="profilePreview"
+      src=""
+      alt="Профайл зураг"
+      style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:2px solid #39ff14;display:none;margin:0 auto 10px;">
+
+    <div style="font-size:48px;" id="profileDefault">👤</div>
+
+    <label for="profileImageInput"
+      style="display:inline-block;padding:10px 15px;border:1px solid #39ff14;border-radius:8px;color:#baffaa;cursor:pointer;">
+      📷 Профайл зураг сонгох
+    </label>
+
+    <input type="file" id="profileImageInput"
+      accept="image/*"
+      style="display:none;"
+      onchange="previewProfileImage(event)">
+  </div>
+
   <input class="field" id="profileFullName"
     type="text"
     placeholder="Овог, нэр">
