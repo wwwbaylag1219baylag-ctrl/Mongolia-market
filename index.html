@@ -1980,6 +1980,24 @@ async function approvePaymentRequest(requestId) {
   alert("Төлбөр амжилттай баталгаажлаа.");
   await loadAdminPaymentRequests();
 }
+ 
+async function rejectPaymentRequest(requestId) {
+  if (!confirm("Энэ төлбөрийн хүсэлтээс татгалзах уу?")) return;
+
+  const { error } = await supabaseClient.rpc(
+    "admin_reject_payment_request",
+    { p_request_id: requestId }
+  );
+
+  if (error) {
+    alert("Татгалзахад алдаа гарлаа: " + error.message);
+    return;
+  }
+
+  alert("Төлбөрийн хүсэлтээс татгалзлаа.");
+  await loadAdminPaymentRequests();
+}
+
 </script>
   
 <style>
