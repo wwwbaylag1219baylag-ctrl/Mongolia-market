@@ -1126,6 +1126,9 @@ if (profileError) {
 alert("Амжилттай нэвтэрлээ!");
 }
 
+
+let selectedProfileImage = null;
+
 /* ПРОФАЙЛ ЗУРАГ УРЬДЧИЛАН ХАРУУЛАХ */
 function previewProfileImage(event) {
   const file = event.target.files[0];
@@ -1135,6 +1138,8 @@ function previewProfileImage(event) {
     alert("Зургийн файл сонгоно уу.");
     return;
   }
+
+  selectedProfileImage = file;
 
   const reader = new FileReader();
 
@@ -1146,8 +1151,8 @@ function previewProfileImage(event) {
 
   reader.readAsDataURL(file);
 }
- 
- /* ПРОФАЙЛ ХАДГАЛАХ */
+
+/* ПРОФАЙЛ ХАДГАЛАХ */
 async function saveProfile() {
   const { data: authData } = await supabaseClient.auth.getUser();
 
@@ -1156,6 +1161,7 @@ async function saveProfile() {
     return;
   }
 
+  const user = authData.user;
   const fullName = document.getElementById("profileFullName").value.trim();
   const phone = document.getElementById("profilePhone").value.trim();
 
@@ -1164,26 +1170,50 @@ async function saveProfile() {
     return;
   }
 
+  let avatarPath = null;
+
+  if (selectedProfileImage) {
+    const fileExt = selectedProfileImage.name.split(".").pop();
+    avatarPath = user.id + "/avatar." + fileExt;
+
+    const { error: uploadError } = await supabaseClient.storage
+      .from("avatars")
+      .upload(avatarPath, selectedProfileImage, {
+        upsert: true
+      });
+
+    if (uploadError) {
+      alert("Зураг хадгалахад алдаа гарлаа: " + uploadError.message);
+      return;
+    }
+  }
+
+  const profileData = {
+    id: user.id,
+    full: fullName,
+    phone: phone
+  };
+
+  if (avatarPath) {
+    profileData.avatar_path = avatarPath;
+  }
+
   const { error } = await supabaseClient
     .from("profiles")
-    .upsert(
-      {
-        id: authData.user.id,
-        full: fullName,
-        phone: phone
-      },
-      {
-        onConflict: "id"
-      }
-    );
+    .upsert(profileData, {
+      onConflict: "id"
+    });
 
   if (error) {
     alert("Профайл хадгалахад алдаа гарлаа: " + error.message);
     return;
   }
 
+  selectedProfileImage = null;
   alert("Профайл амжилттай хадгалагдлаа!");
 }
+
+
 /* БҮРТГҮҮЛЭХ */
 async function registerDemo() {
   const method = document.getElementById("loginMethod").value;
