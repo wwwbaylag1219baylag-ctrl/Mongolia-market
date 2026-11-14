@@ -1950,7 +1950,7 @@ async function loadAdminPaymentRequests() {
   area.innerHTML = cards.length
     ? cards.join("")
     : "<p>Одоогоор төлбөрийн хүсэлт алга.</p>";
-
+}
   
 async function approvePaymentRequest(requestId) {
   if (!confirm("Банкны шилжүүлгийг шалгаж баталгаажуулсан уу?")) return;
