@@ -536,6 +536,10 @@ footer strong {
   <button class="primary-btn" onclick="selectAdPackage(30,15000)">
     30 хоног — 15,000₮
   </button>
+ 
+ <button class="dark-btn" onclick="backToAdForm()">
+  ← Зар бөглөх хэсэг рүү буцах
+ </button>
 </div>
  
 <div id="adBankArea" class="panel hidden payment-screen">
@@ -1202,7 +1206,10 @@ function backToAdPackages() {
   document.getElementById("adBankArea").classList.add("hidden");
   document.getElementById("adPackageArea").classList.remove("hidden");
 }
- 
+function backToAdForm() {
+  document.getElementById("adPackageArea").classList.add("hidden");
+  document.getElementById("adFormArea").classList.remove("hidden");
+} 
  
 async function submitAdPaymentRequest() {
   const reference = document
