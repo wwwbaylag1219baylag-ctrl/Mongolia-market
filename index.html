@@ -1881,7 +1881,8 @@ async function loadAdminPaymentRequests() {
     alert("Хүсэлт ачаалахад алдаа гарлаа: " + error.message);
     return;
   }
-
+const adminArea = document.getElementById("adminPaymentArea");
+if (adminArea) adminArea.classList.remove("hidden");
   const area = document.getElementById("adminPaymentRequests");
   if (!area) {
     alert("Админ хүсэлтийн хэсэг HTML-д хараахан нэмэгдээгүй байна.");
