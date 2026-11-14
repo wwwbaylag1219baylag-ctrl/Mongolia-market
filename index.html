@@ -1197,8 +1197,7 @@ async function selectAdPackage(days, amount) {
   const list = document.getElementById("adBankList");
   const details = document.getElementById("adBankDetails");
   const receiptArea = document.getElementById("adReceiptArea");
-
-  area.classList.remove("hidden");
+Area.classList.remove("hidden");
  Object.assign(area.style, {
   position: "fixed",
   inset: "0",
@@ -1287,10 +1286,11 @@ bankInfo.append(
 
 details.appendChild(bankInfo);
 
-receiptArea.classList.remove("hidden");  
+receiptArea.classList.remove("hidden");
+};
 
-    list.appendChild(button);
-  });
+list.appendChild(button);
+});
 }
 
 function backToAdPackages() {
