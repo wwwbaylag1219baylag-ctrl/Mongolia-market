@@ -718,9 +718,9 @@ footer strong {
   <!-- NEXORA ADMIN -->
   <div id="adminPaymentArea" class="panel hidden">
     <h3>🛡️ NEXORA админ</h3>
-    <button class="primary-btn" onclick="loadAdminPaymentRequests()">
-      Төлбөрийн хүсэлтүүд харах
-    </button>
+   <button class="primary-btn" onclick="toggleAdminPaymentRequests()">
+  Төлбөрийн хүсэлтүүд харах
+</button> 
     <div id="adminPaymentRequests"></div>
   </div>
   <div class="panel">
@@ -1950,8 +1950,19 @@ async function checkNexoraAdmin() {
   }
 }
  checkNexoraAdmin();
+ 
  /* NEXORA ADMIN - ТӨЛБӨРИЙН ХҮСЭЛТ ХАРАХ */
+function toggleAdminPaymentRequests() {
+  const area = document.getElementById("adminPaymentRequests");
 
+  if (area.classList.contains("hidden")) {
+    area.classList.remove("hidden");
+    document.body.style.overflow = "";
+    loadAdminPaymentRequests();
+  } else {
+    area.classList.add("hidden");
+  }
+       }
 async function loadAdminPaymentRequests() {
   const adminId = "627f4eea-4b3f-4860-a9a5-04ad5ec0b515";
   const { data: authData } = await supabaseClient.auth.getUser();
@@ -2142,7 +2153,15 @@ async function loadMyClassifiedAds() {
   });
 }
 </script>
-  
+#adminPaymentRequests {
+  max-height: calc(100vh - 220px);
+  max-height: calc(100dvh - 220px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}  
 <style>
 /
  /* NEXORA БҮТЭН ДЭЛГЭЦИЙН ТӨЛБӨР */
