@@ -501,7 +501,7 @@ footer strong {
   <div class="panel">
     <button class="primary-btn" onclick="toggleAdForm()">＋ Зар нийтлэх</button>
   </div>
-  <div id="adFormArea" class="panel hidden">
+  <div id="adFormArea" class="panel hidden payment-screen">
     <h3>Шинэ зар нийтлэх</h3>
     <input class="field" id="adTitle" placeholder="Зарын гарчиг">
     <select class="field" id="adCategory">
@@ -1373,7 +1373,7 @@ async function publishAd() {
 currentAdIdForPayment = data.id;
 document.getElementById("adPackageArea").classList.remove("hidden");
     const card = document.createElement("div");
-    card.className = "ad-card";
+    card.style.display = "none";
 
     const heading = document.createElement("h3");
     heading.textContent = data.title;
