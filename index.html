@@ -1936,6 +1936,12 @@ async function loadAdminPaymentRequests() {
         <p>Гүйлгээний утга: ${item.transfer_reference}</p>
         <p>Төлөв: ${item.status}</p>
         <p>Огноо: ${new Date(item.created_at).toLocaleString("mn-MN")}</p>
+        ${item.status === "pending_review" ? `
+  <button class="primary-btn"
+    onclick="approvePaymentRequest('${item.id}')">
+    ✅ Баталгаажуулах
+  </button>
+` : ""}
         <div>${receiptHtml}</div>
       </div>
     `;
@@ -1944,8 +1950,24 @@ async function loadAdminPaymentRequests() {
   area.innerHTML = cards.length
     ? cards.join("")
     : "<p>Одоогоор төлбөрийн хүсэлт алга.</p>";
-}
 
+  
+async function approvePaymentRequest(requestId) {
+  if (!confirm("Банкны шилжүүлгийг шалгаж баталгаажуулсан уу?")) return;
+
+  const { error } = await supabaseClient.rpc(
+    "admin_approve_payment_request",
+    { p_request_id: requestId }
+  );
+
+  if (error) {
+    alert("Баталгаажуулахад алдаа гарлаа: " + error.message);
+    return;
+  }
+
+  alert("Төлбөр амжилттай баталгаажлаа.");
+  await loadAdminPaymentRequests();
+}
 </script>
   
 <style>
