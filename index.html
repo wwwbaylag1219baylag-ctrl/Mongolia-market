@@ -1392,6 +1392,23 @@ async function loadPublishedProducts() {
   const products = JSON.parse(
     localStorage.getItem("nexoraProducts") || "[]"
   );
+ if (currentUserId) {
+  let changed = false;
+
+  products.forEach(item => {
+    if (!item.ownerId) {
+      item.ownerId = currentUserId;
+      changed = true;
+    }
+  });
+
+  if (changed) {
+    localStorage.setItem(
+      "nexoraProducts",
+      JSON.stringify(products)
+    );
+  }
+}
   const list = document.getElementById("productList");
 
   products.forEach(item => {
