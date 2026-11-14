@@ -499,7 +499,7 @@ footer strong {
     <div class="category">📋 Бусад зар</div>
   </div>
   <div class="panel">
-    <button class="primary-btn" onclick="showSection('adFormArea')">＋ Зар нийтлэх</button>
+    <button class="primary-btn" onclick="toggleAdForm()">＋ Зар нийтлэх</button>
   </div>
   <div id="adFormArea" class="panel hidden">
     <h3>Шинэ зар нийтлэх</h3>
@@ -1087,7 +1087,10 @@ function showSection(id) {
     }
   }
 }
-
+function toggleAdForm() {
+  const form = document.getElementById("adFormArea");
+  form.classList.toggle("hidden");
+ }
 let currentAdIdForPayment = null;
 let selectedAdPackage = null;
  async function selectAdPackage(days, amount) {
