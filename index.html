@@ -1203,7 +1203,97 @@ function backToAdPackages() {
   document.getElementById("adPackageArea").classList.remove("hidden");
 }
  
-               }
+ }
+ 
+async function submitAdPaymentRequest() {
+  const reference = document
+    .getElementById("adTransferReference")
+    .value.trim();
+
+  const file = document
+    .getElementById("adReceiptFile")
+    .files[0];
+
+  if (!currentAdIdForPayment || !selectedAdPackage || !selectedBankAccount) {
+    alert("Зар, багц болон банкаа бүрэн сонгоно уу.");
+    return;
+  }
+
+  if (!reference || !file) {
+    alert("Гүйлгээний дугаар болон баримтаа оруулна уу.");
+    return;
+  }
+
+  if (
+    !(file.type.startsWith("image/") || file.type === "application/pdf") ||
+    file.size > 5 * 1024 * 1024
+  ) {
+    alert("Зураг эсвэл PDF файл оруулна уу. Файлын хэмжээ 5MB-аас ихгүй байна.");
+    return;
+  }
+
+  try {
+    const { data: authData, error: authError } =
+      await supabaseClient.auth.getUser();
+
+    if (authError || !authData.user) {
+      alert("Та эхлээд нэвтэрнэ үү.");
+      return;
+    }
+
+    const user = authData.user;
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const receiptPath =
+      user.id + "/" +
+      currentAdIdForPayment + "/" +
+      Date.now() + "-" + safeName;
+
+    const { error: uploadError } = await supabaseClient
+      .storage
+      .from("payment-receipts")
+      .upload(receiptPath, file, {
+        cacheControl: "3600",
+        upsert: false
+      });
+
+    if (uploadError) {
+      console.error("Баримт байршуулах алдаа:", uploadError);
+      alert("Баримт хадгалахад алдаа гарлаа: " + uploadError.message);
+      return;
+    }
+
+    const { error: insertError } = await supabaseClient
+      .from("payment_requests")
+      .insert({
+        ad_id: currentAdIdForPayment,
+        user_id: user.id,
+        bank_account_id: selectedBankAccount.id,
+        package_days: selectedAdPackage.days,
+        amount: selectedAdPackage.amount,
+        transfer_reference: reference,
+        receipt_path: receiptPath
+      });
+
+    if (insertError) {
+      console.error("Төлбөрийн хүсэлт хадгалах алдаа:", insertError);
+      alert("Хүсэлт хадгалахад алдаа гарлаа: " + insertError.message);
+      return;
+    }
+
+    document.getElementById("adTransferReference").value = "";
+    document.getElementById("adReceiptFile").value = "";
+    document.getElementById("adReceiptArea").classList.add("hidden");
+    document.getElementById("adBankArea").classList.add("hidden");
+
+    alert("Төлбөрийн хүсэлт амжилттай илгээгдлээ. Админ банкны гүйлгээг шалгаж баталгаажуулна.");
+
+  } catch (err) {
+    console.error(err);
+    alert("Алдаа гарлаа. Дахин оролдоно уу.");
+  }
+}
+
+ 
 /* ЗАР НИЙТЛЭХ */
 async function publishAd() {
   const title = document.getElementById("adTitle").value.trim();
