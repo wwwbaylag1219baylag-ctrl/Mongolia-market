@@ -1084,6 +1084,7 @@ function showSection(id) {
 
 let currentAdIdForPayment = null;
 let selectedAdPackage = null;
+ 
 /* ЗАР НИЙТЛЭХ */
 async function publishAd() {
   const title = document.getElementById("adTitle").value.trim();
@@ -1137,7 +1138,8 @@ async function publishAd() {
       alert("Зар хадгалахад алдаа гарлаа: " + error.message);
       return;
     }
-
+currentAdIdForPayment = data.id;
+document.getElementById("adPackageArea").classList.remove("hidden");
     const card = document.createElement("div");
     card.className = "ad-card";
 
