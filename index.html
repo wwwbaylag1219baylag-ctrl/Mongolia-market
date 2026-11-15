@@ -523,19 +523,17 @@ footer strong {
       onkeydown="if(event.key==='Enter')searchAll()">
     <button class="btn btn-primary" onclick="searchAll()">Хайх</button>
 </div>
-  <!-- ЗАР -->
-  <section id="ads" class="tab-content hidden">
-    <h2 class="section-title">📢 Зар мэдээлэл</h2>
-
-    <div class="categories">
-      <div class="category" onclick="selectAdCategory('Үл хөдлөх')"><span>🏠</span>Үл хөдлөх</div>
-      <div class="category" onclick="selectAdCategory('Автомашин')"><span>🚗</span>Автомашин</div>
-      <div class="category" onclick="selectAdCategory('Ажлын зар')"><span>💼</span>Ажлын зар</div>
-      <div class="category" onclick="selectAdCategory('Түрээс')"><span>🔑</span>Түрээс</div>
-      <div class="category" onclick="selectAdCategory('Бараа зарна')"><span>📦</span>Бараа зарна</div>
-      <div class="category" onclick="selectAdCategory('Үйлчилгээ')"><span>🤝</span>Үйлчилгээ</div>
-    </div>
-
+  <!-- 1. ЗАР МЭДЭЭЛЭЛ -->
+  <section id="homeAds">
+  <h2 class="section-title">📢 Зар мэдээлэл</h2>
+  <div id="homeAdList" class="ad-grid">
+    <p class="empty">Заруудыг ачаалж байна...</p>
+  </div>
+  <button class="btn btn-primary"
+    onclick="switchTab('ads')">
+ Бүх зар харах -
+  </button>
+  </section>
     <div class="panel">
       <button class="btn btn-primary" onclick="toggleAdForm()">＋ Зар нийтлэх</button>
     </div>
@@ -605,18 +603,9 @@ footer strong {
 <section id="homeProducts">
   <h2 class="section-title">🔥 Шинэ бараанууд</h2>
   <div class="products" id="productList">
-    <div class="product" data-category="Электрон бараа">
-      <div class="product-image">📱</div>
-      <h3>Жишээ ухаалаг утас</h3>
-      <div class="price">450,000₮</div>
-      <button class="btn btn-primary"
-        onclick="addProductToCart(this)">Сагслах</button>
-    </div>
-
-    <div class="product" data-category="Гутал">
-      <div class="product-image">👟</div>
-      <h3>Спорт гутал</h3>
-      <div class="price">85,000₮</div>
+    <!-- Бараанууд энд автоматаар гарна -->
+  </div>
+</section
       <button class="btn btn-primary"
         onclick="addProductToCart(this)">Сагслах</button>
     </div>
