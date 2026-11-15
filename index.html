@@ -1168,6 +1168,8 @@ function openSupplierRegistration() {
   }
 }
 /* ЦЭС СОЛИХ */
+
+/* ЦЭС СОЛИХ */
 function switchTab(name, element) {
   document.querySelectorAll(".tab-content").forEach(section => {
     section.classList.add("hidden");
@@ -1175,6 +1177,12 @@ function switchTab(name, element) {
 
   const target = document.getElementById(name);
   if (target) target.classList.remove("hidden");
+
+  /* ҮЙЛЧИЛГЭЭ ДЭЭР ХУДАЛДААНЫ ХЭСГИЙГ ХАДГАЛАХ */
+  if (name === "services") {
+    const market = document.getElementById("market");
+    if (market) market.classList.remove("hidden");
+  }
 
   document.querySelectorAll(".tabs .tab").forEach(tab => {
     tab.classList.remove("active");
@@ -1191,12 +1199,24 @@ function switchTab(name, element) {
     });
   }
 
-  document.getElementById("cartArea").classList.add("hidden");
+  const cartArea = document.getElementById("cartArea");
+  if (cartArea) cartArea.classList.add("hidden");
 
-  const isAccount = name === "account";
+  const hideNavigation = name === "account" || name === "supplier";
 
-  document.querySelector(".tabs").classList.toggle("hidden", isAccount);
-  document.querySelector(".mobile-nav").classList.toggle("hidden", isAccount);
+  const tabs = document.querySelector(".tabs");
+  const mobileNav = document.querySelector(".mobile-nav");
+
+  if (tabs) tabs.classList.toggle("hidden", hideNavigation);
+  if (mobileNav) mobileNav.classList.toggle("hidden", hideNavigation);
+
+  /* СОНГОСОН ХЭСЭГ РҮҮ ДЭЛГЭЦИЙГ ШИЛЖҮҮЛЭХ */
+  if (target) {
+    target.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
 }
 
 
