@@ -534,7 +534,20 @@ footer strong {
   </button>
 </section>
 
-<!-- ХУДАЛДААНЫ АНГИЛАЛ -->
+
+<!-- 1. ЗАР МЭДЭЭЛЭЛ -->
+<section id="homeAds">
+  <h2 class="section-title">📢 Зар мэдээлэл</h2>
+  <div id="homeAdList" class="ad-grid">
+    <p class="empty">Заруудыг ачаалж байна...</p>
+  </div>
+  <button class="btn btn-primary"
+    onclick="switchTab('ads')">
+    Бүх зар харах →
+  </button>
+</section>
+
+<!-- 2. ХУДАЛДААНЫ АНГИЛАЛ -->
 <section id="homeCategories">
   <h2 class="section-title">🛍️ Худалдааны ангилал</h2>
   <div class="categories" id="categories">
@@ -565,22 +578,27 @@ footer strong {
   </div>
 </section>
 
-<!-- ШИНЭ БАРААНУУД -->
+<!-- 3. ШИНЭ БАРААНУУД -->
 <section id="homeProducts">
   <h2 class="section-title">🔥 Шинэ бараанууд</h2>
   <div class="products" id="productList">
-    <!-- Одоогийн бараанууд энд хэвээр үлдэнэ -->
+    <div class="product" data-category="Электрон бараа">
+      <div class="product-image">📱</div>
+      <h3>Жишээ ухаалаг утас</h3>
+      <div class="price">450,000₮</div>
+      <button class="btn btn-primary"
+        onclick="addProductToCart(this)">Сагслах</button>
+    </div>
+
+    <div class="product" data-category="Гутал">
+      <div class="product-image">👟</div>
+      <h3>Спорт гутал</h3>
+      <div class="price">85,000₮</div>
+      <button class="btn btn-primary"
+        onclick="addProductToCart(this)">Сагслах</button>
+    </div>
   </div>
 </section>
-
-  <div class="tabs" id="mainTabs">
-  <button class="tab active" onclick="switchTab('ads',this)">📢 Зар</button>
-  <button class="tab" onclick="switchTab('services',this)">🛠️ Үйлчилгээ</button>
-  <button class="tab" onclick="switchTab('market',this)">🛍️ Бараа</button>
-  <button class="tab" onclick="switchTab('news',this)">📰 Мэдээ</button>
-  <button class="tab" onclick="openSupplierRegistration()">🏪 Нийлүүлэгч</button>
-  <button class="tab" onclick="switchTab('account',this)">👤 Миний булан</button>
-  </div>
 
   <!-- БАРАА -->
   <section id="market" class="tab-content">
