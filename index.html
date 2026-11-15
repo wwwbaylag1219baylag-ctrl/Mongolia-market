@@ -1130,13 +1130,34 @@ document.querySelectorAll("#categories .category").forEach(category => {
   });
 });
 /* НИЙЛҮҮЛЭГЧИЙН БҮРТГЭЛ НЭЭХ */
+/* НИЙЛҮҮЛЭГЧИЙН БҮРТГЭЛ НЭЭХ */
 function openSupplierRegistration() {
   switchTab("supplier", null);
+
+  document.querySelector(".tabs").classList.add("hidden");
+  document.querySelector(".mobile-nav").classList.add("hidden");
 
   const form = document.getElementById("supplierRegister");
   if (form) {
     form.open = true;
   }
+
+  const type = document.getElementById("supplierType");
+  const fields = document.getElementById("supplierFormFields");
+
+  if (type) {
+    type.value = "individual";
+  }
+
+  if (fields) {
+    fields.classList.remove("hidden");
+  }
+
+  const nameLabel = document.getElementById("supplierNameLabel");
+  const registerLabel = document.getElementById("supplierRegisterLabel");
+
+  if (nameLabel) nameLabel.textContent = "Нэр";
+  if (registerLabel) registerLabel.textContent = "Регистрийн дугаар";
 
   const section = document.getElementById("supplier");
   if (section) {
