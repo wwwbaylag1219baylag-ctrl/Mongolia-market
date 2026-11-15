@@ -514,12 +514,7 @@ footer strong {
 
 <main class="container">
 
-  <div class="search-box">
-    <input class="field" id="searchInput"
-      placeholder="🔍 Бараа, зар, үйлчилгээ хайх..."
-      onkeydown="if(event.key==='Enter')searchAll()">
-    <button class="btn btn-primary" onclick="searchAll()">Хайх</button>
-  </div>
+  
 
   
 <!-- НҮҮР ХУУДАСНЫ ЗАР МЭДЭЭЛЭЛ -->
@@ -546,7 +541,12 @@ footer strong {
     Бүх зар харах →
   </button>
 </section>
-
+<div class="search-box">
+    <input class="field" id="searchInput"
+      placeholder="🔍 Бараа, зар, үйлчилгээ хайх..."
+      onkeydown="if(event.key==='Enter')searchAll()">
+    <button class="btn btn-primary" onclick="searchAll()">Хайх</button>
+</div>
 <!-- 2. ХУДАЛДААНЫ АНГИЛАЛ -->
 <section id="homeCategories">
   <h2 class="section-title">🛍️ Худалдааны ангилал</h2>
