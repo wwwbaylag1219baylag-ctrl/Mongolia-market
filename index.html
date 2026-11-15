@@ -1205,6 +1205,15 @@ function toggleAdForm() {
     document.body.style.overflow = "";
   }
 }
+ // NEXORA FULL SCREEN AD SUBCATEGORY
+function closeAdSubcategories() {
+  document.getElementById("adSubcategoryScreen").style.display = "none";
+  document.body.style.overflow = "";
+}
+
+function selectAdSubcategory(category, subcategory) {
+  alert("Сонгосон ангилал: " + category + " — " + subcategory);
+}
 let currentAdIdForPayment = null;
 let selectedAdPackage = null;
  let selectedBankAccount = null;
