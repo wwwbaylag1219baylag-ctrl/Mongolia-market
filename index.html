@@ -2190,9 +2190,13 @@ async function loadMyClassifiedAds() {
   const details = button.closest("details");
   if (!details) return;
 
-  details.open = true;
-  loadMyClassifiedAds();
-}
+  if (details.open) {
+    details.open = false;
+  } else {
+    details.open = true;
+    loadMyClassifiedAds();
+  }
+ }
 </script>
 
 <style>
