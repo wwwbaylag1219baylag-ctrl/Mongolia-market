@@ -1297,8 +1297,10 @@ async function publishAd() {
    ЗАРУУД АЧААЛАХ
 =================================== */
 
+
 async function loadPublishedAds() {
   const area = $("adList");
+  const homeArea = $("homeAdList");
 
   const {data,error} = await supabaseClient
     .from("classified_ads")
@@ -1308,42 +1310,57 @@ async function loadPublishedAds() {
 
   if (error) {
     console.error(error);
-    area.innerHTML = '<p class="empty">Зар ачаалахад алдаа гарлаа.</p>';
+    area.innerHTML =
+      '<p class="empty">Зар ачаалахад алдаа гарлаа.</p>';
+
+    if (homeArea) {
+      homeArea.innerHTML =
+        '<p class="empty">Зар ачаалахад алдаа гарлаа.</p>';
+    }
     return;
   }
 
-  area.innerHTML = "";
+  function renderAds(container, ads) {
+    container.innerHTML = "";
 
-  if (!data || !data.length) {
-    area.innerHTML = '<p class="empty">Одоогоор идэвхтэй зар алга.</p>';
-    return;
+    if (!ads || !ads.length) {
+      container.innerHTML =
+        '<p class="empty">Одоогоор идэвхтэй зар алга.</p>';
+      return;
+    }
+
+    ads.forEach(ad => {
+      const card = document.createElement("article");
+      card.className = "ad-card";
+
+      const title = document.createElement("h3");
+      title.textContent = ad.title;
+
+      const category = document.createElement("span");
+      category.className = "status";
+      category.textContent = ad.category;
+
+      const description = document.createElement("p");
+      description.textContent = ad.description;
+
+      const price = document.createElement("p");
+      price.textContent = ad.price != null
+        ? formatPrice(ad.price)
+        : "Үнэ тохирно";
+
+      const phone = document.createElement("p");
+      phone.textContent = "☎ " + ad.phone;
+
+      card.append(title,category,description,price,phone);
+      container.appendChild(card);
+    });
   }
 
-  data.forEach(ad => {
-    const card = document.createElement("article");
-    card.className = "ad-card";
+  renderAds(area,data);
 
-    const title = document.createElement("h3");
-    title.textContent = ad.title;
-
-    const category = document.createElement("span");
-    category.className = "status";
-    category.textContent = ad.category;
-
-    const description = document.createElement("p");
-    description.textContent = ad.description;
-
-    const price = document.createElement("p");
-    price.textContent = ad.price != null
-      ? formatPrice(ad.price)
-      : "Үнэ тохирно";
-
-    const phone = document.createElement("p");
-    phone.textContent = "☎ " + ad.phone;
-
-    card.append(title,category,description,price,phone);
-    area.appendChild(card);
-  });
+  if (homeArea) {
+    renderAds(homeArea,data.slice(0,4));
+  }
 }
 
 /* ===================================
