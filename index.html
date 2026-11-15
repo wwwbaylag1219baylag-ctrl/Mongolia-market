@@ -523,50 +523,19 @@ footer strong {
       onkeydown="if(event.key==='Enter')searchAll()">
     <button class="btn btn-primary" onclick="searchAll()">Хайх</button>
 </div>
-  <!-- 1. ЗАР МЭДЭЭЛЭЛ -->
-  <section id="homeAds">
+  
+
+<!-- 1. ЗАР МЭДЭЭЛЭЛ -->
+<section id="homeAds">
   <h2 class="section-title">📢 Зар мэдээлэл</h2>
   <div id="homeAdList" class="ad-grid">
     <p class="empty">Заруудыг ачаалж байна...</p>
   </div>
   <button class="btn btn-primary"
     onclick="switchTab('ads')">
- Бүх зар харах -
+    Бүх зар харах →
   </button>
-  </section>
-    <div class="panel">
-      <button class="btn btn-primary" onclick="toggleAdForm()">＋ Зар нийтлэх</button>
-    </div>
-
-    <div id="adFormArea" class="panel hidden">
-      <h3>Шинэ зар нийтлэх</h3>
-
-      <input class="field" id="adTitle" placeholder="Зарын гарчиг">
-
-      <select class="field" id="adCategory">
-        <option value="">Зарын төрөл</option>
-        <option>Үл хөдлөх</option>
-        <option>Автомашин</option>
-        <option>Ажлын зар</option>
-        <option>Түрээс</option>
-        <option>Бараа зарна</option>
-        <option>Үйлчилгээ</option>
-        <option>Бусад</option>
-      </select>
-
-      <textarea class="field" id="adDescription" placeholder="Дэлгэрэнгүй тайлбар"></textarea>
-      <input class="field" id="adPrice" type="number" placeholder="Үнэ ₮">
-      <input class="field" id="adPhone" type="tel" placeholder="Холбоо барих утас">
-
-      <button class="btn btn-primary" onclick="publishAd()">Зар илгээх</button>
-      <button class="btn" onclick="toggleAdForm()">Болих</button>
-    </div>
-
-    <h3 class="section-title">Нийтлэгдсэн зарууд</h3>
-    <div id="adList" class="ad-grid">
-      <p class="empty">Заруудыг ачаалж байна...</p>
-    </div>
-  </section>
+</section>
 
 <!-- 2. ХУДАЛДААНЫ АНГИЛАЛ -->
 <section id="homeCategories">
@@ -603,9 +572,18 @@ footer strong {
 <section id="homeProducts">
   <h2 class="section-title">🔥 Шинэ бараанууд</h2>
   <div class="products" id="productList">
-    <!-- Бараанууд энд автоматаар гарна -->
-  </div>
-</section
+    <div class="product" data-category="Электрон бараа">
+      <div class="product-image">📱</div>
+      <h3>Жишээ ухаалаг утас</h3>
+      <div class="price">450,000₮</div>
+      <button class="btn btn-primary"
+        onclick="addProductToCart(this)">Сагслах</button>
+    </div>
+
+    <div class="product" data-category="Гутал">
+      <div class="product-image">👟</div>
+      <h3>Спорт гутал</h3>
+      <div class="price">85,000₮</div>
       <button class="btn btn-primary"
         onclick="addProductToCart(this)">Сагслах</button>
     </div>
@@ -1282,27 +1260,710 @@ async function publishAd() {
 =================================== */
 
 
-async function loadPublishedAds() {
-  const area = $("adList");
-  const homeArea = $("homeAdList");
 
-  const {data,error} = await supabaseClient
+
+/* =====================================
+   NEXORA CLASSIFIED NAVIGATION
+===================================== */
+
+const adData = {
+  "Үл хөдлөх": [
+    "Орон сууц",
+    "Хаус, амины орон сууц",
+    "Газар",
+    "Оффис",
+    "Ажлын байр",
+    "Агуулах",
+    "Худалдааны талбай",
+    "Түрээс"
+  ],
+  "Автомашин": [
+    "Суудлын автомашин",
+    "Жийп",
+    "Ачааны машин",
+    "Мотоцикл",
+    "Сэлбэг хэрэгсэл",
+    "Автомашины үйлчилгээ"
+  ],
+  "Ажлын зар": [
+    "Барилга",
+    "Уул уурхай",
+    "Боловсрол",
+    "Эрүүл мэнд",
+    "Мэдээллийн технологи",
+    "Худалдаа",
+    "Үйлчилгээ",
+    "Тээвэр",
+    "Үйлдвэрлэл",
+    "Санхүү, нягтлан бодох",
+    "Хөдөө аж ахуй",
+    "Зочид буудал, ресторан"
+  ],
+  "Сургалт, дамжаа": [
+    "Гадаад хэл",
+    "Компьютер, IT",
+    "Мэргэжлийн сургалт",
+    "Жолооны курс",
+    "Онлайн сургалт",
+    "Бусад сургалт"
+  ],
+  "Үйлчилгээ": [
+    "Барилга засвар",
+    "Цэвэрлэгээ",
+    "Тээвэр",
+    "Хүргэлт",
+    "Автомашины засвар",
+    "IT үйлчилгээ",
+    "Гоо сайхан",
+    "Бусад үйлчилгээ"
+  ],
+  "Бусад": [
+    "Төрөл бүрийн зар",
+    "Хэрэгцээт мэдээлэл",
+    "Бусад"
+  ]
+};
+
+const jobProfessions = {
+  "Барилга": [
+    "Барилгын инженер",
+    "Архитектор",
+    "Цахилгаанчин",
+    "Сантехникч",
+    "Гагнуурчин",
+    "Мужаан",
+    "Өрлөгчин",
+    "Засалчин",
+    "Туслах ажилтан"
+  ],
+  "Уул уурхай": [
+    "Уул уурхайн инженер",
+    "Экскаваторын оператор",
+    "Жолооч",
+    "Маркшейдер",
+    "Геологич",
+    "Механик инженер",
+    "Цахилгаанчин"
+  ],
+  "Боловсрол": [
+    "Багш",
+    "Сургалтын менежер",
+    "Цэцэрлэгийн багш",
+    "Орчуулагч"
+  ],
+  "Эрүүл мэнд": [
+    "Эмч",
+    "Сувилагч",
+    "Эм зүйч",
+    "Лабораторийн ажилтан"
+  ],
+  "Мэдээллийн технологи": [
+    "Программист",
+    "Веб хөгжүүлэгч",
+    "Системийн админ",
+    "График дизайнер",
+    "IT инженер"
+  ],
+  "Худалдаа": [
+    "Худалдааны зөвлөх",
+    "Кассчин",
+    "Борлуулалтын менежер",
+    "Маркетингийн ажилтан"
+  ],
+  "Үйлчилгээ": [
+    "Тогооч",
+    "Зөөгч",
+    "Үсчин",
+    "Үйлчлэгч",
+    "Хамгаалагч"
+  ],
+  "Тээвэр": [
+    "Жолооч",
+    "Хүргэлтийн ажилтан",
+    "Логистикийн менежер"
+  ],
+  "Үйлдвэрлэл": [
+    "Үйлдвэрийн ажилтан",
+    "Технологич",
+    "Чанарын хяналтын ажилтан"
+  ],
+  "Санхүү, нягтлан бодох": [
+    "Нягтлан бодогч",
+    "Эдийн засагч",
+    "Санхүүгийн менежер"
+  ],
+  "Хөдөө аж ахуй": [
+    "Малын эмч",
+    "Агрономич",
+    "Малчин",
+    "Фермер"
+  ],
+  "Зочид буудал, ресторан": [
+    "Зочид буудлын ажилтан",
+    "Ресепшн",
+    "Тогооч",
+    "Зөөгч"
+  ]
+};
+
+let adScreenStack = [];
+let currentAdCategory = "";
+let currentAdIndustry = "";
+let currentAdProfession = "";
+
+const adScreens = [
+  "adHome",
+  "adSubcategories",
+  "adProfessions",
+  "adResults",
+  "adDetails",
+  "adPublishScreen"
+];
+
+function showAdScreen(id, saveHistory = true) {
+  if (saveHistory) {
+    const current = adScreens.find(
+      x => !$(x).classList.contains("hidden")
+    );
+    if (current && current !== id) {
+      adScreenStack.push(current);
+    }
+  }
+
+  adScreens.forEach(x => $(x).classList.add("hidden"));
+  $(id).classList.remove("hidden");
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function adGoBack() {
+  const previous = adScreenStack.pop() || "adHome";
+  showAdScreen(previous, false);
+}
+
+function openAdCategory(category) {
+  currentAdCategory = category;
+  currentAdIndustry = "";
+  currentAdProfession = "";
+  adScreenStack = [];
+
+  $("subcategoryTitle").textContent = category;
+
+  const area = $("subcategoryList");
+  area.innerHTML = "";
+
+  (adData[category] || []).forEach(name => {
+    const button = document.createElement("button");
+    button.className = "category";
+    button.textContent = name;
+
+    button.onclick = () => {
+      currentAdIndustry = name;
+
+      if (category === "Ажлын зар") {
+        openProfessions(name);
+      } else {
+        showClassifiedResults();
+      }
+    };
+
+    area.appendChild(button);
+  });
+
+  showAdScreen("adSubcategories");
+}
+
+function openProfessions(industry) {
+  currentAdIndustry = industry;
+  $("professionTitle").textContent = industry + " — Мэргэжил сонгох";
+
+  const area = $("professionList");
+  area.innerHTML = "";
+
+  const professions = jobProfessions[industry] || ["Бусад мэргэжил"];
+
+  professions.forEach(name => {
+    const button = document.createElement("button");
+    button.className = "category";
+    button.textContent = name;
+
+    button.onclick = () => {
+      currentAdProfession = name;
+      showClassifiedResults();
+    };
+
+    area.appendChild(button);
+  });
+
+  showAdScreen("adProfessions");
+}
+
+async function showClassifiedResults() {
+  $("resultsTitle").textContent =
+    currentAdProfession ||
+    currentAdIndustry ||
+    currentAdCategory;
+
+  await loadClassifiedResults();
+  showAdScreen("adResults");
+}
+
+/* =====================================
+   CLASSIFIED LIST
+===================================== */
+
+async function loadClassifiedResults() {
+  const area = $("classifiedList");
+  area.innerHTML = '<p class="empty">Заруудыг ачаалж байна...</p>';
+
+  let query = supabaseClient
     .from("classified_ads")
-    .select("id,title,category,description,price,phone,created_at")
+    .select("*")
     .eq("status","active")
+    .eq("category",currentAdCategory)
     .order("created_at",{ascending:false});
+
+  if (currentAdIndustry) {
+    query = query.eq("industry",currentAdIndustry);
+  }
+
+  if (currentAdProfession && currentAdCategory === "Ажлын зар") {
+    query = query.eq("profession",currentAdProfession);
+  }
+
+  const {data,error} = await query;
 
   if (error) {
     console.error(error);
-    area.innerHTML =
-      '<p class="empty">Зар ачаалахад алдаа гарлаа.</p>';
-
-    if (homeArea) {
-      homeArea.innerHTML =
-        '<p class="empty">Зар ачаалахад алдаа гарлаа.</p>';
-    }
+    area.innerHTML = '<p class="empty">Зар ачаалахад алдаа гарлаа.</p>';
     return;
   }
+
+  renderClassifiedCards(area,data || []);
+}
+
+function renderClassifiedCards(area,ads) {
+  area.innerHTML = "";
+
+  if (!ads.length) {
+    area.innerHTML = '<p class="empty">Одоогоор энэ ангилалд зар алга.</p>';
+    return;
+  }
+
+  ads.forEach(ad => {
+    const card = document.createElement("article");
+    card.className = "ad-card";
+
+    const title = document.createElement("h3");
+    title.textContent = ad.title;
+
+    const industry = document.createElement("span");
+    industry.className = "status";
+    industry.textContent = ad.industry || ad.subcategory || ad.category;
+
+    const salary = document.createElement("p");
+    salary.textContent = ad.price != null
+      ? "Цалин / Үнэ: " + formatPrice(ad.price)
+      : "Цалин / Үнэ: Тохирно";
+
+    const location = document.createElement("p");
+    location.textContent = "📍 " +
+      (ad.work_location || ad.address || "Байршил тодорхойгүй");
+
+    const button = document.createElement("button");
+    button.className = "btn btn-primary";
+    button.textContent = "Дэлгэрэнгүй";
+    button.onclick = () => openClassifiedDetails(ad);
+
+    card.append(title,industry,salary,location,button);
+    area.appendChild(card);
+  });
+}
+
+/* =====================================
+   CLASSIFIED DETAILS
+===================================== */
+
+function openClassifiedDetails(ad) {
+  const area = $("adDetailsContent");
+  area.innerHTML = "";
+
+  const title = document.createElement("h2");
+  title.className = "section-title";
+  title.textContent = ad.title;
+
+  area.appendChild(title);
+
+  if (ad.image_path) {
+    const {data} = supabaseClient.storage
+      .from("classified-images")
+      .getPublicUrl(ad.image_path);
+
+    if (data?.publicUrl) {
+      const image = document.createElement("img");
+      image.src = data.publicUrl;
+      image.alt = ad.title;
+      image.style.cssText =
+        "width:100%;max-height:320px;object-fit:contain;border-radius:14px;margin-bottom:15px";
+      area.appendChild(image);
+    }
+  }
+
+  const fields = [
+    ["Ангилал",ad.category],
+    ["Салбар",ad.industry],
+    ["Мэргэжил",ad.profession],
+    ["Цалин / Үнэ",ad.price != null ? formatPrice(ad.price) : "Тохирно"],
+    ["Байгууллага / Хувь хүн",ad.employer_type],
+    ["Нэр",ad.employer_name],
+    ["Хаяг",ad.address],
+    ["Ажлын байршил",ad.work_location],
+    ["Тавигдах шаардлага",ad.requirements],
+    ["Дэлгэрэнгүй",ad.description]
+  ];
+
+  fields.forEach(([label,value]) => {
+    if (!value) return;
+
+    const panel = document.createElement("div");
+    panel.className = "panel";
+
+    const heading = document.createElement("h3");
+    heading.textContent = label;
+
+    const content = document.createElement("p");
+    content.style.whiteSpace = "pre-wrap";
+    content.textContent = value;
+
+    panel.append(heading,content);
+    area.appendChild(panel);
+  });
+
+  if (ad.phone) {
+    const phone = document.createElement("a");
+    phone.className = "btn btn-primary";
+    phone.style.cssText = "display:block;text-align:center;text-decoration:none;margin:15px 0";
+    phone.href = "tel:" + ad.phone.replace(/[^\d+]/g,"");
+    phone.textContent = "☎ Утасдах: " + ad.phone;
+    area.appendChild(phone);
+  }
+
+  if (
+    Number.isFinite(Number(ad.latitude)) &&
+    Number.isFinite(Number(ad.longitude)) &&
+    ad.latitude !== null &&
+    ad.longitude !== null
+  ) {
+    const map = document.createElement("iframe");
+    map.src =
+      "https://www.openstreetmap.org/export/embed.html?marker=" +
+      encodeURIComponent(ad.latitude + "," + ad.longitude);
+
+    map.width = "100%";
+    map.height = "300";
+    map.loading = "lazy";
+    map.style.border = "0";
+    map.style.borderRadius = "14px";
+
+    const mapPanel = document.createElement("div");
+    mapPanel.className = "panel";
+
+    const heading = document.createElement("h3");
+    heading.textContent = "📍 Газрын зураг";
+
+    mapPanel.append(heading,map);
+    area.appendChild(mapPanel);
+  }
+  
+  showAdScreen("adDetails");
+}
+
+/* =====================================
+   NEW AD FORM
+===================================== */
+
+function openNewAd() {
+  adScreenStack = [];
+  $("adPublishScreen").classList.remove("hidden");
+  adScreens.filter(x => x !== "adPublishScreen")
+    .forEach(x => $(x).classList.add("hidden"));
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+$("adCategory").addEventListener("change",function() {
+  const category = this.value;
+  const industry = $("adIndustry");
+  const profession = $("adProfession");
+
+  industry.innerHTML = '<option value="">Салбар сонгох</option>';
+  profession.innerHTML = '<option value="">Мэргэжил сонгох</option>';
+
+  (adData[category] || []).forEach(name => {
+    const option = document.createElement("option");
+    option.value = name;
+    option.textContent = name;
+    industry.appendChild(option);
+  });
+});
+
+$("adIndustry").addEventListener("change",function() {
+  const professions = jobProfessions[this.value] || [];
+  $("adProfession").innerHTML =
+    '<option value="">Мэргэжил сонгох</option>';
+
+  professions.forEach(name => {
+    const option = document.createElement("option");
+    option.value = name;
+    option.textContent = name;
+    $("adProfession").appendChild(option);
+  });
+});
+
+function useCurrentAdLocation() {
+  if (!navigator.geolocation) {
+    alert("Таны төхөөрөмж байршил тогтоох боломжгүй байна.");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      $("adLatitude").value = position.coords.latitude;
+      $("adLongitude").value = position.coords.longitude;
+      alert("Байршил амжилттай авлаа.");
+    },
+    error => {
+      alert("Байршил авах боломжгүй. Зөвшөөрлөө шалгана уу.");
+    },
+    {enableHighAccuracy:true,timeout:15000}
+  );
+}
+
+/* =====================================
+   PUBLISH AD TO SUPABASE
+===================================== */
+
+async function publishAd() {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    alert("Эхлээд нэвтэрнэ үү.");
+    switchTab("account");
+    return;
+  }
+
+  const category = $("adCategory").value;
+  const industry = $("adIndustry").value;
+  const profession = $("adProfession").value;
+  const title = $("adTitle").value.trim();
+  const description = $("adDescription").value.trim();
+  const phone = $("adPhone").value.trim();
+  const priceText = $("adPrice").value.trim();
+  const employerType = $("adEmployerType").value;
+  const employerName = $("adEmployerName").value.trim();
+  const address = $("adAddress").value.trim();
+  const requirements = $("adRequirements").value.trim();
+  const workLocation = $("adWorkLocation").value.trim();
+  const latitudeText = $("adLatitude").value.trim();
+  const longitudeText = $("adLongitude").value.trim();
+  const file = $("adImage").files[0];
+
+  if (!category || !title || !description || !phone ||
+      !employerType || !address || !requirements) {
+    alert("Шаардлагатай талбаруудыг бөглөнө үү.");
+    return;
+  }
+
+  if (category === "Ажлын зар" && (!industry || !profession)) {
+    alert("Ажлын зарын салбар болон мэргэжлийг сонгоно уу.");
+    return;
+  }
+
+  if (priceText && (!Number.isFinite(Number(priceText)) ||
+      Number(priceText) < 0)) {
+    alert("Цалин эсвэл үнийг зөв оруулна уу.");
+    return;
+  }
+
+  if (file && (!file.type.startsWith("image/") ||
+      file.size > 5 * 1024 * 1024)) {
+    alert("5MB-аас бага хэмжээтэй зураг сонгоно уу.");
+    return;
+  }
+
+  const hasLat = latitudeText !== "";
+  const hasLng = longitudeText !== "";
+
+  if (hasLat !== hasLng) {
+    alert("Өргөрөг болон уртрагийн хоёуланг нь оруулна уу.");
+    return;
+  }
+
+  let latitude = hasLat ? Number(latitudeText) : null;
+  let longitude = hasLng ? Number(longitudeText) : null;
+
+  if (
+    hasLat &&
+    (!Number.isFinite(latitude) ||
+     !Number.isFinite(longitude) ||
+     latitude < -90 || latitude > 90 ||
+     longitude < -180 || longitude > 180)
+  ) {
+    alert("Газрын зургийн координат буруу байна.");
+    return;
+  }
+
+  const button = $("publishAdButton");
+  button.disabled = true;
+  button.textContent = "Хадгалж байна...";
+
+  let imagePath = null;
+
+  try {
+    if (file) {
+      const extension = file.name.split(".").pop()
+        .replace(/[^a-zA-Z0-9]/g,"") || "jpg";
+
+      imagePath = user.id + "/" + crypto.randomUUID() + "." + extension;
+
+      const {error:uploadError} = await supabaseClient.storage
+        .from("classified-images")
+        .upload(imagePath,file,{
+          contentType:file.type,
+          upsert:false
+        });
+
+      if (uploadError) throw uploadError;
+    }
+
+    const record = {
+      owner_id:user.id,
+      category,
+      subcategory:industry || null,
+      industry:industry || null,
+      profession:profession || null,
+      title,
+      description,
+      phone,
+      price:priceText ? Number(priceText) : null,
+      salary:category === "Ажлын зар" && priceText
+        ? Number(priceText) : null,
+      employer_type:employerType,
+      employer_name:employerName || null,
+      address,
+      requirements,
+      work_location:workLocation || null,
+      latitude,
+      longitude,
+      image_path:imagePath,
+      status:"pending_payment"
+    };
+
+    const {error} = await supabaseClient
+      .from("classified_ads")
+      .insert(record);
+
+    if (error) throw error;
+
+    alert("Зар амжилттай хадгалагдлаа. Баталгаажуулалт хүлээгдэж байна.");
+
+    [
+      "adCategory","adIndustry","adProfession","adTitle",
+      "adDescription","adPhone","adPrice","adEmployerType",
+      "adEmployerName","adAddress","adRequirements",
+      "adWorkLocation","adLatitude","adLongitude","adImage"
+    ].forEach(id => $(id).value = "");
+
+    adScreenStack = [];
+    showAdScreen("adHome",false);
+
+    await loadPublishedAds();
+    await loadMyClassifiedAds();
+
+  } catch(error) {
+    console.error(error);
+
+    if (imagePath) {
+      await supabaseClient.storage
+        .from("classified-images")
+        .remove([imagePath]);
+    }
+
+    alert("Зар хадгалахад алдаа гарлаа: " + error.message);
+  } finally {
+    button.disabled = false;
+    button.textContent = "ЗАР НИЙТЛЭХ";
+  }
+}
+
+/* =====================================
+   HOME CLASSIFIED ADS
+===================================== */
+
+async function loadPublishedAds() {
+  const home = $("classifiedHomeList");
+  if (!home) return;
+
+  home.innerHTML = '<p class="empty">Ачаалж байна...</p>';
+
+  const {data,error} = await supabaseClient
+    .from("classified_ads")
+    .select("*")
+    .eq("status","active")
+    .order("created_at",{ascending:false})
+    .limit(20);
+
+  if (error) {
+    console.error(error);
+    home.innerHTML = '<p class="empty">Зар ачаалахад алдаа гарлаа.</p>';
+    return;
+  }
+
+  renderClassifiedCards(home,data || []);
+}
+
+  function renderAds(container, ads) {
+    container.innerHTML = "";
+
+    if (!ads || !ads.length) {
+      container.innerHTML =
+        '<p class="empty">Одоогоор идэвхтэй зар алга.</p>';
+      return;
+    }
+
+    ads.forEach(ad => {
+      const card = document.createElement("article");
+      card.className = "ad-card";
+
+      const title = document.createElement("h3");
+      title.textContent = ad.title;
+
+      const category = document.createElement("span");
+      category.className = "status";
+      category.textContent = ad.category;
+
+      const description = document.createElement("p");
+      description.textContent = ad.description;
+
+      const price = document.createElement("p");
+      price.textContent = ad.price != null
+        ? formatPrice(ad.price)
+        : "Үнэ тохирно";
+
+      const phone = document.createElement("p");
+      phone.textContent = "☎ " + ad.phone;
+
+      card.append(title,category,description,price,phone);
+      container.appendChild(card);
+    });
+  }
+
+  renderAds(area,data);
+
+  if (homeArea) {
+    renderAds(homeArea,data.slice(0,4));
+  }
+}
 
   function renderAds(container, ads) {
     container.innerHTML = "";
