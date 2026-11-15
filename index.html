@@ -2192,8 +2192,9 @@ card.append(title, category, price, status, expiryText, deleteBtn);
     area.appendChild(card);
   });
 }
+
 async function deleteMyClassifiedAd(adId) {
-  const confirmed = confirm("Энэ зарыг бүрмөсөн устгах уу?");
+  const confirmed = confirm("Энэ зарыг устгах уу?");
   if (!confirmed) return;
 
   const { data: authData, error: authError } =
@@ -2206,7 +2207,7 @@ async function deleteMyClassifiedAd(adId) {
 
   const { error } = await supabaseClient
     .from("classified_ads")
-    .delete()
+    .update({ status: "deleted" })
     .eq("id", adId)
     .eq("owner_id", authData.user.id);
 
@@ -2218,7 +2219,8 @@ async function deleteMyClassifiedAd(adId) {
 
   alert("Таны зар устгагдлаа.");
   loadMyClassifiedAds();
-} 
+}
+
 function toggleMyClassifiedAds(button) {
   const details = button.closest("details");
   const list = document.getElementById("myClassifiedAdsList");
