@@ -2182,11 +2182,43 @@ async function loadMyClassifiedAds() {
       ? "Дуусах огноо: " + expiry.toLocaleString("mn-MN")
       : "Дуусах огноо хараахан тохируулагдаагүй";
 
-    card.append(title, category, price, status, expiryText);
+   const deleteBtn = document.createElement("button");
+deleteBtn.type = "button";
+deleteBtn.className = "dark-btn";
+deleteBtn.textContent = "🗑️ Зараа устгах";
+deleteBtn.onclick = () => deleteMyClassifiedAd(ad.id);
+
+card.append(title, category, price, status, expiryText, deleteBtn); 
     area.appendChild(card);
   });
 }
- 
+async function deleteMyClassifiedAd(adId) {
+  const confirmed = confirm("Энэ зарыг бүрмөсөн устгах уу?");
+  if (!confirmed) return;
+
+  const { data: authData, error: authError } =
+    await supabaseClient.auth.getUser();
+
+  if (authError || !authData.user) {
+    alert("Устгахын тулд эхлээд нэвтэрнэ үү.");
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from("classified_ads")
+    .delete()
+    .eq("id", adId)
+    .eq("owner_id", authData.user.id);
+
+  if (error) {
+    console.error("Зар устгах алдаа:", error);
+    alert("Зар устгахад алдаа гарлаа: " + error.message);
+    return;
+  }
+
+  alert("Таны зар устгагдлаа.");
+  loadMyClassifiedAds();
+} 
 function toggleMyClassifiedAds(button) {
   const details = button.closest("details");
   const list = document.getElementById("myClassifiedAdsList");
