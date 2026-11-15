@@ -377,32 +377,42 @@ footer strong {
 
 <main class="container">
 
-<div class="search-box" role="search">
-  <input
-    type="search"
-    id="searchInput"
-    name="nexora_search"
-    autocomplete="new-password"
-    data-form-type="other"
-    placeholder="Бараа, зар, үйлчилгээ хайх..."
-  >
-  <button class="primary-btn" type="button" onclick="searchAll()">Хайх</button>
-</div>
-<h2 class="section-title">📂 Худалдааны ангилал</h2>
+
+<!-- NEXORA ҮНДСЭН 7 АНГИЛАЛ -->
+<h2 class="section-title">NEXORA — Ангилал</h2>
 
 <div class="categories" id="categories">
-<div class="category active" data-category="Бүгд"><span>🌐</span>Бүгд</div>
-<div class="category" data-category="Электрон бараа"><span>📱</span>Электрон бараа</div>
-<div class="category" data-category="Хувцас"><span>👕</span>Хувцас</div>
-<div class="category" data-category="Гутал"><span>👟</span>Гутал</div>
-<div class="category" data-category="Гэр ахуй"><span>🏠</span>Гэр ахуй</div>
-<div class="category" data-category="Автомашин"><span>🚗</span>Автомашин</div>
-<div class="category" data-category="Хүүхдийн бараа"><span>🧸</span>Хүүхдийн бараа</div>
-<div class="category" data-category="Гоо сайхан"><span>💄</span>Гоо сайхан</div>
-<div class="category" data-category="Багаж"><span>🛠️</span>Багаж</div>
-<div class="category" data-category="Хүнс"><span>🌾</span>Хүнс</div>
-<div class="category" data-category="Бусад"><span>📦</span>Бусад</div>
+
+  <div class="category" onclick="switchTab('ads', null)">
+    <span>🏠</span> Үл хөдлөх
+  </div>
+
+  <div class="category" onclick="switchTab('ads', null)">
+    <span>🚗</span> Автомашин
+  </div>
+
+  <div class="category" onclick="switchTab('ads', null)">
+    <span>💼</span> Ажлын зар
+  </div>
+
+  <div class="category" onclick="switchTab('services', null)">
+    <span>🛠️</span> Үйлчилгээ
+  </div>
+
+  <div class="category" onclick="switchTab('ads', null)">
+    <span>🔧</span> Сэлбэг, хэрэгсэл
+  </div>
+
+  <div class="category" onclick="switchTab('ads', null)">
+    <span>📂</span> Бусад
+  </div>
+
+  <div class="category" onclick="switchTab('news', null)">
+    <span>📰</span> Мэдээ, мэдээлэл
+  </div>
+
 </div>
+<!-- NEXORA ҮНДСЭН АНГИЛАЛ ДУУСАВ -->
 
 <h2 class="section-title">🔥 Шинэ бараанууд</h2>
 
