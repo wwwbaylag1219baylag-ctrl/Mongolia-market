@@ -601,7 +601,31 @@ footer strong {
     ← Багц сонгох руу буцах
   </button>
 </div>
+<!-- NEXORA АЖЛЫН ЗАР ҮЗЭХ -->
+<div id="jobBrowseScreen" class="panel">
+  <h3>💼 Ажлын зар</h3>
+  <p>Ажлын салбараа сонгоно уу.</p>
 
+  <div class="ad-full-grid">
+    <button onclick="showJobSector('Барилга, зам')">🏗️ Барилга, зам</button>
+    <button onclick="showJobSector('Үйлдвэр')">🏭 Үйлдвэр</button>
+    <button onclick="showJobSector('Уул уурхай')">⛏️ Уул уурхай</button>
+    <button onclick="showJobSector('Худалдаа, борлуулалт')">🛒 Худалдаа, борлуулалт</button>
+    <button onclick="showJobSector('Боловсрол')">🎓 Боловсрол</button>
+    <button onclick="showJobSector('Эмнэлэг')">🏥 Эмнэлэг</button>
+    <button onclick="showJobSector('Хөдөө аж ахуй')">🌾 Хөдөө аж ахуй</button>
+    <button onclick="showJobSector('Инженер техник')">⚙️ Инженер техник</button>
+    <button onclick="showJobSector('Тээвэр, гааль')">🚚 Тээвэр, гааль</button>
+    <button onclick="showJobSector('Бусад')">📂 Бусад</button>
+  </div>
+</div>
+
+<div id="jobProfessionScreen" class="panel hidden">
+  <button class="dark-btn" onclick="backToJobSectors()">← Салбар руу буцах</button>
+  <h3 id="jobProfessionTitle">Мэргэжил сонгох</h3>
+  <div id="jobProfessionList" class="ad-full-grid"></div>
+</div>
+ 
   <div id="adList" class="ad-grid"></div>
 </div>
 
@@ -2392,6 +2416,67 @@ function toggleMyClassifiedAds(button) {
     button.textContent = "🔄 Заруудаа харах";
   }
 } 
+ 
+let selectedJobSector = "";
+let selectedJobProfession = "";
+
+function showJobSector(sector) {
+  selectedJobSector = sector;
+
+  const screen = document.getElementById("jobProfessionScreen");
+  const title = document.getElementById("jobProfessionTitle");
+  const list = document.getElementById("jobProfessionList");
+
+  const professions = {
+    "Барилга, зам": [
+      "Шаварчин", "Засалчин", "Гадна фасад", "Бусад"
+    ],
+    "Үйлдвэр": [
+      "Оёдолчин", "Бусад"
+    ],
+    "Тээвэр, гааль": [
+      "Жолооч",
+      "Тээврийн менежер",
+      "Логистикийн мэргэжилтэн",
+      "Тээвэр зохицуулагч",
+      "Гаалийн бүрдүүлэлтийн мэргэжилтэн",
+      "Гаалийн зуучлагч",
+      "Агуулахын ажилтан",
+      "Экспедитор",
+      "Бусад"
+    ]
+  };
+
+  const names = professions[sector] || ["Бусад"];
+
+  title.textContent = "📂 " + sector + " — Мэргэжил сонгох";
+  list.innerHTML = "";
+
+  names.forEach(name => {
+    const button = document.createElement("button");
+    button.textContent = name;
+    button.onclick = () => selectJobProfession(name);
+    list.appendChild(button);
+  });
+
+  document.getElementById("jobBrowseScreen").classList.add("hidden");
+  screen.classList.remove("hidden");
+}
+
+function backToJobSectors() {
+  document.getElementById("jobProfessionScreen").classList.add("hidden");
+  document.getElementById("jobBrowseScreen").classList.remove("hidden");
+}
+
+function selectJobProfession(profession) {
+  selectedJobProfession = profession;
+
+  alert(
+    "Сонгосон ангилал: " +
+    selectedJobSector + " — " + selectedJobProfession
+  );
+}
+
 </script>
 
 <style>
