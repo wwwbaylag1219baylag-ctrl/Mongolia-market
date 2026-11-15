@@ -573,12 +573,12 @@ footer strong {
   </section>
 
   <div class="tabs" id="mainTabs">
-    <button class="tab active" onclick="switchTab('market',this)">🛍️ Бараа</button>
-    <button class="tab" onclick="switchTab('ads',this)">📢 Зар</button>
-    <button class="tab" onclick="switchTab('services',this)">🛠️ Үйлчилгээ</button>
-    <button class="tab" onclick="switchTab('news',this)">📰 Мэдээ</button>
-    <button class="tab" onclick="openSupplierRegistration()">🏪 Нийлүүлэгч</button>
-    <button class="tab" onclick="switchTab('account',this)">👤 Миний булан</button>
+  <button class="tab active" onclick="switchTab('ads',this)">📢 Зар</button>
+  <button class="tab" onclick="switchTab('services',this)">🛠️ Үйлчилгээ</button>
+  <button class="tab" onclick="switchTab('market',this)">🛍️ Бараа</button>
+  <button class="tab" onclick="switchTab('news',this)">📰 Мэдээ</button>
+  <button class="tab" onclick="openSupplierRegistration()">🏪 Нийлүүлэгч</button>
+  <button class="tab" onclick="switchTab('account',this)">👤 Миний булан</button>
   </div>
 
   <!-- БАРАА -->
@@ -1677,7 +1677,7 @@ supabaseClient.auth.onAuthStateChange((event,session) => {
 
 async function initializeNexora() {
   try {
-    switchTab("market");
+  switchTab("ads");
 
     await loadPublishedProducts();
     await loadPublishedAds();
