@@ -415,8 +415,7 @@ footer strong {
   <div class="tab active" onclick="openAdSubcategories('Үл хөдлөх')">🏠 Үл хөдлөх</div>
   <div class="tab" onclick="openAdSubcategories('Автомашин')">🚗 Автомашин</div>
   <div class="tab" onclick="openAdSubcategories('Ажлын зар')">💼 Ажлын зар</div>
-  <div class="tab" onclick="document.querySelectorAll('.tab-content').forEach(s=>s.classList.add('hidden'));document.getElementById('market').classList.remove('hidden');document.getElementById('services').classList.remove('hidden');document.querySelectorAll('.tabs .tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.getElementById('services').scrollIntoView({behavior:'smooth',block:'start'});">🛠️ Үйлчилгээ</div>
- 
+  <div class="tab" onclick="switchTab('services', this)">🛠️ Үйлчилгээ</div>
   
   <div class="tab" onclick="switchTab('news',this)">📰 Мэдээ, мэдээлэл</div>
    <div class="tab" onclick="switchTab('ads', null); toggleAdForm()">＋ Зар нийтлэх</div>
@@ -603,7 +602,7 @@ footer strong {
     <button onclick="showJobSector('Хөдөө аж ахуй')">🌾 Хөдөө аж ахуй</button>
     <button onclick="showJobSector('Инженер техник')">⚙️ Инженер техник</button>
     <button onclick="showJobSector('Тээвэр, гааль')">🚚 Тээвэр, гааль</button>
-    <button onclick="showJobSector('Бусад')">📂 Бусад</button>
+    
   </div>
 </div>
 
