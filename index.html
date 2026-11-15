@@ -2186,17 +2186,22 @@ async function loadMyClassifiedAds() {
     area.appendChild(card);
   });
 }
- function toggleMyClassifiedAds(button) {
+ 
+function toggleMyClassifiedAds(button) {
   const details = button.closest("details");
-  if (!details) return;
+  const list = document.getElementById("myClassifiedAdsList");
 
-  if (details.open) {
-    details.open = false;
-  } else {
-    details.open = true;
+  if (!details || !list) return;
+
+  if (list.style.display === "none") {
+    list.style.display = "block";
     loadMyClassifiedAds();
+    button.textContent = "🔄 Заруудаа хумих";
+  } else {
+    list.style.display = "none";
+    button.textContent = "🔄 Заруудаа харах";
   }
- }
+} 
 </script>
 
 <style>
