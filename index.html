@@ -1228,11 +1228,21 @@ function showJobSubcategories() {
 }
 function selectAdSubcategory(category, subcategory) {
   alert("Сонгосон ангилал: " + category + " — " + subcategory);
+
+  if (category === "Ажлын зар") {
+    document.getElementById("adCategory").value = "Ажлын зар";
+  }
 }
+
+function showJobSubcategories() {
+  document.getElementById("carSubcategories").style.display = "none";
+  document.getElementById("propertySubcategories").style.display = "none";
+  document.getElementById("jobSubcategories").style.display = "grid";
+}
+
 let currentAdIdForPayment = null;
 let selectedAdPackage = null;
- let selectedBankAccount = null;
- 
+let selectedBankAccount = null;
 
 async function selectAdPackage(days, amount) {
   if (!currentAdIdForPayment) {
