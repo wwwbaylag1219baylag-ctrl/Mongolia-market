@@ -504,7 +504,7 @@ footer strong {
   <div id="adFormArea" class="panel hidden payment-screen">
     <h3>Шинэ зар нийтлэх</h3>
     <input class="field" id="adTitle" placeholder="Зарын гарчиг">
-    <select class="field" id="adCategory">
+    <select class="field" id="adCategory" onchange="toggleJobFields()">
       <option value="">Зарын төрөл сонгох</option>
       <option>Үл хөдлөх</option>
       <option>Автомашин</option>
@@ -514,6 +514,25 @@ footer strong {
       <option>Үйлчилгээ</option>
       <option>Бусад</option>
     </select>
+   <div id="jobFields" style="display:none;">
+  <select class="field" id="jobSector" onchange="updateJobProfessions()">
+    <option value="">Ажлын салбар сонгох</option>
+    <option>Барилга, зам</option>
+    <option>Үйлдвэр</option>
+    <option>Уул уурхай</option>
+    <option>Худалдаа, борлуулалт</option>
+    <option>Боловсрол</option>
+    <option>Эмнэлэг</option>
+    <option>Хөдөө аж ахуй</option>
+    <option>Инженер техник</option>
+    <option>Тээвэр, гааль</option>
+    <option>Бусад</option>
+  </select>
+
+  <select class="field" id="jobProfession" disabled>
+    <option value="">Эхлээд салбараа сонгоно уу</option>
+  </select>
+   </div>
     <textarea class="field" id="adDescription" placeholder="Зарын дэлгэрэнгүй"></textarea>
     <input class="field" id="adPrice" placeholder="Үнэ (₮)">
     <input class="field" id="adPhone" placeholder="Холбоо барих утас">
@@ -1239,7 +1258,76 @@ function showJobSubcategories() {
   document.getElementById("propertySubcategories").style.display = "none";
   document.getElementById("jobSubcategories").style.display = "grid";
 }
+function toggleJobFields() {
+  const category = document.getElementById("adCategory").value;
+  const fields = document.getElementById("jobFields");
+  if (!fields) return;
 
+  fields.style.display = category === "Ажлын зар" ? "block" : "none";
+
+  if (category !== "Ажлын зар") {
+    document.getElementById("jobSector").value = "";
+    updateJobProfessions();
+  }
+}
+
+function updateJobProfessions() {
+  const sector = document.getElementById("jobSector");
+  const profession = document.getElementById("jobProfession");
+  if (!sector || !profession) return;
+
+  const lists = {
+    "Барилга, зам": [
+      "Шаварчин",
+      "Засалчин",
+      "Гадна фасад",
+      "Бусад"
+    ],
+    "Үйлдвэр": [
+      "Оёдолчин",
+      "Бусад"
+    ],
+    "Тээвэр, гааль": [
+      "Жолооч",
+      "Тээврийн менежер",
+      "Логистикийн мэргэжилтэн",
+      "Тээвэр зохицуулагч",
+      "Гаалийн бүрдүүлэлтийн мэргэжилтэн",
+      "Гаалийн зуучлагч",
+      "Агуулахын ажилтан",
+      "Экспедитор",
+      "Бусад"
+    ]
+  };
+
+  const selected = sector.value;
+  profession.innerHTML = '<option value="">Мэргэжил сонгох</option>';
+
+  if (!selected) {
+    profession.disabled = true;
+    profession.innerHTML =
+      '<option value="">Эхлээд салбараа сонгоно уу</option>';
+    return;
+  }
+
+  const options = lists[selected];
+
+  if (!options) {
+    profession.disabled = true;
+    profession.innerHTML =
+      '<option value="">Энэ салбарын мэргэжлүүдийг дараагийн алхамд нэмнэ</option>';
+    return;
+  }
+
+  options.forEach(name => {
+    const option = document.createElement("option");
+    option.value = name;
+    option.textContent = name;
+    profession.appendChild(option);
+  });
+
+  profession.disabled = false;
+   }
 let currentAdIdForPayment = null;
 let selectedAdPackage = null;
 let selectedBankAccount = null;
