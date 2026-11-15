@@ -2130,7 +2130,8 @@ async function loadMyClassifiedAds() {
     .from("classified_ads")
     .select("id, title, category, status, price, created_at, expires_at")
     .eq("owner_id", authData.user.id)
-    .order("created_at", { ascending: false });
+.neq("status", "deleted")
+.order("created_at", { ascending: false });
 
   if (error) {
     console.error("Миний заруудын алдаа:", error);
