@@ -1,2349 +1,1382 @@
 
 <!DOCTYPE html>
 <html lang="mn">
- 
 <head>
- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#101827">
-<title>NEXORA - Монголын нэгдсэн цахим зах зээл</title>
+<meta name="theme-color" content="#07150e">
+
+<title>NEXORA | Монголын нэгдсэн зах зээл</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#f3f5f9;color:#172033}
-header{background:#101827;color:white;padding:14px 16px;position:sticky;top:0;z-index:10}
-.topbar{max-width:1200px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.logo{font-size:27px;font-weight:bold;color:#38bdf8}
-.logo small{display:block;font-size:10px;letter-spacing:2px;color:white}
-.cart{background:#26364c;padding:11px 15px;border-radius:9px;cursor:pointer}
-.hero{background:linear-gradient(135deg,#101827,#075985);color:white;text-align:center;padding:42px 15px}
-.hero h1{font-size:27px;margin-bottom:12px}
-.hero p{line-height:1.7;color:#dbeafe}
-.container{max-width:1200px;margin:auto;padding:18px}
-.section-title{font-size:21px;margin:25px 0 15px}
-.search-box{display:flex;gap:8px;margin:15px 0}
-input,select,textarea{font:inherit}
-.search-box input,.field{width:100%;padding:13px;border:1px solid #cbd5e1;border-radius:8px;background:white}
-button{border:0;border-radius:8px;padding:12px 16px;font-weight:bold;cursor:pointer}
-.primary-btn{background:#0284c7;color:white}
-.dark-btn{background:#172033;color:white}
-.categories{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:10px}
-.category{background:white;padding:16px 7px;text-align:center;border-radius:10px;font-size:13px;font-weight:bold;box-shadow:0 2px 8px #0000000b;cursor:pointer}
-.category span{display:block;font-size:27px;margin-bottom:7px}
-.category.active{outline:2px solid #0284c7;color:#0284c7}
-.products,.ad-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:13px}
-.product,.ad-card{background:white;padding:12px;border-radius:11px;box-shadow:0 2px 9px #0000000b}
-.product-image{height:135px;background:#e2e8f0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:48px;margin-bottom:10px}
-.product h3,.ad-card h3{font-size:15px;margin:7px 0}
-.price{color:#0284c7;font-weight:bold;margin:9px 0}
-.product button{width:100%}
-.tabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:9px;margin:20px 0}
-.tab{background:white;padding:15px 8px;text-align:center;border-radius:9px;font-weight:bold;cursor:pointer;border:1px solid #e2e8f0}
-.tab.active{background:#e0f2fe;border-color:#0284c7;color:#0369a1}
-.panel{background:white;padding:17px;border-radius:11px;margin:15px 0}
-.field{display:block;margin:10px 0}
-textarea.field{min-height:100px;resize:vertical}
-.hidden{display:none!important}
-footer{background:#101827;color:white;text-align:center;padding:28px 15px;margin-top:35px;line-height:2}
-footer strong{color:#38bdf8;font-size:25px}
-@media(max-width:480px){
-.hero h1{font-size:22px}
-.search-box{flex-wrap:wrap}
-.search-box button{width:100%}
-.container{padding:13px}
-}
-</style>
-<style>
-
-
-/* NEXORA GREEN NEON PREMIUM */
 :root {
-  --nx-bg:#071b10;
-  --nx-card:#0d2918;
-  --nx-blue:#39ff14;
-  --nx-text:#effff0;
-  --nx-muted:#a4c5ad;
+  --bg:#07150e;
+  --surface:#10251a;
+  --card:#122b1e;
+  --border:#244b32;
+  --green:#39e75f;
+  --green2:#a5ffb2;
+  --text:#f1fff3;
+  --muted:#a3b9a9;
+  --danger:#ff6868;
 }
 
 * {
   box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
 
 body {
-  background:#071b10 !important;
-  color:#effff0;
   font-family:Arial,sans-serif;
-  font-size:14px;
+  background:var(--bg);
+  color:var(--text);
+  padding-bottom:85px;
+}
+
+button,input,textarea,select {
+  font:inherit;
+}
+
+button {
+  cursor:pointer;
+  border:0;
 }
 
 header {
-  background:#091b10 !important;
-  border-bottom:1px solid #245b32;
-  padding:9px 12px;
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:#091a10ed;
+  backdrop-filter:blur(15px);
+  border-bottom:1px solid var(--border);
+}
+
+.topbar {
+  max-width:1250px;
+  margin:auto;
+  padding:13px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
 }
 
 .logo {
-  font-size:22px;
-  color:#39ff14 !important;
-  letter-spacing:1px;
-  text-shadow:0 0 9px #39ff1466;
+  font-size:27px;
+  font-weight:900;
+  color:var(--green);
+  letter-spacing:2px;
 }
 
 .logo small {
-  color:#b5d8bd;
-  font-size:8px;
-  letter-spacing:1.5px;
+  display:block;
+  font-size:9px;
+  color:var(--muted);
+  letter-spacing:2px;
+  margin-top:3px;
+}
+
+.header-actions {
+  display:flex;
+  align-items:center;
+  gap:10px;
 }
 
 .cart {
-  background:#102c19 !important;
-  color:#baffaa;
-  border:1px solid #39ff14 !important;
-  box-shadow:0 0 8px #39ff1433;
-  padding:8px 11px;
-  font-size:12px;
-  border-radius:7px;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--surface);
+  color:var(--green2);
 }
 
-.hero {
-  background:linear-gradient(120deg,#0b2815,#123b20) !important;
-  border-bottom:1px solid #245b32;
-  padding:22px 12px;
+.profile-button {
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  border:1px solid var(--green);
+  background:var(--surface);
+  color:white;
+  overflow:hidden;
+  font-size:20px;
 }
 
-.hero h1 {
-  color:#d9ffd9;
-  font-size:19px;
-  margin-bottom:7px;
-}
-
-.hero p {
-  color:#b5d8bd;
-  font-size:12px;
-  line-height:1.5;
+.profile-button img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
 .container {
-  padding:12px;
+  max-width:1250px;
+  margin:auto;
+  padding:20px;
+}
+
+.hero {
+  padding:55px 20px;
+  text-align:center;
+  background:
+    radial-gradient(ellipse at top,#174b2b 0%,transparent 65%),
+    linear-gradient(135deg,#0c2616,#07150e);
+  border-bottom:1px solid var(--border);
+}
+
+.hero h1 {
+  font-size:clamp(23px,4vw,38px);
+  line-height:1.3;
+  margin-bottom:13px;
+}
+
+.hero h1 span {
+  color:var(--green);
+}
+
+.hero p {
+  color:var(--muted);
+  line-height:1.8;
+}
+
+.hero-tag {
+  display:inline-block;
+  margin-bottom:17px;
+  padding:7px 14px;
+  color:var(--green2);
+  border:1px solid var(--border);
+  background:#102b1b;
+  border-radius:30px;
+  font-size:12px;
 }
 
 .section-title {
-  color:#baffaa;
-  font-size:16px;
-  margin:17px 0 10px;
-}
-
-button,
-.primary-btn,
-.dark-btn {
-  background:#102c19 !important;
-  color:#baffaa !important;
-  border:1px solid #39ff14 !important;
-  border-radius:7px;
-  padding:9px 12px;
-  font-size:12px;
-  font-weight:bold;
-  box-shadow:0 0 5px #39ff1422;
-  transition:0.2s;
-}
-
-button:active {
-  background:#214b2b !important;
-  box-shadow:0 0 12px #39ff1488;
+  font-size:21px;
+  margin:25px 0 15px;
 }
 
 .search-box {
-  gap:6px;
-  margin:10px 0;
+  display:flex;
+  gap:10px;
+  margin:20px 0;
 }
 
-.search-box input,
 .field {
-  padding:10px;
-  border-radius:7px;
-  background:#102719 !important;
-  color:#effff0 !important;
-  border:1px solid #28643a !important;
-  font-size:13px;
+  width:100%;
+  padding:13px;
+  border-radius:10px;
+  background:#0d2116;
+  color:white;
+  border:1px solid var(--border);
+  outline:none;
+  margin:8px 0;
 }
 
-input::placeholder,
-textarea::placeholder {
-  color:#91ad98;
+.field:focus {
+  border-color:var(--green);
+  box-shadow:0 0 0 3px #39e75f18;
+}
+
+.field::placeholder {
+  color:#789181;
+}
+
+textarea.field {
+  min-height:100px;
+  resize:vertical;
+}
+
+.btn {
+  padding:12px 17px;
+  border-radius:10px;
+  font-weight:bold;
+  background:var(--surface);
+  color:var(--green2);
+  border:1px solid var(--border);
+  transition:.2s;
+}
+
+.btn:hover {
+  border-color:var(--green);
+  transform:translateY(-1px);
+}
+
+.btn-primary {
+  background:var(--green);
+  color:#06140b;
+  border:1px solid var(--green);
+}
+
+.btn-danger {
+  color:white;
+  background:#602323;
+  border-color:#a83b3b;
+}
+
+.search-box .field {
+  margin:0;
 }
 
 .categories {
-  grid-template-columns:repeat(auto-fit,minmax(76px,1fr));
-  gap:7px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(105px,1fr));
+  gap:10px;
 }
 
 .category {
-  background:#0d2918 !important;
-  color:#d9f5df !important;
-  border:1px solid #245b32 !important;
-  border-radius:8px;
-  padding:10px 5px;
-  font-size:11px;
-  box-shadow:none;
+  background:var(--surface);
+  padding:17px 8px;
+  border:1px solid var(--border);
+  border-radius:13px;
+  text-align:center;
+  cursor:pointer;
+  transition:.2s;
+  font-size:13px;
 }
 
 .category span {
-  font-size:21px;
-  margin-bottom:4px;
+  display:block;
+  font-size:27px;
+  margin-bottom:8px;
 }
 
+.category:hover,
 .category.active {
-  outline:1px solid #39ff14;
-  color:#39ff14 !important;
-  background:#173b20 !important;
-  box-shadow:0 0 8px #39ff1444;
+  border-color:var(--green);
+  background:#173a23;
+  color:var(--green2);
 }
 
-.products,
-.ad-grid {
-  gap:9px;
+.products,.ad-grid {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:15px;
 }
 
-.product,
-.ad-card,
-.panel {
-  background:#0d2918 !important;
-  color:#effff0;
-  border:1px solid #245b32 !important;
-  border-radius:9px;
-  padding:10px;
-  box-shadow:0 3px 12px #0005;
+.product,.ad-card,.panel {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+}
+
+.product {
+  min-width:0;
+  transition:.2s;
+}
+
+.product:hover {
+  transform:translateY(-3px);
+  border-color:#4e9a60;
 }
 
 .product-image {
-  height:110px;
-  background:#102719 !important;
-  border:1px solid #1e482a;
-  border-radius:7px;
-  font-size:36px;
+  height:180px;
+  background:#0a1c11;
+  border-radius:10px;
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:50px;
+  margin-bottom:12px;
 }
 
-.product h3,
-.ad-card h3 {
-  font-size:13px;
-  color:#effff0 !important;
+.product-image img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.product h3,.ad-card h3 {
+  font-size:15px;
+  line-height:1.5;
+  overflow-wrap:anywhere;
 }
 
 .price {
-  color:#39ff14 !important;
-  font-size:14px;
+  color:var(--green);
+  font-size:18px;
+  font-weight:bold;
+  margin:12px 0;
+}
+
+.product p,.ad-card p {
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.7;
+  overflow-wrap:anywhere;
 }
 
 .product button {
   width:100%;
+  margin-top:10px;
 }
 
 .tabs {
-  gap:6px;
-  margin:13px 0;
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:9px;
+  margin:22px 0;
 }
 
 .tab {
-  background:#102719 !important;
-  color:#d9f5df !important;
-  border:1px solid #245b32 !important;
-  border-radius:7px;
-  padding:10px 5px;
-  font-size:11px;
+  padding:13px 7px;
+  border-radius:10px;
+  background:var(--surface);
+  color:var(--muted);
+  border:1px solid var(--border);
+  font-weight:bold;
+  font-size:12px;
 }
 
 .tab.active {
-  background:#173b20 !important;
-  color:#39ff14 !important;
-  border-color:#39ff14 !important;
-  box-shadow:0 0 8px #39ff1433;
+  background:#183b23;
+  color:var(--green);
+  border-color:var(--green);
+}
+
+.panel {
+  margin:14px 0;
+}
+
+.panel h3 {
+  margin-bottom:10px;
 }
 
 .panel p {
-  color:#b5d8bd;
-  font-size:12px;
-  line-height:1.6;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.7;
+  margin:7px 0;
+}
+
+.panel button {
+  margin-top:8px;
+}
+
+.hidden {
+  display:none!important;
+}
+
+.tab-content {
+  min-height:200px;
+}
+
+details summary {
+  cursor:pointer;
+  font-weight:bold;
+  color:var(--green2);
+  padding:5px;
 }
 
 footer {
-  background:#091b10 !important;
-  border-top:1px solid #245b32;
-  color:#d9f5df;
+  margin-top:35px;
+  padding:35px 15px;
+  text-align:center;
+  background:#091a10;
+  border-top:1px solid var(--border);
+  color:var(--muted);
+  line-height:2;
 }
 
 footer strong {
-  color:#39ff14 !important;
+  font-size:25px;
+  color:var(--green);
 }
 
 .mobile-nav {
-  background:#091b10 !important;
-  border-top:1px solid #39ff14 !important;
+  display:none;
 }
 
-.mobile-nav button {
-  background:transparent !important;
-  color:#baffaa !important;
-  border:0 !important;
-  box-shadow:none !important;
-  font-size:17px;
+.status {
+  display:inline-block;
+  padding:5px 10px;
+  border-radius:20px;
+  background:#173b23;
+  color:var(--green2);
+  font-size:11px;
+  margin:8px 0;
 }
 
-.mobile-nav small {
-  color:#a4c5ad;
-  font-size:9px;
+.empty {
+  text-align:center;
+  padding:30px;
+  color:var(--muted);
+}
+
+@media(max-width:900px) {
+  .products,.ad-grid {
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+  .tabs {
+    grid-template-columns:repeat(3,1fr);
+  }
 }
 
 @media(max-width:600px) {
-  .container {padding:10px}
-  .hero {padding:19px 10px}
-  .hero h1 {font-size:17px}
-  .products,
-  .ad-grid {
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:7px;
+  .container {
+    padding:12px;
   }
-  .product,
-  .ad-card {padding:8px}
-  .product-image {height:95px}
-  .product h3 {font-size:12px}
-  .price {font-size:13px}
-  .category {padding:9px 3px}
-  .tabs {grid-template-columns:repeat(3,1fr)}
-  .tab {padding:9px 3px}
+  .topbar {
+    padding:10px;
+  }
+  .logo {
+    font-size:22px;
+  }
+  .hero {
+    padding:35px 13px;
+  }
+  .products,.ad-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:9px;
+  }
+  .product {
+    padding:9px;
+  }
+  .product-image {
+    height:125px;
+  }
+  .tabs {
+    grid-template-columns:repeat(3,1fr);
+    gap:6px;
+  }
+  .tab {
+    padding:11px 3px;
+    font-size:11px;
+  }
+  .search-box {
+    flex-wrap:wrap;
+  }
+  .search-box button {
+    width:100%;
+  }
+  .mobile-nav {
+    position:fixed;
+    z-index:200;
+    bottom:0;
+    left:0;
+    right:0;
+    display:flex;
+    justify-content:space-around;
+    padding:8px 2px;
+    background:#091a10f5;
+    border-top:1px solid var(--green);
+    backdrop-filter:blur(15px);
+  }
+  .mobile-nav button {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:3px;
+    background:transparent;
+    color:var(--green2);
+    font-size:19px;
+    padding:4px;
+  }
+  .mobile-nav small {
+    font-size:10px;
+    color:var(--muted);
+  }
 }
- 
-/* НИЙЛҮҮЛЭГЧИЙН БҮРТГЭЛИЙН ТАЛБАРЫН ЗАСВАР */
-#supplierRegister label {
-  display: block;
-  margin-top: 12px;
-  color: #baffaa;
-}
-
-#supplierRegister input,
-#supplierRegister select {
-  display: block;
-  width: 100%;
-  min-height: 42px;
-  padding: 10px;
-  margin: 8px 0 12px;
-  border: 1px solid #28643a;
-  border-radius: 7px;
-  background: #102719;
-  color: #effff0;
-  font-size: 14px;
-}
-
-#supplierRegister button {
-  width: 100%;
-}
-
-</style>  
+</style>
 </head>
 
 <body>
 
-
 <header>
-<div class="topbar">
-  <div class="logo">
-    NEXORA
-    <small>NEXT GENERATION MARKETPLACE</small>
-  </div>
-
-  <div style="display:flex;align-items:center;gap:8px;margin-left:auto;">
-
-    <div class="cart" onclick="showCart()">
-      🛒 Сагс (<span id="cartCount">0</span>)
+  <div class="topbar">
+    <div class="logo">
+      NEXORA
+      <small>NEXT GENERATION MARKETPLACE</small>
     </div>
 
-   
-<div onclick="toggleAccount()"
-  style="width:42px;height:42px;background:#102c19;border:1px solid #39ff14;border-radius:8px;cursor:pointer;overflow:hidden;display:flex;align-items:center;justify-content:center;">
-  <img id="headerProfileImage"
-    style="width:100%;height:100%;object-fit:cover;display:none;">
-  <span id="headerProfileDefault" style="font-size:21px;">👤</span>
-</div>
- 
+    <div class="header-actions">
+      <button class="cart" onclick="showCart()">
+        🛒 <span id="cartCount">0</span>
+      </button>
+
+      <button class="profile-button" onclick="toggleAccount()">
+        <img id="headerProfileImage" class="hidden" alt="Профайл">
+        <span id="headerProfileDefault">👤</span>
+      </button>
+    </div>
   </div>
-</div>
 </header>
 
 <section class="hero">
-<h1>МОНГОЛЫН НЭГДСЭН ЦАХИМ ЗАХ ЗЭЭЛ</h1>
-<p>Худалдааны шинэ эрин.</p>
-<p>Бараа • Зар • Мэдээлэл • Үйлчилгээ</p>
+  <div class="hero-tag">🇲🇳 MONGOLIAN MARKETPLACE</div>
+  <h1>Худалдааны шинэ эрин <span>NEXORA</span></h1>
+  <p>Бараа • Зар • Үйлчилгээ • Мэдээлэл</p>
+  <p>Монголын нэгдсэн цахим зах зээл</p>
 </section>
 
 <main class="container">
 
-
-<!-- NEXORA ХУДАЛДААНЫ АНГИЛАЛ -->
-<h2 class="section-title">🛍️ Худалдаа</h2>
-<div class="categories" id="tradeCategories">
-  <div class="category" onclick="switchTab('market', null)">
-    <span>🛍️</span> Бараа
-  </div>
-  <div class="category" onclick="openSupplierRegistration()">
-    <span>🏪</span> Нийлүүлэгчийн бүртгэл
-  </div>
-</div>
-<!-- NEXORA ХУДАЛДААНЫ АНГИЛАЛ ДУУСАВ -->
-<h2 class="section-title">🔥 Шинэ бараанууд</h2>
-
-<div class="products" id="productList">
-<div class="product" data-category="Электрон бараа">
-<div class="product-image">📱</div>
-<h3>Жишээ ухаалаг утас</h3>
-<div class="price">450,000₮</div>
-<button class="primary-btn" onclick="addToCart(this)">Сагслах</button>
-</div>
-
-<div class="product" data-category="Гутал">
-<div class="product-image">👟</div>
-<h3>Спорт гутал</h3>
-<div class="price">85,000₮</div>
-<button class="primary-btn" onclick="addToCart(this)">Сагслах</button>
-</div>
-</div>
-</main>
-
-<section class="container">
-
-
-<div class="tabs">
-  <div class="tab active" onclick="openAdSubcategories('Үл хөдлөх')">🏠 Үл хөдлөх</div>
-  <div class="tab" onclick="openAdSubcategories('Автомашин')">🚗 Автомашин</div>
-  <div class="tab" onclick="openAdSubcategories('Ажлын зар')">💼 Ажлын зар</div>
-  <div class="tab" onclick="switchTab('services', this)">🛠️ Үйлчилгээ</div>
-  
-  <div class="tab" onclick="switchTab('news',this)">📰 Мэдээ, мэдээлэл</div>
-   <div class="tab" onclick="switchTab('ads', null); toggleAdForm()">＋ Зар нийтлэх</div>
-</div>
-<div id="market" class="tab-content">
-  <h2 class="section-title">🛍️ Барааны зах зээл</h2>
-  <p>Монголын бүх төрлийн барааг нэг дороос.</p>
-
-  <div class="panel">
-    <h3>📦 Бараа худалдаанд гаргах</h3>
-    <p>Өөрийн барааг NEXORA-д нийтлээрэй.</p>
-    <button class="primary-btn"
-      onclick="showSection('productFormArea')">
-      ＋ Бараа нийтлэх
-    </button>
+  <div class="search-box">
+    <input class="field" id="searchInput"
+      placeholder="🔍 Бараа, зар, үйлчилгээ хайх..."
+      onkeydown="if(event.key==='Enter')searchAll()">
+    <button class="btn btn-primary" onclick="searchAll()">Хайх</button>
   </div>
 
-  <div id="productFormArea" class="panel hidden">
-    <h3>Шинэ бараа нийтлэх</h3>
-    <input class="field" id="productTitle"
-      placeholder="Барааны нэр">
+  <section id="homeCategories">
+    <h2 class="section-title">🛍️ Худалдааны ангилал</h2>
+    <div class="categories" id="categories">
+      <div class="category active" onclick="filterProducts('Бүгд',this)">
+        <span>🛍️</span>Бүгд
+      </div>
+      <div class="category" onclick="filterProducts('Электрон бараа',this)">
+        <span>📱</span>Электрон
+      </div>
+      <div class="category" onclick="filterProducts('Хувцас',this)">
+        <span>👕</span>Хувцас
+      </div>
+      <div class="category" onclick="filterProducts('Гутал',this)">
+        <span>👟</span>Гутал
+      </div>
+      <div class="category" onclick="filterProducts('Гэр ахуй',this)">
+        <span>🏠</span>Гэр ахуй
+      </div>
+      <div class="category" onclick="filterProducts('Автомашин',this)">
+        <span>🚗</span>Автомашин
+      </div>
+      <div class="category" onclick="filterProducts('Хүүхдийн бараа',this)">
+        <span>🧸</span>Хүүхэд
+      </div>
+      <div class="category" onclick="filterProducts('Бусад',this)">
+        <span>📦</span>Бусад
+      </div>
+    </div>
+  </section>
 
-    <select class="field" id="productCategory">
-      <option value="">Ангилал сонгох</option>
-      <option>Электрон бараа</option>
-      <option>Хувцас</option>
-      <option>Гутал</option>
-      <option>Гэр ахуй</option>
-      <option>Автомашин</option>
-      <option>Хүүхдийн бараа</option>
-      <option>Гоо сайхан</option>
-      <option>Багаж</option>
-      <option>Хүнс</option>
-      <option>Бусад</option>
-    </select>
-
-    <input class="field" id="productPrice"
-      type="number" placeholder="Үнэ (₮)">
-
-    <input class="field" id="productImage"
-      type="file" accept="image/*">
-
-    <textarea class="field" id="productDescription"
-      placeholder="Барааны тайлбар"></textarea>
-
-    <input class="field" id="productPhone"
-      type="tel" placeholder="Холбоо барих утас">
-
-    <button class="primary-btn"
-      onclick="publishProduct()">Нийтлэх</button>
-
-  <button type="button" class="dark-btn"
-  onclick="document.getElementById('productFormArea').classList.add('hidden')">
-  Болих
-</button>  
-  </div>
-</div>
-<div id="ads" class="tab-content hidden">
-  <h2 class="section-title">📢 Зар мэдээлэл</h2>
-  <div class="categories">
-    <div class="category">🏠 Үл хөдлөх</div>
-    <div class="category">🚗 Автомашин</div>
-    <div class="category">💼 Ажлын зар</div>
-    <div class="category">🔑 Түрээс</div>
-    <div class="category">📦 Бараа зарна</div>
-    <div class="category">🤝 Үйлчилгээ</div>
-    <div class="category">🔎 Ажил хайна</div>
-    <div class="category">📋 Бусад зар</div>
-  </div>
-  <div class="panel">
-    <button class="primary-btn" onclick="toggleAdForm()">＋ Зар нийтлэх</button>
-  </div>
-  <div id="adFormArea" class="panel hidden payment-screen">
-    <h3>Шинэ зар нийтлэх</h3>
-    <input class="field" id="adTitle" placeholder="Зарын гарчиг">
-    <select class="field" id="adCategory" onchange="toggleJobFields()">
-      <option value="">Зарын төрөл сонгох</option>
-      <option>Үл хөдлөх</option>
-      <option>Автомашин</option>
-      <option>Ажлын зар</option>
-      <option>Түрээс</option>
-      <option>Бараа зарна</option>
-      <option>Үйлчилгээ</option>
-      <option>Бусад</option>
-    </select>
-   <div id="jobFields" style="display:none;">
-  <select class="field" id="jobSector" onchange="updateJobProfessions()">
-    <option value="">Ажлын салбар сонгох</option>
-    <option>Барилга, зам</option>
-    <option>Үйлдвэр</option>
-    <option>Уул уурхай</option>
-    <option>Худалдаа, борлуулалт</option>
-    <option>Боловсрол</option>
-    <option>Эмнэлэг</option>
-    <option>Хөдөө аж ахуй</option>
-    <option>Инженер техник</option>
-    <option>Тээвэр, гааль</option>
-    <option>Бусад</option>
-  </select>
-
-  <select class="field" id="jobProfession" disabled>
-    <option value="">Эхлээд салбараа сонгоно уу</option>
-  </select>
-   </div>
-    <textarea class="field" id="adDescription" placeholder="Зарын дэлгэрэнгүй"></textarea>
-    <input class="field" id="adPrice" placeholder="Үнэ (₮)">
-    <input class="field" id="adPhone" placeholder="Холбоо барих утас">
-   <button class="primary-btn" onclick="publishAd()">Үргэлжлүүлэх — төлбөр сонгох</button> 
-    <button class="dark-btn" onclick="toggleAdForm(); switchTab('market', null)">Болих</button>
- <!-- NEXORA ЗАРЫН ТӨЛБӨРИЙН БАГЦ -->
-<div id="adPackageArea" class="panel hidden payment-screen">
-  <h3>📢 Зарын хугацаа сонгох</h3>
-  <p>Зараа нийтлэх хугацаагаа сонгоно уу.</p>
-
-  <button class="primary-btn" onclick="selectAdPackage(7,5000)">
-    7 хоног — 5,000₮
-  </button>
-
-  <button class="primary-btn" onclick="selectAdPackage(15,8000)">
-    15 хоног — 8,000₮
-  </button>
-
-  <button class="primary-btn" onclick="selectAdPackage(30,15000)">
-    30 хоног — 15,000₮
-  </button>
- 
- <button class="dark-btn" onclick="backToAdForm()">
-  ← Зар бөглөх хэсэг рүү буцах
- </button>
-</div>
- 
-<div id="adBankArea" class="panel hidden payment-screen">
-  <h3>🏦 Банк сонгох</h3>
-  <p>Төлбөр шилжүүлэх банкаа сонгоно уу.</p>
-
-  <div id="adBankList"></div>
-  <div id="adBankDetails"></div>
-
-  <div id="adReceiptArea" class="hidden">
-    <h3>🧾 Шилжүүлгийн баримт</h3>
-
-    <label>Гүйлгээний утга эсвэл дугаар</label>
-    <input
-      class="field"
-      id="adTransferReference"
-      placeholder="Гүйлгээний дугаараа оруулна уу"
-    >
-
-    <label>Шилжүүлгийн баримт зураг эсвэл PDF</label>
-    <input
-      class="field"
-      id="adReceiptFile"
-      type="file"
-      accept="image/*,.pdf"
-    >
-
-    <button
-      class="primary-btn"
-      onclick="submitAdPaymentRequest()"
-    >
-      Төлбөрийн хүсэлт илгээх
-    </button>
-  </div>
-
-  <button
-    class="dark-btn"
-    onclick="backToAdPackages()"
-  >
-    ← Багц сонгох руу буцах
-  </button>
-</div>
-<!-- NEXORA АЖЛЫН ЗАР ҮЗЭХ -->
-<div id="jobBrowseScreen" class="panel hidden">
-  <h3>💼 Ажлын зар</h3>
-  <p>Ажлын салбараа сонгоно уу.</p>
-
-  <div class="ad-full-grid">
-    <button onclick="showJobSector('Барилга, зам')">🏗️ Барилга, зам</button>
-    <button onclick="showJobSector('Үйлдвэр')">🏭 Үйлдвэр</button>
-    <button onclick="showJobSector('Уул уурхай')">⛏️ Уул уурхай</button>
-    <button onclick="showJobSector('Худалдаа, борлуулалт')">🛒 Худалдаа, борлуулалт</button>
-    <button onclick="showJobSector('Боловсрол')">🎓 Боловсрол</button>
-    <button onclick="showJobSector('Эмнэлэг')">🏥 Эмнэлэг</button>
-    <button onclick="showJobSector('Хөдөө аж ахуй')">🌾 Хөдөө аж ахуй</button>
-    <button onclick="showJobSector('Инженер техник')">⚙️ Инженер техник</button>
-    <button onclick="showJobSector('Тээвэр, гааль')">🚚 Тээвэр, гааль</button>
-    
-  </div>
-</div>
-
-<div id="jobProfessionScreen" class="panel hidden">
-  <button class="dark-btn" onclick="backToJobSectors()">← Салбар руу буцах</button>
-  <h3 id="jobProfessionTitle">Мэргэжил сонгох</h3>
-  <div id="jobProfessionList" class="ad-full-grid"></div>
-</div>
- 
-  <div id="adList" class="ad-grid"></div>
-</div>
-
-<div id="news" class="tab-content hidden">
-  <h2 class="section-title">📰 Мэдээ, мэдээлэл</h2>
-  <div class="categories">
-    <div class="category">🇲🇳 Монгол мэдээ</div>
-    <div class="category">💼 Эдийн засаг</div>
-    <div class="category">🏢 Байгууллага</div>
-    <div class="category">🎉 Үйл явдал</div>
-    <div class="category">📣 Зарлал</div>
-    <div class="category">🌍 Дэлхий</div>
-  </div>
- 
-
-  <div class="panel">
-    <p>Мэдээ, мэдээллийн нийтлэлүүд энэ хэсэгт харагдана.</p>
-    <p>Мэдээ нийтлэх эрхийг админ болон зөвшөөрөгдсөн байгууллагад олгоно.</p>
-  </div>
-</div>
-
-<div id="services" class="tab-content hidden">
-  <h2 class="section-title">🛠️ Үйлчилгээ</h2>
-  <div class="categories">
-    <div class="category" onclick="openAdSubcategories('Үйлчилгээ')">🔧 Засвар</div>
-    <div class="category" onclick="openAdSubcategories('Үйлчилгээ')">🏗️ Барилга</div>
-    <div class="category" onclick="openAdSubcategories('Үйлчилгээ')">🚚 Тээвэр</div>
-    <div class="category" onclick="openAdSubcategories('Үйлчилгээ')">📦 Хүргэлт</div>
-    <div class="category" onclick="openAdSubcategories('Үйлчилгээ')">💻 IT үйлчилгээ</div>
-    <div class="category" onclick="openAdSubcategories('Үйлчилгээ')">🧹 Цэвэрлэгээ</div>
-    <div class="category" onclick="openAdSubcategories('Үйлчилгээ')">🎨 Дизайн</div>
-    <div class="category" onclick="openAdSubcategories('Үйлчилгээ')">📋 Бусад</div>
-  </div>
-</div>
-
-<div id="account" class="tab-content hidden">
-  <h2 class="section-title">👤 Миний булан</h2>
-
-  <p id="loggedInEmail" style="display:none;"></p>
-
-  <details class="panel">
-    <summary>👤 Миний мэдээлэл</summary>
-
-    <div class="profile-box">
-      <div style="text-align:center;margin:15px 0;">
-        <img id="profilePreview" src="" alt="Профайл зураг"
-          style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:2px solid #39ff14;display:none;margin:0 auto 10px;">
-
-        <div style="font-size:48px;" id="profileDefault">👤</div>
-
-        <label for="profileImageInput"
-          style="display:inline-block;padding:10px 15px;border:1px solid #39ff14;border-radius:8px;color:#baffaa;cursor:pointer;">
-          📷 Профайл зураг сонгох
-        </label>
-
-        <input type="file" id="profileImageInput"
-          accept="image/*" style="display:none;"
-          onchange="previewProfileImage(event)">
+  <section>
+    <h2 class="section-title">🔥 Шинэ бараанууд</h2>
+    <div class="products" id="productList">
+      <div class="product" data-category="Электрон бараа">
+        <div class="product-image">📱</div>
+        <h3>Жишээ ухаалаг утас</h3>
+        <div class="price">450,000₮</div>
+        <button class="btn btn-primary"
+          onclick="addProductToCart(this)">Сагслах</button>
       </div>
 
-      <input class="field" id="profileFullName"
-        type="text" placeholder="Овог, нэр">
+      <div class="product" data-category="Гутал">
+        <div class="product-image">👟</div>
+        <h3>Спорт гутал</h3>
+        <div class="price">85,000₮</div>
+        <button class="btn btn-primary"
+          onclick="addProductToCart(this)">Сагслах</button>
+      </div>
+    </div>
+  </section>
 
-      <input class="field" id="profilePhone"
-        type="tel" placeholder="Утасны дугаар">
+  <div class="tabs" id="mainTabs">
+    <button class="tab active" onclick="switchTab('market',this)">🛍️ Бараа</button>
+    <button class="tab" onclick="switchTab('ads',this)">📢 Зар</button>
+    <button class="tab" onclick="switchTab('services',this)">🛠️ Үйлчилгээ</button>
+    <button class="tab" onclick="switchTab('news',this)">📰 Мэдээ</button>
+    <button class="tab" onclick="openSupplierRegistration()">🏪 Нийлүүлэгч</button>
+    <button class="tab" onclick="switchTab('account',this)">👤 Миний булан</button>
+  </div>
 
-      <button class="primary-btn" onclick="saveProfile()">
-        Профайл хадгалах
+  <!-- БАРАА -->
+  <section id="market" class="tab-content">
+    <h2 class="section-title">📦 Бараа худалдаанд гаргах</h2>
+
+    <div class="panel">
+      <p>Өөрийн барааг NEXORA зах зээлд нийтлээрэй.</p>
+      <button class="btn btn-primary" onclick="showSection('productFormArea')">
+        ＋ Бараа нийтлэх
       </button>
     </div>
-  </details>
 
-  <details class="panel">
-    <summary>🔐 Нэвтрэх / Бүртгүүлэх</summary>
+    <div class="panel hidden" id="productFormArea">
+      <h3>Шинэ бараа нийтлэх</h3>
 
-    <select class="field" id="loginMethod"
-      onchange="
-        document.getElementById('loginPhone').placeholder =
-        this.value === 'email' ? 'И-мэйл хаяг' : 'Утасны дугаар';
-      ">
-      <option value="phone">Утасны дугаараар</option>
-      <option value="email">И-мэйлээр</option>
-    </select>
+      <input class="field" id="productTitle" placeholder="Барааны нэр">
 
-    <input class="field" id="loginPhone" type="text"
-      autocomplete="username" placeholder="Утасны дугаар">
+      <select class="field" id="productCategory">
+        <option value="">Ангилал сонгох</option>
+        <option>Электрон бараа</option>
+        <option>Хувцас</option>
+        <option>Гутал</option>
+        <option>Гэр ахуй</option>
+        <option>Автомашин</option>
+        <option>Хүүхдийн бараа</option>
+        <option>Гоо сайхан</option>
+        <option>Багаж</option>
+        <option>Хүнс</option>
+        <option>Бусад</option>
+      </select>
 
-    <input class="field" id="loginPassword" type="password"
-      autocomplete="current-password" placeholder="Нууц үг">
+      <input class="field" id="productPrice" type="number" min="1" placeholder="Үнэ ₮">
+      <input class="field" id="productImage" type="file" accept="image/*">
+      <textarea class="field" id="productDescription" placeholder="Барааны тайлбар"></textarea>
+      <input class="field" id="productPhone" type="tel" placeholder="Утасны дугаар">
 
-    <button class="primary-btn" onclick="loginDemo()">Нэвтрэх</button>
-    <button class="dark-btn" onclick="registerDemo()">Бүртгүүлэх</button>
-  </details>
+      <button class="btn btn-primary" onclick="publishProduct()">Нийтлэх</button>
+      <button class="btn" onclick="showSection('')">Болих</button>
+    </div>
+  </section>
 
-  
-<details class="panel">
-  <summary>📢 Миний зарууд</summary>
+  <!-- ЗАР -->
+  <section id="ads" class="tab-content hidden">
+    <h2 class="section-title">📢 Зар мэдээлэл</h2>
 
-  <button class="primary-btn"
-  type="button"
-  onclick="toggleMyClassifiedAds(this)">
-  🔄 Заруудаа харах
-</button>
-  <div id="myClassifiedAdsList">
-    <p>Заруудаа харахын тулд товчийг дарна уу.</p>
-  </div>
-</details>
+    <div class="categories">
+      <div class="category" onclick="selectAdCategory('Үл хөдлөх')"><span>🏠</span>Үл хөдлөх</div>
+      <div class="category" onclick="selectAdCategory('Автомашин')"><span>🚗</span>Автомашин</div>
+      <div class="category" onclick="selectAdCategory('Ажлын зар')"><span>💼</span>Ажлын зар</div>
+      <div class="category" onclick="selectAdCategory('Түрээс')"><span>🔑</span>Түрээс</div>
+      <div class="category" onclick="selectAdCategory('Бараа зарна')"><span>📦</span>Бараа зарна</div>
+      <div class="category" onclick="selectAdCategory('Үйлчилгээ')"><span>🤝</span>Үйлчилгээ</div>
+    </div>
 
-  <details class="panel">
-    <summary>📦 Миний бараанууд</summary>
-    <p>Нийтэлсэн бараанууд харагдах хэсэг</p>
-  </details>
+    <div class="panel">
+      <button class="btn btn-primary" onclick="toggleAdForm()">＋ Зар нийтлэх</button>
+    </div>
 
-  <details class="panel">
-    <summary>🛒 Миний захиалгууд</summary>
-    <p>Захиалгын мэдээлэл харагдах хэсэг</p>
-  </details>
+    <div id="adFormArea" class="panel hidden">
+      <h3>Шинэ зар нийтлэх</h3>
 
-  <details class="panel">
-    <summary>💰 Орлого, зарлага</summary>
-    <p>Орлого, зарлагын мэдээлэл</p>
-  </details>
+      <input class="field" id="adTitle" placeholder="Зарын гарчиг">
 
-  <details class="panel">
-    <summary>💳 Төлбөрийн түүх, үлдэгдэл</summary>
-    <p>Төлбөрийн мэдээлэл</p>
-  </details>
+      <select class="field" id="adCategory">
+        <option value="">Зарын төрөл</option>
+        <option>Үл хөдлөх</option>
+        <option>Автомашин</option>
+        <option>Ажлын зар</option>
+        <option>Түрээс</option>
+        <option>Бараа зарна</option>
+        <option>Үйлчилгээ</option>
+        <option>Бусад</option>
+      </select>
 
-  <details class="panel">
-    <summary>⚙️ Тохиргоо</summary>
-    <p>Хэрэглэгчийн тохиргоо</p>
-  </details>
-  <!-- NEXORA ADMIN -->
-  <div id="adminPaymentArea" class="panel hidden">
-    <h3>🛡️ NEXORA админ</h3>
-   <button class="primary-btn" onclick="toggleAdminPaymentRequests()">
-  Төлбөрийн хүсэлтүүд харах
-</button> 
-   <div id="adminPaymentRequests" class="hidden"></div> 
-  </div>
-  <div class="panel">
-    <button class="dark-btn" onclick="logoutNexora()">
-      🚪 Гарах
-    </button>
-  </div>
-</div>
+      <textarea class="field" id="adDescription" placeholder="Дэлгэрэнгүй тайлбар"></textarea>
+      <input class="field" id="adPrice" type="number" placeholder="Үнэ ₮">
+      <input class="field" id="adPhone" type="tel" placeholder="Холбоо барих утас">
 
-  
-   <div id="supplier" class="tab-content hidden">
+      <button class="btn btn-primary" onclick="publishAd()">Зар илгээх</button>
+      <button class="btn" onclick="toggleAdForm()">Болих</button>
+    </div>
 
-  <h2 class="section-title">🏪 Нийлүүлэгчийн удирдлагын самбар</h2>
+    <h3 class="section-title">Нийтлэгдсэн зарууд</h3>
+    <div id="adList" class="ad-grid">
+      <p class="empty">Заруудыг ачаалж байна...</p>
+    </div>
+  </section>
 
-<details class="panel" id="supplierRegister">
-  <summary>📝 Нийлүүлэгчээр бүртгүүлэх</summary>
+  <!-- ҮЙЛЧИЛГЭЭ -->
+  <section id="services" class="tab-content hidden">
+    <h2 class="section-title">🛠️ Үйлчилгээ</h2>
+    <div class="categories">
+      <div class="category" onclick="selectAdCategory('Үйлчилгээ')"><span>🔧</span>Засвар</div>
+      <div class="category" onclick="selectAdCategory('Үйлчилгээ')"><span>🏗️</span>Барилга</div>
+      <div class="category" onclick="selectAdCategory('Үйлчилгээ')"><span>🚚</span>Тээвэр</div>
+      <div class="category" onclick="selectAdCategory('Үйлчилгээ')"><span>📦</span>Хүргэлт</div>
+      <div class="category" onclick="selectAdCategory('Үйлчилгээ')"><span>💻</span>IT үйлчилгээ</div>
+      <div class="category" onclick="selectAdCategory('Үйлчилгээ')"><span>🧹</span>Цэвэрлэгээ</div>
+    </div>
+    <div class="panel">
+      <button class="btn btn-primary" onclick="switchTab('ads')">Үйлчилгээний зар нийтлэх</button>
+    </div>
+  </section>
 
- 
-<label>Бүртгэлийн төрөл</label>
-<select id="supplierType"
-  onchange="
-    document.getElementById('supplierFormFields').classList.toggle('hidden', this.value === '');
-    document.getElementById('supplierNameLabel').textContent = this.value === 'company' ? 'Байгууллагын нэр' : 'Нэр';
-    document.getElementById('supplierRegisterLabel').textContent = this.value === 'company' ? 'Байгууллагын регистр' : 'Регистрийн дугаар';
-  ">
- 
+  <!-- МЭДЭЭ -->
+  <section id="news" class="tab-content hidden">
+    <h2 class="section-title">📰 Мэдээ, мэдээлэл</h2>
+    <div class="panel">
+      <p>Монгол мэдээ, эдийн засаг, байгууллага, үйл явдал болон зарлалууд.</p>
+      <p>Мэдээ нийтлэх эрхийг админ болон зөвшөөрөгдсөн байгууллагад олгоно.</p>
+    </div>
+  </section>
 
-    <option value="">Сонгоно уу</option>
-    <option value="individual">Хувь хүн</option>
-    <option value="company">Байгууллага</option>
-  </select>
+  <!-- МИНИЙ БУЛАН -->
+  <section id="account" class="tab-content hidden">
+    <h2 class="section-title">👤 Миний булан</h2>
+    <p id="loggedInEmail"></p>
 
-  <div id="supplierFormFields" class="hidden">
+    <details class="panel">
+      <summary>🔐 Нэвтрэх / Бүртгүүлэх</summary>
 
-    
+      <input class="field" id="loginEmail" type="email" placeholder="И-мэйл">
+      <input class="field" id="loginPassword" type="password" placeholder="Нууц үг">
 
-<label id="supplierNameLabel">Нэр</label>
+      <button class="btn btn-primary" onclick="loginDemo()">Нэвтрэх</button>
+      <button class="btn" onclick="registerDemo()">Бүртгүүлэх</button>
+    </details>
 
+    <details class="panel">
+      <summary>👤 Миний мэдээлэл</summary>
 
-    <input type="text" id="supplierName"
-      placeholder="Нэрээ оруулна уу">
+      <div style="text-align:center;margin:15px">
+        <img id="profilePreview" class="hidden"
+          style="width:100px;height:100px;object-fit:cover;border-radius:50%">
+        <p id="profileDefault">👤</p>
+        <input class="field" type="file" id="profileImageInput" accept="image/*">
+      </div>
 
-   
-<label id="supplierRegisterLabel">Регистрийн дугаар</label>
- 
-    <input type="text" id="supplierRegisterNo"
-      placeholder="Регистрийн дугаар">
+      <input class="field" id="profileFullName" placeholder="Овог, нэр">
+      <input class="field" id="profilePhone" placeholder="Утасны дугаар">
+      <button class="btn btn-primary" onclick="saveProfile()">Хадгалах</button>
+    </details>
 
-    <label>Утасны дугаар</label>
-    <input type="tel" id="supplierPhone"
-      placeholder="Утасны дугаар">
+    <details class="panel">
+      <summary>📢 Миний зарууд</summary>
+      <button class="btn btn-primary" onclick="loadMyClassifiedAds()">Зарууд харах</button>
+      <div id="myClassifiedAdsList"></div>
+    </details>
 
-    <label>И-мэйл</label>
-    <input type="email" id="supplierEmail"
-      placeholder="И-мэйл хаяг">
+    <details class="panel">
+      <summary>📦 Миний бараанууд</summary>
+      <div id="myProductsList">Барааны мэдээлэл</div>
+    </details>
 
-    <label>Байршил, хаяг</label>
-    <input type="text" id="supplierAddress"
-      placeholder="Аймаг, хот, дүүрэг">
+    <div class="panel">
+      <button class="btn btn-danger" onclick="logoutNexora()">🚪 Гарах</button>
+    </div>
+  </section>
 
-    <button class="dark-btn" type="button"
-      onclick="registerSupplier()">
-      Бүртгүүлэх
-    </button>
+  <!-- НИЙЛҮҮЛЭГЧ -->
+  <section id="supplier" class="tab-content hidden">
+    <h2 class="section-title">🏪 Нийлүүлэгчийн бүртгэл</h2>
 
-  </div>
-</details>
+    <div class="panel">
+      <select class="field" id="supplierType">
+        <option value="">Бүртгэлийн төрөл</option>
+        <option value="individual">Хувь хүн</option>
+        <option value="company">Байгууллага</option>
+      </select>
 
-<details class="panel">
-  <summary>👤 Миний мэдээлэл</summary>
-  <p>Нийлүүлэгчийн бүртгэл, мэдээлэл</p>
-</details>
+      <input class="field" id="supplierName" placeholder="Нэр / Байгууллагын нэр">
+      <input class="field" id="supplierRegisterNo" placeholder="Регистрийн дугаар">
+      <input class="field" id="supplierPhone" placeholder="Утас">
+      <input class="field" id="supplierEmail" type="email" placeholder="И-мэйл">
+      <input class="field" id="supplierAddress" placeholder="Байршил, хаяг">
 
-<details class="panel">
-  <summary>📦 Миний бараанууд</summary>
-  <p>Нийтэлсэн бараагаа удирдах хэсэг</p>
-</details>
+      <button class="btn btn-primary" onclick="registerSupplier()">Бүртгүүлэх</button>
+    </div>
+  </section>
 
-<details class="panel">
-  <summary>🛒 Ирсэн захиалгууд</summary>
-  <p>Захиалгын мэдээлэл харах хэсэг</p>
-</details>
+</main>
 
-<details class="panel">
-  <summary>💰 Борлуулалт ба орлого</summary>
-  <p>Борлуулалтын мэдээлэл харах хэсэг</p>
-</details>
-
-<details class="panel">
-  <summary>🔔 Мэдэгдэл</summary>
-  <p>Шинэ захиалгын мэдэгдэл</p>
-</details>
- 
-   </div>
-</section>
-
-<section class="container hidden" id="cartArea">
-<h2 class="section-title">🛒 Миний сагс</h2>
-<div id="cartItems"></div>
-<button class="dark-btn" onclick="closeCart()">Буцах</button>
+<!-- САГС -->
+<section id="cartArea" class="container hidden">
+  <h2 class="section-title">🛒 Миний сагс</h2>
+  <div id="cartItems"></div>
+  <button class="btn" onclick="closeCart()">← Буцах</button>
 </section>
 
 <nav class="mobile-nav">
   <button onclick="switchTab('market')">🏠<small>Нүүр</small></button>
   <button onclick="switchTab('ads')">📢<small>Зар</small></button>
-  <button onclick="switchTab('news')">📰<small>Мэдээ</small></button>
   <button onclick="switchTab('services')">🛠️<small>Үйлчилгээ</small></button>
-  
+  <button onclick="switchTab('account')">👤<small>Миний булан</small></button>
 </nav>
 
-<style>
-.tab-content{min-height:180px}
-.mobile-nav{
-  display:none;
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:white;
-  border-top:1px solid #e2e8f0;
-  padding:7px 2px;
-  z-index:20;
-  justify-content:space-around;
-}
-.mobile-nav button{
-  background:transparent;
-  color:#334155;
-  padding:5px;
-  font-size:19px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:3px;
-}
-.mobile-nav small{font-size:10px}
-.ad-card{font-size:13px}
-.ad-card p{margin:6px 0;line-height:1.5}
-@media(max-width:600px){
-  .mobile-nav{display:flex}
-  body{padding-bottom:65px}
-  .tabs{grid-template-columns:repeat(3,1fr)}
-  .tab{font-size:12px;padding:11px 4px}
-  .products,.ad-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:8px;
-  }
-  .product,.ad-card{padding:9px}
-  .product-image{height:105px;font-size:35px}
-  .product h3{font-size:13px}
-  .price{font-size:13px}
-  .category{padding:11px 4px;font-size:11px}
-}
-</style>
+<footer>
+  <strong>NEXORA</strong>
+  <p>Монголын нэгдсэн цахим зах зээл</p>
+  <p>© 2026 NEXORA. Бүх эрх хуулиар хамгаалагдсан.</p>
+</footer>
 
-  
 <script>
-/* NEXORA - НЭГДСЭН JAVASCRIPT */
+/* ===================================
+   NEXORA CONFIGURATION
+=================================== */
+
+const SUPABASE_URL =
+  "https://grbpbmowhkbtuxostfny.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_wspX-C4VBPJMmvWuQgsMTw_h40w8O3x";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
 let cart = [];
 let selectedCategory = "Бүгд";
 
-/* НҮҮРНИЙ ХЭСГҮҮДИЙГ БАРААНЫ ЦЭСЭНД ХОЛБОХ */
-(function () {
-  const main = document.querySelector("main");
-  const market = document.getElementById("market");
+/* ===================================
+   ТУСЛАХ ФУНКЦҮҮД
+=================================== */
 
-  if (main && market) {
-    while (main.firstChild) {
-      market.appendChild(main.firstChild);
-    }
-    main.remove();
-  }
-})();
-/* NEXORA БАРАА НИЙТЛЭХ */
-async function publishProduct() {
-   const { data: authData } = await supabaseClient.auth.getUser();
+const $ = id => document.getElementById(id);
 
-  if (!authData.user) {
-    alert("Бараа нийтлэхийн тулд эхлээд нэвтэрнэ үү.");
-    return;
-  }
-
-  const ownerId = authData.user.id;
-  const title = document.getElementById("productTitle").value.trim();
-  const category = document.getElementById("productCategory").value;
-  const price = document.getElementById("productPrice").value;
-  const description = document.getElementById("productDescription").value.trim();
-  const phone = document.getElementById("productPhone").value.trim();
-  const imageInput = document.getElementById("productImage");
-
-  if (!title || !category || !price || !description || !phone) {
-    alert("Бүх талбарыг бүрэн бөглөнө үү.");
-    return;
-  }
-
-  if (Number(price) <= 0) {
-    alert("Үнийг зөв оруулна уу.");
-    return;
-  }
-
-  const saveProduct = async (image) => {
-    const products = JSON.parse(localStorage.getItem("nexoraProducts") || "[]");
-
-    products.push({
-     id: Date.now(),
-ownerId,
-title,
-     
-      category,
-      price,
-      description,
-      phone,
-      image,
-      date: new Date().toLocaleDateString("mn-MN")
-    });
-
-    localStorage.setItem("nexoraProducts", JSON.stringify(products));
-   
-await loadPublishedProducts();
-   
-    alert("Бараа амжилттай хадгалагдлаа!");
-
-    document.getElementById("productTitle").value = "";
-    document.getElementById("productCategory").value = "";
-    document.getElementById("productPrice").value = "";
-    document.getElementById("productDescription").value = "";
-    document.getElementById("productPhone").value = "";
-    imageInput.value = "";
-
-    document.getElementById("productFormArea").classList.add("hidden");
-  };
-
-  if (imageInput.files.length > 0) {
-    const reader = new FileReader();
-
-    reader.onload = function () {
-      saveProduct(reader.result);
-    };
-
-    reader.readAsDataURL(imageInput.files[0]);
-  } else {
-    saveProduct("");
-  }
-}
-/* САГСАНД НЭМЭХ */
-function addToCart(button) {
-  const product = button.closest(".product");
-  if (!product) return;
-
-  const name = product.querySelector("h3").textContent;
-  const price = product.querySelector(".price").textContent;
-
-  cart.push({ name, price });
-
-  document.getElementById("cartCount").textContent = cart.length;
-  alert(name + " сагсанд нэмэгдлээ!");
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  })[char]);
 }
 
-/* САГС ХАРУУЛАХ */
-function showCart() {
+function formatPrice(value) {
+  return Number(value || 0).toLocaleString("mn-MN") + "₮";
+}
+
+async function getCurrentUser() {
+  const {data,error} = await supabaseClient.auth.getUser();
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  return data.user || null;
+}
+
+/* ===================================
+   ЦЭС СОЛИХ
+=================================== */
+
+function switchTab(name, element) {
   document.querySelectorAll(".tab-content").forEach(section => {
     section.classList.add("hidden");
   });
 
-  document.querySelector(".tabs").parentElement.classList.add("hidden");
-  document.getElementById("cartArea").classList.remove("hidden");
+  const target = $(name);
 
-  renderCart();
-}
+  if (target) target.classList.remove("hidden");
 
-/* САГСНААС БУЦАХ */
-function closeCart() {
-  document.getElementById("cartArea").classList.add("hidden");
-  document.querySelector(".tabs").parentElement.classList.remove("hidden");
-  switchTab("market");
-}
+  $("cartArea").classList.add("hidden");
 
-/* САГСНЫ ЖАГСААЛТ */
-function renderCart() {
-  const area = document.getElementById("cartItems");
-  area.innerHTML = "";
+  document.querySelectorAll(".tabs .tab").forEach(tab => {
+    tab.classList.remove("active");
+  });
 
-  if (cart.length === 0) {
-    area.textContent = "Таны сагс хоосон байна.";
-    return;
+  if (element) {
+    element.classList.add("active");
+  } else {
+    const buttons = document.querySelectorAll(".tabs .tab");
+    buttons.forEach(button => {
+      if ((button.getAttribute("onclick") || "").includes("'" + name + "'")) {
+        button.classList.add("active");
+      }
+    });
   }
 
-  cart.forEach((item, index) => {
-    const row = document.createElement("div");
-    row.className = "panel";
+  $("mainTabs").classList.toggle(
+    "hidden",
+    name === "account" || name === "supplier"
+  );
 
-    const name = document.createElement("strong");
-    name.textContent = item.name;
-
-    const price = document.createElement("p");
-    price.textContent = item.price;
-
-    const remove = document.createElement("button");
-    remove.className = "dark-btn";
-    remove.textContent = "Устгах";
-
-    remove.onclick = function () {
-      cart.splice(index, 1);
-      document.getElementById("cartCount").textContent = cart.length;
-      renderCart();
-    };
-
-    row.append(name, price, remove);
-    area.appendChild(row);
-  });
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
+function toggleAccount() {
+  const account = $("account");
 
-/* NEXORA НЭГДСЭН ХАЙЛТ */
+  if (!account.classList.contains("hidden")) {
+    switchTab("market");
+  } else {
+    switchTab("account");
+  }
+}
+
+function openSupplierRegistration() {
+  switchTab("supplier");
+}
+
+function showSection(id) {
+  $("productFormArea").classList.add("hidden");
+
+  if (id) $(id).classList.remove("hidden");
+}
+
+function toggleAdForm() {
+  $("adFormArea").classList.toggle("hidden");
+}
+
+function selectAdCategory(category) {
+  switchTab("ads");
+  $("adCategory").value = category;
+  $("adFormArea").classList.remove("hidden");
+}
+
+/* ===================================
+   ХАЙЛТ
+=================================== */
+
 function searchAll() {
-  const input = document.getElementById("searchInput");
-  const query = input.value.trim().toLowerCase();
+  const query = $("searchInput").value.trim().toLowerCase();
 
   if (!query) {
     alert("Хайх үгээ бичнэ үү.");
     return;
   }
 
-  const sections = [
-    { id: "market", selectors: ".product" },
-    { id: "ads", selectors: ".ad-card" },
-    { id: "services", selectors: ".category" },
-    { id: "news", selectors: ".category" }
-  ];
-
   let found = 0;
-  let firstSection = "";
 
-  sections.forEach(section => {
-    const parent = document.getElementById(section.id);
-    if (!parent) return;
+  const productMatches = [...document.querySelectorAll("#productList .product")];
 
-    parent.querySelectorAll(section.selectors).forEach(item => {
-      const match = item.textContent.toLowerCase().includes(query);
+  productMatches.forEach(card => {
+    const match = card.textContent.toLowerCase().includes(query);
+    card.style.display = match ? "" : "none";
+    if (match) found++;
+  });
 
-      item.style.display = match ? "" : "none";
+  const adMatches = [...document.querySelectorAll("#adList .ad-card")];
 
-      if (match) {
-        found++;
-        if (!firstSection) firstSection = section.id;
-      }
-    });
+  adMatches.forEach(card => {
+    const match = card.textContent.toLowerCase().includes(query);
+    card.style.display = match ? "" : "none";
+    if (match) found++;
   });
 
   if (found > 0) {
-    switchTab(firstSection);
-    alert("Нийт " + found + " үр дүн олдлоо.");
+    if (productMatches.some(card => card.style.display !== "none")) {
+      switchTab("market");
+    } else {
+      switchTab("ads");
+    }
+    alert(found + " үр дүн олдлоо.");
   } else {
-    switchTab("market");
     alert("Тохирох мэдээлэл олдсонгүй.");
   }
 }
 
-/* NEXORA АНГИЛАЛ ШҮҮХ */
-document.querySelectorAll("#categories .category").forEach(category => {
-  category.addEventListener("click", function () {
-    selectedCategory = this.dataset.category || "Бүгд";
+/* ===================================
+   БАРААНЫ АНГИЛАЛ
+=================================== */
 
-    document.querySelectorAll("#categories .category").forEach(item => {
-      item.classList.remove("active");
-    });
+function filterProducts(category, element) {
+  selectedCategory = category;
 
-    this.classList.add("active");
-
-    document.querySelectorAll("#productList .product").forEach(product => {
-      const match = selectedCategory === "Бүгд" ||
-        product.dataset.category === selectedCategory;
-
-      product.style.display = match ? "" : "none";
-    });
+  document.querySelectorAll("#categories .category").forEach(item => {
+    item.classList.remove("active");
   });
-});
-/* НИЙЛҮҮЛЭГЧИЙН БҮРТГЭЛ НЭЭХ */
-/* НИЙЛҮҮЛЭГЧИЙН БҮРТГЭЛ НЭЭХ */
-function openSupplierRegistration() {
-  switchTab("supplier", null);
 
-  document.querySelector(".tabs").classList.add("hidden");
-  document.querySelector(".mobile-nav").classList.add("hidden");
+  if (element) element.classList.add("active");
 
-  const form = document.getElementById("supplierRegister");
-  if (form) {
-    form.open = true;
-  }
+  document.querySelectorAll("#productList .product").forEach(card => {
+    const match = category === "Бүгд" ||
+      card.dataset.category === category;
 
-  const type = document.getElementById("supplierType");
-  const fields = document.getElementById("supplierFormFields");
-
-  if (type) {
-    type.value = "individual";
-  }
-
-  if (fields) {
-    fields.classList.remove("hidden");
-  }
-
-  const nameLabel = document.getElementById("supplierNameLabel");
-  const registerLabel = document.getElementById("supplierRegisterLabel");
-
-  if (nameLabel) nameLabel.textContent = "Нэр";
-  if (registerLabel) registerLabel.textContent = "Регистрийн дугаар";
-
-  const section = document.getElementById("supplier");
-  if (section) {
-    section.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-  }
+    card.style.display = match ? "" : "none";
+  });
 }
-/* ЦЭС СОЛИХ */
 
-/* ЦЭС СОЛИХ */
-function switchTab(name, element) {
+/* ===================================
+   САГС
+=================================== */
+
+function addProductToCart(button) {
+  const card = button.closest(".product");
+
+  if (!card) return;
+
+  const name = card.querySelector("h3")?.textContent || "Бараа";
+  const price = card.querySelector(".price")?.textContent || "";
+
+  cart.push({name,price});
+
+  $("cartCount").textContent = cart.length;
+
+  alert(name + " сагсанд нэмэгдлээ.");
+}
+
+function showCart() {
   document.querySelectorAll(".tab-content").forEach(section => {
     section.classList.add("hidden");
   });
 
-  const target = document.getElementById(name);
-  if (target) target.classList.remove("hidden");
+  $("mainTabs").classList.add("hidden");
+  $("cartArea").classList.remove("hidden");
 
-  /* ҮЙЛЧИЛГЭЭ ДЭЭР ХУДАЛДААНЫ ХЭСГИЙГ ХАДГАЛАХ */
-  if (name === "services") {
-    const market = document.getElementById("market");
-    if (market) market.classList.remove("hidden");
-  }
+  renderCart();
 
-  document.querySelectorAll(".tabs .tab").forEach(tab => {
-    tab.classList.remove("active");
-  });
-
-  if (element && element.classList.contains("tab")) {
-    element.classList.add("active");
-  } else {
-    document.querySelectorAll(".tabs .tab").forEach(tab => {
-      const action = tab.getAttribute("onclick") || "";
-      if (action.includes("'" + name + "'")) {
-        tab.classList.add("active");
-      }
-    });
-  }
-
-  const cartArea = document.getElementById("cartArea");
-  if (cartArea) cartArea.classList.add("hidden");
-
-  const hideNavigation = name === "account" || name === "supplier";
-
-  const tabs = document.querySelector(".tabs");
-  const mobileNav = document.querySelector(".mobile-nav");
-
-  if (tabs) tabs.classList.toggle("hidden", hideNavigation);
-  if (mobileNav) mobileNav.classList.toggle("hidden", hideNavigation);
-
-  /* СОНГОСОН ХЭСЭГ РҮҮ ДЭЛГЭЦИЙГ ШИЛЖҮҮЛЭХ */
-  if (target) {
-    target.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-  }
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
-
-/* БАРАА БОЛОН ЗАРЫН ФОРМ НЭЭХ, ХААХ */
-function showSection(id) {
-  document.getElementById("adFormArea").classList.add("hidden");
-  document.getElementById("productFormArea").classList.add("hidden");
-
-  if (id) {
-    const section = document.getElementById(id);
-    if (section) {
-      section.classList.remove("hidden");
-    }
-  }
-}
-function toggleAdForm() {
-  const form = document.getElementById("adFormArea");
-
-  if (form.classList.contains("hidden")) {
-    form.classList.remove("hidden");
-
-    Object.assign(form.style, {
-      position: "fixed",
-      top: "0",
-      left: "0",
-      right: "0",
-      bottom: "0",
-      width: "100vw",
-      height: "100vh",
-      zIndex: "999999",
-      margin: "0",
-      borderRadius: "0",
-      overflowY: "auto",
-      background: "#101827",
-      boxSizing: "border-box"
-    });
-
-    document.body.style.overflow = "hidden";
-  } else {
-    form.classList.add("hidden");
-    form.removeAttribute("style");
-    document.body.style.overflow = "";
-  }
-}
- function openAdSubcategories(category) {
-  const screen = document.getElementById("adSubcategoryScreen");
-
-  document.getElementById("carSubcategories").style.display = "none";
-  document.getElementById("propertySubcategories").style.display = "none";
-  document.getElementById("jobSubcategories").style.display = "none";
-  document.getElementById("serviceSubcategories").style.display = "none";
-
-  document.getElementById("adSubcategoryTitle").textContent = category;
-
-  if (category === "Автомашин") {
-    document.getElementById("carSubcategories").style.display = "grid";
-  } else if (category === "Үл хөдлөх") {
-    document.getElementById("propertySubcategories").style.display = "grid";
-  } else if (category === "Ажлын зар") {
-    document.getElementById("jobSubcategories").style.display = "grid";
-  } else if (category === "Үйлчилгээ") {
-    document.getElementById("serviceSubcategories").style.display = "grid";
-  }
-
-  screen.style.display = "block";
-  document.body.style.overflow = "hidden";
- }
-function closeAdSubcategories() {
-  document.getElementById("adSubcategoryScreen").style.display = "none";
-  document.body.style.overflow = "";
-}
-function showJobSubcategories() {
-  document.getElementById("carSubcategories").style.display = "none";
-  document.getElementById("propertySubcategories").style.display = "none";
-  document.getElementById("jobSubcategories").style.display = "grid";
-}
-function selectAdSubcategory(category, subcategory) {
-  alert("Сонгосон ангилал: " + category + " — " + subcategory);
-
-  if (category === "Ажлын зар") {
-    document.getElementById("adCategory").value = "Ажлын зар";
-  }
-}
-
-function showJobSubcategories() {
-  document.getElementById("carSubcategories").style.display = "none";
-  document.getElementById("propertySubcategories").style.display = "none";
-  document.getElementById("jobSubcategories").style.display = "grid";
-}
-function toggleJobFields() {
-  const category = document.getElementById("adCategory").value;
-  const fields = document.getElementById("jobFields");
-  if (!fields) return;
-
-  fields.style.display = category === "Ажлын зар" ? "block" : "none";
-
-  if (category !== "Ажлын зар") {
-    document.getElementById("jobSector").value = "";
-    updateJobProfessions();
-  }
-}
-
-function updateJobProfessions() {
-  const sector = document.getElementById("jobSector");
-  const profession = document.getElementById("jobProfession");
-  if (!sector || !profession) return;
-
-  const lists = {
-    "Барилга, зам": [
-      "Шаварчин",
-      "Засалчин",
-      "Гадна фасад",
-      "Бусад"
-    ],
-    "Үйлдвэр": [
-      "Оёдолчин",
-      "Бусад"
-    ],
-    "Тээвэр, гааль": [
-      "Жолооч",
-      "Тээврийн менежер",
-      "Логистикийн мэргэжилтэн",
-      "Тээвэр зохицуулагч",
-      "Гаалийн бүрдүүлэлтийн мэргэжилтэн",
-      "Гаалийн зуучлагч",
-      "Агуулахын ажилтан",
-      "Экспедитор",
-      "Бусад"
-    ]
-  };
-
-  const selected = sector.value;
-  profession.innerHTML = '<option value="">Мэргэжил сонгох</option>';
-
-  if (!selected) {
-    profession.disabled = true;
-    profession.innerHTML =
-      '<option value="">Эхлээд салбараа сонгоно уу</option>';
-    return;
-  }
-
-  const options = lists[selected];
-
-  if (!options) {
-    profession.disabled = true;
-    profession.innerHTML =
-      '<option value="">Энэ салбарын мэргэжлүүдийг дараагийн алхамд нэмнэ</option>';
-    return;
-  }
-
-  options.forEach(name => {
-    const option = document.createElement("option");
-    option.value = name;
-    option.textContent = name;
-    profession.appendChild(option);
-  });
-
-  profession.disabled = false;
-   }
-let currentAdIdForPayment = null;
-let selectedAdPackage = null;
-let selectedBankAccount = null;
-
-async function selectAdPackage(days, amount) {
-  if (!currentAdIdForPayment) {
-    alert("Зараа эхлээд нийтэлнэ үү.");
-    return;
-  }
-
-  selectedAdPackage = {
-    days: days,
-    amount: amount
-  };
-
-  selectedBankAccount = null;
-
-  document.getElementById("adPackageArea").classList.add("hidden");
-
-  const area = document.getElementById("adBankArea");
- console.log("BANK AREA:", area);
-  const list = document.getElementById("adBankList");
-  const details = document.getElementById("adBankDetails");
-  const receiptArea = document.getElementById("adReceiptArea");
-area.classList.remove("hidden");
- Object.assign(area.style, {
-  position: "fixed",
-  inset: "0",
-  width: "100vw",
-  height: "100vh",
-  maxHeight: "100vh",
-  zIndex: "999999",
-  margin: "0",
-  borderRadius: "0",
-  overflowY: "auto",
-  background: "#071b10",
-  boxSizing: "border-box",
-  padding: "24px 18px"
-});
-document.body.style.overflow = "hidden";
-  list.textContent = "Банкны мэдээлэл ачаалж байна...";
-  details.textContent = "";
-  receiptArea.classList.add("hidden");
-
-  const { data, error } = await supabaseClient
-    .from("bank_accounts")
-    .select("id, bank_name, account_number, account_holder")
-    .eq("is_active", true)
-    .order("display_order");
-
-  if (error) {
-    list.textContent = "Банкны мэдээлэл авахад алдаа гарлаа.";
-    console.error(error);
-    return;
-  }
-
-  list.innerHTML = "";
-
-  if (!data || data.length === 0) {
-    list.textContent = "Банкны дансны мэдээлэл хараахан бүртгэгдээгүй байна.";
-    return;
-  }
-
-  data.forEach(account => {
-    const button = document.createElement("button");
-    button.className = "primary-btn";
-    button.textContent = account.bank_name;
-
-    button.onclick = function () {
-      selectedBankAccount = account;
-
-    details.innerHTML = "";
-
-const bankInfo = document.createElement("div");
-bankInfo.className = "ad-bank-info";
-
-const bankTitle = document.createElement("h3");
-bankTitle.textContent = account.bank_name;
-
-const accountNumber = document.createElement("p");
-accountNumber.innerHTML = "<strong>Дансны дугаар</strong>";
-
-const accountNumberValue = document.createElement("p");
-accountNumberValue.className = "ad-bank-value";
-accountNumberValue.textContent = account.account_number;
-
-const holder = document.createElement("p");
-holder.innerHTML = "<strong>Данс эзэмшигчийн овог, нэр</strong>";
-
-const holderValue = document.createElement("p");
-holderValue.className = "ad-bank-value";
-holderValue.textContent = account.account_holder;
-
-const amount = document.createElement("p");
-amount.innerHTML = "<strong>Төлөх дүн</strong>";
-
-const amountValue = document.createElement("p");
-amountValue.className = "ad-bank-amount";
-amountValue.textContent =
-  selectedAdPackage.amount.toLocaleString("mn-MN") + "₮";
-
-bankInfo.append(
-  bankTitle,
-  accountNumber,
-  accountNumberValue,
-  holder,
-  holderValue,
-  amount,
-  amountValue
-);
-
-details.appendChild(bankInfo);
-
-receiptArea.classList.remove("hidden");
-};
-
-list.appendChild(button);
-});
-}
-
-function backToAdPackages() {
-  const bank = document.getElementById("adBankArea");
-  const pack = document.getElementById("adPackageArea");
-
-  bank.classList.add("hidden");
-  pack.classList.remove("hidden");
-
-  Object.assign(pack.style, {
-    position: "fixed",
-    inset: "0",
-    width: "100vw",
-    height: "100vh",
-    maxHeight: "100vh",
-    zIndex: "999999",
-    margin: "0",
-    borderRadius: "0",
-    overflowY: "auto",
-    background: "#071b10",
-    boxSizing: "border-box",
-    padding: "24px 18px"
-  });
-
-  document.body.style.overflow = "hidden";
-}
-function backToAdForm() {
-  document.getElementById("adPackageArea").classList.add("hidden");
-  document.getElementById("adFormArea").classList.remove("hidden");
-} 
- 
-async function submitAdPaymentRequest() {
-  const reference = document
-    .getElementById("adTransferReference")
-    .value.trim();
-
-  const file = document
-    .getElementById("adReceiptFile")
-    .files[0];
-
-  if (!currentAdIdForPayment || !selectedAdPackage || !selectedBankAccount) {
-    alert("Зар, багц болон банкаа бүрэн сонгоно уу.");
-    return;
-  }
-
-  if (!reference || !file) {
-    alert("Гүйлгээний дугаар болон баримтаа оруулна уу.");
-    return;
-  }
-
-  if (
-    !(file.type.startsWith("image/") || file.type === "application/pdf") ||
-    file.size > 5 * 1024 * 1024
-  ) {
-    alert("Зураг эсвэл PDF файл оруулна уу. Файлын хэмжээ 5MB-аас ихгүй байна.");
-    return;
-  }
-
-  try {
-    const { data: authData, error: authError } =
-      await supabaseClient.auth.getUser();
-
-    if (authError || !authData.user) {
-      alert("Та эхлээд нэвтэрнэ үү.");
-      return;
-    }
-
-    const user = authData.user;
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-    const receiptPath =
-      user.id + "/" +
-      currentAdIdForPayment + "/" +
-      Date.now() + "-" + safeName;
-
-    const { error: uploadError } = await supabaseClient
-      .storage
-      .from("payment-receipts")
-      .upload(receiptPath, file, {
-        cacheControl: "3600",
-        upsert: false
-      });
-
-    if (uploadError) {
-      console.error("Баримт байршуулах алдаа:", uploadError);
-      alert("Баримт хадгалахад алдаа гарлаа: " + uploadError.message);
-      return;
-    }
-
-    const { error: insertError } = await supabaseClient
-      .from("payment_requests")
-      .insert({
-        ad_id: currentAdIdForPayment,
-        user_id: user.id,
-        bank_account_id: selectedBankAccount.id,
-        package_days: selectedAdPackage.days,
-        amount: selectedAdPackage.amount,
-        transfer_reference: reference,
-        receipt_path: receiptPath
-      });
-
-    if (insertError) {
-      console.error("Төлбөрийн хүсэлт хадгалах алдаа:", insertError);
-      alert("Хүсэлт хадгалахад алдаа гарлаа: " + insertError.message);
-      return;
-    }
-
-    document.getElementById("adTransferReference").value = "";
-    document.getElementById("adReceiptFile").value = "";
-    document.getElementById("adReceiptArea").classList.add("hidden");
-    document.getElementById("adBankArea").classList.add("hidden");
-
-    alert("Төлбөрийн хүсэлт амжилттай илгээгдлээ. Админ банкны гүйлгээг шалгаж баталгаажуулна.");
-
-  } catch (err) {
-    console.error(err);
-    alert("Алдаа гарлаа. Дахин оролдоно уу.");
-  }
-}
-
- 
-/* ЗАР НИЙТЛЭХ */
-async function publishAd() {
-  const title = document.getElementById("adTitle").value.trim();
-  const category = document.getElementById("adCategory").value;
-  const description = document.getElementById("adDescription").value.trim();
-  const price = document.getElementById("adPrice").value.trim();
-  const phone = document.getElementById("adPhone").value.trim();
-
-  if (!title || !category || !description || !phone) {
-    alert("Гарчиг, төрөл, тайлбар, утсаа бүрэн бөглөнө үү.");
-    return;
-  }
-
-  let priceValue = null;
-
-  if (price) {
-    priceValue = Number(price.replace(/,/g, ""));
-
-    if (!Number.isFinite(priceValue) || priceValue < 0) {
-      alert("Үнийг зөв тоогоор оруулна уу.");
-      return;
-    }
-  }
-
-  try {
-    const { data: authData, error: authError } =
-      await supabaseClient.auth.getUser();
-
-    if (authError || !authData.user) {
-      alert("Зар нийтлэхийн тулд эхлээд нэвтэрнэ үү.");
-      return;
-    }
-
-    const { data, error } = await supabaseClient
-      .from("classified_ads")
-      .insert({
-        owner_id: authData.user.id,
-        title: title,
-        category: category,
-        description: description,
-        price: priceValue,
-        phone: phone,
-        image_path: null,
-        status: "pending_payment"
-      })
-      .select()
-      .single();
-
-    if (error) {
-      console.error("Зар хадгалах алдаа:", error);
-      alert("Зар хадгалахад алдаа гарлаа: " + error.message);
-      return;
-    }
-currentAdIdForPayment = data.id;
-document.getElementById("adPackageArea").classList.remove("hidden");
-    const card = document.createElement("div");
-    card.style.display = "none";
-
-    const heading = document.createElement("h3");
-    heading.textContent = data.title;
-
-    const type = document.createElement("p");
-    type.textContent = "Ангилал: " + data.category;
-
-    const detail = document.createElement("p");
-    detail.textContent = data.description;
-
-    const cost = document.createElement("p");
-    cost.textContent = data.price !== null
-      ? "Үнэ: " + data.price + "₮"
-      : "Үнэ тохирно";
-
-    const contact = document.createElement("p");
-    contact.textContent = "Утас: " + data.phone;
-
-    const status = document.createElement("p");
-    status.textContent = "Төлөв: Төлбөр хүлээгдэж байна";
-
-    card.append(heading, type, detail, cost, contact, status);
-
-    document.getElementById("adList").prepend(card);
-
-    document.getElementById("adTitle").value = "";
-    document.getElementById("adCategory").value = "";
-    document.getElementById("adDescription").value = "";
-    document.getElementById("adPrice").value = "";
-    document.getElementById("adPhone").value = "";
-    document.getElementById("adFormArea").classList.add("hidden");
-
-    alert("Зар Supabase-д амжилттай хадгалагдлаа. Одоо төлбөр хүлээгдэж байна.");
-
-  } catch (err) {
-    console.error(err);
-    alert("Алдаа гарлаа. Дахин оролдоно уу.");
-  }
-}
-
- 
-/* НЭВТРЭХ */
-async function loginDemo() {
-  const method = document.getElementById("loginMethod").value;
-  const value = document.getElementById("loginPhone").value.trim();
-  const password = document.getElementById("loginPassword").value;
-
-  if (!value || !password) {
-    alert("И-мэйл болон нууц үгээ оруулна уу.");
-    return;
-  }
-
-  if (method === "phone") {
-    alert("Утасны нэвтрэлт одоогоор холбогдоогүй байна.");
-    return;
-  }
-
-  const { data, error } = await supabaseClient.auth.signInWithPassword({
-    email: value,
-    password: password
-  });
-
-  if (error) {
-    alert("Нэвтрэхэд алдаа гарлаа: " + error.message);
-    return;
-  }
-const emailDisplay = document.getElementById("loggedInEmail");
-
-if (emailDisplay) {
-  emailDisplay.textContent = "Нэвтэрсэн хэрэглэгч: " + data.user.email;
-emailDisplay.style.display = "block"; 
-  const { error: profileError } = await supabaseClient
-  .from("profiles")
-  .upsert(
-    {
-      id: data.user.id
-    },
-    {
-      onConflict: "id"
-    }
-  );
-
-if (profileError) {
-  alert("Профайл хадгалахад алдаа гарлаа: " + profileError.message);
-  return;
-}
-}
-alert("Амжилттай нэвтэрлээ!");
-}
-
-
-let selectedProfileImage = null;
-async function previewProfileImage(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  if (!file.type.startsWith("image/")) {
-    alert("Зургийн файл сонгоно уу.");
-    return;
-  }
-
-  selectedProfileImage = file;
-
-  // Профайл дээр шууд харуулах
-  const reader = new FileReader();
-
-  reader.onload = function () {
-    document.getElementById("profilePreview").src = reader.result;
-    document.getElementById("profilePreview").style.display = "block";
-    document.getElementById("profileDefault").style.display = "none";
-  };
-
-  reader.readAsDataURL(file);
-
-  // Нэвтэрсэн хэрэглэгчийг шалгах
-  const { data: authData } = await supabaseClient.auth.getUser();
-
-  if (!authData.user) {
-    alert("Эхлээд нэвтэрнэ үү.");
-    return;
-  }
-
-  const user = authData.user;
-  const fileExt = file.name.split(".").pop() || "jpg";
-  const avatarPath = user.id + "/avatar-" + Date.now() + "." + fileExt;
-
-  // Зургийг автоматаар хадгалах
-  const { error: uploadError } = await supabaseClient.storage
-    .from("avatars")
-    .upload(avatarPath, file);
-
-  if (uploadError) {
-    alert("Зураг хадгалахад алдаа гарлаа: " + uploadError.message);
-    return;
-  }
-
-  // Профайлын зурагны замыг хадгалах
-  const { error: profileError } = await supabaseClient
-    .from("profiles")
-    .upsert({
-      id: user.id,
-      avatar_path: avatarPath
-    }, {
-      onConflict: "id"
-    });
-
-  if (profileError) {
-    alert("Профайл зураг хадгалахад алдаа гарлаа: " + profileError.message);
-    return;
-  }
-
-  selectedProfileImage = null;
-
-  // Дээд талын дүрсийг шууд шинэчлэх
-  await loadHeaderProfileImage();
-
-  alert("Профайл зураг амжилттай солигдлоо!");
-}
-
-/* ПРОФАЙЛ ХАДГАЛАХ */
-async function saveProfile() {
-  const { data: authData } = await supabaseClient.auth.getUser();
-
-  if (!authData.user) {
-    alert("Эхлээд нэвтэрнэ үү.");
-    return;
-  }
-
-  const user = authData.user;
-  const fullName = document.getElementById("profileFullName").value.trim();
-  const phone = document.getElementById("profilePhone").value.trim();
-
-  if (!fullName || !phone) {
-    alert("Овог нэр болон утасны дугаараа оруулна уу.");
-    return;
-  }
-
-  let avatarPath = null;
-
-  if (selectedProfileImage) {
-    const fileExt = selectedProfileImage.name.split(".").pop();
-    avatarPath = user.id + "/avatar." + fileExt;
-
-    const { error: uploadError } = await supabaseClient.storage
-      .from("avatars")
-      .upload(avatarPath, selectedProfileImage, {
-        upsert: true
-      });
-
-    if (uploadError) {
-      alert("Зураг хадгалахад алдаа гарлаа: " + uploadError.message);
-      return;
-    }
-  }
-
-  const profileData = {
-    id: user.id,
-    full: fullName,
-    phone: phone
-  };
-
-  if (avatarPath) {
-    profileData.avatar_path = avatarPath;
-  }
-
-  const { error } = await supabaseClient
-    .from("profiles")
-    .upsert(profileData, {
-      onConflict: "id"
-    });
-
-  if (error) {
-    alert("Профайл хадгалахад алдаа гарлаа: " + error.message);
-    return;
-  }
-
-  selectedProfileImage = null;
-  alert("Профайл амжилттай хадгалагдлаа!");
-}
-
-/* NEXORA-ГААС ГАРАХ */
-async function logoutNexora() {
-  const { error } = await supabaseClient.auth.signOut();
-
-  if (error) {
-    alert("Гарахад алдаа гарлаа: " + error.message);
-    return;
-  }
-
-  alert("Та системээс амжилттай гарлаа.");
+function closeCart() {
+  $("cartArea").classList.add("hidden");
+  $("mainTabs").classList.remove("hidden");
   switchTab("market");
 }
- 
-/* БҮРТГҮҮЛЭХ */
-async function registerDemo() {
-  const method = document.getElementById("loginMethod").value;
-  const value = document.getElementById("loginPhone").value.trim();
-  const password = document.getElementById("loginPassword").value;
 
-  if (!value || !password) {
-    alert("И-мэйл болон нууц үгээ оруулна уу.");
+function renderCart() {
+  const area = $("cartItems");
+  area.innerHTML = "";
+
+  if (!cart.length) {
+    area.innerHTML = '<p class="empty">Таны сагс хоосон байна.</p>';
     return;
   }
 
-  if (method === "phone") {
-    alert("Утасны бүртгэл одоогоор холбогдоогүй байна.");
-    return;
-  }
+  cart.forEach((item,index) => {
+    const row = document.createElement("div");
+    row.className = "panel";
 
-  const { data, error } = await supabaseClient.auth.signUp({
-  email: value,
-  password: password,
-  options: {
-    emailRedirectTo: "https://wwwbaylag1219baylag-ctrl.github.io/Mongolia-market/"
-  }
-});
+    const title = document.createElement("h3");
+    title.textContent = item.name;
 
-  if (error) {
-    alert("Бүртгүүлэхэд алдаа гарлаа: " + error.message);
-    return;
-  }
+    const price = document.createElement("p");
+    price.textContent = item.price;
 
-  alert(
-    data.session
-      ? "Бүртгэл амжилттай үүслээ!"
-      : "Бүртгэл үүслээ. И-мэйлээ шалгаж баталгаажуулна уу."
-  );
-}
- /* НИЙЛҮҮЛЭГЧИЙН БҮРТГЭЛ */
-function registerSupplier() {
-  const type = document.getElementById("supplierType").value;
-  const name = document.getElementById("supplierName").value.trim();
-  const regNo = document.getElementById("supplierRegisterNo").value.trim();
-  const phone = document.getElementById("supplierPhone").value.trim();
-  const email = document.getElementById("supplierEmail").value.trim();
-  const address = document.getElementById("supplierAddress").value.trim();
+    const remove = document.createElement("button");
+    remove.className = "btn btn-danger";
+    remove.textContent = "Устгах";
 
-  if (!type || !name || !phone || !address) {
-    alert("Заавал бөглөх мэдээллээ оруулна уу.");
-    return;
-  }
+    remove.onclick = () => {
+      cart.splice(index,1);
+      $("cartCount").textContent = cart.length;
+      renderCart();
+    };
 
-  const supplier = {
-    type,
-    name,
-    regNo,
-    phone,
-    email,
-    address,
-    status: "Хянагдаж байна",
-    date: new Date().toLocaleDateString()
-  };
-
-  localStorage.setItem("nexoraSupplier", JSON.stringify(supplier));
-
-  alert("Нийлүүлэгчийн хүсэлт амжилттай илгээгдлээ. Админы шалгалтыг хүлээнэ үү.");
-}
- /* НИЙЛҮҮЛЭГЧИЙН МЭДЭЭЛЭЛ ХАРУУЛАХ */
-function loadSupplierInfo() {
-  const data = JSON.parse(
-    localStorage.getItem("nexoraSupplier") || "null"
-  );
-
-  if (!data) return;
-
-  document.getElementById("supplierName").value = data.name || "";
-  document.getElementById("supplierPhone").value = data.phone || "";
-  document.getElementById("supplierEmail").value = data.email || "";
-   document.getElementById("supplierAddress").value = data.address || "";
-}
-
-
-
-  
-/* NEXORA НИЙТЭЛСЭН БАРААГ ХАРУУЛАХ */
-async function loadPublishedProducts() {
-  const { data: authData } = await supabaseClient.auth.getUser();
-  const currentUserId = authData.user ? authData.user.id : null;
-
-  const products = JSON.parse(
-    localStorage.getItem("nexoraProducts") || "[]"
-  );
- if (currentUserId) {
-  let changed = false;
-
-  products.forEach(item => {
-    if (!item.ownerId) {
-      item.ownerId = currentUserId;
-      changed = true;
-    }
+    row.append(title,price,remove);
+    area.appendChild(row);
   });
+}
 
-  if (changed) {
+/* ===================================
+   БАРАА НИЙТЛЭХ
+=================================== */
+
+async function publishProduct() {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    alert("Бараа нийтлэхийн тулд эхлээд нэвтэрнэ үү.");
+    switchTab("account");
+    return;
+  }
+
+  const title = $("productTitle").value.trim();
+  const category = $("productCategory").value;
+  const price = Number($("productPrice").value);
+  const description = $("productDescription").value.trim();
+  const phone = $("productPhone").value.trim();
+  const file = $("productImage").files[0];
+
+  if (!title || !category || !price || price <= 0 ||
+      !description || !phone) {
+    alert("Бүх талбарыг зөв бөглөнө үү.");
+    return;
+  }
+
+  if (file && (!file.type.startsWith("image/") ||
+      file.size > 5 * 1024 * 1024)) {
+    alert("5MB-аас бага хэмжээтэй зураг сонгоно уу.");
+    return;
+  }
+
+  const button = document.querySelector(
+    "#productFormArea button.btn-primary"
+  );
+
+  button.disabled = true;
+  button.textContent = "Хадгалж байна...";
+
+  try {
+    const products = JSON.parse(
+      localStorage.getItem("nexoraProducts") || "[]"
+    );
+
+    let image = "";
+
+    if (file) {
+      image = await readImage(file);
+    }
+
+    products.unshift({
+      id:crypto.randomUUID(),
+      ownerId:user.id,
+      title,
+      category,
+      price,
+      description,
+      phone,
+      image,
+      date:new Date().toISOString()
+    });
+
     localStorage.setItem(
       "nexoraProducts",
       JSON.stringify(products)
     );
+
+    await loadPublishedProducts();
+
+    $("productTitle").value = "";
+    $("productCategory").value = "";
+    $("productPrice").value = "";
+    $("productDescription").value = "";
+    $("productPhone").value = "";
+    $("productImage").value = "";
+
+    $("productFormArea").classList.add("hidden");
+
+    alert("Бараа амжилттай нийтлэгдлээ!");
+
+  } catch(error) {
+    console.error(error);
+    alert("Бараа хадгалахад алдаа гарлаа.");
+  } finally {
+    button.disabled = false;
+    button.textContent = "Нийтлэх";
   }
 }
-  const list = document.getElementById("productList");
 
-  products.forEach(item => {
-    let card = list.querySelector(
-      '[data-product-id="' + item.id + '"]'
-    );
-
-    if (!card) {
-      card = document.createElement("div");
-      card.className = "product";
-      card.dataset.category = item.category;
-      card.dataset.productId = item.id;
-
-      const image = document.createElement("div");
-      image.className = "product-image";
-
-      if (item.image) {
-        const img = document.createElement("img");
-        img.src = item.image;
-        img.alt = item.title;
-        img.style.width = "100%";
-        img.style.height = "100%";
-        img.style.objectFit = "cover";
-        image.appendChild(img);
-      } else {
-        image.textContent = "📦";
-      }
-
-      const title = document.createElement("h3");
-      title.textContent = item.title;
-
-      const price = document.createElement("div");
-      price.className = "price";
-      price.textContent =
-        Number(item.price).toLocaleString("mn-MN") + "₮";
-
-      const description = document.createElement("p");
-      description.textContent = item.description;
-
-      const phone = document.createElement("p");
-      phone.textContent = "Утас: " + item.phone;
-
-      const date = document.createElement("p");
-      date.textContent = "Нийтэлсэн: " + item.date;
-
-      const cartButton = document.createElement("button");
-      cartButton.className = "primary-btn";
-      cartButton.textContent = "Сагслах";
-      cartButton.onclick = function () {
-        addToCart(cartButton);
-      };
-
-      card.append(
-        image,
-        title,
-        price,
-        description,
-        phone,
-        date,
-        cartButton
-      );
-
-      list.prepend(card);
-    }
-
-    // Зөвхөн өөрийн бараанд устгах товч харуулна
-    if (
-      currentUserId &&
-      item.ownerId === currentUserId &&
-      !card.querySelector(".delete-product-btn")
-    ) {
-      const deleteButton = document.createElement("button");
-      deleteButton.className = "dark-btn delete-product-btn";
-      deleteButton.textContent = "🗑️ Устгах";
-
-      deleteButton.onclick = function () {
-        if (!confirm("Энэ барааг устгах уу?")) return;
-
-        const savedProducts = JSON.parse(
-          localStorage.getItem("nexoraProducts") || "[]"
-        );
-
-        const updatedProducts = savedProducts.filter(
-          product => String(product.id) !== String(item.id)
-        );
-
-        localStorage.setItem(
-          "nexoraProducts",
-          JSON.stringify(updatedProducts)
-        );
-
-        card.remove();
-        alert("Таны бараа устгагдлаа.");
-      };
-
-      card.appendChild(deleteButton);
-    }
+function readImage(file) {
+  return new Promise((resolve,reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
   });
 }
 
-/* SUPABASE ХОЛБОЛТ */
-const SUPABASE_URL = "https://grbpbmowhkbtuxostfny.supabase.co";
-const SUPABASE_KEY = "sb_publishable_wspX-C4VBPJMmvWuQgsMTw_h40w8O3x";
- const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-loadPublishedProducts();
+async function loadPublishedProducts() {
+  const list = $("productList");
 
-/* АНХНЫ ЦЭС */
-switchTab("market");
+  const products = JSON.parse(
+    localStorage.getItem("nexoraProducts") || "[]"
+  );
 
-/* ПРОФАЙЛ НЭЭХ, БУЦАХ */
-function toggleAccount() {
-  const account = document.getElementById("account");
+  list.querySelectorAll("[data-product-id]").forEach(card => card.remove());
 
-  if (account && !account.classList.contains("hidden")) {
-    switchTab("market");
-  } else {
-    switchTab("account");
-  }
-}
-/* HEADER ДЭЭР ПРОФАЙЛ ЗУРАГ ХАРУУЛАХ */
-async function loadHeaderProfileImage() {
-  const { data: authData } = await supabaseClient.auth.getUser();
+  const user = await getCurrentUser();
 
-  const img = document.getElementById("headerProfileImage");
-  const defaultIcon = document.getElementById("headerProfileDefault");
+  products.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "product";
+    card.dataset.category = item.category;
+    card.dataset.productId = item.id;
 
-  if (!img || !defaultIcon) return;
+    const image = document.createElement("div");
+    image.className = "product-image";
 
-  if (!authData.user) {
-    img.style.display = "none";
-    defaultIcon.style.display = "block";
-    return;
-  }
-
-  const { data: profile } = await supabaseClient
-    .from("profiles")
-    .select("avatar_path")
-    .eq("id", authData.user.id)
-    .maybeSingle();
-
-  if (!profile || !profile.avatar_path) return;
-
-  const { data, error } = await supabaseClient.storage
-    .from("avatars")
-    .createSignedUrl(profile.avatar_path, 3600);
-
-  if (error || !data?.signedUrl) return;
-
-  img.src = data.signedUrl + "&t=" + Date.now();
-  img.style.display = "block";
-  defaultIcon.style.display = "none";
-}
-
-/* НЭВТЭРСНИЙ ДАРАА ЗУРАГ АЧААЛАХ */
-supabaseClient.auth.onAuthStateChange(() => {
-  setTimeout(loadHeaderProfileImage, 0);
-});
-
-loadHeaderProfileImage();
- /* NEXORA ADMIN ХЭСЭГ ХАРУУЛАХ */
-async function checkNexoraAdmin() {
-  const adminId = "627f4eea-4b3f-4860-a9a5-04ad5ec0b515";
-  const { data: authData } = await supabaseClient.auth.getUser();
-  const adminArea = document.getElementById("adminPaymentArea");
-
-  if (!adminArea) return;
-
-  if (authData.user?.id === adminId) {
-    adminArea.classList.remove("hidden");
-  } else {
-    adminArea.classList.add("hidden");
-  }
-}
- checkNexoraAdmin();
- 
- /* NEXORA ADMIN - ТӨЛБӨРИЙН ХҮСЭЛТ ХАРАХ */
-function toggleAdminPaymentRequests() {
-  const area = document.getElementById("adminPaymentRequests");
-
-  if (area.classList.contains("hidden")) {
-    area.classList.remove("hidden");
-    document.body.style.overflow = "";
-    loadAdminPaymentRequests();
-  } else {
-    area.classList.add("hidden");
-  }
-       }
-async function loadAdminPaymentRequests() {
-  const adminId = "627f4eea-4b3f-4860-a9a5-04ad5ec0b515";
-  const { data: authData } = await supabaseClient.auth.getUser();
-
-  if (authData.user?.id !== adminId) {
-    alert("Админ эрх шаардлагатай.");
-    return;
-  }
-
- 
-  
-  const { data, error } = await supabaseClient
-    .from("payment_requests")
-    .select("id, ad_id, user_id, package_days, amount, transfer_reference, receipt_path, status, created_at")
-    .eq("status", "pending_review")
-    .order("created_at", { ascending: false });
-
- 
-  if (error) {
-    alert("Хүсэлт ачаалахад алдаа гарлаа: " + error.message);
-    console.error(error);
-    return;
-  }
-
-  const area = document.getElementById("adminPaymentRequests");
-  if (!area) return;
-
-  const cards = await Promise.all(data.map(async item => {
-    let receiptHtml = "<p>Баримт хавсаргаагүй байна.</p>";
-
-    if (item.receipt_path) {
-      const { data: fileData, error: fileError } =
-        await supabaseClient.storage
-          .from("payment-receipts")
-          .createSignedUrl(item.receipt_path, 300);
-
-      if (!fileError && fileData?.signedUrl) {
-        receiptHtml = `
-          <a href="${fileData.signedUrl}" target="_blank">
-            <img src="${fileData.signedUrl}"
-              alt="Төлбөрийн баримт"
-              style="width:100%;max-width:320px;border-radius:12px;margin-top:10px;cursor:pointer;">
-          </a>
-          <p>Зураг дээр дарж томоор үзнэ үү.</p>
-        `;
-      } else {
-        receiptHtml = "<p>Баримт нээх боломжгүй байна. Storage эрхийг шалгана уу.</p>";
-        console.error(fileError);
-      }
+    if (item.image) {
+      const img = document.createElement("img");
+      img.src = item.image;
+      img.alt = item.title;
+      image.appendChild(img);
+    } else {
+      image.textContent = "📦";
     }
 
-    return `
-      <div class="panel">
-        <p>Багц: ${item.package_days} хоног</p>
-        <p>Дүн: ${Number(item.amount).toLocaleString("mn-MN")}₮</p>
-        <p>Гүйлгээний утга: ${item.transfer_reference}</p>
-        <p>Төлөв: ${item.status}</p>
-        <p>Огноо: ${new Date(item.created_at).toLocaleString("mn-MN")}</p>
-        
-${item.status === "pending_review" ? `
-  <button class="primary-btn"
-    onclick="approvePaymentRequest('${item.id}')">
-    ✅ Баталгаажуулах
-  </button>
+    const title = document.createElement("h3");
+    title.textContent = item.title;
 
-  <button class="primary-btn"
-    style="background:#b42318;"
-    onclick="rejectPaymentRequest('${item.id}')">
-    ❌ Татгалзах
-  </button>
-` : ""}
+    const price = document.createElement("div");
+    price.className = "price";
+    price.textContent = formatPrice(item.price);
 
-        <div>${receiptHtml}</div>
-      </div>
-    `;
-  }));
+    const description = document.createElement("p");
+    description.textContent = item.description;
 
-  area.innerHTML = cards.length
-    ? cards.join("")
-    : "<p>Одоогоор төлбөрийн хүсэлт алга.</p>";
+    const phone = document.createElement("p");
+    phone.textContent = "Утас: " + item.phone;
+
+    const button = document.createElement("button");
+    button.className = "btn btn-primary";
+    button.textContent = "Сагслах";
+    button.onclick = () => addProductToCart(button);
+
+    card.append(image,title,price,description,phone,button);
+
+    if (user && item.ownerId === user.id) {
+      const remove = document.createElement("button");
+      remove.className = "btn btn-danger";
+      remove.textContent = "🗑️ Устгах";
+
+      remove.onclick = () => deleteProduct(item.id);
+
+      card.appendChild(remove);
+    }
+
+    list.prepend(card);
+  });
+
+  filterProducts(selectedCategory);
 }
-  
-async function approvePaymentRequest(requestId) {
-  if (!confirm("Банкны шилжүүлгийг шалгаж баталгаажуулсан уу?")) return;
 
-  const { error } = await supabaseClient.rpc(
-    "admin_approve_payment_request",
-    { p_request_id: requestId }
+function deleteProduct(id) {
+  if (!confirm("Барааг устгах уу?")) return;
+
+  const products = JSON.parse(
+    localStorage.getItem("nexoraProducts") || "[]"
   );
 
-  if (error) {
-    alert("Баталгаажуулахад алдаа гарлаа: " + error.message);
+  const updated = products.filter(item => item.id !== id);
+
+  localStorage.setItem("nexoraProducts",JSON.stringify(updated));
+
+  loadPublishedProducts();
+}
+
+/* ===================================
+   ЗАР НИЙТЛЭХ
+=================================== */
+
+async function publishAd() {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    alert("Зар нийтлэхийн тулд эхлээд нэвтэрнэ үү.");
+    switchTab("account");
     return;
   }
 
-  alert("Төлбөр амжилттай баталгаажлаа.");
-  await loadAdminPaymentRequests();
-}
- 
-async function rejectPaymentRequest(requestId) {
-  if (!confirm("Энэ төлбөрийн хүсэлтээс татгалзах уу?")) return;
+  const title = $("adTitle").value.trim();
+  const category = $("adCategory").value;
+  const description = $("adDescription").value.trim();
+  const priceText = $("adPrice").value.trim();
+  const phone = $("adPhone").value.trim();
 
-  const { error } = await supabaseClient.rpc(
-    "admin_reject_payment_request",
-    { p_request_id: requestId }
+  if (!title || !category || !description || !phone) {
+    alert("Шаардлагатай мэдээллийг бөглөнө үү.");
+    return;
+  }
+
+  let price = null;
+
+  if (priceText) {
+    price = Number(priceText);
+
+    if (!Number.isFinite(price) || price < 0) {
+      alert("Үнийг зөв оруулна уу.");
+      return;
+    }
+  }
+
+  const button = document.querySelector(
+    "#adFormArea button.btn-primary"
   );
 
-  if (error) {
-    alert("Татгалзахад алдаа гарлаа: " + error.message);
-    return;
-  }
+  button.disabled = true;
+  button.textContent = "Илгээж байна...";
 
-  alert("Төлбөрийн хүсэлтээс татгалзлаа.");
-  await loadAdminPaymentRequests();
+  try {
+    const {error} = await supabaseClient
+      .from("classified_ads")
+      .insert({
+        owner_id:user.id,
+        title,
+        category,
+        description,
+        price,
+        phone,
+        image_path:null,
+        status:"pending_payment"
+      });
+
+    if (error) throw error;
+
+    $("adTitle").value = "";
+    $("adCategory").value = "";
+    $("adDescription").value = "";
+    $("adPrice").value = "";
+    $("adPhone").value = "";
+
+    $("adFormArea").classList.add("hidden");
+
+    alert("Зар хадгалагдлаа. Төлбөрийн баталгаажуулалт хүлээгдэж байна.");
+
+    await loadPublishedAds();
+    await loadMyClassifiedAds();
+
+  } catch(error) {
+    console.error(error);
+    alert("Зар хадгалахад алдаа гарлаа: " + error.message);
+  } finally {
+    button.disabled = false;
+    button.textContent = "Зар илгээх";
+  }
 }
-/* NEXORA - ХЭРЭГЛЭГЧИЙН ӨӨРИЙН ЗАРУУД */
-async function loadMyClassifiedAds() {
-  const area = document.getElementById("myClassifiedAdsList");
 
-  area.textContent = "Таны заруудыг ачаалж байна...";
+/* ===================================
+   ЗАРУУД АЧААЛАХ
+=================================== */
 
-  const { data: authData, error: authError } =
-    await supabaseClient.auth.getUser();
+async function loadPublishedAds() {
+  const area = $("adList");
 
-  if (authError || !authData.user) {
-    area.textContent = "Заруудаа харахын тулд эхлээд нэвтэрнэ үү.";
-    return;
-  }
-
-  const { data, error } = await supabaseClient
+  const {data,error} = await supabaseClient
     .from("classified_ads")
-    .select("id, title, category, status, price, created_at, expires_at")
-    .eq("owner_id", authData.user.id)
-.neq("status", "deleted")
-.order("created_at", { ascending: false });
+    .select("id,title,category,description,price,phone,created_at")
+    .eq("status","active")
+    .order("created_at",{ascending:false});
 
   if (error) {
-    console.error("Миний заруудын алдаа:", error);
-    area.textContent = "Заруудыг ачаалахад алдаа гарлаа: " + error.message;
+    console.error(error);
+    area.innerHTML = '<p class="empty">Зар ачаалахад алдаа гарлаа.</p>';
     return;
   }
 
   area.innerHTML = "";
 
-  if (!data || data.length === 0) {
-    area.textContent = "Танд одоогоор нийтэлсэн зар алга.";
+  if (!data || !data.length) {
+    area.innerHTML = '<p class="empty">Одоогоор идэвхтэй зар алга.</p>';
+    return;
+  }
+
+  data.forEach(ad => {
+    const card = document.createElement("article");
+    card.className = "ad-card";
+
+    const title = document.createElement("h3");
+    title.textContent = ad.title;
+
+    const category = document.createElement("span");
+    category.className = "status";
+    category.textContent = ad.category;
+
+    const description = document.createElement("p");
+    description.textContent = ad.description;
+
+    const price = document.createElement("p");
+    price.textContent = ad.price != null
+      ? formatPrice(ad.price)
+      : "Үнэ тохирно";
+
+    const phone = document.createElement("p");
+    phone.textContent = "☎ " + ad.phone;
+
+    card.append(title,category,description,price,phone);
+    area.appendChild(card);
+  });
+}
+
+/* ===================================
+   МИНИЙ ЗАРУУД
+=================================== */
+
+async function loadMyClassifiedAds() {
+  const area = $("myClassifiedAdsList");
+  area.textContent = "Ачаалж байна...";
+
+  const user = await getCurrentUser();
+
+  if (!user) {
+    area.textContent = "Эхлээд нэвтэрнэ үү.";
+    return;
+  }
+
+  const {data,error} = await supabaseClient
+    .from("classified_ads")
+    .select("id,title,category,price,status,created_at,expires_at")
+    .eq("owner_id",user.id)
+    .neq("status","deleted")
+    .order("created_at",{ascending:false});
+
+  if (error) {
+    console.error(error);
+    area.textContent = "Зар ачаалахад алдаа гарлаа: " + error.message;
+    return;
+  }
+
+  area.innerHTML = "";
+
+  if (!data.length) {
+    area.textContent = "Танд одоогоор зар алга.";
     return;
   }
 
@@ -2358,319 +1391,313 @@ async function loadMyClassifiedAds() {
     category.textContent = "Ангилал: " + ad.category;
 
     const price = document.createElement("p");
-    price.textContent = ad.price !== null
-      ? "Үнэ: " + Number(ad.price).toLocaleString("mn-MN") + "₮"
+    price.textContent = ad.price != null
+      ? formatPrice(ad.price)
       : "Үнэ тохирно";
 
     const status = document.createElement("p");
-    const expiry = ad.expires_at ? new Date(ad.expires_at) : null;
+    status.textContent = "Төлөв: " + ({
+      active:"Идэвхтэй",
+      pending_payment:"Төлбөр хүлээгдэж байна",
+      pending_review:"Төлбөр шалгаж байна",
+      rejected:"Татгалзсан"
+    }[ad.status] || ad.status);
 
-    let statusText = ad.status;
+    const remove = document.createElement("button");
+    remove.className = "btn btn-danger";
+    remove.textContent = "🗑️ Устгах";
+    remove.onclick = () => deleteMyClassifiedAd(ad.id);
 
-    if (ad.status === "active") {
-      statusText = expiry && expiry.getTime() <= Date.now()
-        ? "Хугацаа дууссан"
-        : "Идэвхтэй";
-    } else if (ad.status === "pending_payment") {
-      statusText = "Төлбөр хүлээгдэж байна";
-    } else if (ad.status === "rejected") {
-      statusText = "Татгалзсан";
-    }
-
-    status.textContent = "Төлөв: " + statusText;
-
-    const expiryText = document.createElement("p");
-    expiryText.textContent = expiry
-      ? "Дуусах огноо: " + expiry.toLocaleString("mn-MN")
-      : "Дуусах огноо хараахан тохируулагдаагүй";
-
-   const deleteBtn = document.createElement("button");
-deleteBtn.type = "button";
-deleteBtn.className = "dark-btn";
-deleteBtn.textContent = "🗑️ Зараа устгах";
-deleteBtn.onclick = () => deleteMyClassifiedAd(ad.id);
-
-card.append(title, category, price, status, expiryText, deleteBtn); 
+    card.append(title,category,price,status,remove);
     area.appendChild(card);
   });
 }
 
-async function deleteMyClassifiedAd(adId) {
-  const confirmed = confirm("Энэ зарыг устгах уу?");
-  if (!confirmed) return;
+async function deleteMyClassifiedAd(id) {
+  if (!confirm("Энэ зарыг устгах уу?")) return;
 
-  const { data: authData, error: authError } =
-    await supabaseClient.auth.getUser();
+  const user = await getCurrentUser();
 
-  if (authError || !authData.user) {
-    alert("Устгахын тулд эхлээд нэвтэрнэ үү.");
+  if (!user) {
+    alert("Эхлээд нэвтэрнэ үү.");
     return;
   }
 
-  const { error } = await supabaseClient
+  const {error} = await supabaseClient
     .from("classified_ads")
-    .update({ status: "deleted" })
-    .eq("id", adId)
-    .eq("owner_id", authData.user.id);
+    .update({status:"deleted"})
+    .eq("id",id)
+    .eq("owner_id",user.id);
 
   if (error) {
-    console.error("Зар устгах алдаа:", error);
-    alert("Зар устгахад алдаа гарлаа: " + error.message);
+    alert("Устгахад алдаа гарлаа: " + error.message);
     return;
   }
 
-  alert("Таны зар устгагдлаа.");
+  alert("Зар устгагдлаа.");
   loadMyClassifiedAds();
+  loadPublishedAds();
 }
 
-function toggleMyClassifiedAds(button) {
-  const details = button.closest("details");
-  const list = document.getElementById("myClassifiedAdsList");
+/* ===================================
+   НЭВТРЭХ
+=================================== */
 
-  if (!details || !list) return;
+async function loginDemo() {
+  const email = $("loginEmail").value.trim();
+  const password = $("loginPassword").value;
 
-  if (list.style.display === "none") {
-    list.style.display = "block";
-    loadMyClassifiedAds();
-    button.textContent = "🔄 Заруудаа хумих";
-  } else {
-    list.style.display = "none";
-    button.textContent = "🔄 Заруудаа харах";
+  if (!email || !password) {
+    alert("И-мэйл болон нууц үгээ оруулна уу.");
+    return;
   }
-} 
- 
-let selectedJobSector = "";
-let selectedJobProfession = "";
 
-function showJobSector(sector) {
-  selectedJobSector = sector;
-
-  const screen = document.getElementById("jobProfessionScreen");
-  const title = document.getElementById("jobProfessionTitle");
-  const list = document.getElementById("jobProfessionList");
-
-  const professions = {
-    "Барилга, зам": [
-      "Шаварчин", "Засалчин", "Гадна фасад", "Бусад"
-    ],
-    "Үйлдвэр": [
-      "Оёдолчин", "Бусад"
-    ],
-    "Тээвэр, гааль": [
-      "Жолооч",
-      "Тээврийн менежер",
-      "Логистикийн мэргэжилтэн",
-      "Тээвэр зохицуулагч",
-      "Гаалийн бүрдүүлэлтийн мэргэжилтэн",
-      "Гаалийн зуучлагч",
-      "Агуулахын ажилтан",
-      "Экспедитор",
-      "Бусад"
-    ]
-  };
-
-  const names = professions[sector] || ["Бусад"];
-
-  title.textContent = "📂 " + sector + " — Мэргэжил сонгох";
-  list.innerHTML = "";
-
-  names.forEach(name => {
-    const button = document.createElement("button");
-    button.textContent = name;
-    button.onclick = () => selectJobProfession(name);
-    list.appendChild(button);
+  const {data,error} = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
   });
 
-  document.getElementById("jobBrowseScreen").classList.add("hidden");
-  screen.classList.remove("hidden");
+  if (error) {
+    alert("Нэвтрэхэд алдаа гарлаа: " + error.message);
+    return;
+  }
+
+  $("loggedInEmail").textContent = "Нэвтэрсэн: " + data.user.email;
+
+  alert("Амжилттай нэвтэрлээ!");
+
+  await loadHeaderProfileImage();
+  await loadPublishedProducts();
+  await loadMyClassifiedAds();
 }
 
-function backToJobSectors() {
-  document.getElementById("jobProfessionScreen").classList.add("hidden");
-  document.getElementById("jobBrowseScreen").classList.remove("hidden");
+async function registerDemo() {
+  const email = $("loginEmail").value.trim();
+  const password = $("loginPassword").value;
+
+  if (!email || !password || password.length < 6) {
+    alert("И-мэйл болон 6-аас доошгүй тэмдэгттэй нууц үг оруулна уу.");
+    return;
+  }
+
+  const {data,error} = await supabaseClient.auth.signUp({
+    email,
+    password,
+    options:{
+      emailRedirectTo:
+        "https://wwwbaylag1219baylag-ctrl.github.io/Mongolia-market/"
+    }
+  });
+
+  if (error) {
+    alert("Бүртгүүлэхэд алдаа гарлаа: " + error.message);
+    return;
+  }
+
+  alert(data.session
+    ? "Бүртгэл амжилттай үүслээ."
+    : "Бүртгэл үүслээ. И-мэйлээ баталгаажуулна уу.");
 }
 
-function selectJobProfession(profession) {
-  selectedJobProfession = profession;
+async function logoutNexora() {
+  const {error} = await supabaseClient.auth.signOut();
 
-  alert(
-    "Сонгосон ангилал: " +
-    selectedJobSector + " — " + selectedJobProfession
+  if (error) {
+    alert("Гарахад алдаа гарлаа: " + error.message);
+    return;
+  }
+
+  $("loggedInEmail").textContent = "";
+  alert("Та системээс гарлаа.");
+
+  await loadHeaderProfileImage();
+  await loadPublishedProducts();
+  switchTab("market");
+}
+
+/* ===================================
+   ПРОФАЙЛ
+=================================== */
+
+async function loadHeaderProfileImage() {
+  const user = await getCurrentUser();
+
+  const img = $("headerProfileImage");
+  const icon = $("headerProfileDefault");
+
+  if (!user) {
+    img.classList.add("hidden");
+    icon.classList.remove("hidden");
+    return;
+  }
+
+  const {data:profile,error} = await supabaseClient
+    .from("profiles")
+    .select("avatar_path,full,phone")
+    .eq("id",user.id)
+    .maybeSingle();
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  if (!profile) return;
+
+  $("profileFullName").value = profile.full || "";
+  $("profilePhone").value = profile.phone || "";
+
+  if (profile.avatar_path) {
+    const {data} = await supabaseClient.storage
+      .from("avatars")
+      .createSignedUrl(profile.avatar_path,3600);
+
+    if (data?.signedUrl) {
+      img.src = data.signedUrl;
+      img.classList.remove("hidden");
+      icon.classList.add("hidden");
+
+      $("profilePreview").src = data.signedUrl;
+      $("profilePreview").classList.remove("hidden");
+      $("profileDefault").classList.add("hidden");
+    }
+  }
+}
+
+async function saveProfile() {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    alert("Эхлээд нэвтэрнэ үү.");
+    return;
+  }
+
+  const full = $("profileFullName").value.trim();
+  const phone = $("profilePhone").value.trim();
+  const file = $("profileImageInput").files[0];
+
+  if (!full || !phone) {
+    alert("Нэр болон утсаа бөглөнө үү.");
+    return;
+  }
+
+  const profile = {
+    id:user.id,
+    full,
+    phone
+  };
+
+  if (file) {
+    if (!file.type.startsWith("image/") || file.size > 5*1024*1024) {
+      alert("5MB-аас бага хэмжээтэй зураг сонгоно уу.");
+      return;
+    }
+
+    const ext = file.name.split(".").pop().replace(/[^a-zA-Z0-9]/g,"");
+    const path = user.id + "/avatar-" + Date.now() + "." + ext;
+
+    const {error:uploadError} = await supabaseClient.storage
+      .from("avatars")
+      .upload(path,file);
+
+    if (uploadError) {
+      alert("Зураг хадгалахад алдаа гарлаа: " + uploadError.message);
+      return;
+    }
+
+    profile.avatar_path = path;
+  }
+
+  const {error} = await supabaseClient
+    .from("profiles")
+    .upsert(profile,{onConflict:"id"});
+
+  if (error) {
+    alert("Профайл хадгалахад алдаа гарлаа: " + error.message);
+    return;
+  }
+
+  alert("Профайл амжилттай хадгалагдлаа!");
+  await loadHeaderProfileImage();
+}
+
+/* ===================================
+   НИЙЛҮҮЛЭГЧ
+=================================== */
+
+function registerSupplier() {
+  const type = $("supplierType").value;
+  const name = $("supplierName").value.trim();
+  const regNo = $("supplierRegisterNo").value.trim();
+  const phone = $("supplierPhone").value.trim();
+  const email = $("supplierEmail").value.trim();
+  const address = $("supplierAddress").value.trim();
+
+  if (!type || !name || !phone || !address) {
+    alert("Шаардлагатай мэдээллээ бөглөнө үү.");
+    return;
+  }
+
+  const supplier = {
+    type,name,regNo,phone,email,address,
+    status:"Хянагдаж байна",
+    date:new Date().toISOString()
+  };
+
+  localStorage.setItem(
+    "nexoraSupplier",
+    JSON.stringify(supplier)
   );
+
+  alert("Нийлүүлэгчийн хүсэлт хадгалагдлаа.");
 }
+
+/* ===================================
+   AUTH EVENT
+=================================== */
+
+supabaseClient.auth.onAuthStateChange((event,session) => {
+  $("loggedInEmail").textContent =
+    session?.user?.email
+      ? "Нэвтэрсэн: " + session.user.email
+      : "";
+
+  if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
+    setTimeout(async () => {
+      await loadHeaderProfileImage();
+      await loadPublishedProducts();
+      await loadPublishedAds();
+    },0);
+  }
+});
+
+/* ===================================
+   ЭХЛЭЛ
+=================================== */
+
+async function initializeNexora() {
+  try {
+    switchTab("market");
+
+    await loadPublishedProducts();
+    await loadPublishedAds();
+    await loadHeaderProfileImage();
+
+    const user = await getCurrentUser();
+
+    if (user) {
+      $("loggedInEmail").textContent =
+        "Нэвтэрсэн: " + user.email;
+    }
+
+  } catch(error) {
+    console.error("NEXORA initialization error:",error);
+  }
+}
+
+initializeNexora();
 
 </script>
 
-<style>
- .ad-bank-info {
-  background: #102c19;
-  border: 1px solid #39ff14;
-  border-radius: 10px;
-  padding: 16px;
-  margin: 12px 0;
-  line-height: 1.7;
-}
-
-.ad-bank-info h3 {
-  color: #39ff14;
-  margin-bottom: 14px;
-  font-size: 17px;
-}
-
-.ad-bank-info strong {
-  color: #a4c5ad;
-  font-size: 12px;
-}
-
-.ad-bank-value {
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 12px;
-  overflow-wrap: anywhere;
-}
-
-.ad-bank-amount {
-  color: #39ff14;
-  font-size: 21px;
-  font-weight: bold;
-}
-#adminPaymentRequests {
-  max-height: calc(100vh - 220px);
-  max-height: calc(100dvh - 220px);
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-  touch-action: pan-y;
-}
- /* NEXORA БҮТЭН ДЭЛГЭЦИЙН ТӨЛБӨР */
-.payment-screen {
-  position: fixed;
-  inset: 0;
-   background: #101827 !important;
-  z-index: 9999;
-  width: 100%;
-  height: 100%;
-  max-height: 100%;
-  margin: 0;
-  padding: 24px 18px;
-  box-sizing: border-box;
-  overflow-y: auto;
-  border-radius: 0;
-}
- 
-/* NEXORA FULL SCREEN AD CATEGORY */
-#adSubcategoryScreen {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  width: 100%;
-  height: 100vh;
-  height: 100dvh;
-  overflow-y: auto;
-  background: #071b10;
-  color: #effff0;
-  padding: 16px;
-  box-sizing: border-box;
-}
-
-.ad-full-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.ad-full-header button {
-  padding: 12px 16px;
-  border: 1px solid #39ff14;
-  border-radius: 10px;
-  background: #0d2918;
-  color: #39ff14;
-  font-size: 15px;
-}
-
-.ad-full-header h2 {
-  font-size: 19px;
-  margin: 0;
-}
-
-.ad-full-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.ad-full-grid button {
-  min-height: 85px;
-  padding: 14px;
-  border: 1px solid #245b32;
-  border-radius: 12px;
-  background: #0d2918;
-  color: #effff0;
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.ad-full-grid button:active {
-  background: #174b25;
-  border-color: #39ff14;
-}
-</style>
-<!-- NEXORA FULL SCREEN AD SUBCATEGORIES -->
-<div id="adSubcategoryScreen" style="display:none;">
-
-  <div class="ad-full-header">
-    <button type="button" onclick="closeAdSubcategories()">← Буцах</button>
-    <h2 id="adSubcategoryTitle">Ангилал сонгох</h2>
-  </div>
-
-  <div id="carSubcategories" class="ad-full-grid" style="display:none;">
-    <button onclick="selectAdSubcategory('Автомашин','Суудлын машин')">🚗 Суудлын машин</button>
-    <button onclick="selectAdSubcategory('Автомашин','Жийп / SUV')">🚙 Жийп / SUV</button>
-    <button onclick="selectAdSubcategory('Автомашин','Ачааны машин')">🚚 Ачааны машин</button>
-    <button onclick="selectAdSubcategory('Автомашин','Автобус')">🚌 Автобус</button>
-    <button onclick="selectAdSubcategory('Автомашин','Мотоцикл')">🏍️ Мотоцикл</button>
-    <button onclick="selectAdSubcategory('Автомашин','Сэлбэг')">🔧 Сэлбэг</button>
-    <button onclick="selectAdSubcategory('Автомашин','Дугуй, обуд')">🛞 Дугуй, обуд</button>
-    <button onclick="selectAdSubcategory('Автомашин','Тусгай зориулалтын техник')">🚜 Тусгай зориулалтын техник</button>
-    <button onclick="selectAdSubcategory('Автомашин','Бусад')">📦 Бусад</button>
-  </div>
-
-  <div id="propertySubcategories" class="ad-full-grid" style="display:none;">
-    <button onclick="selectAdSubcategory('Үл хөдлөх','Хашаа байшин')">🏡 Хашаа байшин</button>
-    <button onclick="selectAdSubcategory('Үл хөдлөх','Объект')">🏢 Объект</button>
-    <button onclick="selectAdSubcategory('Үл хөдлөх','1 өрөө')">1 өрөө</button>
-    <button onclick="selectAdSubcategory('Үл хөдлөх','2 өрөө')">2 өрөө</button>
-    <button onclick="selectAdSubcategory('Үл хөдлөх','3 өрөө')">3 өрөө</button>
-    <button onclick="selectAdSubcategory('Үл хөдлөх','4 өрөө')">4 өрөө</button>
-    <button onclick="selectAdSubcategory('Үл хөдлөх','Пентхаус')">🏙️ Пентхаус</button>
-    <button onclick="selectAdSubcategory('Үл хөдлөх','Бусад')">Бусад</button>
-  </div>
-<div id="jobSubcategories" class="ad-full-grid" style="display:none;">
-  <button onclick="selectAdSubcategory('Ажлын зар','Барилга, зам')">🏗️ Барилга, зам</button>
-  <button onclick="selectAdSubcategory('Ажлын зар','Үйлдвэр')">🏭 Үйлдвэр</button>
-  <button onclick="selectAdSubcategory('Ажлын зар','Уул уурхай')">⛏️ Уул уурхай</button>
-  <button onclick="selectAdSubcategory('Ажлын зар','Худалдаа, борлуулалт')">🛒 Худалдаа, борлуулалт</button>
-  <button onclick="selectAdSubcategory('Ажлын зар','Боловсрол')">🎓 Боловсрол</button>
-  <button onclick="selectAdSubcategory('Ажлын зар','Эмнэлэг')">🏥 Эмнэлэг</button>
-  <button onclick="selectAdSubcategory('Ажлын зар','Хөдөө аж ахуй')">🌾 Хөдөө аж ахуй</button>
-  <button onclick="selectAdSubcategory('Ажлын зар','Инженер техник')">⚙️ Инженер техник</button>
-  <button onclick="selectAdSubcategory('Ажлын зар','Тээвэр, гааль')">🚛 Тээвэр, гааль</button>
-  <button onclick="selectAdSubcategory('Ажлын зар','Бусад')">📦 Бусад</button>
-</div>
- <div id="serviceSubcategories" class="ad-full-grid" style="display:none;">
-  <button onclick="selectAdSubcategory('Үйлчилгээ','Засвар — Цахилгаан, сантехник')">🔧 Цахилгаан, сантехникийн засвар</button>
-  <button onclick="selectAdSubcategory('Үйлчилгээ','Барилга — Засал, өрлөг')">🏗️ Засал, өрлөг</button>
-  <button onclick="selectAdSubcategory('Үйлчилгээ','Тээвэр — Ачаа, нүүлгэлт')">🚚 Ачаа тээвэр, нүүлгэлт</button>
-  <button onclick="selectAdSubcategory('Үйлчилгээ','Хүргэлт — Хоол, бараа')">📦 Хоол, бараа хүргэлт</button>
-  <button onclick="selectAdSubcategory('Үйлчилгээ','IT — Компьютер, программ')">💻 Компьютер, программ</button>
-  <button onclick="selectAdSubcategory('Үйлчилгээ','Цэвэрлэгээ — Гэр, оффис')">🧹 Гэр, оффис цэвэрлэгээ</button>
-  <button onclick="selectAdSubcategory('Үйлчилгээ','Дизайн — График, интерьер')">🎨 График, интерьер дизайн</button>
-  <button onclick="selectAdSubcategory('Үйлчилгээ','Бусад үйлчилгээ')">📋 Бусад үйлчилгээ</button>
- </div>
-</div>
-<!-- END NEXORA FULL SCREEN AD SUBCATEGORIES -->
 </body>
-      </html>
+</html>
