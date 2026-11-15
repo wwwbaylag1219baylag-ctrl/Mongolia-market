@@ -521,56 +521,57 @@ footer strong {
     <button class="btn btn-primary" onclick="searchAll()">Хайх</button>
   </div>
 
-  <section id="homeCategories">
-    <h2 class="section-title">🛍️ Худалдааны ангилал</h2>
-    <div class="categories" id="categories">
-      <div class="category active" onclick="filterProducts('Бүгд',this)">
-        <span>🛍️</span>Бүгд
-      </div>
-      <div class="category" onclick="filterProducts('Электрон бараа',this)">
-        <span>📱</span>Электрон
-      </div>
-      <div class="category" onclick="filterProducts('Хувцас',this)">
-        <span>👕</span>Хувцас
-      </div>
-      <div class="category" onclick="filterProducts('Гутал',this)">
-        <span>👟</span>Гутал
-      </div>
-      <div class="category" onclick="filterProducts('Гэр ахуй',this)">
-        <span>🏠</span>Гэр ахуй
-      </div>
-      <div class="category" onclick="filterProducts('Автомашин',this)">
-        <span>🚗</span>Автомашин
-      </div>
-      <div class="category" onclick="filterProducts('Хүүхдийн бараа',this)">
-        <span>🧸</span>Хүүхэд
-      </div>
-      <div class="category" onclick="filterProducts('Бусад',this)">
-        <span>📦</span>Бусад
-      </div>
-    </div>
-  </section>
+  
+<!-- НҮҮР ХУУДАСНЫ ЗАР МЭДЭЭЛЭЛ -->
+<section id="homeAds">
+  <h2 class="section-title">📢 Зар мэдээлэл</h2>
+  <div id="homeAdList" class="ad-grid">
+    <p class="empty">Заруудыг ачаалж байна...</p>
+  </div>
+  <button class="btn btn-primary"
+    onclick="switchTab('ads')">
+    Бүх зар харах
+  </button>
+</section>
 
-  <section>
-    <h2 class="section-title">🔥 Шинэ бараанууд</h2>
-    <div class="products" id="productList">
-      <div class="product" data-category="Электрон бараа">
-        <div class="product-image">📱</div>
-        <h3>Жишээ ухаалаг утас</h3>
-        <div class="price">450,000₮</div>
-        <button class="btn btn-primary"
-          onclick="addProductToCart(this)">Сагслах</button>
-      </div>
-
-      <div class="product" data-category="Гутал">
-        <div class="product-image">👟</div>
-        <h3>Спорт гутал</h3>
-        <div class="price">85,000₮</div>
-        <button class="btn btn-primary"
-          onclick="addProductToCart(this)">Сагслах</button>
-      </div>
+<!-- ХУДАЛДААНЫ АНГИЛАЛ -->
+<section id="homeCategories">
+  <h2 class="section-title">🛍️ Худалдааны ангилал</h2>
+  <div class="categories" id="categories">
+    <div class="category active" onclick="filterProducts('Бүгд',this)">
+      <span>🛍️</span>Бүгд
     </div>
-  </section>
+    <div class="category" onclick="filterProducts('Электрон бараа',this)">
+      <span>📱</span>Электрон
+    </div>
+    <div class="category" onclick="filterProducts('Хувцас',this)">
+      <span>👕</span>Хувцас
+    </div>
+    <div class="category" onclick="filterProducts('Гутал',this)">
+      <span>👟</span>Гутал
+    </div>
+    <div class="category" onclick="filterProducts('Гэр ахуй',this)">
+      <span>🏠</span>Гэр ахуй
+    </div>
+    <div class="category" onclick="filterProducts('Автомашин',this)">
+      <span>🚗</span>Автомашин
+    </div>
+    <div class="category" onclick="filterProducts('Хүүхдийн бараа',this)">
+      <span>🧸</span>Хүүхэд
+    </div>
+    <div class="category" onclick="filterProducts('Бусад',this)">
+      <span>📦</span>Бусад
+    </div>
+  </div>
+</section>
+
+<!-- ШИНЭ БАРААНУУД -->
+<section id="homeProducts">
+  <h2 class="section-title">🔥 Шинэ бараанууд</h2>
+  <div class="products" id="productList">
+    <!-- Одоогийн бараанууд энд хэвээр үлдэнэ -->
+  </div>
+</section>
 
   <div class="tabs" id="mainTabs">
   <button class="tab active" onclick="switchTab('ads',this)">📢 Зар</button>
