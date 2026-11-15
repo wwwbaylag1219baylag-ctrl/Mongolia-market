@@ -1221,7 +1221,11 @@ function closeAdSubcategories() {
   document.getElementById("adSubcategoryScreen").style.display = "none";
   document.body.style.overflow = "";
 }
-
+function showJobSubcategories() {
+  document.getElementById("carSubcategories").style.display = "none";
+  document.getElementById("propertySubcategories").style.display = "none";
+  document.getElementById("jobSubcategories").style.display = "grid";
+}
 function selectAdSubcategory(category, subcategory) {
   alert("Сонгосон ангилал: " + category + " — " + subcategory);
 }
