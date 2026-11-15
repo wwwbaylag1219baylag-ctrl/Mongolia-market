@@ -1261,13 +1261,13 @@ function toggleAdForm() {
     document.body.style.overflow = "";
   }
 }
- // NEXORA FULL SCREEN AD SUBCATEGORY
  function openAdSubcategories(category) {
   const screen = document.getElementById("adSubcategoryScreen");
 
   document.getElementById("carSubcategories").style.display = "none";
   document.getElementById("propertySubcategories").style.display = "none";
   document.getElementById("jobSubcategories").style.display = "none";
+  document.getElementById("serviceSubcategories").style.display = "none";
 
   document.getElementById("adSubcategoryTitle").textContent = category;
 
@@ -1277,6 +1277,8 @@ function toggleAdForm() {
     document.getElementById("propertySubcategories").style.display = "grid";
   } else if (category === "Ажлын зар") {
     document.getElementById("jobSubcategories").style.display = "grid";
+  } else if (category === "Үйлчилгээ") {
+    document.getElementById("serviceSubcategories").style.display = "grid";
   }
 
   screen.style.display = "block";
