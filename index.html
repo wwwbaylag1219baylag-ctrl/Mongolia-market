@@ -514,9 +514,7 @@ footer strong {
 
 <main class="container">
 
-  
 
-  
   </button>
 </section>
 <div class="search-box">
@@ -525,6 +523,53 @@ footer strong {
       onkeydown="if(event.key==='Enter')searchAll()">
     <button class="btn btn-primary" onclick="searchAll()">Хайх</button>
 </div>
+  <!-- ЗАР -->
+  <section id="ads" class="tab-content hidden">
+    <h2 class="section-title">📢 Зар мэдээлэл</h2>
+
+    <div class="categories">
+      <div class="category" onclick="selectAdCategory('Үл хөдлөх')"><span>🏠</span>Үл хөдлөх</div>
+      <div class="category" onclick="selectAdCategory('Автомашин')"><span>🚗</span>Автомашин</div>
+      <div class="category" onclick="selectAdCategory('Ажлын зар')"><span>💼</span>Ажлын зар</div>
+      <div class="category" onclick="selectAdCategory('Түрээс')"><span>🔑</span>Түрээс</div>
+      <div class="category" onclick="selectAdCategory('Бараа зарна')"><span>📦</span>Бараа зарна</div>
+      <div class="category" onclick="selectAdCategory('Үйлчилгээ')"><span>🤝</span>Үйлчилгээ</div>
+    </div>
+
+    <div class="panel">
+      <button class="btn btn-primary" onclick="toggleAdForm()">＋ Зар нийтлэх</button>
+    </div>
+
+    <div id="adFormArea" class="panel hidden">
+      <h3>Шинэ зар нийтлэх</h3>
+
+      <input class="field" id="adTitle" placeholder="Зарын гарчиг">
+
+      <select class="field" id="adCategory">
+        <option value="">Зарын төрөл</option>
+        <option>Үл хөдлөх</option>
+        <option>Автомашин</option>
+        <option>Ажлын зар</option>
+        <option>Түрээс</option>
+        <option>Бараа зарна</option>
+        <option>Үйлчилгээ</option>
+        <option>Бусад</option>
+      </select>
+
+      <textarea class="field" id="adDescription" placeholder="Дэлгэрэнгүй тайлбар"></textarea>
+      <input class="field" id="adPrice" type="number" placeholder="Үнэ ₮">
+      <input class="field" id="adPhone" type="tel" placeholder="Холбоо барих утас">
+
+      <button class="btn btn-primary" onclick="publishAd()">Зар илгээх</button>
+      <button class="btn" onclick="toggleAdForm()">Болих</button>
+    </div>
+
+    <h3 class="section-title">Нийтлэгдсэн зарууд</h3>
+    <div id="adList" class="ad-grid">
+      <p class="empty">Заруудыг ачаалж байна...</p>
+    </div>
+  </section>
+
 <!-- 2. ХУДАЛДААНЫ АНГИЛАЛ -->
 <section id="homeCategories">
   <h2 class="section-title">🛍️ Худалдааны ангилал</h2>
@@ -618,53 +663,7 @@ footer strong {
     </div>
   </section>
 
-  <!-- ЗАР -->
-  <section id="ads" class="tab-content hidden">
-    <h2 class="section-title">📢 Зар мэдээлэл</h2>
-
-    <div class="categories">
-      <div class="category" onclick="selectAdCategory('Үл хөдлөх')"><span>🏠</span>Үл хөдлөх</div>
-      <div class="category" onclick="selectAdCategory('Автомашин')"><span>🚗</span>Автомашин</div>
-      <div class="category" onclick="selectAdCategory('Ажлын зар')"><span>💼</span>Ажлын зар</div>
-      <div class="category" onclick="selectAdCategory('Түрээс')"><span>🔑</span>Түрээс</div>
-      <div class="category" onclick="selectAdCategory('Бараа зарна')"><span>📦</span>Бараа зарна</div>
-      <div class="category" onclick="selectAdCategory('Үйлчилгээ')"><span>🤝</span>Үйлчилгээ</div>
-    </div>
-
-    <div class="panel">
-      <button class="btn btn-primary" onclick="toggleAdForm()">＋ Зар нийтлэх</button>
-    </div>
-
-    <div id="adFormArea" class="panel hidden">
-      <h3>Шинэ зар нийтлэх</h3>
-
-      <input class="field" id="adTitle" placeholder="Зарын гарчиг">
-
-      <select class="field" id="adCategory">
-        <option value="">Зарын төрөл</option>
-        <option>Үл хөдлөх</option>
-        <option>Автомашин</option>
-        <option>Ажлын зар</option>
-        <option>Түрээс</option>
-        <option>Бараа зарна</option>
-        <option>Үйлчилгээ</option>
-        <option>Бусад</option>
-      </select>
-
-      <textarea class="field" id="adDescription" placeholder="Дэлгэрэнгүй тайлбар"></textarea>
-      <input class="field" id="adPrice" type="number" placeholder="Үнэ ₮">
-      <input class="field" id="adPhone" type="tel" placeholder="Холбоо барих утас">
-
-      <button class="btn btn-primary" onclick="publishAd()">Зар илгээх</button>
-      <button class="btn" onclick="toggleAdForm()">Болих</button>
-    </div>
-
-    <h3 class="section-title">Нийтлэгдсэн зарууд</h3>
-    <div id="adList" class="ad-grid">
-      <p class="empty">Заруудыг ачаалж байна...</p>
-    </div>
-  </section>
-
+  
   <!-- ҮЙЛЧИЛГЭЭ -->
   <section id="services" class="tab-content hidden">
     <h2 class="section-title">🛠️ Үйлчилгээ</h2>
