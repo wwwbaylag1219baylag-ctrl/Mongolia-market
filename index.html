@@ -2188,15 +2188,10 @@ async function loadMyClassifiedAds() {
 }
  function toggleMyClassifiedAds(button) {
   const details = button.closest("details");
-
   if (!details) return;
 
-  if (details.open) {
-    details.open = false;
-  } else {
-    details.open = true;
-    loadMyClassifiedAds();
-  }
+  details.open = true;
+  loadMyClassifiedAds();
 }
 </script>
 
