@@ -1129,7 +1129,23 @@ document.querySelectorAll("#categories .category").forEach(category => {
     });
   });
 });
+/* НИЙЛҮҮЛЭГЧИЙН БҮРТГЭЛ НЭЭХ */
+function openSupplierRegistration() {
+  switchTab("supplier", null);
 
+  const form = document.getElementById("supplierRegister");
+  if (form) {
+    form.open = true;
+  }
+
+  const section = document.getElementById("supplier");
+  if (section) {
+    section.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+}
 /* ЦЭС СОЛИХ */
 function switchTab(name, element) {
   document.querySelectorAll(".tab-content").forEach(section => {
