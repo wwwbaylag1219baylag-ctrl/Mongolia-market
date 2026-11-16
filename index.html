@@ -506,6 +506,63 @@ button {
 
 
 <section id="nx-profile" class="nx-page">
+
+  <header class="nx-header">
+    <button class="nx-back"
+      onclick="nxNavigate('nx-home')">
+      ← Буцах
+    </button>
+    <div class="nx-logo">NEXORA PROFILE</div>
+    <button class="nx-btn"
+      onclick="nxLogout()">
+      Гарах
+    </button>
+  </header>
+
+  <main class="nx-container">
+
+    <div class="nx-platform-card">
+      <h2 style="color:#d6b15e">
+        МИНИЙ ПРОФАЙЛ
+      </h2>
+
+      <div id="nx-profile-info">
+        <p>Хэрэглэгчийн мэдээлэл ачаалж байна...</p>
+      </div>
+
+      <button onclick="nxEditProfile()">
+        Профайл засах
+      </button>
+    </div>
+
+    <div class="nx-platforms">
+
+      <article class="nx-platform-card">
+        <h2>📢 Миний зарууд</h2>
+        <div id="nx-my-ads">Ачаалж байна...</div>
+      </article>
+
+      <article class="nx-platform-card">
+        <h2>🛍️ Миний худалдаа</h2>
+        <div id="nx-my-shop">Ачаалж байна...</div>
+      </article>
+
+      <article class="nx-platform-card">
+        <h2>💳 Төлбөрийн түүх</h2>
+        <div id="nx-my-payments">Ачаалж байна...</div>
+      </article>
+
+      <article class="nx-platform-card">
+        <h2>⭐ Миний онцгой зарууд</h2>
+        <div id="nx-my-premium">Ачаалж байна...</div>
+      </article>
+
+    </div>
+
+  </main>
+</section>
+
+<section id="nx-profile" class="nx-page">
   <header class="nx-header">
     <button class="nx-back"
       onclick="nxGoBack()">
