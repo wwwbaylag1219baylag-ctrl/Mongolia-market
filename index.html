@@ -1682,6 +1682,162 @@ async function submitNexoraPayment() {
 }
 </script>
 
+<!-- NEXORA 7-р хэсэг: ТӨЛБӨРИЙН ХЭСЭГ -->
+
+<section id="nexora-payment" style="
+display:none;
+padding:20px;
+background:#f4f6fa;
+min-height:100vh;
+font-family:Arial,sans-serif;">
+
+<button onclick="closeNexoraPayment()"
+style="padding:12px 18px;border:0;border-radius:10px;">
+← Буцах
+</button>
+
+<h2 style="color:#243b8a;margin:25px 0 10px;">
+ТӨЛБӨР ТӨЛӨХ
+</h2>
+
+<p>Банк сонгоно уу.</p>
+
+<select id="nexoraBank"
+style="width:100%;padding:15px;margin:15px 0;border-radius:10px;">
+<option value="ХААН банк">ХААН банк — У.Нямбаяр</option>
+<option value="ХАС банк">ХАС банк — Б.Баярлхагва</option>
+</select>
+
+<input id="nexoraAmount"
+type="number"
+placeholder="Төлөх дүн (₮)"
+style="width:100%;padding:15px;margin-bottom:12px;">
+
+<div style="background:white;padding:18px;border-radius:14px;">
+<h3>Дансны мэдээлэл</h3>
+<p id="nexoraBankOwner">У.Нямбаяр</p>
+<p id="nexoraBankNumber">
+Дансны дугаарыг тохируулна уу.
+</p>
+</div>
+
+<input id="nexoraTransactionNote"
+placeholder="Гүйлгээний утга"
+style="width:100%;padding:15px;margin:15px 0;">
+
+<label>Төлбөрийн баримтын зураг</label>
+
+<input id="nexoraReceipt"
+type="file"
+accept="image/*"
+style="display:block;margin:15px 0;">
+
+<button onclick="sendNexoraPayment()"
+style="
+width:100%;
+padding:17px;
+background:#243b8a;
+color:white;
+border:0;
+border-radius:12px;
+font-weight:bold;">
+БАРИМТ ИЛГЭЭХ
+</button>
+
+<p id="nexoraPaymentMessage"
+style="margin-top:15px;"></p>
+
+</section>
+
+<script>
+function openNexoraPayment() {
+  document.getElementById("nexora-payment").style.display = "block";
+  document.getElementById("nexora-ads").style.display = "none";
+}
+
+function closeNexoraPayment() {
+  document.getElementById("nexora-payment").style.display = "none";
+  document.getElementById("nexora-ads").style.display = "block";
+}
+
+document.getElementById("nexoraBank")
+.addEventListener("change", function() {
+  const owner = this.value === "ХААН банк"
+    ? "У.Нямбаяр"
+    : "Б.Баярлхагва";
+
+  document.getElementById("nexoraBankOwner")
+    .textContent = owner;
+});
+
+async function sendNexoraPayment() {
+  const client = window.supabaseClient;
+
+  if (!client) {
+    alert("Supabase холболт олдсонгүй.");
+    return;
+  }
+
+  const { data: { user } } = await client.auth.getUser();
+
+  if (!user) {
+    alert("Эхлээд нэвтэрнэ үү.");
+    return;
+  }
+
+  const bank = document.getElementById("nexoraBank").value;
+  const amount = Number(document.getElementById("nexoraAmount").value);
+  const note = document.getElementById("nexoraTransactionNote").value.trim();
+  const file = document.getElementById("nexoraReceipt").files[0];
+
+  if (!amount || amount <= 0 || !note || !file) {
+    alert("Бүх мэдээллийг бөглөнө үү.");
+    return;
+  }
+
+  if (!file.type.startsWith("image/") || file.size > 5 * 1024 * 1024) {
+    alert("5MB-аас бага хэмжээтэй зураг сонгоно уу.");
+    return;
+  }
+
+  const message = document.getElementById("nexoraPaymentMessage");
+  message.textContent = "Илгээж байна...";
+
+  try {
+    const extension = file.name.split(".").pop().toLowerCase();
+    const path = user.id + "/" + crypto.randomUUID() + "." + extension;
+
+    const { error: uploadError } = await client.storage
+      .from("nexora-receipts")
+      .upload(path, file, {
+        contentType: file.type,
+        upsert: false
+      });
+
+    if (uploadError) throw uploadError;
+
+    const { error: insertError } = await client
+      .from("nexora_payments")
+      .insert({
+        user_id: user.id,
+        bank_name: bank,
+        amount: amount,
+        transaction_note: note,
+        receipt_path: path,
+        status: "pending"
+      });
+
+    if (insertError) throw insertError;
+
+    message.textContent =
+      "Амжилттай илгээгдлээ. Админ баталгаажуулахыг хүлээнэ үү.";
+
+  } catch (error) {
+    message.textContent = "Алдаа: " + error.message;
+  }
+}
+</script>
+
 </body>
 </html>
 
