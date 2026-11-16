@@ -3383,109 +3383,825 @@ updateCartCount();
 
 <!-- 6-Р ХЭСЭГ ДУУСАВ -->
 
-import React, { useState } from "react";
 
-const categories = [
-  {
-    name: "Хувцас",
-    image: "/images/clothing.jpg",
-    sub: ["Эрэгтэй хувцас", "Эмэгтэй хувцас", "Хүүхдийн хувцас", "Өвлийн хувцас"]
-  },
-  {
-    name: "Гутал",
-    image: "/images/shoes.jpg",
-    sub: ["Пүүз", "Өвлийн гутал", "Арьсан гутал", "Спорт гутал"]
-  },
-  {
-    name: "Цахилгаан бараа",
-    image: "/images/electronics.jpg",
-    sub: ["Гар утас", "Компьютер", "Телевизор", "Чихэвч"]
-  },
-  {
-    name: "Гэр ахуй",
-    image: "/images/home.jpg",
-    sub: ["Тавилга", "Гал тогоо", "Гэрийн чимэглэл", "Гэрэлтүүлэг"]
-  },
-  {
-    name: "Гоо сайхан",
-    image: "/images/beauty.jpg",
-    sub: ["Арьс арчилгаа", "Нүүр будалт", "Үнэртэй ус", "Үс арчилгаа"]
-  },
-  {
-    name: "Хүүхдийн бараа",
-    image: "/images/kids.jpg",
-    sub: ["Тоглоом", "Хүүхдийн хувцас", "Хүүхдийн тэрэг", "Сургалтын хэрэгсэл"]
-  },
-  {
-    name: "Автомашин",
-    image: "/images/auto.jpg",
-    sub: ["Сэлбэг", "Дугуй", "Авто гоёл", "Тос тосолгоо"]
-  },
-  {
-    name: "Спорт, аялал",
-    image: "/images/sport.jpg",
-    sub: ["Фитнес", "Аяллын хэрэгсэл", "Спорт хувцас", "Дугуй"]
-  }
-];
+              
 
-export default function NexoraCategories() {
-  const [selected, setSelected] = useState(null);
+<!-- =========================================
+ NEXORA PART 7
+ MONTHLY STORE PAYMENT + ADMIN CONTROL
+========================================= -->
 
-  return (
-    <main className="max-w-6xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-5">
-        NEXORA худалдааны платформ
-      </h1>
-
-      {selected === null ? (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {categories.map((cat, index) => (
-            <button
-              key={index}
-              onClick={() => setSelected(cat)}
-              className="text-left rounded-xl overflow-hidden
-                border bg-white hover:shadow-lg transition"
-            >
-              <img
-                src={cat.image}
-                alt={cat.name}
-                className="w-full aspect-[5/4] object-cover"
-              />
-              <div className="p-3 font-semibold">
-                {cat.name}
-              </div>
-            </button>
-          ))}
-        </div>
-      ) : (
-        <section>
-          <button
-            onClick={() => setSelected(null)}
-            className="mb-5 text-blue-600"
-          >
-            ← Ангилал руу буцах
-          </button>
-
-          <h2 className="text-xl font-bold mb-4">
-            {selected.name}
-          </h2>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {selected.sub.map((sub, index) => (
-              <button
-                key={index}
-                className="p-5 border rounded-xl
-                  bg-white hover:border-blue-500"
-              >
-                {sub}
-              </button>
-            ))}
-          </div>
-        </section>
-      )}
-    </main>
-  );
+<style>
+#nx7 {
+  color:#f5f0e5;
+  padding:20px 0;
 }
+#nx7 .nx7-card {
+  background:#191919;
+  border:1px solid var(--nx7-border,#554528);
+  border-radius:16px;
+  padding:18px;
+  margin:15px 0;
+}
+#nx7 .nx7-gold {color:var(--nx7-primary,#d6b46a)}
+#nx7 .nx7-input {
+  width:100%;
+  padding:14px;
+  margin:9px 0;
+  border:1px solid #554528;
+  border-radius:10px;
+  background:#242424;
+  color:white;
+}
+#nx7 .nx7-btn {
+  display:block;
+  width:100%;
+  padding:14px;
+  margin:9px 0;
+  background:var(--nx7-button,#d6b46a);
+  color:#17130b;
+  border:0;
+  border-radius:10px;
+  font-weight:bold;
+  cursor:pointer;
+}
+#nx7 .nx7-tab {
+  padding:11px;
+  background:var(--nx7-tab,#292017);
+  color:white;
+  border:1px solid #554528;
+  border-radius:9px;
+  cursor:pointer;
+}
+#nx7 .nx7-tabs {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+  margin:15px 0;
+}
+#nx7 .nx7-muted {
+  color:#aaa398;
+  font-size:13px;
+  line-height:1.7;
+}
+#nx7 .nx7-screen {display:none}
+#nx7 .nx7-screen.active {display:block}
+#nx7 .nx7-status {
+  padding:7px 10px;
+  border-radius:7px;
+  background:#302819;
+  color:#e5c77e;
+  display:inline-block;
+  font-size:12px;
+}
+#nx7 .nx7-bank {
+  background:#242017;
+  border:1px solid #66532f;
+  padding:14px;
+  border-radius:12px;
+  margin:10px 0;
+}
+#nx7 .nx7-row {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+#nx7 .nx7-row button {flex:1}
+#nx7 input[type=color] {
+  width:100%;
+  height:48px;
+  background:#242424;
+  border:1px solid #554528;
+  border-radius:8px;
+}
+</style>
+
+<section id="nx7">
+
+ <div class="nx7-card">
+  <h2 class="nx7-gold">◇ NEXORA STORE MEMBERSHIP</h2>
+  <p class="nx7-muted">
+   Дэлгүүрийн сарын төлбөр, сунгалт болон
+   төлбөрийн баталгаажуулалт
+  </p>
+
+  <div class="nx7-tabs">
+   <button class="nx7-tab" onclick="nx7Show('membership')">
+    Дэлгүүрийн эрх
+   </button>
+   <button class="nx7-tab" onclick="nx7Show('payment')">
+    Төлбөр төлөх
+   </button>
+   <button class="nx7-tab" onclick="nx7Show('history')">
+    Түүх
+   </button>
+   <button class="nx7-tab" id="nx7AdminTab"
+    style="display:none"
+    onclick="nx7Show('admin')">
+    Админ
+   </button>
+  </div>
+ </div>
+
+ <!-- MEMBERSHIP -->
+ <div id="nx7-membership" class="nx7-screen active">
+
+  <div class="nx7-card">
+   <h3 class="nx7-gold">Дэлгүүрийн мэдээлэл</h3>
+
+   <input id="nx7StoreName" class="nx7-input"
+    placeholder="Дэлгүүрийн нэр">
+
+   <select id="nx7OwnerType" class="nx7-input">
+    <option value="individual">Хувь хүн</option>
+    <option value="company">Компани</option>
+   </select>
+
+   <input id="nx7Phone" class="nx7-input"
+    placeholder="Утасны дугаар">
+
+   <button class="nx7-btn" onclick="nx7RegisterStore()">
+    ДЭЛГҮҮР БҮРТГҮҮЛЭХ
+   </button>
+  </div>
+
+  <div class="nx7-card">
+   <h3 class="nx7-gold">Сарын төлбөр</h3>
+   <h2 id="nx7Price" class="nx7-gold">Ачаалж байна...</h2>
+   <p class="nx7-muted">30 хоногийн дэлгүүрийн эрх</p>
+
+   <hr style="border-color:#554528;margin:15px 0">
+
+   <p>Төлөв: <span id="nx7Status" class="nx7-status">Шалгаж байна</span></p>
+   <p id="nx7Expiry" class="nx7-muted"></p>
+
+   <button class="nx7-btn" onclick="nx7Show('payment')">
+    ТӨЛБӨР ТӨЛӨХ / СУНГАХ
+   </button>
+  </div>
+
+ </div>
+
+ <!-- PAYMENT -->
+ <div id="nx7-payment" class="nx7-screen">
+
+  <div class="nx7-card">
+   <h3 class="nx7-gold">Банкны дансны мэдээлэл</h3>
+
+   <div class="nx7-bank">
+    <h3>Хаан банк</h3>
+    <p id="nx7KhanHolder">Данс эзэмшигч</p>
+    <h3 id="nx7KhanAccount">Дансны дугаар</h3>
+   </div>
+
+   <div class="nx7-bank">
+    <h3>ХасБанк</h3>
+    <p id="nx7XacHolder">Данс эзэмшигч</p>
+    <h3 id="nx7XacAccount">Дансны дугаар</h3>
+   </div>
+  </div>
+
+  <div class="nx7-card">
+   <h3 class="nx7-gold">Төлбөрийн хүсэлт</h3>
+
+   <select id="nx7Bank" class="nx7-input">
+    <option value="Хаан банк">Хаан банк</option>
+    <option value="ХасБанк">ХасБанк</option>
+   </select>
+
+   <input id="nx7Reference" class="nx7-input"
+    placeholder="Гүйлгээний утга / дугаар" required>
+
+   <input id="nx7Receipt" class="nx7-input"
+    type="file" accept="image/*,.pdf">
+
+   <p class="nx7-muted">
+    Төлбөрийн баримтаа зураг эсвэл PDF хэлбэрээр оруулна уу.
+   </p>
+
+   <h3 id="nx7PayAmount" class="nx7-gold"></h3>
+
+   <button class="nx7-btn" onclick="nx7SubmitPayment()">
+    ТӨЛБӨРИЙН ХҮСЭЛТ ИЛГЭЭХ
+   </button>
+  </div>
+ </div>
+
+ <!-- HISTORY -->
+ <div id="nx7-history" class="nx7-screen">
+  <div class="nx7-card">
+   <h3 class="nx7-gold">Миний төлбөрийн түүх</h3>
+   <div id="nx7History"></div>
+  </div>
+ </div>
+
+ <!-- ADMIN -->
+ <div id="nx7-admin" class="nx7-screen">
+
+  <div class="nx7-card">
+   <h2 class="nx7-gold">NEXORA ADMIN PANEL</h2>
+   <p class="nx7-muted">Зөвхөн эрх бүхий админд харагдана.</p>
+  </div>
+
+  <div class="nx7-card">
+   <h3 class="nx7-gold">Үнийн тохиргоо</h3>
+
+   <label>Хувь хүний сарын төлбөр</label>
+   <input id="nx7IndividualPrice" type="number"
+    min="0" class="nx7-input">
+
+   <label>Компанийн сарын төлбөр</label>
+   <input id="nx7CompanyPrice" type="number"
+    min="0" class="nx7-input">
+
+   <label>Эрхийн хугацаа (хоног)</label>
+   <input id="nx7Days" type="number"
+    min="1" class="nx7-input">
+
+   <label>Сануулгын хоногууд (таслалаар)</label>
+   <input id="nx7ReminderDays" class="nx7-input"
+    placeholder="7,1">
+
+   <button class="nx7-btn" onclick="nx7SaveSettings()">
+    ҮНИЙН ТОХИРГОО ХАДГАЛАХ
+   </button>
+  </div>
+
+  <div class="nx7-card">
+   <h3 class="nx7-gold">Банкны тохиргоо</h3>
+
+   <label>Хаан банкны данс</label>
+   <input id="nx7KhanEdit" class="nx7-input"
+    placeholder="Дансны дугаар">
+
+   <input id="nx7KhanNameEdit" class="nx7-input"
+    placeholder="Данс эзэмшигч">
+
+   <label>ХасБанкны данс</label>
+   <input id="nx7XacEdit" class="nx7-input"
+    placeholder="Дансны дугаар">
+
+   <input id="nx7XacNameEdit" class="nx7-input"
+    placeholder="Данс эзэмшигч">
+
+   <button class="nx7-btn" onclick="nx7SaveSettings()">
+    БАНКНЫ МЭДЭЭЛЭЛ ХАДГАЛАХ
+   </button>
+  </div>
+
+  <div class="nx7-card">
+   <h3 class="nx7-gold">Дизайны өнгө тохируулах</h3>
+
+   <label>Үндсэн өнгө</label>
+   <input type="color" id="nx7PrimaryColor">
+
+   <label>Арын өнгө</label>
+   <input type="color" id="nx7BackgroundColor">
+
+   <label>Товчны өнгө</label>
+   <input type="color" id="nx7ButtonColor">
+
+   <label>Табын өнгө</label>
+   <input type="color" id="nx7TabColor">
+
+   <button class="nx7-btn" onclick="nx7SaveSettings()">
+    ӨНГӨ ХАДГАЛАХ
+   </button>
+  </div>
+
+  <div class="nx7-card">
+   <h3 class="nx7-gold">Төлбөрийн баталгаажуулалт</h3>
+   <div id="nx7AdminPayments">Ачаалж байна...</div>
+  </div>
+
+  <div class="nx7-card">
+   <h3 class="nx7-gold">Дэлгүүрүүд</h3>
+   <div id="nx7AdminStores"></div>
+  </div>
+
+ </div>
+
+</section>
+
+<script>
+(function(){
+
+"use strict";
+
+const client = window.supabaseClient;
+const $ = id => document.getElementById(id);
+
+let user = null;
+let store = null;
+let settings = null;
+let admin = false;
+
+function message(text){
+ alert(text);
+}
+
+function money(n){
+ return Number(n || 0).toLocaleString("mn-MN")+" ₮";
+}
+
+function requireClient(){
+ if(!client) throw new Error("Supabase холболт олдсонгүй.");
+}
+
+async function getUser(){
+ requireClient();
+
+ const {data,error}=await client.auth.getUser();
+ if(error) throw error;
+
+ if(!data.user) throw new Error("Эхлээд нэвтэрнэ үү.");
+
+ user=data.user;
+ return user;
+}
+
+async function getSettings(){
+ const {data,error}=await client
+  .from("nexora_settings")
+  .select("*")
+  .eq("id",1)
+  .single();
+
+ if(error) throw error;
+
+ settings=data;
+ applyTheme();
+ renderPrices();
+ return data;
+}
+
+function applyTheme(){
+ if(!settings) return;
+
+ const root=$("nx7");
+ root.style.setProperty("--nx7-primary",settings.theme_primary);
+ root.style.setProperty("--nx7-button",settings.theme_button);
+ root.style.setProperty("--nx7-tab",settings.theme_tab);
+ root.style.setProperty("--nx7-border",settings.theme_primary);
+ root.style.background=settings.theme_background;
+
+}
+
+function renderPrices(){
+ if(!settings) return;
+
+ const type=$("nx7OwnerType")?.value || "individual";
+ const price=type==="company"
+  ? settings.company_price
+  : settings.individual_price;
+
+ $("nx7Price").textContent=money(price);
+ $("nx7PayAmount").textContent="Төлөх дүн: "+money(price);
+
+ $("nx7KhanAccount").textContent=settings.khan_account || "Админ тохируулаагүй";
+ $("nx7KhanHolder").textContent=settings.khan_holder || "Данс эзэмшигч";
+ $("nx7XacAccount").textContent=settings.xac_account || "Админ тохируулаагүй";
+ $("nx7XacHolder").textContent=settings.xac_holder || "Данс эзэмшигч";
+}
+
+window.nx7Show=function(name){
+ document.querySelectorAll("#nx7 .nx7-screen")
+  .forEach(x=>x.classList.remove("active"));
+
+ const target=$("nx7-"+name);
+ if(target) target.classList.add("active");
+
+ if(name==="history") nx7LoadHistory();
+ if(name==="admin" && admin) nx7LoadAdmin();
+};
+
+$("nx7OwnerType").addEventListener("change",renderPrices);
+
+window.nx7RegisterStore=async function(){
+ try{
+  await getUser();
+
+  const name=$("nx7StoreName").value.trim();
+  const type=$("nx7OwnerType").value;
+  const phone=$("nx7Phone").value.trim();
+
+  if(!name || !phone) throw new Error("Мэдээллээ бүрэн бөглөнө үү.");
+
+  const {data,error}=await client
+   .from("nexora_store_profiles")
+   .upsert({
+    user_id:user.id,
+    store_name:name,
+    owner_type:type,
+    phone
+   },{onConflict:"user_id"})
+   .select()
+   .single();
+
+  if(error) throw error;
+
+  store=data;
+  message("Дэлгүүрийн мэдээлэл хадгалагдлаа.");
+  await nx7LoadStore();
+
+ }catch(e){message(e.message);}
+};
+
+async function nx7LoadStore(){
+ const {data,error}=await client
+  .from("nexora_store_profiles")
+  .select("*")
+  .eq("user_id",user.id)
+  .maybeSingle();
+
+ if(error) throw error;
+
+ store=data;
+
+ if(store){
+  $("nx7StoreName").value=store.store_name;
+  $("nx7OwnerType").value=store.owner_type;
+  $("nx7Phone").value=store.phone || "";
+ }
+
+ const {data:sub,error:subError}=await client
+  .from("nexora_subscriptions")
+  .select("*")
+  .eq("user_id",user.id)
+  .eq("status","active")
+  .gt("expires_at",new Date().toISOString())
+  .order("expires_at",{ascending:false})
+  .limit(1)
+  .maybeSingle();
+
+ if(subError) throw subError;
+
+ $("nx7Status").textContent=sub
+  ? "Идэвхтэй"
+  : "Төлбөр шаардлагатай";
+
+ $("nx7Expiry").textContent=sub
+  ? "Дуусах хугацаа: "+new Date(sub.expires_at).toLocaleString("mn-MN")
+  : "Идэвхтэй дэлгүүрийн эрх олдоогүй.";
+
+}
+
+window.nx7SubmitPayment=async function(){
+ try{
+  await getUser();
+
+  if(!store) throw new Error("Эхлээд дэлгүүрээ бүртгүүлнэ үү.");
+
+  const bank=$("nx7Bank").value;
+  const reference=$("nx7Reference").value.trim();
+  const file=$("nx7Receipt").files[0];
+
+  if(!reference) throw new Error("Гүйлгээний утгаа оруулна уу.");
+  if(!file) throw new Error("Төлбөрийн баримтаа оруулна уу.");
+
+  if(!["image/jpeg","image/png","image/webp","application/pdf"].includes(file.type)){
+   throw new Error("Зураг эсвэл PDF файл сонгоно уу.");
+  }
+
+  if(file.size>5*1024*1024){
+   throw new Error("Баримтын хэмжээ 5MB-аас хэтэрч болохгүй.");
+  }
+
+  const amount=store.owner_type==="company"
+   ? settings.company_price
+   : settings.individual_price;
+
+  const extension=file.name.split(".").pop().toLowerCase();
+  const path=user.id+"/"+crypto.randomUUID()+"."+extension;
+
+  const {error:uploadError}=await client.storage
+   .from("nexora-payment-receipts")
+   .upload(path,file,{
+    contentType:file.type,
+    upsert:false
+   });
+
+  if(uploadError) throw uploadError;
+
+  const {error}=await client
+   .from("nexora_store_payments")
+   .insert({
+    store_id:store.id,
+    user_id:user.id,
+    amount,
+    bank_name:bank,
+    transfer_reference:reference,
+    receipt_path:path,
+    status:"pending"
+   });
+
+  if(error){
+   await client.storage.from("nexora-payment-receipts").remove([path]);
+   throw error;
+  }
+
+  $("nx7Reference").value="";
+  $("nx7Receipt").value="";
+
+  message("Төлбөрийн хүсэлт амжилттай илгээгдлээ. Админ шалгаж баталгаажуулна.");
+  nx7Show("history");
+
+ }catch(e){message(e.message);}
+};
+
+window.nx7LoadHistory=async function(){
+ try{
+  await getUser();
+
+  const {data,error}=await client
+   .from("nexora_store_payments")
+   .select("*")
+   .eq("user_id",user.id)
+   .order("created_at",{ascending:false});
+
+  if(error) throw error;
+
+  const container=$("nx7History");
+  container.replaceChildren();
+
+  if(!data.length){
+   container.textContent="Төлбөрийн түүх байхгүй.";
+   return;
+  }
+
+  data.forEach(p=>{
+   const card=document.createElement("div");
+   card.className="nx7-card";
+
+   const title=document.createElement("h4");
+   title.textContent=money(p.amount);
+
+   const status=document.createElement("p");
+   status.textContent="Төлөв: "+p.status;
+
+   const date=document.createElement("p");
+   date.className="nx7-muted";
+   date.textContent=new Date(p.created_at).toLocaleString("mn-MN");
+
+   card.append(title,status,date);
+
+   if(p.status==="rejected" && p.admin_note){
+    const note=document.createElement("p");
+    note.textContent="Админы тайлбар: "+p.admin_note;
+    card.appendChild(note);
+   }
+
+   container.appendChild(card);
+  });
+
+ }catch(e){message(e.message);}
+};
+
+// ADMIN
+async function checkAdmin(){
+ const {data,error}=await client
+  .from("nexora_admins")
+  .select("user_id")
+  .eq("user_id",user.id)
+  .maybeSingle();
+
+ if(error) throw error;
+
+ admin=!!data;
+ $("nx7AdminTab").style.display=admin?"block":"none";
+}
+
+window.nx7SaveSettings=async function(){
+ try{
+  if(!admin) throw new Error("Админы эрх шаардлагатай.");
+
+  const payload={
+   individual_price:Number($("nx7IndividualPrice").value),
+   company_price:Number($("nx7CompanyPrice").value),
+   duration_days:Number($("nx7Days").value),
+   reminder_days:$("nx7ReminderDays").value
+    .split(",").map(x=>Number(x.trim()))
+    .filter(x=>Number.isInteger(x)&&x>=1&&x<=30),
+
+   khan_account:$("nx7KhanEdit").value.trim(),
+   khan_holder:$("nx7KhanNameEdit").value.trim(),
+   xac_account:$("nx7XacEdit").value.trim(),
+   xac_holder:$("nx7XacNameEdit").value.trim(),
+
+   theme_primary:$("nx7PrimaryColor").value,
+   theme_background:$("nx7BackgroundColor").value,
+   theme_button:$("nx7ButtonColor").value,
+   theme_tab:$("nx7TabColor").value,
+   updated_at:new Date().toISOString()
+  };
+
+  if(!Number.isSafeInteger(payload.individual_price) ||
+     !Number.isSafeInteger(payload.company_price) ||
+     payload.individual_price<0 ||
+     payload.company_price<0 ||
+     !Number.isInteger(payload.duration_days) ||
+     payload.duration_days<1){
+   throw new Error("Үнэ болон хугацааны утгыг шалгана уу.");
+  }
+
+  const {error}=await client
+   .from("nexora_settings")
+   .update(payload)
+   .eq("id",1);
+
+  if(error) throw error;
+
+  await getSettings();
+  message("Тохиргоо хадгалагдлаа.");
+
+ }catch(e){message(e.message);}
+};
+
+async function nx7LoadAdmin(){
+ if(!admin) return;
+
+ await getSettings();
+
+ const fields={
+  nx7IndividualPrice:settings.individual_price,
+  nx7CompanyPrice:settings.company_price,
+  nx7Days:settings.duration_days,
+  nx7ReminderDays:settings.reminder_days.join(","),
+  nx7KhanEdit:settings.khan_account,
+  nx7KhanNameEdit:settings.khan_holder,
+  nx7XacEdit:settings.xac_account,
+  nx7XacNameEdit:settings.xac_holder,
+  nx7PrimaryColor:settings.theme_primary,
+  nx7BackgroundColor:settings.theme_background,
+  nx7ButtonColor:settings.theme_button,
+  nx7TabColor:settings.theme_tab
+ };
+
+ Object.entries(fields).forEach(([id,value])=>{
+  $(id).value=value || "";
+ });
+
+ await nx7LoadPayments();
+ await nx7LoadStores();
+}
+
+async function nx7LoadPayments(){
+ const {data,error}=await client
+  .from("nexora_store_payments")
+  .select("*, nexora_store_profiles(store_name,owner_type)")
+  .eq("status","pending")
+  .order("created_at");
+
+ if(error) throw error;
+
+ const container=$("nx7AdminPayments");
+ container.replaceChildren();
+
+ if(!data.length){
+  container.textContent="Хүлээгдэж буй төлбөр алга.";
+  return;
+ }
+
+ for(const p of data){
+  const card=document.createElement("div");
+  card.className="nx7-card";
+
+  const title=document.createElement("h4");
+  title.textContent=p.nexora_store_profiles?.store_name || "Дэлгүүр";
+
+  const info=document.createElement("p");
+  info.textContent=p.bank_name+" / "+money(p.amount)+
+   " / "+p.transfer_reference;
+
+  const receipt=document.createElement("button");
+  receipt.className="nx7-btn";
+  receipt.textContent="БАРИМТ ХАРАХ";
+  receipt.onclick=()=>nx7ViewReceipt(p.receipt_path);
+
+  const approve=document.createElement("button");
+  approve.className="nx7-btn";
+  approve.textContent="БАТАЛГААЖУУЛАХ";
+  approve.onclick=()=>nx7Approve(p.id);
+
+  const reject=document.createElement("button");
+  reject.className="nx7-btn";
+  reject.style.background="#8b2929";
+  reject.style.color="white";
+  reject.textContent="ТАТГАЛЗАХ";
+  reject.onclick=()=>nx7Reject(p.id);
+
+  card.append(title,info,receipt,approve,reject);
+  container.appendChild(card);
+ }
+}
+
+async function nx7ViewReceipt(path){
+ const {data,error}=await client.storage
+  .from("nexora-payment-receipts")
+  .createSignedUrl(path,120);
+
+ if(error){message(error.message);return;}
+
+ window.open(data.signedUrl,"_blank","noopener");
+}
+
+async function nx7Approve(id){
+ try{
+  if(!admin) throw new Error("Зөвшөөрөлгүй.");
+
+  if(!confirm("Төлбөрийг шалгаж баталгаажуулсан уу?")) return;
+
+  const {error}=await client.rpc(
+   "nexora_approve_store_payment",
+   {p_payment_id:id}
+  );
+
+  if(error) throw error;
+
+  message("Төлбөр баталгаажлаа. 30 хоногийн эрх нээгдлээ.");
+  await nx7LoadAdmin();
+
+ }catch(e){message(e.message);}
+}
+
+async function nx7Reject(id){
+ try{
+  if(!admin) throw new Error("Зөвшөөрөлгүй.");
+
+  const note=prompt("Татгалзсан шалтгаанаа бичнэ үү.");
+  if(note===null || !note.trim()) return;
+
+  const {error}=await client.rpc(
+   "nexora_reject_store_payment",
+   {p_payment_id:id,p_note:note.trim()}
+  );
+
+  if(error) throw error;
+
+  message("Төлбөрийн хүсэлт татгалзагдлаа.");
+  await nx7LoadAdmin();
+
+ }catch(e){message(e.message);}
+}
+
+async function nx7LoadStores(){
+ const {data,error}=await client
+  .from("nexora_store_profiles")
+  .select("*, nexora_subscriptions(*)")
+  .order("created_at",{ascending:false});
+
+ if(error) throw error;
+
+ const container=$("nx7AdminStores");
+ container.replaceChildren();
+
+ data.forEach(s=>{
+  const card=document.createElement("div");
+  card.className="nx7-card";
+
+  const name=document.createElement("h4");
+  name.textContent=s.store_name;
+
+  const type=document.createElement("p");
+  type.textContent=s.owner_type==="company"?"Компани":"Хувь хүн";
+
+  const sub=(s.nexora_subscriptions||[])
+   .filter(x=>x.status==="active")
+   .sort((a,b)=>new Date(b.expires_at)-new Date(a.expires_at))[0];
+
+  const expiry=document.createElement("p");
+  expiry.textContent=sub
+   ?"Дуусах: "+new Date(sub.expires_at).toLocaleDateString("mn-MN")
+   :"Идэвхтэй эрхгүй";
+
+  card.append(name,type,expiry);
+  container.appendChild(card);
+ });
+}
+
+async function init(){
+ try{
+  await getUser();
+  await getSettings();
+  await checkAdmin();
+  await nx7LoadStore();
+ }catch(e){
+  console.warn("NEXORA 7:",e.message);
+ }
+}
+
+if(client){
+ init();
+ client.auth.onAuthStateChange(()=>{
+  setTimeout(init,0);
+ });
+}
+
+})();
+</script>
+
+<!-- NEXORA PART 7 END -->
+
 
 </body>
 </html>
