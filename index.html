@@ -2200,5 +2200,330 @@ window.openNexoraAdDetail = function(id) {
 
 <!-- NEXORA 4-Р ХЭСЭГ ДУУСАВ -->
 
+<!-- =====================================
+ NEXORA - 5-Р ХЭСЭГ
+ SUPABASE ЗАР ХАДГАЛАХ СИСТЕМ
+===================================== -->
+
+<style>
+#nx5DetailPage {
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:10020;
+  overflow-y:auto;
+  padding:22px;
+  background:#101010;
+  color:#f5f0e5;
+  font-family:Arial,sans-serif;
+}
+
+.nx5-detail-card {
+  background:#1c1c1c;
+  border:1px solid #59472a;
+  border-radius:16px;
+  padding:20px;
+  margin-top:18px;
+}
+
+.nx5-gold {
+  color:#d6b46a;
+}
+
+#nx5Map {
+  width:100%;
+  height:280px;
+  border:0;
+  border-radius:13px;
+  margin-top:15px;
+}
+
+.nx5-action {
+  display:block;
+  width:100%;
+  padding:15px;
+  border:0;
+  border-radius:12px;
+  background:#d6b46a;
+  color:#17130b;
+  font-weight:bold;
+  margin-top:15px;
+}
+</style>
+
+<section id="nx5DetailPage">
+
+  <button onclick="nx5CloseDetail()"
+    style="padding:12px 18px;border:0;border-radius:10px;background:#292929;color:#d6b46a;">
+    ← Буцах
+  </button>
+
+  <h2 class="nx5-gold" style="margin-top:25px;">
+    ЗАРЫН ДЭЛГЭРЭНГҮЙ
+  </h2>
+
+  <div class="nx5-detail-card">
+
+    <img id="nx5DetailImage"
+      style="width:100%;max-height:280px;object-fit:contain;border-radius:12px;">
+
+    <h2 id="nx5DetailTitle" class="nx5-gold"
+      style="margin-top:18px;"></h2>
+
+    <h2 id="nx5DetailPrice"
+      style="margin-top:12px;"></h2>
+
+    <p id="nx5DetailCategory"
+      style="margin-top:12px;color:#aaa;"></p>
+
+    <p id="nx5DetailLocation"
+      style="margin-top:12px;"></p>
+
+    <hr style="margin:20px 0;border-color:#554528;">
+
+    <h3 class="nx5-gold">Дэлгэрэнгүй мэдээлэл</h3>
+
+    <p id="nx5DetailDescription"
+      style="margin-top:12px;line-height:1.8;"></p>
+
+    <hr style="margin:20px 0;border-color:#554528;">
+
+    <h3 class="nx5-gold">Холбоо барих</h3>
+
+    <a id="nx5DetailPhone"
+      class="nx5-action"
+      style="text-align:center;text-decoration:none;">
+      📞 Утас руу залгах
+    </a>
+
+  </div>
+
+  <div class="nx5-detail-card">
+
+    <h3 class="nx5-gold">📍 Зарын байршил</h3>
+
+    <p id="nx5MapAddress"
+      style="margin-top:10px;color:#aaa;"></p>
+
+    <iframe id="nx5Map"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      allowfullscreen>
+    </iframe>
+
+    <button class="nx5-action"
+      onclick="nx5OpenMap()">
+      GOOGLE MAPS НЭЭХ
+    </button>
+
+  </div>
+
+</section>
+
+<script>
+(function(){
+
+  const client = window.supabaseClient;
+
+  let currentAd = null;
+
+  window.nx5SaveAdToSupabase = async function(ad){
+
+    if(!client){
+      alert("Supabase холболт олдсонгүй.");
+      return;
+    }
+
+    try {
+
+      const {data:{user},error:userError} =
+        await client.auth.getUser();
+
+      if(userError || !user){
+        alert("Эхлээд нэвтэрнэ үү.");
+        return;
+      }
+
+      const payload = {
+        user_id:user.id,
+        category:ad.category,
+        subcategory:ad.subcategory,
+        title:ad.title,
+        price:ad.price,
+        location:ad.location,
+        description:ad.description,
+        phone:ad.phone,
+        status:"pending_payment"
+      };
+
+      const {data,error} = await client
+        .from("nexora_ads")
+        .insert(payload)
+        .select()
+        .single();
+
+      if(error) throw error;
+
+      if(ad.imageFile){
+
+        const file = ad.imageFile;
+
+        const extension =
+          file.name.split(".").pop().toLowerCase();
+
+        const path =
+          user.id + "/" +
+          crypto.randomUUID() + "." + extension;
+
+        const {error:uploadError} = await client.storage
+          .from("nexora-ads")
+          .upload(path,file,{
+            contentType:file.type,
+            upsert:false
+          });
+
+        if(uploadError){
+
+          await client
+            .from("nexora_ads")
+            .delete()
+            .eq("id",data.id)
+            .eq("user_id",user.id);
+
+          throw uploadError;
+        }
+
+        const {error:updateError} = await client
+          .from("nexora_ads")
+          .update({image_path:path})
+          .eq("id",data.id)
+          .eq("user_id",user.id);
+
+        if(updateError) throw updateError;
+      }
+
+      alert("Зар амжилттай хадгалагдлаа. Төлбөр болон админы баталгаажуулалтыг хүлээнэ үү.");
+
+      return data;
+
+    } catch(error){
+
+      console.error("NEXORA:",error);
+
+      alert("Зар хадгалахад алдаа гарлаа: "+error.message);
+
+      return null;
+    }
+
+  };
+
+
+  window.nx5OpenDetail = async function(id){
+
+    if(!client){
+      alert("Supabase холболт олдсонгүй.");
+      return;
+    }
+
+    try{
+
+      const {data,error} = await client
+        .from("nexora_ads")
+        .select("*")
+        .eq("id",id)
+        .eq("status","published")
+        .single();
+
+      if(error) throw error;
+
+      currentAd = data;
+
+      document.getElementById("nx5DetailTitle").textContent =
+        data.title || "";
+
+      document.getElementById("nx5DetailPrice").textContent =
+        Number(data.price || 0).toLocaleString("mn-MN")+" ₮";
+
+      document.getElementById("nx5DetailCategory").textContent =
+        data.category+" / "+data.subcategory;
+
+      document.getElementById("nx5DetailLocation").textContent =
+        "📍 "+data.location;
+
+      document.getElementById("nx5DetailDescription").textContent =
+        data.description || "";
+
+      document.getElementById("nx5DetailPhone").href =
+        "tel:"+data.phone;
+
+      document.getElementById("nx5MapAddress").textContent =
+        data.location;
+
+      const mapURL =
+        "https://www.google.com/maps?q="+
+        encodeURIComponent(data.location)+
+        "&output=embed";
+
+      document.getElementById("nx5Map").src = mapURL;
+
+      const img = document.getElementById("nx5DetailImage");
+
+      if(data.image_path){
+
+        const {data:imageData} = client.storage
+          .from("nexora-ads")
+          .getPublicUrl(data.image_path);
+
+        img.src = imageData.publicUrl;
+        img.style.display = "block";
+
+      }else{
+
+        img.style.display = "none";
+
+      }
+
+      document.getElementById("nx5DetailPage").style.display =
+        "block";
+
+      window.scrollTo(0,0);
+
+    }catch(error){
+
+      alert("Зарын мэдээлэл ачаалж чадсангүй: "+error.message);
+
+    }
+
+  };
+
+
+  window.nx5CloseDetail = function(){
+
+    document.getElementById("nx5DetailPage").style.display =
+      "none";
+
+  };
+
+
+  window.nx5OpenMap = function(){
+
+    if(!currentAd || !currentAd.location){
+      alert("Байршлын мэдээлэл алга.");
+      return;
+    }
+
+    window.open(
+      "https://www.google.com/maps/search/?api=1&query="+
+      encodeURIComponent(currentAd.location),
+      "_blank"
+    );
+
+  };
+
+})();
+</script>
+
+<!-- NEXORA 5-Р ХЭСЭГ ДУУСАВ -->
+
 </body>
 </html>
