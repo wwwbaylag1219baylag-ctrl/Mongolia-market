@@ -2569,5 +2569,923 @@ window.openNexoraAdDetail = function(id) {
 
 <!-- NEXORA 5-Р ХЭСЭГ ДУУСАВ -->
 
+<!-- ==========================================
+ NEXORA — 6-Р ХЭСЭГ
+ MARKETPLACE SHOP SYSTEM
+ 5% PLATFORM COMMISSION
+ APPEND ONLY — 1-5-Р ХЭСГИЙГ УСТГАХГҮЙ
+========================================== -->
+
+<style>
+#nxShopApp {
+  color:#f5f0e5;
+  padding:20px 0 50px;
+  font-family:Arial,sans-serif;
+}
+#nxShopApp * {box-sizing:border-box}
+#nxShopApp .gold {color:#d6b46a}
+#nxShopApp .shop-card {
+  background:#191919;
+  border:1px solid #554528;
+  border-radius:16px;
+  padding:18px;
+  margin:14px 0;
+}
+#nxShopApp .shop-field {
+  width:100%;
+  padding:14px;
+  margin:9px 0;
+  border:1px solid #554528;
+  border-radius:10px;
+  background:#242424;
+  color:white;
+}
+#nxShopApp .shop-btn {
+  width:100%;
+  padding:15px;
+  margin-top:10px;
+  border:1px solid #66532f;
+  border-radius:11px;
+  background:#242017;
+  color:#e5c77e;
+  font-weight:bold;
+  cursor:pointer;
+}
+#nxShopApp .shop-primary {
+  background:linear-gradient(135deg,#e5c77e,#a9823e);
+  color:#17130b;
+  border:0;
+}
+#nxShopApp .shop-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+#nxShopApp .shop-category {
+  padding:18px 10px;
+  background:#202020;
+  border:1px solid #554528;
+  border-radius:14px;
+  color:#e5c77e;
+  text-align:center;
+  cursor:pointer;
+}
+#nxShopApp .shop-category span {
+  display:block;
+  font-size:30px;
+  margin-bottom:9px;
+}
+#nxShopApp .product-card {
+  background:#191919;
+  border:1px solid #554528;
+  border-radius:14px;
+  overflow:hidden;
+  cursor:pointer;
+}
+#nxShopApp .product-card img {
+  width:100%;
+  height:145px;
+  object-fit:cover;
+}
+#nxShopApp .product-info {padding:12px}
+#nxShopApp .product-info h4 {
+  color:#e5c77e;
+  margin-bottom:8px;
+}
+#nxShopApp .price {
+  color:#d6b46a;
+  font-weight:bold;
+  font-size:17px;
+}
+#nxShopApp .muted {
+  color:#aaa398;
+  font-size:13px;
+  line-height:1.7;
+}
+#nxShopApp .shop-screen {display:none}
+#nxShopApp .shop-screen.active {display:block}
+#nxShopApp .shop-back {
+  background:#252525;
+  color:#e5c77e;
+  border:1px solid #66532f;
+  padding:11px 16px;
+  border-radius:10px;
+  cursor:pointer;
+}
+#nxShopApp .shop-nav {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin:18px 0;
+}
+#nxShopApp .shop-nav button {
+  padding:12px 5px;
+  background:#202020;
+  color:#d6b46a;
+  border:1px solid #554528;
+  border-radius:10px;
+}
+@media(min-width:650px) {
+  #nxShopApp .shop-grid {
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+}
+</style>
+
+<script>
+(function(){
+
+const root = document.getElementById("nx-shop");
+
+if(!root || document.getElementById("nxShopApp")) return;
+
+// Keep the original placeholder in the source.
+const placeholder = root.querySelector(".nx-placeholder");
+if(placeholder) placeholder.style.display = "none";
+
+root.insertAdjacentHTML("beforeend", `
+<div id="nxShopApp">
+  <div class="nx-container">
+
+    <header class="shop-card">
+      <h1 class="gold">◇ NEXORA SHOP</h1>
+      <p class="muted">Нэгдсэн худалдааны платформ</p>
+      <input id="nsSearch" class="shop-field"
+        placeholder="⌕ Бараа хайх...">
+      <div class="shop-nav">
+        <button onclick="nsShow('home')">Нүүр</button>
+        <button onclick="nsShow('cart')">🛒 Сагс
+          <span id="nsCartCount">0</span>
+        </button>
+        <button onclick="nsShow('seller')">Дэлгүүр</button>
+      </div>
+    </header>
+
+    <!-- HOME -->
+    <section id="ns-home" class="shop-screen active">
+
+      <div class="shop-card">
+        <h2 class="gold">Худалдааны ертөнц</h2>
+        <p class="muted">
+          Өөрийн хүссэн бараагаа сонгож,
+          дэлгүүрүүдээс захиалаарай.
+        </p>
+      </div>
+
+      <h3 class="gold">Үндсэн ангилал</h3>
+      <div id="nsCategories" class="shop-grid"></div>
+
+      <h3 class="gold" style="margin-top:25px">
+        Шинээр нэмэгдсэн бараа
+      </h3>
+      <div id="nsProducts" class="shop-grid"></div>
+    </section>
+
+    <!-- CATEGORY -->
+    <section id="ns-category" class="shop-screen">
+      <button class="shop-back" onclick="nsShow('home')">
+        ← Буцах
+      </button>
+      <h2 id="nsCategoryTitle" class="gold"
+        style="margin:22px 0"></h2>
+      <div id="nsSubcategories"></div>
+      <div id="nsCategoryProducts" class="shop-grid"></div>
+    </section>
+
+    <!-- PRODUCT DETAIL -->
+    <section id="ns-detail" class="shop-screen">
+      <button class="shop-back" onclick="nsShow('home')">
+        ← Буцах
+      </button>
+      <div id="nsProductDetail" class="shop-card"></div>
+    </section>
+
+    <!-- CART -->
+    <section id="ns-cart" class="shop-screen">
+      <h2 class="gold">🛒 МИНИЙ САГС</h2>
+      <div id="nsCartItems"></div>
+      <div class="shop-card">
+        <p>Нийт дүн</p>
+        <h2 id="nsCartTotal" class="gold">0 ₮</h2>
+        <button class="shop-btn shop-primary"
+          onclick="nsCheckout()">
+          ЗАХИАЛГА ҮҮСГЭХ
+        </button>
+      </div>
+    </section>
+
+    <!-- SELLER -->
+    <section id="ns-seller" class="shop-screen">
+      <h2 class="gold">ХУДАЛДАГЧИЙН ХЭСЭГ</h2>
+      <p class="muted">
+        NEXORA бараа хадгалахгүй, хүргэлт хийхгүй.
+        Худалдагч бараа болон хүргэлтээ өөрөө хариуцна.
+      </p>
+
+      <div class="shop-card">
+        <h3 class="gold">Дэлгүүр бүртгүүлэх</h3>
+        <input id="nsStoreName" class="shop-field"
+          placeholder="Дэлгүүрийн нэр">
+        <input id="nsSellerPhone" class="shop-field"
+          placeholder="Холбоо барих утас">
+        <input id="nsSellerAddress" class="shop-field"
+          placeholder="Байршил">
+        <button class="shop-btn shop-primary"
+          onclick="nsRegisterStore()">
+          ДЭЛГҮҮР БҮРТГҮҮЛЭХ
+        </button>
+      </div>
+
+      <div class="shop-card">
+        <h3 class="gold">Шинэ бараа нийтлэх</h3>
+        <input id="nsProductName" class="shop-field"
+          placeholder="Барааны нэр">
+        <select id="nsProductCategory" class="shop-field">
+          <option value="">Ангилал сонгох</option>
+        </select>
+        <select id="nsProductSub" class="shop-field">
+          <option value="">Дэд ангилал сонгох</option>
+        </select>
+        <input id="nsProductPrice" class="shop-field"
+          type="number" min="1" placeholder="Үнэ (₮)">
+        <input id="nsProductStock" class="shop-field"
+          type="number" min="1" placeholder="Бэлэн байгаа тоо">
+        <textarea id="nsProductDescription"
+          class="shop-field" rows="4"
+          placeholder="Барааны тайлбар"></textarea>
+        <input id="nsProductImage" class="shop-field"
+          type="file" accept="image/*">
+        <button class="shop-btn shop-primary"
+          onclick="nsPublishProduct()">
+          БАРАА НИЙТЛЭХ
+        </button>
+      </div>
+
+      <div class="shop-card">
+        <h3 class="gold">Миний бараанууд</h3>
+        <div id="nsSellerProducts"></div>
+      </div>
+    </section>
+
+    <!-- ORDERS -->
+    <section id="ns-orders" class="shop-screen">
+      <h2 class="gold">МИНИЙ ЗАХИАЛГУУД</h2>
+      <div id="nsOrderList"></div>
+    </section>
+
+  </div>
+</div>
+`);
+
+// Category data
+const categories = {
+  "Электроник": {
+    icon:"📱",
+    subs:["Гар утас","Компьютер","Телевизор",
+      "Чихэвч","Дагалдах хэрэгсэл"]
+  },
+  "Хувцас загвар": {
+    icon:"👔",
+    subs:["Эрэгтэй хувцас","Эмэгтэй хувцас",
+      "Хүүхдийн хувцас","Гутал","Цүнх"]
+  },
+  "Гэр ахуй": {
+    icon:"🏠",
+    subs:["Гэр ахуйн бараа","Гал тогоо",
+      "Тавилга","Гэрийн чимэглэл"]
+  },
+  "Гоо сайхан": {
+    icon:"💄",
+    subs:["Арьс арчилгаа","Нүүр будалт",
+      "Үнэртэн","Үс арчилгаа"]
+  },
+  "Спорт": {
+    icon:"🏋️",
+    subs:["Фитнес","Спорт хувцас",
+      "Спорт хэрэгсэл"]
+  },
+  "Хүүхдийн бараа": {
+    icon:"🧸",
+    subs:["Тоглоом","Хүүхдийн хувцас",
+      "Сургалтын хэрэгсэл"]
+  },
+  "Автомашин": {
+    icon:"🚘",
+    subs:["Сэлбэг","Авто хэрэгсэл",
+      "Авто гоёл"]
+  },
+  "Бусад": {
+    icon:"📦",
+    subs:["Бусад бараа"]
+  }
+};
+
+const KEY = "nexoraShopProducts";
+const STORE = "nexoraShopStores";
+const CART = "nexoraShopCart";
+const ORDERS = "nexoraShopOrders";
+const FEE = 0.05;
+
+const $ = id => document.getElementById(id);
+
+const money = n =>
+  Number(n || 0).toLocaleString("mn-MN") + " ₮";
+
+function read(key) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key)||"[]");
+    return Array.isArray(value) ? value : [];
+  } catch(e) { return []; }
+}
+
+function write(key,data) {
+  localStorage.setItem(key,JSON.stringify(data));
+}
+
+let selectedCategory = "";
+let selectedProduct = null;
+let productImage = "";
+let selectedStore = null;
+
+function products() { return read(KEY); }
+function stores() { return read(STORE); }
+function cart() { return read(CART); }
+
+function showProducts(list,container) {
+  container.innerHTML = "";
+
+  if(!list.length) {
+    container.textContent = "Одоогоор бараа байхгүй байна.";
+    return;
+  }
+
+  list.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "product-card";
+
+    if(p.image) {
+      const img = document.createElement("img");
+      img.src = p.image;
+      img.alt = p.name;
+      card.appendChild(img);
+    }
+
+    const info = document.createElement("div");
+    info.className = "product-info";
+
+    const name = document.createElement("h4");
+    name.textContent = p.name;
+
+    const price = document.createElement("p");
+    price.className = "price";
+    price.textContent = money(p.price);
+
+    const store = document.createElement("p");
+    store.className = "muted";
+    store.textContent = p.storeName;
+
+    info.append(name,price,store);
+    card.appendChild(info);
+
+    card.onclick = () => nsOpenProduct(p.id);
+    container.appendChild(card);
+  });
+}
+
+function renderCategories() {
+  const container = $("nsCategories");
+  const select = $("nsProductCategory");
+
+  Object.entries(categories).forEach(([name,data]) => {
+    const button = document.createElement("button");
+    button.className = "shop-category";
+
+    const icon = document.createElement("span");
+    icon.textContent = data.icon;
+
+    const title = document.createElement("strong");
+    title.textContent = name;
+
+    button.append(icon,title);
+    button.onclick = () => nsOpenCategory(name);
+    container.appendChild(button);
+
+    const option = document.createElement("option");
+    option.value = name;
+    option.textContent = name;
+    select.appendChild(option);
+  });
+}
+
+function renderHome() {
+  showProducts(
+    products().filter(p=>p.status==="published").slice().reverse(),
+    $("nsProducts")
+  );
+}
+
+window.nsShow = function(name) {
+  document.querySelectorAll("#nxShopApp .shop-screen")
+    .forEach(s=>s.classList.remove("active"));
+
+  const target = $("ns-"+name);
+  if(target) target.classList.add("active");
+
+  if(name==="home") renderHome();
+  if(name==="cart") renderCart();
+  if(name==="seller") renderSellerProducts();
+  if(name==="orders") renderOrders();
+};
+
+window.nsOpenCategory = function(name) {
+  selectedCategory = name;
+  $("nsCategoryTitle").textContent = name;
+
+  const subs = $("nsSubcategories");
+  subs.innerHTML = "";
+
+  categories[name].subs.forEach(sub=>{
+    const button = document.createElement("button");
+    button.className = "shop-btn";
+    button.textContent = sub;
+    button.onclick = ()=> {
+      const matches = products().filter(p=>
+        p.status==="published" &&
+        p.category===name && p.subcategory===sub
+      );
+      showProducts(matches,$("nsCategoryProducts"));
+    };
+    subs.appendChild(button);
+  });
+
+  showProducts(
+    products().filter(p=>
+      p.status==="published" && p.category===name
+    ),
+    $("nsCategoryProducts")
+  );
+
+  nsShow("category");
+};
+
+window.nsOpenProduct = function(id) {
+  const p = products().find(x=>x.id===id);
+  if(!p) return;
+
+  selectedProduct = p;
+
+  const container = $("nsProductDetail");
+  container.innerHTML = "";
+
+  if(p.image) {
+    const img = document.createElement("img");
+    img.src = p.image;
+    img.style.cssText="width:100%;max-height:280px;object-fit:contain";
+    container.appendChild(img);
+  }
+
+  const title = document.createElement("h2");
+  title.className="gold";
+  title.textContent=p.name;
+
+  const price = document.createElement("h2");
+  price.className="price";
+  price.textContent=money(p.price);
+
+  const description = document.createElement("p");
+  description.className="muted";
+  description.textContent=p.description;
+
+  const seller = document.createElement("p");
+  seller.className="muted";
+  seller.textContent="Дэлгүүр: "+p.storeName;
+
+  const stock = document.createElement("p");
+  stock.className="muted";
+  stock.textContent="Үлдэгдэл: "+p.stock;
+
+  const add = document.createElement("button");
+  add.className="shop-btn shop-primary";
+  add.textContent="🛒 САГСАНД НЭМЭХ";
+  add.onclick=()=>nsAddCart(p.id);
+
+  container.append(title,price,description,seller,stock,add);
+  nsShow("detail");
+};
+
+window.nsRegisterStore = function() {
+  const name=$("nsStoreName").value.trim();
+  const phone=$("nsSellerPhone").value.trim();
+  const address=$("nsSellerAddress").value.trim();
+
+  if(!name || !phone || !address) {
+    alert("Бүх мэдээллийг бөглөнө үү.");
+    return;
+  }
+
+  const list=stores();
+
+  if(list.some(s=>s.phone===phone)) {
+    alert("Энэ утсаар дэлгүүр бүртгэгдсэн байна.");
+    return;
+  }
+
+  selectedStore={
+    id:"STORE-"+Date.now(),
+    name,phone,address,
+    status:"pending"
+  };
+
+  try {
+    list.push(selectedStore);
+    write(STORE,list);
+    alert("Дэлгүүрийн хүсэлт бүртгэгдлээ. Админы баталгаажуулалт хүлээнэ.");
+  } catch(e) {
+    alert("Мэдээлэл хадгалах боломжгүй байна.");
+  }
+};
+
+$("nsProductCategory").addEventListener("change",function() {
+  const sub=$("nsProductSub");
+  sub.innerHTML='<option value="">Дэд ангилал сонгох</option>';
+
+  (categories[this.value]?.subs||[]).forEach(name=>{
+    const option=document.createElement("option");
+    option.value=name;
+    option.textContent=name;
+    sub.appendChild(option);
+  });
+});
+
+$("nsProductImage").addEventListener("change",function() {
+  productImage="";
+  const file=this.files[0];
+
+  if(!file) return;
+
+  if(!file.type.startsWith("image/") || file.size>2*1024*1024) {
+    alert("Зураг 2MB-аас бага байх ёстой.");
+    this.value="";
+    return;
+  }
+
+  const reader=new FileReader();
+  reader.onload=()=>productImage=reader.result;
+  reader.readAsDataURL(file);
+});
+
+window.nsPublishProduct = function() {
+  const storeList=stores();
+  const store=storeList.find(s=>
+    selectedStore && s.id===selectedStore.id
+  );
+
+  if(!store || store.status!=="approved") {
+    alert("Бараа нийтлэхийн өмнө дэлгүүрээ админаар баталгаажуулна уу.");
+    return;
+  }
+
+  const name=$("nsProductName").value.trim();
+  const category=$("nsProductCategory").value;
+  const subcategory=$("nsProductSub").value;
+  const price=Number($("nsProductPrice").value);
+  const stock=Number($("nsProductStock").value);
+  const description=$("nsProductDescription").value.trim();
+
+  if(!name || !category || !subcategory ||
+     !price || !stock || !description) {
+    alert("Бүх талбарыг бөглөнө үү.");
+    return;
+  }
+
+  const list=products();
+
+  list.push({
+    id:"PRODUCT-"+Date.now(),
+    storeId:store.id,
+    storeName:store.name,
+    name,category,subcategory,
+    price,stock,description,
+    image:productImage,
+    status:"pending",
+    createdAt:new Date().toISOString()
+  });
+
+  try {
+    write(KEY,list);
+    alert("Бараа бүртгэгдлээ. Админы баталгаажуулалтын дараа нийтэд харагдана.");
+    renderSellerProducts();
+  } catch(e) {
+    alert("Хадгалах багтаамж хүрэлцэхгүй байна.");
+  }
+};
+
+function renderSellerProducts() {
+  const container=$("nsSellerProducts");
+  container.innerHTML="";
+
+  const list=products().filter(p=>
+    selectedStore && p.storeId===selectedStore.id
+  );
+
+  list.forEach(p=>{
+    const item=document.createElement("p");
+    item.className="shop-card";
+    item.textContent=p.name+" — "+money(p.price)+
+      " / "+p.status;
+    container.appendChild(item);
+  });
+
+  if(!list.length) container.textContent="Бараа одоогоор алга.";
+}
+
+window.nsAddCart = function(id) {
+  const p=products().find(x=>x.id===id);
+  if(!p || p.status!=="published") return;
+
+  const list=cart();
+  const existing=list.find(x=>x.productId===id);
+
+  if(existing) {
+    if(existing.quantity>=p.stock) {
+      alert("Бэлэн байгаа тоо хүрэлцэхгүй байна.");
+      return;
+    }
+    existing.quantity++;
+  } else {
+    list.push({productId:id,quantity:1});
+  }
+
+  write(CART,list);
+  updateCartCount();
+  alert("Сагсанд нэмлээ.");
+};
+
+function updateCartCount() {
+  $("nsCartCount").textContent=
+    cart().reduce((sum,x)=>sum+x.quantity,0);
+}
+
+function renderCart() {
+  const container=$("nsCartItems");
+  container.innerHTML="";
+  let total=0;
+
+  cart().forEach(item=>{
+    const p=products().find(x=>x.id===item.productId);
+    if(!p || p.status!=="published") return;
+
+    total+=p.price*item.quantity;
+
+    const row=document.createElement("div");
+    row.className="shop-card";
+    row.textContent=p.name+" × "+item.quantity+" — "+
+      money(p.price*item.quantity);
+
+    const remove=document.createElement("button");
+    remove.className="shop-btn";
+    remove.textContent="Хасах";
+    remove.onclick=()=>{
+      write(CART,cart().filter(x=>x.productId!==p.id));
+      renderCart();
+      updateCartCount();
+    };
+
+    row.appendChild(remove);
+    container.appendChild(row);
+  });
+
+  $("nsCartTotal").textContent=money(total);
+}
+
+window.nsCheckout = function() {
+  const list=cart();
+
+  if(!list.length) {
+    alert("Сагс хоосон байна.");
+    return;
+  }
+
+  const all=products();
+  const lines=[];
+  let total=0;
+
+  for(const item of list) {
+    const p=all.find(x=>x.id===item.productId);
+
+    if(!p || p.status!=="published" ||
+       item.quantity>p.stock) {
+      alert("Барааны үлдэгдэл өөрчлөгдсөн байна. Сагсаа шалгана уу.");
+      return;
+    }
+
+    const amount=p.price*item.quantity;
+    total+=amount;
+
+    lines.push({
+      productId:p.id,
+      sellerStoreId:p.storeId,
+      name:p.name,
+      quantity:item.quantity,
+      unitPrice:p.price,
+      amount
+    });
+  }
+
+  const commission=Math.round(total*FEE);
+
+  const order={
+    id:"ORDER-"+Date.now(),
+    items:lines,
+    total,
+    commission,
+    sellerNet:total-commission,
+    status:"pending_payment",
+    createdAt:new Date().toISOString()
+  };
+
+  try {
+    const orders=read(ORDERS);
+    orders.push(order);
+    write(ORDERS,orders);
+    write(CART,[]);
+    updateCartCount();
+    renderOrders();
+    nsShow("orders");
+
+    alert(
+      "Захиалга бүртгэгдлээ.\n"+
+      "Нийт: "+money(total)+"\n"+
+      "NEXORA 5%: "+money(commission)+"\n"+
+      "Худалдагчид ногдох дүн: "+money(total-commission)+
+      "\n\nТөлбөр баталгаажуулах шаардлагатай."
+    );
+  } catch(e) {
+    alert("Захиалга хадгалахад алдаа гарлаа.");
+  }
+};
+
+function renderOrders() {
+  const container=$("nsOrderList");
+  container.innerHTML="";
+
+  read(ORDERS).slice().reverse().forEach(order=>{
+    const item=document.createElement("div");
+    item.className="shop-card";
+
+    const title=document.createElement("h3");
+    title.className="gold";
+    title.textContent=order.id;
+
+    const total=document.createElement("p");
+    total.textContent="Захиалгын дүн: "+money(order.total);
+
+    const fee=document.createElement("p");
+    fee.textContent="NEXORA 5%: "+money(order.commission);
+
+    const status=document.createElement("p");
+    status.className="muted";
+    status.textContent="Төлөв: "+order.status;
+
+    item.append(title,total,fee,status);
+    container.appendChild(item);
+  });
+
+  if(!container.children.length) {
+    container.textContent="Захиалга байхгүй байна.";
+  }
+}
+
+$("nsSearch").addEventListener("input",function() {
+  const query=this.value.trim().toLowerCase();
+
+  if(!query) {
+    nsShow("home");
+    return;
+  }
+
+  const matches=products().filter(p=>
+    p.status==="published" &&
+    (p.name+" "+p.category+" "+p.subcategory)
+      .toLowerCase().includes(query)
+  );
+
+  nsShow("home");
+  showProducts(matches,$("nsProducts"));
+});
+
+renderCategories();
+renderHome();
+updateCartCount();
+
+})();
+</script>
+
+<!-- 6-Р ХЭСЭГ ДУУСАВ -->
+
+import React, { useState } from "react";
+
+const categories = [
+  {
+    name: "Хувцас",
+    image: "/images/clothing.jpg",
+    sub: ["Эрэгтэй хувцас", "Эмэгтэй хувцас", "Хүүхдийн хувцас", "Өвлийн хувцас"]
+  },
+  {
+    name: "Гутал",
+    image: "/images/shoes.jpg",
+    sub: ["Пүүз", "Өвлийн гутал", "Арьсан гутал", "Спорт гутал"]
+  },
+  {
+    name: "Цахилгаан бараа",
+    image: "/images/electronics.jpg",
+    sub: ["Гар утас", "Компьютер", "Телевизор", "Чихэвч"]
+  },
+  {
+    name: "Гэр ахуй",
+    image: "/images/home.jpg",
+    sub: ["Тавилга", "Гал тогоо", "Гэрийн чимэглэл", "Гэрэлтүүлэг"]
+  },
+  {
+    name: "Гоо сайхан",
+    image: "/images/beauty.jpg",
+    sub: ["Арьс арчилгаа", "Нүүр будалт", "Үнэртэй ус", "Үс арчилгаа"]
+  },
+  {
+    name: "Хүүхдийн бараа",
+    image: "/images/kids.jpg",
+    sub: ["Тоглоом", "Хүүхдийн хувцас", "Хүүхдийн тэрэг", "Сургалтын хэрэгсэл"]
+  },
+  {
+    name: "Автомашин",
+    image: "/images/auto.jpg",
+    sub: ["Сэлбэг", "Дугуй", "Авто гоёл", "Тос тосолгоо"]
+  },
+  {
+    name: "Спорт, аялал",
+    image: "/images/sport.jpg",
+    sub: ["Фитнес", "Аяллын хэрэгсэл", "Спорт хувцас", "Дугуй"]
+  }
+];
+
+export default function NexoraCategories() {
+  const [selected, setSelected] = useState(null);
+
+  return (
+    <main className="max-w-6xl mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-5">
+        NEXORA худалдааны платформ
+      </h1>
+
+      {selected === null ? (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {categories.map((cat, index) => (
+            <button
+              key={index}
+              onClick={() => setSelected(cat)}
+              className="text-left rounded-xl overflow-hidden
+                border bg-white hover:shadow-lg transition"
+            >
+              <img
+                src={cat.image}
+                alt={cat.name}
+                className="w-full aspect-[5/4] object-cover"
+              />
+              <div className="p-3 font-semibold">
+                {cat.name}
+              </div>
+            </button>
+          ))}
+        </div>
+      ) : (
+        <section>
+          <button
+            onClick={() => setSelected(null)}
+            className="mb-5 text-blue-600"
+          >
+            ← Ангилал руу буцах
+          </button>
+
+          <h2 className="text-xl font-bold mb-4">
+            {selected.name}
+          </h2>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {selected.sub.map((sub, index) => (
+              <button
+                key={index}
+                className="p-5 border rounded-xl
+                  bg-white hover:border-blue-500"
+              >
+                {sub}
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+    </main>
+  );
+}
+
 </body>
 </html>
