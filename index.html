@@ -255,5 +255,521 @@ function searchCategories() {
 }
 </script>
 
+<!-- ================================= -->
+<!-- NEXORA - 2-Р ХЭСЭГ: ЗАРЫН ПЛАТФОРМ -->
+<!-- ================================= -->
+
+<section id="nexora-ads" style="display:none; padding:20px; background:#f4f6fa; min-height:100vh; font-family:Arial,sans-serif;">
+
+  <button onclick="closeNexoraAds()" style="border:0;background:white;padding:12px 18px;border-radius:12px;font-size:16px;">
+    ← Буцах
+  </button>
+
+  <h1 style="color:#243B8A;margin-top:25px;">NEXORA ЗАР</h1>
+  <p style="color:#64748b;">Хэрэгтэй бүх зар нэг дор</p>
+
+  <input id="nexoraSearch"
+    type="search"
+    placeholder="Зар хайх..."
+    oninput="searchNexoraAds()"
+    style="width:100%;padding:16px;border:1px solid #ddd;border-radius:14px;font-size:16px;">
+
+  <div id="nexoraCategories" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px;">
+
+    <button onclick="openNexoraCategory('Ажлын байр')" class="nexora-category">💼<br>Ажлын байр</button>
+    <button onclick="openNexoraCategory('Үл хөдлөх хөрөнгө')" class="nexora-category">🏠<br>Үл хөдлөх</button>
+    <button onclick="openNexoraCategory('Автомашин')" class="nexora-category">🚗<br>Автомашин</button>
+    <button onclick="openNexoraCategory('Цахилгаан бараа')" class="nexora-category">📱<br>Цахилгаан бараа</button>
+    <button onclick="openNexoraCategory('Хувцас загвар')" class="nexora-category">👕<br>Хувцас загвар</button>
+    <button onclick="openNexoraCategory('Үйлчилгээ')" class="nexora-category">🛠️<br>Үйлчилгээ</button>
+    <button onclick="openNexoraCategory('Тавилга')" class="nexora-category">🛋️<br>Тавилга</button>
+    <button onclick="openNexoraCategory('Бусад')" class="nexora-category">📦<br>Бусад</button>
+
+  </div>
+
+  <div id="nexoraSubcategories" style="display:none;margin-top:25px;">
+    <h2 id="nexoraCategoryTitle"></h2>
+    <div id="nexoraSubcategoryList"></div>
+  </div>
+
+  <div id="nexoraAdResults" style="margin-top:25px;"></div>
+
+  <button onclick="openNexoraPublish()" style="width:100%;padding:17px;background:#087e72;color:white;border:0;border-radius:14px;font-size:17px;font-weight:bold;margin-top:25px;">
+    ＋ Зар нийтлэх
+  </button>
+
+  <div id="nexoraPublishForm" style="display:none;background:white;padding:18px;border-radius:16px;margin-top:20px;">
+
+    <h2>Шинэ зар нийтлэх</h2>
+
+    <input id="newAdTitle" placeholder="Зарын гарчиг" class="nexora-input">
+    <select id="newAdCategory" class="nexora-input">
+      <option>Ажлын байр</option>
+      <option>Үл хөдлөх хөрөнгө</option>
+      <option>Автомашин</option>
+      <option>Цахилгаан бараа</option>
+      <option>Хувцас загвар</option>
+      <option>Үйлчилгээ</option>
+      <option>Тавилга</option>
+      <option>Бусад</option>
+    </select>
+    <input id="newAdPrice" type="number" placeholder="Үнэ (₮)" class="nexora-input">
+    <input id="newAdLocation" placeholder="Байршил" class="nexora-input">
+    <input id="newAdPhone" placeholder="Утасны дугаар" class="nexora-input">
+    <textarea id="newAdDescription" placeholder="Дэлгэрэнгүй мэдээлэл" class="nexora-input"></textarea>
+
+    <button onclick="submitNexoraAd()" style="width:100%;background:#243B8A;color:white;padding:15px;border:0;border-radius:12px;font-weight:bold;">
+      Үргэлжлүүлэх
+    </button>
+
+  </div>
+
+</section>
+
+<style>
+.nexora-category {
+  background:white;
+  border:1px solid #e2e8f0;
+  border-radius:16px;
+  padding:22px 10px;
+  font-size:17px;
+  font-weight:bold;
+  color:#243B8A;
+  cursor:pointer;
+}
+.nexora-input {
+  display:block;
+  width:100%;
+  box-sizing:border-box;
+  padding:14px;
+  margin:12px 0;
+  border:1px solid #ddd;
+  border-radius:10px;
+  font-size:15px;
+}
+.nexora-ad-card {
+  background:white;
+  padding:16px;
+  border-radius:14px;
+  margin:12px 0;
+}
+</style>
+
+<script>
+const nexoraSubcategories = {
+  "Ажлын байр": [
+    "Бүх ажлын байр",
+    "Оффисын ажил",
+    "Инженер, техникийн ажил",
+    "Барилга",
+    "Үйлчилгээ",
+    "Борлуулалт",
+    "Жолооч",
+    "IT, программ хангамж",
+    "Цагийн ажил",
+    "Зайнаас ажиллах",
+    "Түр ажил"
+  ],
+  "Үл хөдлөх хөрөнгө": [
+    "Орон сууц",
+    "Хашаа байшин",
+    "Газар",
+    "Оффис",
+    "Үйлдвэр, агуулах",
+    "Түрээс"
+  ],
+  "Автомашин": [
+    "Суудлын машин",
+    "Жийп",
+    "Ачааны машин",
+    "Мотоцикл",
+    "Сэлбэг хэрэгсэл"
+  ],
+  "Цахилгаан бараа": [
+    "Гар утас",
+    "Компьютер",
+    "Телевизор",
+    "Гэр ахуйн цахилгаан бараа"
+  ],
+  "Хувцас загвар": [
+    "Эрэгтэй хувцас",
+    "Эмэгтэй хувцас",
+    "Хүүхдийн хувцас",
+    "Гутал",
+    "Цүнх"
+  ],
+  "Үйлчилгээ": [
+    "Засвар үйлчилгээ",
+    "Цэвэрлэгээ",
+    "Сургалт",
+    "Тээвэр",
+    "Гоо сайхан"
+  ],
+  "Тавилга": [
+    "Гэрийн тавилга",
+    "Оффисын тавилга",
+    "Гал тогооны тавилга"
+  ],
+  "Бусад": [
+    "Бусад зар"
+  ]
+};
+
+let nexoraAds = [];
+
+function openNexoraAds() {
+  document.getElementById("nexora-ads").style.display = "block";
+}
+
+function closeNexoraAds() {
+  document.getElementById("nexora-ads").style.display = "none";
+}
+
+function openNexoraCategory(category) {
+  document.getElementById("nexoraSubcategories").style.display = "block";
+  document.getElementById("nexoraCategoryTitle").textContent = category;
+
+  const list = document.getElementById("nexoraSubcategoryList");
+  list.innerHTML = "";
+
+  nexoraSubcategories[category].forEach(sub => {
+    const button = document.createElement("button");
+    button.textContent = sub + " →";
+    button.style.cssText = "display:block;width:100%;padding:15px;margin:8px 0;background:white;border:1px solid #ddd;border-radius:12px;text-align:left;font-size:16px;";
+    button.onclick = () => showNexoraAds(category, sub);
+    list.appendChild(button);
+  });
+}
+
+function showNexoraAds(category, sub) {
+  const results = document.getElementById("nexoraAdResults");
+  results.innerHTML = "<h2>" + sub + "</h2>";
+
+  const filtered = nexoraAds.filter(ad =>
+    ad.category === category &&
+    (sub === "Бүх ажлын байр" || ad.subcategory === sub || ad.category === category)
+  );
+
+  if (!filtered.length) {
+    results.innerHTML += "<p>Одоогоор энэ ангилалд зар байхгүй байна.</p>";
+    return;
+  }
+
+  
+   
+filtered.forEach(ad => {
+  const card = document.createElement("div");
+  card.className = "nexora-ad-card";
+
+  card.style.cursor = "pointer";
+
+  card.onclick = () => {
+    openNexoraJobDetail(ad);
+  };
+
+  const title = document.createElement("h3");
+  title.textContent = ad.title;
+
+  const price = document.createElement("p");
+  price.textContent =
+    Number(ad.price || 0).toLocaleString() + " ₮";
+
+  const location = document.createElement("p");
+  location.textContent = "📍 " + ad.location;
+
+  const description = document.createElement("p");
+  description.textContent = ad.description;
+
+  card.append(title, price, location, description);
+
+  results.appendChild(card);
+});
+ 
+
+function searchNexoraAds() {
+  const query = document.getElementById("nexoraSearch").value.toLowerCase();
+  const results = document.getElementById("nexoraAdResults");
+  results.innerHTML = "";
+
+  nexoraAds.filter(ad =>
+    (ad.title + " " + ad.description + " " + ad.category)
+      .toLowerCase().includes(query)
+  ).forEach(ad => {
+    const card = document.createElement("div");
+    card.className = "nexora-ad-card";
+    const title = document.createElement("h3");
+    title.textContent = ad.title;
+    const desc = document.createElement("p");
+    desc.textContent = ad.description;
+    card.append(title, desc);
+    results.appendChild(card);
+  });
+}
+
+function openNexoraPublish() {
+  document.getElementById("nexoraPublishForm").style.display = "block";
+}
+
+function submitNexoraAd() {
+  const title = document.getElementById("newAdTitle").value.trim();
+  const category = document.getElementById("newAdCategory").value;
+  const price = document.getElementById("newAdPrice").value;
+  const location = document.getElementById("newAdLocation").value.trim();
+  const phone = document.getElementById("newAdPhone").value.trim();
+  const description = document.getElementById("newAdDescription").value.trim();
+
+  if (!title || !location || !phone || !description) {
+    alert("Бүх шаардлагатай мэдээллийг бөглөнө үү.");
+    return;
+  }
+
+  nexoraAds.push({
+    title, category, price, location, phone, description,
+    createdAt: new Date().toISOString()
+  });
+
+  alert("Зар түр бүртгэгдлээ. Төлбөр болон баталгаажуулалтын системийг дараагийн хэсэгт холбоно.");
+
+  document.getElementById("nexoraPublishForm").style.display = "none";
+}
+</script>
+
+<!-- =====================================
+ NEXORA - 3-Р ХЭСЭГ
+ АЖЛЫН ЗАРЫН ДЭЛГЭРЭНГҮЙ ХЭСЭГ
+===================================== -->
+
+<section id="nexora-job-detail" style="
+display:none;
+padding:20px;
+background:#f4f6fa;
+min-height:100vh;
+font-family:Arial,sans-serif;
+">
+
+<button onclick="closeNexoraJobDetail()" style="
+background:white;
+border:0;
+padding:12px 18px;
+border-radius:12px;
+font-size:16px;">
+← Буцах
+</button>
+
+<h2 style="color:#243B8A;margin-top:25px;">
+АЖЛЫН БАЙРНЫ МЭДЭЭЛЭЛ
+</h2>
+
+<div style="
+background:white;
+padding:20px;
+border-radius:18px;
+margin-top:20px;">
+
+<h2 id="jobDetailTitle">Ажлын байр</h2>
+
+<p id="jobDetailCompany">🏢 Ажил олгогч</p>
+
+<h2 id="jobDetailSalary" style="color:#087E72;">
+Цалин тохиролцоно
+</h2>
+
+<hr>
+
+<h3>Ажлын нөхцөл</h3>
+
+<p id="jobDetailTime">⏰ Ажлын цаг</p>
+
+<p id="jobDetailType">📋 Ажлын төрөл</p>
+
+<p id="jobDetailLocation">📍 Байршил</p>
+
+<hr>
+
+<h3>Ажлын байрны дэлгэрэнгүй</h3>
+
+<p id="jobDetailDescription"></p>
+
+<hr>
+
+<h3>Ажил олгогчийн мэдээлэл</h3>
+
+<p id="jobDetailEmployer"></p>
+
+<a id="jobDetailPhone" href="tel:" style="
+display:block;
+background:#087E72;
+color:white;
+text-decoration:none;
+padding:15px;
+text-align:center;
+border-radius:12px;
+font-weight:bold;">
+📞 Утас руу залгах
+</a>
+
+</div>
+
+<div style="
+background:white;
+padding:18px;
+border-radius:18px;
+margin-top:18px;">
+
+<h3>📍 Ажлын газрын байршил</h3>
+
+<p id="jobMapAddress">Байршлын мэдээлэл</p>
+
+<div id="nexoraJobMap" style="
+width:100%;
+height:280px;
+border-radius:14px;
+overflow:hidden;
+background:#e2e8f0;
+display:flex;
+align-items:center;
+justify-content:center;">
+
+<p>Газрын зураг ачаалж байна...</p>
+
+</div>
+
+<button onclick="openNexoraJobMap()" style="
+width:100%;
+padding:14px;
+margin-top:12px;
+background:#243B8A;
+color:white;
+border:0;
+border-radius:12px;
+font-size:16px;">
+🗺 Газрын зураг нээх
+</button>
+
+</div>
+
+<button onclick="applyNexoraJob()" style="
+width:100%;
+padding:17px;
+background:#087E72;
+color:white;
+border:0;
+border-radius:14px;
+font-size:17px;
+font-weight:bold;
+margin-top:20px;">
+АЖИЛД ХҮСЭЛТ ИЛГЭЭХ
+</button>
+
+</section>
+
+<script>
+
+let currentNexoraJob = null;
+
+function openNexoraJobDetail(job) {
+
+  currentNexoraJob = job;
+
+  document.getElementById("nexora-ads").style.display = "none";
+
+  const page = document.getElementById("nexora-job-detail");
+  page.style.display = "block";
+
+  document.getElementById("jobDetailTitle").textContent =
+    job.title || "Ажлын байр";
+
+  document.getElementById("jobDetailCompany").textContent =
+    "🏢 " + (job.company || "Байгууллага");
+
+  document.getElementById("jobDetailSalary").textContent =
+    job.salary || "Цалин тохиролцоно";
+
+  document.getElementById("jobDetailTime").textContent =
+    "⏰ " + (job.workTime || "Тохиролцоно");
+
+  document.getElementById("jobDetailType").textContent =
+    "📋 " + (job.workType || "Бүтэн цагийн");
+
+  document.getElementById("jobDetailLocation").textContent =
+    "📍 " + (job.location || "Байршил тодорхойгүй");
+
+  document.getElementById("jobDetailDescription").textContent =
+    job.description || "Дэлгэрэнгүй мэдээлэл байхгүй.";
+
+  document.getElementById("jobDetailEmployer").textContent =
+    job.company || "Ажил олгогч";
+
+  const phone = document.getElementById("jobDetailPhone");
+
+  phone.href = "tel:" + (job.phone || "");
+
+  document.getElementById("jobMapAddress").textContent =
+    job.location || "Байршил оруулаагүй";
+
+  const map = document.getElementById("nexoraJobMap");
+
+  map.innerHTML = "";
+
+  if (job.location) {
+    const iframe = document.createElement("iframe");
+
+    iframe.src =
+      "https://www.google.com/maps?q=" +
+      encodeURIComponent(job.location) +
+      "&output=embed";
+
+    iframe.width = "100%";
+    iframe.height = "280";
+    iframe.style.border = "0";
+    iframe.loading = "lazy";
+    iframe.allowFullscreen = true;
+
+    map.appendChild(iframe);
+  } else {
+    map.textContent = "Ажил олгогч байршил оруулаагүй байна.";
+  }
+}
+
+function closeNexoraJobDetail() {
+
+  document.getElementById("nexora-job-detail").style.display = "none";
+
+  document.getElementById("nexora-ads").style.display = "block";
+
+}
+
+function openNexoraJobMap() {
+
+  if (!currentNexoraJob || !currentNexoraJob.location) {
+    alert("Байршлын мэдээлэл алга байна.");
+    return;
+  }
+
+  const url =
+    "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(currentNexoraJob.location);
+
+  window.open(url, "_blank");
+
+}
+
+function applyNexoraJob() {
+
+  if (!currentNexoraJob) return;
+
+  if (!currentNexoraJob.phone) {
+    alert("Ажил олгогчийн утасны дугаар байхгүй байна.");
+    return;
+  }
+
+  window.location.href =
+    "tel:" + currentNexoraJob.phone;
+
+}
+
+</script>
+
 </body>
 </html>
+
