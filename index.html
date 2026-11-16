@@ -5113,5 +5113,15 @@ async function openMarketAdmin() {
   await loadMarketAdmin();
 
 }
+  
+<function openMarketPlatform() {
+  $("nexoraAdPlatform").classList.add("hidden");
+  $("nexoraMarketPlatform").classList.remove("hidden");
+  openMarketScreen("marketHome");
+  loadMarketProducts();
+  window.scrollTo(0,0);
+}
+  </script>
+</body>
+</html>
 
-</script>
