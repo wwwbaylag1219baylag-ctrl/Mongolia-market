@@ -1884,5 +1884,321 @@ window.openNexoraAdDetail = function(id) {
 
 <!-- NEXORA 3-Р ХЭСЭГ ДУУСАВ -->
 
+<!-- =====================================
+ NEXORA - 4-Р ХЭСЭГ
+ ЗАР НИЙТЛЭХ СИСТЕМ
+ Хар - Алтлаг загвар
+===================================== -->
+
+<style>
+#nx4PublishPage {
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:10010;
+  overflow-y:auto;
+  background:#101010;
+  color:#f5f0e5;
+  padding:22px;
+  font-family:Arial,sans-serif;
+}
+
+.nx4-gold {
+  color:#d6b46a;
+}
+
+.nx4-card {
+  background:#1c1c1c;
+  border:1px solid #554528;
+  border-radius:16px;
+  padding:20px;
+  margin-top:18px;
+}
+
+.nx4-field {
+  display:block;
+  width:100%;
+  padding:15px;
+  margin:12px 0;
+  border:1px solid #554528;
+  border-radius:11px;
+  background:#252525;
+  color:white;
+  font-size:15px;
+}
+
+.nx4-field::placeholder {
+  color:#aaa;
+}
+
+.nx4-button {
+  width:100%;
+  padding:16px;
+  margin-top:15px;
+  border:0;
+  border-radius:12px;
+  background:#d6b46a;
+  color:#17130b;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.nx4-back {
+  background:#292929;
+  color:#d6b46a;
+  border:1px solid #554528;
+  padding:12px 18px;
+  border-radius:10px;
+}
+
+#nx4ImagePreview {
+  display:none;
+  width:100%;
+  max-height:250px;
+  object-fit:contain;
+  margin-top:12px;
+  border-radius:12px;
+}
+</style>
+
+<section id="nx4PublishPage">
+
+  <button class="nx4-back"
+    onclick="nx4ClosePublish()">
+    ← Буцах
+  </button>
+
+  <h2 class="nx4-gold" style="margin-top:25px;">
+    ШИНЭ ЗАР НИЙТЛЭХ
+  </h2>
+
+  <p style="color:#aaa;margin-top:8px;">
+    NEXORA зарын платформ
+  </p>
+
+  <form id="nx4Form">
+
+    <div class="nx4-card">
+
+      <h3 class="nx4-gold">Зарын мэдээлэл</h3>
+
+      <select id="nx4Category"
+        class="nx4-field" required>
+        <option value="">Үндсэн ангилал сонгох</option>
+        <option>Ажлын байр</option>
+        <option>Үл хөдлөх хөрөнгө</option>
+        <option>Автомашин</option>
+        <option>Цахилгаан бараа</option>
+        <option>Хувцас загвар</option>
+        <option>Үйлчилгээ</option>
+        <option>Тавилга</option>
+        <option>Бусад</option>
+      </select>
+
+      <select id="nx4Subcategory"
+        class="nx4-field" required>
+        <option value="">Дэд ангилал сонгох</option>
+      </select>
+
+      <input id="nx4Title"
+        class="nx4-field"
+        placeholder="Зарын гарчиг"
+        required>
+
+      <input id="nx4Price"
+        class="nx4-field"
+        type="number"
+        min="0"
+        placeholder="Үнэ (₮)"
+        required>
+
+      <input id="nx4Location"
+        class="nx4-field"
+        placeholder="Байршил"
+        required>
+
+      <textarea id="nx4Description"
+        class="nx4-field"
+        rows="5"
+        placeholder="Зарын дэлгэрэнгүй мэдээлэл"
+        required></textarea>
+
+    </div>
+
+    <div class="nx4-card">
+
+      <h3 class="nx4-gold">Холбоо барих</h3>
+
+      <input id="nx4Phone"
+        class="nx4-field"
+        type="tel"
+        placeholder="Утасны дугаар"
+        required>
+
+    </div>
+
+    <div class="nx4-card">
+
+      <h3 class="nx4-gold">Зарын зураг</h3>
+
+      <input id="nx4Image"
+        class="nx4-field"
+        type="file"
+        accept="image/*">
+
+      <img id="nx4ImagePreview">
+
+    </div>
+
+    <button type="submit" class="nx4-button">
+      ҮРГЭЛЖЛҮҮЛЭХ
+    </button>
+
+  </form>
+</section>
+
+<script>
+(function(){
+
+  const page = document.getElementById("nx4PublishPage");
+  const form = document.getElementById("nx4Form");
+  const category = document.getElementById("nx4Category");
+  const subcategory = document.getElementById("nx4Subcategory");
+  const image = document.getElementById("nx4Image");
+  const preview = document.getElementById("nx4ImagePreview");
+
+  const subcategories = {
+    "Ажлын байр": [
+      "Оффисын ажил",
+      "Барилга",
+      "Борлуулалт",
+      "Жолооч",
+      "IT",
+      "Цагийн ажил"
+    ],
+    "Үл хөдлөх хөрөнгө": [
+      "Орон сууц",
+      "Газар",
+      "Хашаа байшин",
+      "Оффис",
+      "Түрээс"
+    ],
+    "Автомашин": [
+      "Суудлын машин",
+      "Жийп",
+      "Ачааны машин",
+      "Мотоцикл"
+    ],
+    "Цахилгаан бараа": [
+      "Гар утас",
+      "Компьютер",
+      "Телевизор"
+    ],
+    "Хувцас загвар": [
+      "Эрэгтэй хувцас",
+      "Эмэгтэй хувцас",
+      "Хүүхдийн хувцас",
+      "Гутал"
+    ],
+    "Үйлчилгээ": [
+      "Засвар",
+      "Цэвэрлэгээ",
+      "Сургалт",
+      "Тээвэр"
+    ],
+    "Тавилга": [
+      "Гэрийн тавилга",
+      "Оффисын тавилга"
+    ],
+    "Бусад": [
+      "Бусад зар"
+    ]
+  };
+
+  category.addEventListener("change",function(){
+
+    subcategory.innerHTML =
+      '<option value="">Дэд ангилал сонгох</option>';
+
+    (subcategories[this.value] || []).forEach(function(item){
+
+      const option = document.createElement("option");
+      option.value = item;
+      option.textContent = item;
+
+      subcategory.appendChild(option);
+
+    });
+
+  });
+
+  image.addEventListener("change",function(){
+
+    const file = this.files[0];
+
+    if(!file){
+      preview.style.display = "none";
+      return;
+    }
+
+    if(!file.type.startsWith("image/") ||
+       file.size > 5 * 1024 * 1024){
+
+      alert("5MB-аас бага хэмжээтэй зураг сонгоно уу.");
+      this.value = "";
+      preview.style.display = "none";
+      return;
+    }
+
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = "block";
+
+  });
+
+  window.nx4OpenPublish = function(){
+    page.style.display = "block";
+    window.scrollTo(0,0);
+  };
+
+  window.nx4ClosePublish = function(){
+    page.style.display = "none";
+  };
+
+  form.addEventListener("submit",async function(event){
+
+    event.preventDefault();
+
+    const { data, error } =
+      await window.supabaseClient.auth.getUser();
+
+    if(error || !data.user){
+      alert("Зар нийтлэхийн тулд нэвтэрнэ үү.");
+      return;
+    }
+
+    const ad = {
+      user_id:data.user.id,
+      category:category.value,
+      subcategory:subcategory.value,
+      title:document.getElementById("nx4Title").value.trim(),
+      price:Number(document.getElementById("nx4Price").value),
+      location:document.getElementById("nx4Location").value.trim(),
+      description:document.getElementById("nx4Description").value.trim(),
+      phone:document.getElementById("nx4Phone").value.trim(),
+      status:"pending_payment"
+    };
+
+    alert("Зарын мэдээлэл бэлэн боллоо. Дараагийн хэсэгт Supabase-д хадгалах, төлбөрийн баталгаажуулалттай холбоно.");
+
+    console.log("NEXORA AD:",ad);
+
+  });
+
+})();
+</script>
+
+<!-- NEXORA 4-Р ХЭСЭГ ДУУСАВ -->
+
 </body>
 </html>
