@@ -5,11 +5,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#07150e">
-<title>NEXORA | Монголын нэгдсэн зах зээл</title>
+<title>NEXORA | Монголын нэгдсэн платформ</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-:root{
+:root {
   --bg:#07150e;
   --surface:#10251a;
   --card:#122b1e;
@@ -20,196 +21,608 @@
   --muted:#a3b9a9;
   --danger:#ff6868;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
+
+* {
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html {
+  scroll-behavior:smooth;
+}
+
+body {
   font-family:Arial,sans-serif;
   background:var(--bg);
   color:var(--text);
   min-height:100vh;
+  padding-bottom:75px;
 }
-button,input,textarea,select{font:inherit}
-button{cursor:pointer;border:0}
-.hidden{display:none!important}
 
-header{
-  position:sticky;top:0;z-index:100;
+button,input,textarea,select {
+  font:inherit;
+}
+
+button {
+  cursor:pointer;
+  border:0;
+}
+
+.hidden {
+  display:none!important;
+}
+
+header {
+  position:sticky;
+  top:0;
+  z-index:100;
   background:#091a10f5;
   backdrop-filter:blur(15px);
   border-bottom:1px solid var(--border);
 }
-.topbar{
-  max-width:1250px;margin:auto;padding:12px 16px;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.logo{font-size:25px;font-weight:900;color:var(--green);letter-spacing:2px}
-.logo small{display:block;font-size:9px;color:var(--muted);margin-top:3px}
-.header-actions{display:flex;gap:9px;align-items:center}
-.header-actions button{
-  padding:10px 13px;border-radius:11px;
-  background:var(--surface);color:var(--green2);
-  border:1px solid var(--border);
-}
-.profile-button{width:42px;height:42px;padding:0!important;overflow:hidden}
-.profile-button img{width:100%;height:100%;object-fit:cover}
 
-.container{max-width:1250px;margin:auto;padding:18px}
-.hero{
-  padding:38px 15px;text-align:center;
-  background:radial-gradient(ellipse at top,#174b2b,transparent 70%),#0b1c11;
-  border-bottom:1px solid var(--border);
-}
-.hero h1{font-size:clamp(22px,4vw,36px);margin:12px 0}
-.hero h1 span{color:var(--green)}
-.hero p{color:var(--muted);line-height:1.8}
-.hero-tag{
-  display:inline-block;padding:7px 13px;border-radius:30px;
-  border:1px solid var(--border);color:var(--green2);font-size:12px;
-}
-.section-title{font-size:21px;margin:15px 0}
-.muted{color:var(--muted);line-height:1.7}
-.field{
-  display:block;width:100%;padding:14px;margin:9px 0;
-  border-radius:10px;background:#0d2116;color:white;
-  border:1px solid var(--border);outline:none;
-}
-.field:focus{border-color:var(--green)}
-.field::placeholder{color:#789181}
-textarea.field{min-height:110px;resize:vertical}
-.btn{
-  padding:12px 16px;border-radius:10px;
-  background:var(--surface);color:var(--green2);
-  border:1px solid var(--border);font-weight:bold;
-}
-.btn-primary{background:var(--green);color:#06140b;border-color:var(--green)}
-.btn-danger{background:#602323;color:white;border-color:#a83b3b}
-.btn-block{width:100%;margin-top:10px}
-.panel{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:13px;padding:15px;margin:12px 0;
-}
-.panel p{color:var(--muted);font-size:14px;line-height:1.8;margin-top:7px}
-.empty{text-align:center;padding:30px;color:var(--muted)}
-.status{
-  display:inline-block;padding:5px 10px;border-radius:20px;
-  background:#173b23;color:var(--green2);font-size:11px;margin:8px 0;
-}
-
-/* ҮНДСЭН 7 ТАБ */
-.main-tabs{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:10px;margin:20px 0;
-}
-.main-tab{
-  min-height:105px;padding:14px 7px;
-  display:flex;flex-direction:column;justify-content:center;
-  align-items:center;gap:9px;text-align:center;
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:13px;color:var(--text);font-weight:bold;
-}
-.main-tab span{font-size:30px}
-.main-tab small{font-size:12px}
-.main-tab.active,.main-tab:active{
-  border-color:var(--green);background:#173a23;color:var(--green2);
-}
-
-/* БҮТЭН ДЭЛГЭЦИЙН ДЭЛГЭЦҮҮД */
-.app-screen{
-  min-height:calc(100dvh - 68px);
-  padding:18px max(15px,calc((100vw - 1050px)/2));
-  background:var(--bg);
-}
-.screen-header{
-  display:flex;align-items:center;gap:14px;
-  padding:5px 0 18px;border-bottom:1px solid var(--border);
-  margin-bottom:18px;
-}
-.back-arrow{
-  background:transparent;color:var(--green2);
-  font-size:30px;line-height:1;padding:3px 8px;
-}
-.screen-header h2{font-size:20px}
-.screen-content{width:100%;max-width:1050px;margin:auto}
-
-/* ДЭД АНГИЛАЛ */
-.category-list{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+.topbar {
+  max-width:1250px;
+  margin:auto;
+  padding:12px 18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
   gap:12px;
 }
-.category-option{
-  width:100%;min-height:76px;padding:17px;
-  display:flex;align-items:center;justify-content:space-between;
-  text-align:left;background:var(--surface);
-  border:1px solid var(--border);border-radius:12px;
-  color:var(--text);font-weight:bold;
-}
-.category-option:active{border-color:var(--green)}
-.category-option span{color:var(--green);font-size:20px}
 
-/* ЗАРЫН ЖАГСААЛТ */
-.ad-list{display:grid;grid-template-columns:1fr;gap:12px}
-.ad-card{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:13px;padding:15px;cursor:pointer;
-}
-.ad-card h3{font-size:17px;line-height:1.5}
-.ad-card p{color:var(--muted);font-size:13px;line-height:1.8;margin-top:6px}
-.ad-card .price{color:var(--green);font-weight:bold;font-size:18px;margin-top:9px}
-.ad-thumb{
-  width:100%;max-height:220px;object-fit:cover;
-  border-radius:10px;margin-bottom:10px;
+.logo {
+  color:var(--green);
+  font-size:27px;
+  font-weight:900;
+  letter-spacing:2px;
 }
 
-/* ДЭЛГЭРЭНГҮЙ */
-.detail-image{
-  width:100%;max-height:380px;object-fit:contain;
-  border-radius:13px;background:#0d2116;margin-bottom:15px;
+.logo small {
+  display:block;
+  color:var(--muted);
+  font-size:9px;
+  letter-spacing:2px;
+  margin-top:3px;
 }
-.detail-row{
-  padding:13px 0;border-bottom:1px solid var(--border);
-}
-.detail-row strong{display:block;color:var(--green2);margin-bottom:6px}
-.detail-row p{white-space:pre-wrap;line-height:1.7;color:var(--text)}
-.map-frame{
-  width:100%;height:300px;border:0;border-radius:12px;
-  background:var(--surface);margin-top:12px;
-}
-.map-link{display:inline-block;color:var(--green2);margin-top:10px}
 
-/* ЗАР НИЙТЛЭХ */
-.form-section{margin-bottom:18px}
-.form-section h3{color:var(--green2);margin-bottom:8px}
-.required{color:var(--danger)}
-.form-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
-
-/* БУСАД */
-.tab-content{min-height:300px}
-footer{
-  text-align:center;padding:25px 12px;
-  color:var(--muted);border-top:1px solid var(--border);
+.header-actions {
+  display:flex;
+  align-items:center;
+  gap:9px;
 }
-footer strong{font-size:24px;color:var(--green)}
 
-@media(min-width:750px){
-  .main-tabs{grid-template-columns:repeat(7,1fr)}
-  .ad-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+.header-btn {
+  padding:10px 13px;
+  border-radius:11px;
+  color:var(--green2);
+  background:var(--surface);
+  border:1px solid var(--border);
 }
-@media(max-width:600px){
-  .container{padding:12px}
-  .topbar{padding:9px 12px}
-  .logo{font-size:22px}
-  .hero{padding:28px 12px}
-  .main-tabs{grid-template-columns:repeat(2,1fr);gap:8px}
-  .main-tab{min-height:90px}
-  .category-list{grid-template-columns:1fr}
-  .app-screen{padding:12px}
-  .screen-header h2{font-size:18px}
-  .form-actions{grid-template-columns:1fr}
+
+.profile-button {
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  border:1px solid var(--green);
+  background:var(--surface);
+  color:white;
+  overflow:hidden;
+  font-size:20px;
+}
+
+.profile-button img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.container {
+  width:100%;
+  max-width:1250px;
+  margin:auto;
+  padding:18px;
+}
+
+.hero {
+  padding:45px 15px;
+  text-align:center;
+  background:
+    radial-gradient(ellipse at top,#174b2b 0%,transparent 65%),
+    linear-gradient(135deg,#0c2616,#07150e);
+  border-bottom:1px solid var(--border);
+}
+
+.hero h1 {
+  font-size:clamp(25px,5vw,40px);
+  line-height:1.3;
+  margin-bottom:12px;
+}
+
+.hero h1 span {
+  color:var(--green);
+}
+
+.hero p {
+  color:var(--muted);
+  line-height:1.8;
+}
+
+.hero-tag {
+  display:inline-block;
+  padding:7px 14px;
+  margin-bottom:15px;
+  border-radius:30px;
+  border:1px solid var(--border);
+  background:#102b1b;
+  color:var(--green2);
+  font-size:12px;
+}
+
+.section-title {
+  font-size:21px;
+  margin:20px 0 15px;
+}
+
+.field {
+  width:100%;
+  padding:14px;
+  margin:7px 0;
+  background:#0d2116;
+  color:white;
+  border:1px solid var(--border);
+  border-radius:10px;
+  outline:none;
+}
+
+.field:focus {
+  border-color:var(--green);
+}
+
+.field::placeholder {
+  color:#789181;
+}
+
+textarea.field {
+  min-height:110px;
+  resize:vertical;
+}
+
+.btn {
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  gap:7px;
+  padding:12px 16px;
+  border-radius:10px;
+  background:var(--surface);
+  color:var(--green2);
+  border:1px solid var(--border);
+  font-weight:bold;
+}
+
+.btn-primary {
+  background:var(--green);
+  color:#06140b;
+  border-color:var(--green);
+}
+
+.btn-danger {
+  background:#602323;
+  color:white;
+  border-color:#a83b3b;
+}
+
+.btn-block {
+  width:100%;
+}
+
+.panel {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:15px;
+  margin:12px 0;
+}
+
+.panel p {
+  color:var(--muted);
+  line-height:1.8;
+  font-size:13px;
+  margin:7px 0;
+}
+
+.empty {
+  text-align:center;
+  padding:35px 15px;
+  color:var(--muted);
+}
+
+.status {
+  display:inline-block;
+  padding:5px 10px;
+  border-radius:20px;
+  background:#173b23;
+  color:var(--green2);
+  font-size:11px;
+  margin:8px 0;
+}
+
+.search-box {
+  display:flex;
+  gap:9px;
+  margin:15px 0;
+}
+
+.search-box .field {
+  margin:0;
+}
+
+.categories {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+}
+
+.category {
+  min-height:90px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+  padding:13px 7px;
+  text-align:center;
+  background:var(--surface);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:13px;
+  font-size:13px;
+}
+
+.category span {
+  font-size:27px;
+}
+
+.category.active,
+.category:hover {
+  border-color:var(--green);
+  background:#173a23;
+  color:var(--green2);
+}
+
+.ad-grid,.products {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:13px;
+}
+
+.ad-card,.product {
+  min-width:0;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:13px;
+}
+
+.ad-card h3,.product h3 {
+  font-size:15px;
+  line-height:1.5;
+  overflow-wrap:anywhere;
+}
+
+.ad-card p,.product p {
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.7;
+  margin:7px 0;
+}
+
+.price {
+  font-size:18px;
+  font-weight:bold;
+  color:var(--green);
+  margin:12px 0;
+}
+
+.product-image {
+  height:155px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  background:#0a1c11;
+  border-radius:10px;
+  margin-bottom:12px;
+  font-size:45px;
+}
+
+.product-image img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.ad-image {
+  width:100%;
+  max-height:230px;
+  object-fit:cover;
+  border-radius:11px;
+  margin-bottom:12px;
+}
+
+.screen {
+  min-height:75vh;
+}
+
+.screen-header {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 0 18px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:15px;
+}
+
+.back-arrow {
+  width:35px;
+  height:35px;
+  flex-shrink:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:transparent;
+  color:var(--green2);
+  font-size:27px;
+  font-weight:normal;
+  border:0;
+}
+
+.screen-header h2 {
+  font-size:19px;
+}
+
+.screen-list {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+
+.screen-option {
+  min-height:75px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:17px;
+  background:var(--surface);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:12px;
+  text-align:left;
+}
+
+.screen-option:hover {
+  border-color:var(--green);
+  color:var(--green2);
+}
+
+.detail-panel {
+  background:var(--card);
+  padding:17px;
+  border:1px solid var(--border);
+  border-radius:13px;
+  margin:12px 0;
+}
+
+.detail-panel h3 {
+  margin-bottom:9px;
+  color:var(--green2);
+}
+
+.detail-panel p {
+  line-height:1.8;
+  color:var(--text);
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+
+.map-frame {
+  width:100%;
+  height:300px;
+  border:0;
+  border-radius:12px;
+  margin-top:12px;
+}
+
+.main-tabs {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+  margin:20px 0;
+}
+
+.main-tab {
+  padding:14px 5px;
+  border-radius:11px;
+  background:var(--surface);
+  color:var(--muted);
+  border:1px solid var(--border);
+  font-size:12px;
+  font-weight:bold;
+}
+
+.main-tab.active {
+  background:#183b23;
+  color:var(--green);
+  border-color:var(--green);
+}
+
+.platform-switch {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin:20px 0;
+}
+
+.platform-button {
+  padding:17px 8px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  color:var(--green2);
+  border-radius:13px;
+  font-weight:bold;
+  font-size:14px;
+}
+
+.platform-button.active {
+  background:#183b23;
+  border-color:var(--green);
+  color:var(--green);
+}
+
+.tab-content {
+  min-height:250px;
+}
+
+footer {
+  text-align:center;
+  padding:30px 15px;
+  margin-top:35px;
+  background:#091a10;
+  border-top:1px solid var(--border);
+  color:var(--muted);
+  line-height:2;
+}
+
+footer strong {
+  color:var(--green);
+  font-size:25px;
+}
+
+.mobile-nav {
+  position:fixed;
+  z-index:200;
+  bottom:0;
+  left:0;
+  right:0;
+  display:none;
+  justify-content:space-around;
+  background:#091a10f5;
+  border-top:1px solid var(--border);
+  backdrop-filter:blur(15px);
+  padding:8px 2px;
+}
+
+.mobile-nav button {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  padding:4px;
+  color:var(--green2);
+  background:transparent;
+  font-size:19px;
+}
+
+.mobile-nav small {
+  color:var(--muted);
+  font-size:10px;
+}
+
+.form-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.form-grid .field {
+  min-width:0;
+}
+
+.checkbox-row {
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin:10px 0;
+  color:var(--muted);
+}
+
+@media(max-width:700px) {
+  body {
+    padding-bottom:72px;
+  }
+
+  .container {
+    padding:12px;
+  }
+
+  .topbar {
+    padding:9px 11px;
+  }
+
+  .logo {
+    font-size:22px;
+  }
+
+  .hero {
+    padding:32px 12px;
+  }
+
+  .ad-grid,.products {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:9px;
+  }
+
+  .product,.ad-card {
+    padding:9px;
+  }
+
+  .product-image {
+    height:120px;
+  }
+
+  .main-tabs {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:7px;
+  }
+
+  .main-tab {
+    padding:13px 3px;
+    font-size:11px;
+  }
+
+  .categories {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .screen-list {
+    grid-template-columns:1fr;
+  }
+
+  .search-box {
+    flex-wrap:wrap;
+  }
+
+  .search-box button {
+    width:100%;
+  }
+
+  .form-grid {
+    grid-template-columns:1fr;
+    gap:0;
+  }
+
+  .mobile-nav {
+    display:flex;
+  }
 }
 </style>
 </head>
 
 <body>
+
+<!-- HEADER -->
 
 <header>
   <div class="topbar">
@@ -217,145 +630,208 @@ footer strong{font-size:24px;color:var(--green)}
       NEXORA
       <small>NEXT GENERATION MARKETPLACE</small>
     </div>
+
     <div class="header-actions">
-      <button onclick="openAccount()">👤 <span id="headerUser">Нэвтрэх</span></button>
+      <button class="header-btn" onclick="openCart()">
+        🛒 <span id="cartCount">0</span>
+      </button>
+
+      <button class="profile-button" onclick="openAccount()">
+        <img id="headerProfileImage" class="hidden" alt="Профайл">
+        <span id="headerProfileDefault">👤</span>
+      </button>
     </div>
   </div>
 </header>
 
-<section class="hero" id="hero">
+<!-- HERO -->
+
+<section class="hero" id="heroSection">
   <div class="hero-tag">🇲🇳 MONGOLIAN MARKETPLACE</div>
-  <h1>Худалдааны шинэ эрин <span>NEXORA</span></h1>
-  <p>Үл хөдлөх • Автомашин • Ажлын зар • Үйлчилгээ</p>
-  <p>Монголын нэгдсэн цахим зах зээл</p>
+  <h1>Монголын нэгдсэн <span>NEXORA</span></h1>
+  <p>Зар мэдээлэл • Худалдаа • Үйлчилгээ</p>
+  <p>Нэг сайт. Хоёр тусдаа платформ.</p>
 </section>
 
-<main class="container" id="mainPage">
+<main class="container" id="mainContainer">
 
-  <input class="field" id="globalSearch"
-    placeholder="🔍 Бүх зар дундаас хайх..."
-    onkeydown="if(event.key==='Enter')searchAll()">
-  <button class="btn btn-primary btn-block" onclick="searchAll()">ХАЙХ</button>
+  <!-- ПЛАТФОРМ СОНГОХ -->
 
-  <h2 class="section-title">Үндсэн ангиллууд</h2>
-  <div class="main-tabs" id="mainTabs">
+  <section id="platformHome">
+    <div class="platform-switch">
+      <button class="platform-button active"
+        id="classifiedPlatformButton"
+        onclick="openPlatform('classified')">
+        📢 ЗАРЫН ПЛАТФОРМ
+      </button>
 
-    <button class="main-tab" onclick="openAdCategory('Үл хөдлөх')">
-      <span>🏠</span><small>Үл хөдлөх</small>
-    </button>
-
-    <button class="main-tab" onclick="openAdCategory('Автомашин')">
-      <span>🚗</span><small>Автомашин</small>
-    </button>
-
-    <button class="main-tab" onclick="openAdCategory('Ажлын зар')">
-      <span>💼</span><small>Ажлын зар</small>
-    </button>
-
-    <button class="main-tab" onclick="openAdCategory('Сэлбэг, хэрэгсэл')">
-      <span>⚙️</span><small>Сэлбэг, хэрэгсэл</small>
-    </button>
-
-    <button class="main-tab" onclick="openAdCategory('Үйлчилгээ')">
-      <span>🛠️</span><small>Үйлчилгээ</small>
-    </button>
-
-    <button class="main-tab" onclick="openAdCategory('Нийтийн байр, түрээс')">
-      <span>🏢</span><small>Нийтийн байр, түрээс</small>
-    </button>
-
-    <button class="main-tab" onclick="openAdCategory('Бусад')">
-      <span>📦</span><small>Бусад</small>
-    </button>
-
-  </div>
-
-  <button class="btn btn-primary btn-block" onclick="openNewAd()">
-    ＋ ЗАР НИЙТЛЭХ
-  </button>
-
-  <h2 class="section-title">🔥 Шинэ зарууд</h2>
-  <div id="homeAdList" class="ad-list">
-    <p class="empty">Заруудыг ачаалж байна...</p>
-  </div>
-</main>
-
-<!-- АНГИЛАЛ СОНГОХ ДЭЛГЭЦ -->
-<section id="categoryScreen" class="app-screen hidden">
-  <div class="screen-header">
-    <button class="back-arrow" onclick="goHome()">←</button>
-    <h2 id="categoryScreenTitle">Ангилал</h2>
-  </div>
-  <div class="screen-content">
-    <p class="muted" id="categoryDescription">Дэд ангиллаа сонгоно уу.</p>
-    <div id="subcategoryList" class="category-list"></div>
-  </div>
-</section>
-
-<!-- АЖЛЫН ЗАРЫН САЛБАР -->
-<section id="industryScreen" class="app-screen hidden">
-  <div class="screen-header">
-    <button class="back-arrow" onclick="goBack()">←</button>
-    <h2>Салбар сонгох</h2>
-  </div>
-  <div class="screen-content">
-    <p class="muted">Ажил хайж буй салбараа сонгоно уу.</p>
-    <div id="industryList" class="category-list"></div>
-  </div>
-</section>
-
-<!-- АЖЛЫН ЗАРЫН МЭРГЭЖИЛ -->
-<section id="professionScreen" class="app-screen hidden">
-  <div class="screen-header">
-    <button class="back-arrow" onclick="goBack()">←</button>
-    <h2 id="professionScreenTitle">Мэргэжил сонгох</h2>
-  </div>
-  <div class="screen-content">
-    <p class="muted">Өөрийн мэргэжлийг сонгоно уу.</p>
-    <div id="professionList" class="category-list"></div>
-  </div>
-</section>
-
-<!-- ЗАРЫН ЖАГСААЛТ -->
-<section id="resultsScreen" class="app-screen hidden">
-  <div class="screen-header">
-    <button class="back-arrow" onclick="goBack()">←</button>
-    <h2 id="resultsTitle">Зарын жагсаалт</h2>
-  </div>
-  <div class="screen-content">
-    <input class="field" id="listSearch"
-      placeholder="Энэ ангиллаас хайх..."
-      oninput="filterVisibleAds()">
-    <div id="classifiedList" class="ad-list">
-      <p class="empty">Заруудыг ачаалж байна...</p>
+      <button class="platform-button"
+        id="marketPlatformButton"
+        onclick="openPlatform('market')">
+        🛍️ ХУДАЛДААНЫ ПЛАТФОРМ
+      </button>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ЗАРЫН ДЭЛГЭРЭНГҮЙ -->
-<section id="detailsScreen" class="app-screen hidden">
-  <div class="screen-header">
-    <button class="back-arrow" onclick="goBack()">←</button>
-    <h2>Зарын дэлгэрэнгүй</h2>
-  </div>
-  <div class="screen-content" id="detailsContent"></div>
-</section>
+  <!-- ==================================
+       ЗАРЫН ПЛАТФОРМ
+  =================================== -->
 
-<!-- ЗАР НИЙТЛЭХ -->
-<section id="publishScreen" class="app-screen hidden">
-  <div class="screen-header">
-    <button class="back-arrow" onclick="goBack()">←</button>
-    <h2>Зар нийтлэх</h2>
-  </div>
+  <section id="classifiedPlatform">
 
-  <div class="screen-content">
-    <form id="adForm" onsubmit="event.preventDefault();publishAd();">
+    <!-- ЗАРЫН ҮНДСЭН 7 ТАБ -->
 
-      <div class="form-section">
-        <h3>1. Үндсэн мэдээлэл</h3>
+    <nav class="main-tabs" id="classifiedTabs">
 
-        <label>Үндсэн ангилал <span class="required">*</span></label>
-        <select class="field" id="adCategory" required>
+      <button class="main-tab active"
+        onclick="openAdCategory('Үл хөдлөх')">
+        🏠 Үл хөдлөх
+      </button>
+
+      <button class="main-tab"
+        onclick="openAdCategory('Автомашин')">
+        🚗 Автомашин
+      </button>
+
+      <button class="main-tab"
+        onclick="openAdCategory('Ажлын зар')">
+        💼 Ажлын зар
+      </button>
+
+      <button class="main-tab"
+        onclick="openAdCategory('Сэлбэг, хэрэгсэл')">
+        ⚙️ Сэлбэг
+      </button>
+
+      <button class="main-tab"
+        onclick="openAdCategory('Үйлчилгээ')">
+        🛠️ Үйлчилгээ
+      </button>
+
+      <button class="main-tab"
+        onclick="openAdCategory('Нийтийн байр, түрээс')">
+        🏢 Байр, түрээс
+      </button>
+
+      <button class="main-tab"
+        onclick="openAdCategory('Бусад')">
+        📦 Бусад
+      </button>
+
+      <button class="main-tab"
+        onclick="openNewAd()">
+        ＋ Зар нийтлэх
+      </button>
+
+    </nav>
+
+    <!-- ЗАРЫН НҮҮР -->
+
+    <section id="adHome" class="screen">
+
+      <h2 class="section-title">📢 Зар мэдээлэл</h2>
+
+      <div class="search-box">
+        <input class="field"
+          id="adSearchInput"
+          placeholder="Зар, байршил, мэргэжил хайх..."
+          onkeydown="if(event.key==='Enter')searchClassifiedAds()">
+
+        <button class="btn btn-primary"
+          onclick="searchClassifiedAds()">Хайх</button>
+      </div>
+
+      <div id="classifiedHomeList" class="ad-grid">
+        <p class="empty">Заруудыг ачаалж байна...</p>
+      </div>
+
+    </section>
+
+    <!-- ДЭД АНГИЛАЛ -->
+
+    <section id="adSubcategories" class="screen hidden">
+
+      <div class="screen-header">
+        <button class="back-arrow" onclick="adGoBack()">‹</button>
+        <h2 id="subcategoryTitle">Ангилал</h2>
+      </div>
+
+      <div id="subcategoryList" class="screen-list"></div>
+
+    </section>
+
+    <!-- АЖЛЫН САЛБАР -->
+
+    <section id="adIndustries" class="screen hidden">
+
+      <div class="screen-header">
+        <button class="back-arrow" onclick="adGoBack()">‹</button>
+        <h2>Салбар сонгох</h2>
+      </div>
+
+      <div id="industryList" class="screen-list"></div>
+
+    </section>
+
+    <!-- АЖЛЫН МЭРГЭЖИЛ -->
+
+    <section id="adProfessions" class="screen hidden">
+
+      <div class="screen-header">
+        <button class="back-arrow" onclick="adGoBack()">‹</button>
+        <h2 id="professionTitle">Мэргэжил сонгох</h2>
+      </div>
+
+      <div id="professionList" class="screen-list"></div>
+
+    </section>
+
+    <!-- ЗАРЫН ЖАГСААЛТ -->
+
+    <section id="adResults" class="screen hidden">
+
+      <div class="screen-header">
+        <button class="back-arrow" onclick="adGoBack()">‹</button>
+        <h2 id="resultsTitle">Зарууд</h2>
+      </div>
+
+      <div class="search-box">
+        <input class="field"
+          id="resultSearchInput"
+          placeholder="Энэ ангиллаас хайх..."
+          oninput="filterVisibleClassifiedResults()">
+      </div>
+
+      <div id="classifiedList" class="ad-grid"></div>
+
+    </section>
+
+    <!-- ЗАРЫН ДЭЛГЭРЭНГҮЙ -->
+
+    <section id="adDetails" class="screen hidden">
+
+      <div class="screen-header">
+        <button class="back-arrow" onclick="adGoBack()">‹</button>
+        <h2>Зарын дэлгэрэнгүй</h2>
+      </div>
+
+      <div id="adDetailsContent"></div>
+
+    </section>
+
+    <!-- ЗАР НИЙТЛЭХ -->
+
+    <section id="adPublishScreen" class="screen hidden">
+
+      <div class="screen-header">
+        <button class="back-arrow" onclick="adGoBack()">‹</button>
+        <h2>＋ Шинэ зар нийтлэх</h2>
+      </div>
+
+      <div class="panel">
+
+        <label>Үндсэн ангилал</label>
+        <select class="field" id="adCategory">
           <option value="">Ангилал сонгох</option>
           <option>Үл хөдлөх</option>
           <option>Автомашин</option>
@@ -371,106 +847,308 @@ footer strong{font-size:24px;color:var(--green)}
           <option value="">Дэд ангилал сонгох</option>
         </select>
 
-        <div id="jobFields" class="hidden">
-          <label>Салбар <span class="required">*</span></label>
+        <div id="jobPublishFields" class="hidden">
+
+          <label>Салбар</label>
           <select class="field" id="adIndustry">
             <option value="">Салбар сонгох</option>
           </select>
 
-          <label>Мэргэжил <span class="required">*</span></label>
+          <label>Мэргэжил</label>
           <select class="field" id="adProfession">
             <option value="">Мэргэжил сонгох</option>
           </select>
+
         </div>
 
-        <label>Зарын гарчиг <span class="required">*</span></label>
-        <input class="field" id="adTitle" maxlength="150"
-          placeholder="Зарын гарчиг" required>
+        <label>Зарын гарчиг</label>
+        <input class="field" id="adTitle"
+          placeholder="Зарын нэр">
 
-        <label>Дэлгэрэнгүй тайлбар <span class="required">*</span></label>
+        <label>Дэлгэрэнгүй мэдээлэл</label>
         <textarea class="field" id="adDescription"
-          placeholder="Зарын дэлгэрэнгүй мэдээлэл..." required></textarea>
+          placeholder="Зарын дэлгэрэнгүй тайлбар"></textarea>
 
-        <label>Үнэ / Цалин (₮)</label>
-        <input class="field" id="adPrice" type="number"
-          min="0" placeholder="Үнээ оруулна уу">
-      </div>
+        <label>Үнэ / Цалин</label>
+        <input class="field" id="adPrice"
+          type="number" min="0" placeholder="Үнэ төгрөгөөр">
 
-      <div class="form-section">
-        <h3>2. Холбоо барих мэдээлэл</h3>
+        <label>Утасны дугаар</label>
+        <input class="field" id="adPhone"
+          type="tel" placeholder="Утас">
 
-        <label>Зарын эзний төрөл <span class="required">*</span></label>
-        <select class="field" id="adEmployerType" required>
-          <option value="">Сонгох</option>
-          <option value="Хувь хүн">Хувь хүн</option>
-          <option value="Байгууллага">Байгууллага</option>
+        <label>Байгууллага / Хувь хүн</label>
+        <select class="field" id="adEmployerType">
+          <option value="">Төрөл сонгох</option>
+          <option value="individual">Хувь хүн</option>
+          <option value="company">Байгууллага</option>
         </select>
 
         <input class="field" id="adEmployerName"
           placeholder="Нэр / Байгууллагын нэр">
 
-        <label>Утасны дугаар <span class="required">*</span></label>
-        <input class="field" id="adPhone" type="tel"
-          placeholder="Утасны дугаар" required>
-
-        <label>Хаяг, байршил <span class="required">*</span></label>
+        <label>Хаяг, байршил</label>
         <input class="field" id="adAddress"
-          placeholder="Жишээ: Улаанбаатар, Хан-Уул дүүрэг" required>
+          placeholder="Хот, дүүрэг, хороо, дэлгэрэнгүй хаяг">
 
+        <label>Ажлын байршил / Объектын байршил</label>
         <input class="field" id="adWorkLocation"
-          placeholder="Ажлын байршил / Нэмэлт хаяг">
-      </div>
-
-      <div class="form-section">
-        <h3>3. Нэмэлт мэдээлэл</h3>
+          placeholder="Байршлын нэмэлт мэдээлэл">
 
         <label>Тавигдах шаардлага</label>
         <textarea class="field" id="adRequirements"
-          placeholder="Нэмэлт нөхцөл, шаардлага..."></textarea>
+          placeholder="Шаардлага, нөхцөл"></textarea>
 
         <label>Зураг оруулах</label>
-        <input class="field" id="adImage" type="file" accept="image/*">
+        <input class="field" id="adImage"
+          type="file" accept="image/*">
 
-        <label>Өргөрөг (Latitude)</label>
-        <input class="field" id="adLatitude" type="number"
-          step="any" placeholder="47.918873">
+        <div class="form-grid">
+          <input class="field" id="adLatitude"
+            type="number" step="any" placeholder="Өргөрөг">
 
-        <label>Уртраг (Longitude)</label>
-        <input class="field" id="adLongitude" type="number"
-          step="any" placeholder="106.917701">
+          <input class="field" id="adLongitude"
+            type="number" step="any" placeholder="Уртраг">
+        </div>
 
-        <button type="button" class="btn btn-block"
+        <button class="btn btn-block"
           onclick="useCurrentAdLocation()">
-          📍 Миний одоогийн байршлыг авах
+          📍 Миний байршлыг авах
         </button>
-        <p class="muted">
-          Байршлын зөвшөөрөл өгвөл таны зар газрын зураг дээр тэмдэглэгдэнэ.
-        </p>
+
+        <button class="btn btn-primary btn-block"
+          id="publishAdButton"
+          onclick="publishAd()">
+          ЗАР НИЙТЛЭХ
+        </button>
+
+      </div>
+    </section>
+
+  </section>
+
+  <!-- ==================================
+       ХУДАЛДААНЫ ПЛАТФОРМ
+  =================================== -->
+
+  <section id="marketPlatform" class="hidden">
+
+    <nav class="main-tabs" id="marketTabs">
+
+      <button class="main-tab active"
+        onclick="showMarketScreen('marketHome',this)">
+        🛍️ Худалдаа
+      </button>
+
+      <button class="main-tab"
+        onclick="showMarketScreen('marketCategories',this)">
+        📂 Ангилал
+      </button>
+
+      <button class="main-tab"
+        onclick="showMarketScreen('supplierScreen',this)">
+        🏪 Нийлүүлэгч
+      </button>
+
+      <button class="main-tab"
+        onclick="openCart()">
+        🛒 Миний сагс
+      </button>
+
+    </nav>
+
+    <!-- ХУДАЛДААНЫ НҮҮР -->
+
+    <section id="marketHome" class="screen">
+
+      <h2 class="section-title">🛍️ NEXORA худалдаа</h2>
+
+      <p style="color:var(--muted);line-height:1.8">
+        Бараа бүтээгдэхүүн хайх, худалдан авах, нийлүүлэгчтэй холбогдох
+        худалдааны тусдаа платформ.
+      </p>
+
+      <div class="search-box">
+        <input class="field" id="productSearch"
+          placeholder="Барааны нэр хайх..."
+          oninput="searchProducts()">
+
+        <button class="btn btn-primary"
+          onclick="searchProducts()">Хайх</button>
       </div>
 
-      <div class="form-actions">
-        <button type="button" class="btn"
-          onclick="goBack()">Буцах</button>
-        <button type="submit" class="btn btn-primary"
-          id="publishAdButton">ЗАР НИЙТЛЭХ</button>
+      <h3 class="section-title">🔥 Шинэ бараанууд</h3>
+
+      <div id="productList" class="products">
+        <p class="empty">Бараа ачаалж байна...</p>
       </div>
 
-    </form>
-  </div>
-</section>
+    </section>
 
-<!-- ХЭРЭГЛЭГЧИЙН БУЛАН -->
-<section id="accountScreen" class="app-screen hidden">
-  <div class="screen-header">
-    <button class="back-arrow" onclick="goBack()">←</button>
-    <h2>Миний булан</h2>
-  </div>
+    <!-- ХУДАЛДААНЫ АНГИЛАЛ -->
 
-  <div class="screen-content">
+    <section id="marketCategories" class="screen hidden">
 
-    <div class="panel">
-      <h3>Нэвтрэх / Бүртгүүлэх</h3>
-      <p id="loggedInEmail">Та нэвтрээгүй байна.</p>
+      <div class="screen-header">
+        <button class="back-arrow"
+          onclick="showMarketScreen('marketHome')">‹</button>
+        <h2>Худалдааны ангилал</h2>
+      </div>
+
+      <div id="productCategories" class="categories"></div>
+
+      <div id="categoryProducts" class="products"></div>
+
+    </section>
+
+    <!-- БАРААНЫ ДЭЛГЭРЭНГҮЙ -->
+
+    <section id="productDetailsScreen" class="screen hidden">
+
+      <div class="screen-header">
+        <button class="back-arrow"
+          onclick="showMarketScreen('marketHome')">‹</button>
+        <h2>Барааны мэдээлэл</h2>
+      </div>
+
+      <div id="productDetailsContent"></div>
+
+    </section>
+
+    <!-- БАРАА НИЙТЛЭХ -->
+
+    <section id="productPublishScreen" class="screen hidden">
+
+      <div class="screen-header">
+        <button class="back-arrow"
+          onclick="showMarketScreen('marketHome')">‹</button>
+        <h2>Бараа нийтлэх</h2>
+      </div>
+
+      <div class="panel">
+
+        <input class="field" id="productTitle"
+          placeholder="Барааны нэр">
+
+        <select class="field" id="productCategory">
+          <option value="">Ангилал сонгох</option>
+          <option>Электрон бараа</option>
+          <option>Гар утас, компьютер</option>
+          <option>Хувцас</option>
+          <option>Гутал</option>
+          <option>Гэр ахуй</option>
+          <option>Автомашин</option>
+          <option>Хүүхдийн бараа</option>
+          <option>Гоо сайхан</option>
+          <option>Багаж хэрэгсэл</option>
+          <option>Хүнс</option>
+          <option>Бусад</option>
+        </select>
+
+        <input class="field" id="productPrice"
+          type="number" min="1" placeholder="Үнэ ₮">
+
+        <textarea class="field" id="productDescription"
+          placeholder="Барааны тайлбар"></textarea>
+
+        <input class="field" id="productPhone"
+          type="tel" placeholder="Утас">
+
+        <input class="field" id="productAddress"
+          placeholder="Барааны байршил">
+
+        <input class="field" id="productImage"
+          type="file" accept="image/*">
+
+        <button class="btn btn-primary btn-block"
+          onclick="publishProduct()">БАРАА НИЙТЛЭХ</button>
+
+      </div>
+
+    </section>
+
+    <!-- САГС -->
+
+    <section id="cartScreen" class="screen hidden">
+
+      <div class="screen-header">
+        <button class="back-arrow"
+          onclick="showMarketScreen('marketHome')">‹</button>
+        <h2>🛒 Миний сагс</h2>
+      </div>
+
+      <div id="cartItems"></div>
+
+      <div class="panel">
+        <h3>Нийт дүн</h3>
+        <h2 class="price" id="cartTotal">0₮</h2>
+
+        <button class="btn btn-primary btn-block"
+          onclick="checkoutCart()">ЗАХИАЛГА ҮРГЭЛЖЛҮҮЛЭХ</button>
+      </div>
+
+    </section>
+
+    <!-- НИЙЛҮҮЛЭГЧИЙН БҮРТГЭЛ -->
+
+    <section id="supplierScreen" class="screen hidden">
+
+      <div class="screen-header">
+        <button class="back-arrow"
+          onclick="showMarketScreen('marketHome')">‹</button>
+        <h2>🏪 Нийлүүлэгчийн бүртгэл</h2>
+      </div>
+
+      <div class="panel">
+
+        <select class="field" id="supplierType">
+          <option value="">Бүртгэлийн төрөл</option>
+          <option value="individual">Хувь хүн</option>
+          <option value="company">Байгууллага</option>
+        </select>
+
+        <input class="field" id="supplierName"
+          placeholder="Нэр / Байгууллагын нэр">
+
+        <input class="field" id="supplierRegisterNo"
+          placeholder="Регистр / Байгууллагын дугаар">
+
+        <input class="field" id="supplierPhone"
+          placeholder="Утасны дугаар">
+
+        <input class="field" id="supplierEmail"
+          type="email" placeholder="И-мэйл">
+
+        <input class="field" id="supplierAddress"
+          placeholder="Хаяг, байршил">
+
+        <textarea class="field" id="supplierDescription"
+          placeholder="Борлуулах бараа, үйл ажиллагааны мэдээлэл"></textarea>
+
+        <button class="btn btn-primary btn-block"
+          onclick="registerSupplier()">БҮРТГҮҮЛЭХ</button>
+
+      </div>
+
+    </section>
+
+  </section>
+
+  <!-- ==================================
+       НЭВТРЭХ / ПРОФАЙЛ
+  =================================== -->
+
+  <section id="accountScreen" class="screen hidden">
+
+    <div class="screen-header">
+      <button class="back-arrow" onclick="goBackMain()">‹</button>
+      <h2>👤 Миний булан</h2>
+    </div>
+
+    <p id="loggedInEmail"></p>
+
+    <details class="panel">
+      <summary>🔐 Нэвтрэх / Бүртгүүлэх</summary>
 
       <input class="field" id="loginEmail"
         type="email" placeholder="И-мэйл">
@@ -478,21 +1156,18 @@ footer strong{font-size:24px;color:var(--green)}
       <input class="field" id="loginPassword"
         type="password" placeholder="Нууц үг">
 
-      <button class="btn btn-primary btn-block"
-        onclick="loginDemo()">НЭВТРЭХ</button>
+      <button class="btn btn-primary"
+        onclick="loginNexora()">Нэвтрэх</button>
 
-      <button class="btn btn-block"
-        onclick="registerDemo()">БҮРТГҮҮЛЭХ</button>
-    </div>
+      <button class="btn"
+        onclick="registerNexora()">Бүртгүүлэх</button>
+    </details>
 
-    <div class="panel">
-      <h3>Миний мэдээлэл</h3>
+    <details class="panel">
+      <summary>👤 Миний мэдээлэл</summary>
 
-      <div style="text-align:center;padding:12px">
-        <img id="profilePreview" class="hidden"
-          style="width:100px;height:100px;object-fit:cover;border-radius:50%">
-        <p id="profileDefault">👤</p>
-      </div>
+      <img id="profilePreview" class="hidden"
+        style="width:90px;height:90px;border-radius:50%;object-fit:cover">
 
       <input class="field" id="profileImageInput"
         type="file" accept="image/*">
@@ -501,43 +1176,1061 @@ footer strong{font-size:24px;color:var(--green)}
         placeholder="Овог, нэр">
 
       <input class="field" id="profilePhone"
-        placeholder="Утасны дугаар">
+        placeholder="Утас">
 
-      <button class="btn btn-primary btn-block"
-        onclick="saveProfile()">МЭДЭЭЛЭЛ ХАДГАЛАХ</button>
-    </div>
+      <button class="btn btn-primary"
+        onclick="saveProfile()">Хадгалах</button>
+    </details>
 
-    <div class="panel">
-      <h3>Миний нийтэлсэн зарууд</h3>
-      <button class="btn btn-primary btn-block"
-        onclick="loadMyClassifiedAds()">Миний заруудыг харах</button>
+    <details class="panel">
+      <summary>📢 Миний зарууд</summary>
       <div id="myClassifiedAdsList"></div>
+    </details>
+
+    <details class="panel">
+      <summary>🛍️ Миний бараанууд</summary>
+      <div id="myProductsList"></div>
+    </details>
+
+    <button class="btn btn-danger"
+      onclick="logoutNexora()">Гарах</button>
+
+  </section>
+
+  <!-- ==================================
+       АДМИН САМБАР
+  =================================== -->
+
+  <section id="adminScreen" class="screen hidden">
+
+    <div class="screen-header">
+      <button class="back-arrow" onclick="goBackMain()">‹</button>
+      <h2>⚙️ Админ самбар</h2>
     </div>
 
-    <button class="btn btn-danger btn-block"
-      onclick="logoutNexora()">ГАРАХ</button>
+    <div id="adminContent">
+      <p class="empty">Админ эрх шаардлагатай.</p>
+    </div>
 
-  </div>
-</section>
+  </section>
 
-<footer id="mainFooter">
+  <!-- ТӨЛБӨР -->
+
+  <section id="paymentScreen" class="screen hidden">
+
+    <div class="screen-header">
+      <button class="back-arrow" onclick="goBackMain()">‹</button>
+      <h2>💳 Төлбөр</h2>
+    </div>
+
+    <div id="paymentContent"></div>
+
+  </section>
+
+</main>
+
+<!-- MOBILE NAV -->
+
+<nav class="mobile-nav">
+  <button onclick="goHome()">
+    🏠<small>Нүүр</small>
+  </button>
+
+  <button onclick="openPlatform('classified')">
+    📢<small>Зар</small>
+  </button>
+
+  <button onclick="openPlatform('market')">
+    🛍️<small>Худалдаа</small>
+  </button>
+
+  <button onclick="openAccount()">
+    👤<small>Миний булан</small>
+  </button>
+</nav>
+
+<footer>
   <strong>NEXORA</strong>
-  <p>Монголын нэгдсэн цахим зах зээл</p>
-  <p>© 2026 NEXORA. Бүх эрх хуулиар хамгаалагдсан.</p>
+  <p>Монголын нэгдсэн цахим платформ</p>
+  <p>© 2026 NEXORA. Бүх эрх хамгаалагдсан.</p>
 </footer>
 
-<script>
+<!-- 2-Р ХЭСЭГ ЭНДЭЭС ҮРГЭЛЖИЛНЭ -->
 
-    "Санхүүгийн менежер"
-  ],
-  "Хөдөө аж ахуй": [
-    "Малын эмч","Агрономич","Малчин","Фермер"
-  ],
-  "Зочид буудал, ресторан": [
-    "Зочид буудлын ажилтан","Ресепшн",
-    "Тогооч","Зөөгч"
-  ]
-};
+<!-- =========================================
+ NEXORA PART 2 / 4
+ CLASSIFIED PLATFORM UI
+========================================= -->
+
+<style>
+#classifiedPlatform {
+  width:100%;
+  min-height:80vh;
+}
+
+.ad-screen {
+  width:100%;
+  min-height:100vh;
+  padding:16px;
+  background:var(--bg);
+}
+
+.ad-screen.hidden {
+  display:none!important;
+}
+
+.ad-back {
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:10px 0;
+  margin-bottom:15px;
+  background:transparent;
+  color:var(--green2);
+  font-size:16px;
+}
+
+.ad-back span {
+  font-size:27px;
+  font-weight:300;
+}
+
+.ad-heading {
+  font-size:23px;
+  margin:12px 0 18px;
+}
+
+.ad-description {
+  color:var(--muted);
+  line-height:1.7;
+  margin-bottom:18px;
+}
+
+.ad-category-list {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+
+.ad-category-item {
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:15px;
+  padding:19px 15px;
+  text-align:left;
+  background:var(--card);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:13px;
+  font-size:16px;
+}
+
+.ad-category-item:hover {
+  border-color:var(--green);
+  background:#173a23;
+}
+
+.ad-category-icon {
+  width:48px;
+  height:48px;
+  display:grid;
+  place-items:center;
+  flex-shrink:0;
+  background:#0b2113;
+  border-radius:12px;
+  font-size:27px;
+}
+
+.ad-category-info {
+  flex:1;
+}
+
+.ad-category-info strong {
+  display:block;
+  margin-bottom:5px;
+}
+
+.ad-category-info small {
+  color:var(--muted);
+  font-size:12px;
+}
+
+.ad-arrow {
+  color:var(--green);
+  font-size:22px;
+}
+
+.ad-result-list {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:13px;
+}
+
+.ad-card {
+  padding:16px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:13px;
+}
+
+.ad-card h3 {
+  font-size:17px;
+  margin-bottom:10px;
+}
+
+.ad-card p {
+  margin:7px 0;
+  color:var(--muted);
+  line-height:1.7;
+}
+
+.ad-detail-image {
+  width:100%;
+  max-height:350px;
+  object-fit:contain;
+  background:#0b2113;
+  border-radius:13px;
+  margin-bottom:15px;
+}
+
+.ad-detail-panel {
+  padding:17px;
+  margin:12px 0;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+}
+
+.ad-detail-panel h3 {
+  margin-bottom:9px;
+  color:var(--green2);
+}
+
+.ad-detail-panel p {
+  color:var(--text);
+  line-height:1.8;
+  white-space:pre-wrap;
+}
+
+.ad-map {
+  width:100%;
+  height:300px;
+  border:0;
+  border-radius:13px;
+}
+
+.ad-empty {
+  padding:35px 15px;
+  text-align:center;
+  color:var(--muted);
+  line-height:1.8;
+}
+
+.ad-full-button {
+  width:100%;
+  padding:15px;
+  margin:8px 0;
+  border-radius:11px;
+  background:var(--surface);
+  color:var(--green2);
+  border:1px solid var(--border);
+  text-align:left;
+  font-size:15px;
+}
+
+.ad-full-button:hover {
+  border-color:var(--green);
+}
+
+.ad-form-field {
+  display:block;
+  width:100%;
+  padding:14px;
+  margin:10px 0;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#0d2116;
+  color:white;
+  outline:none;
+}
+
+.ad-form-field:focus {
+  border-color:var(--green);
+}
+
+.ad-primary {
+  width:100%;
+  padding:15px;
+  margin-top:12px;
+  border-radius:11px;
+  background:var(--green);
+  color:#06140b;
+  font-weight:bold;
+}
+
+@media(min-width:700px) {
+  .ad-category-list {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .ad-result-list {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .ad-screen {
+    padding:25px;
+  }
+}
+</style>
+
+<!-- ЗАРЫН ПЛАТФОРМ -->
+
+<div id="classifiedPlatform">
+
+  <!-- ҮНДСЭН 7 АНГИЛАЛ -->
+
+  <section id="adHome" class="ad-screen">
+
+    <h2 class="ad-heading">📢 Зар мэдээлэл</h2>
+
+    <p class="ad-description">
+      NEXORA зарын платформоос өөрт хэрэгтэй зар,
+      үйлчилгээ болон ажлын байраа хайж олоорой.
+    </p>
+
+    <div class="ad-category-list">
+
+      <button class="ad-category-item"
+        onclick="openAdCategory('Үл хөдлөх')">
+        <span class="ad-category-icon">🏠</span>
+        <span class="ad-category-info">
+          <strong>Үл хөдлөх</strong>
+          <small>Орон сууц, хаус, хашаа байшин</small>
+        </span>
+        <span class="ad-arrow">›</span>
+      </button>
+
+      <button class="ad-category-item"
+        onclick="openAdCategory('Автомашин')">
+        <span class="ad-category-icon">🚗</span>
+        <span class="ad-category-info">
+          <strong>Автомашин</strong>
+          <small>Машин худалдаа, түрээс</small>
+        </span>
+        <span class="ad-arrow">›</span>
+      </button>
+
+      <button class="ad-category-item"
+        onclick="openAdCategory('Ажлын зар')">
+        <span class="ad-category-icon">👷</span>
+        <span class="ad-category-info">
+          <strong>Ажлын зар</strong>
+          <small>Салбар, мэргэжил, ажлын байр</small>
+        </span>
+        <span class="ad-arrow">›</span>
+      </button>
+
+      <button class="ad-category-item"
+        onclick="openAdCategory('Сэлбэг, хэрэгсэл')">
+        <span class="ad-category-icon">⚙️</span>
+        <span class="ad-category-info">
+          <strong>Сэлбэг, хэрэгсэл</strong>
+          <small>Автомашины сэлбэг, тоноглол</small>
+        </span>
+        <span class="ad-arrow">›</span>
+      </button>
+
+      <button class="ad-category-item"
+        onclick="openAdCategory('Үйлчилгээ')">
+        <span class="ad-category-icon">🛠️</span>
+        <span class="ad-category-info">
+          <strong>Үйлчилгээ</strong>
+          <small>Засвар, тээвэр, хүргэлт</small>
+        </span>
+        <span class="ad-arrow">›</span>
+      </button>
+
+      <button class="ad-category-item"
+        onclick="openAdCategory('Нийтийн байр, түрээс')">
+        <span class="ad-category-icon">🏢</span>
+        <span class="ad-category-info">
+          <strong>Нийтийн байр, түрээс</strong>
+          <small>Өрөө, байр, нийтийн байр</small>
+        </span>
+        <span class="ad-arrow">›</span>
+      </button>
+
+      <button class="ad-category-item"
+        onclick="openAdCategory('Бусад')">
+        <span class="ad-category-icon">📦</span>
+        <span class="ad-category-info">
+          <strong>Бусад</strong>
+          <small>Бусад төрлийн зарууд</small>
+        </span>
+        <span class="ad-arrow">›</span>
+      </button>
+
+    </div>
+
+    <button class="ad-primary" onclick="openNewAd()">
+      ＋ ЗАР НИЙТЛЭХ
+    </button>
+
+  </section>
+
+
+  <!-- ДЭД АНГИЛАЛ -->
+
+  <section id="adSubcategories"
+    class="ad-screen hidden">
+
+    <button class="ad-back" onclick="adGoBack()">
+      <span>←</span> Буцах
+    </button>
+
+    <h2 class="ad-heading" id="subcategoryTitle">
+      Ангилал сонгох
+    </h2>
+
+    <p class="ad-description">
+      Хүссэн дэд ангиллаа сонгоно уу.
+    </p>
+
+    <div id="subcategoryList"
+      class="ad-category-list"></div>
+
+  </section>
+
+
+  <!-- АЖЛЫН ЗАРЫН МЭРГЭЖИЛ -->
+
+  <section id="adProfessions"
+    class="ad-screen hidden">
+
+    <button class="ad-back" onclick="adGoBack()">
+      <span>←</span> Буцах
+    </button>
+
+    <h2 class="ad-heading" id="professionTitle">
+      Мэргэжил сонгох
+    </h2>
+
+    <p class="ad-description">
+      Ажил хайж буй мэргэжлээ сонгоно уу.
+    </p>
+
+    <div id="professionList"
+      class="ad-category-list"></div>
+
+  </section>
+
+
+  <!-- ЗАРЫН ЖАГСААЛТ -->
+
+  <section id="adResults"
+    class="ad-screen hidden">
+
+    <button class="ad-back" onclick="adGoBack()">
+      <span>←</span> Буцах
+    </button>
+
+    <h2 class="ad-heading" id="resultsTitle">
+      Зар мэдээлэл
+    </h2>
+
+    <input
+      class="ad-form-field"
+      id="classifiedSearch"
+      placeholder="🔍 Энэ ангиллаас зар хайх..."
+      oninput="filterClassifiedResults(this.value)">
+
+    <div id="classifiedList"
+      class="ad-result-list">
+
+      <p class="ad-empty">Заруудыг ачаалж байна...</p>
+
+    </div>
+
+  </section>
+
+
+  <!-- ЗАРЫН ДЭЛГЭРЭНГҮЙ -->
+
+  <section id="adDetails"
+    class="ad-screen hidden">
+
+    <button class="ad-back" onclick="adGoBack()">
+      <span>←</span> Буцах
+    </button>
+
+    <div id="adDetailsContent"></div>
+
+  </section>
+
+
+  <!-- ЗАР НИЙТЛЭХ -->
+
+  <section id="adPublishScreen"
+    class="ad-screen hidden">
+
+    <button class="ad-back" onclick="adGoBack()">
+      <span>←</span> Буцах
+    </button>
+
+    <h2 class="ad-heading">＋ Зар нийтлэх</h2>
+
+    <p class="ad-description">
+      Зар нийтлэх маягтыг бүрэн бөглөж илгээнэ үү.
+    </p>
+
+    <select class="ad-form-field" id="adCategory">
+      <option value="">Үндсэн ангилал сонгох</option>
+      <option>Үл хөдлөх</option>
+      <option>Автомашин</option>
+      <option>Ажлын зар</option>
+      <option>Сэлбэг, хэрэгсэл</option>
+      <option>Үйлчилгээ</option>
+      <option>Нийтийн байр, түрээс</option>
+      <option>Бусад</option>
+    </select>
+
+    <select class="ad-form-field" id="adIndustry">
+      <option value="">Дэд ангилал / Салбар</option>
+    </select>
+
+    <select class="ad-form-field" id="adProfession">
+      <option value="">Мэргэжил сонгох</option>
+    </select>
+
+    <input class="ad-form-field"
+      id="adTitle"
+      placeholder="Зарын гарчиг">
+
+    <textarea class="ad-form-field"
+      id="adDescription"
+      rows="5"
+      placeholder="Дэлгэрэнгүй мэдээлэл"></textarea>
+
+    <input class="ad-form-field"
+      id="adPrice"
+      type="number"
+      placeholder="Үнэ / Цалин ₮">
+
+    <input class="ad-form-field"
+      id="adPhone"
+      type="tel"
+      placeholder="Холбоо барих утас">
+
+    <select class="ad-form-field" id="adEmployerType">
+      <option value="">Зарын эзний төрөл</option>
+      <option value="individual">Хувь хүн</option>
+      <option value="company">Байгууллага</option>
+    </select>
+
+    <input class="ad-form-field"
+      id="adEmployerName"
+      placeholder="Нэр / Байгууллагын нэр">
+
+    <input class="ad-form-field"
+      id="adAddress"
+      placeholder="Байршил, хаяг">
+
+    <textarea class="ad-form-field"
+      id="adRequirements"
+      rows="3"
+      placeholder="Тавигдах шаардлага"></textarea>
+
+    <input class="ad-form-field"
+      id="adWorkLocation"
+      placeholder="Ажлын байршил / Дэлгэрэнгүй хаяг">
+
+    <h3 style="margin:20px 0 10px">
+      📍 Газрын зураг
+    </h3>
+
+    <button class="ad-full-button"
+      type="button"
+      onclick="useCurrentAdLocation()">
+      📍 Одоогийн байршил авах
+    </button>
+
+    <input class="ad-form-field"
+      id="adLatitude"
+      type="number"
+      step="any"
+      placeholder="Өргөрөг">
+
+    <input class="ad-form-field"
+      id="adLongitude"
+      type="number"
+      step="any"
+      placeholder="Уртраг">
+
+    <h3 style="margin:20px 0 10px">
+      🖼️ Зураг
+    </h3>
+
+    <input class="ad-form-field"
+      id="adImage"
+      type="file"
+      accept="image/*">
+
+    <button class="ad-primary"
+      id="publishAdButton"
+      onclick="publishAd()">
+      ЗАР НИЙТЛЭХ
+    </button>
+
+  </section>
+
+</div>
+
+<!-- =========================================
+ NEXORA PART 2 / 4
+ ЗАРЫН ПЛАТФОРМ
+========================================= -->
+
+<style>
+#classifiedPlatform {
+  width:100%;
+  min-height:80vh;
+}
+
+.ad-screen {
+  width:100%;
+  min-height:100vh;
+  padding:16px;
+  background:var(--bg);
+}
+
+.ad-screen.hidden {
+  display:none!important;
+}
+
+.ad-back {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 0;
+  margin-bottom:18px;
+  background:transparent;
+  color:var(--green2);
+  font-size:16px;
+}
+
+.ad-back span {
+  font-size:27px;
+  font-weight:300;
+}
+
+.ad-heading {
+  font-size:23px;
+  margin:10px 0 18px;
+}
+
+.ad-description {
+  color:var(--muted);
+  line-height:1.7;
+  margin-bottom:18px;
+}
+
+.ad-category-list {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+
+.ad-category-item {
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:15px;
+  padding:19px 15px;
+  text-align:left;
+  background:var(--card);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:13px;
+  font-size:16px;
+}
+
+.ad-category-item:active,
+.ad-category-item:hover {
+  border-color:var(--green);
+  background:#173a23;
+}
+
+.ad-category-icon {
+  width:48px;
+  height:48px;
+  display:grid;
+  place-items:center;
+  flex-shrink:0;
+  background:#0b2113;
+  border-radius:12px;
+  font-size:27px;
+}
+
+.ad-category-item small {
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:5px;
+}
+
+.ad-list {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:13px;
+}
+
+.ad-result-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:15px;
+}
+
+.ad-result-card h3 {
+  font-size:17px;
+  margin-bottom:9px;
+}
+
+.ad-result-card p {
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.8;
+  margin:5px 0;
+}
+
+.ad-result-card .price {
+  font-size:19px;
+}
+
+.ad-detail-panel {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:16px;
+  margin:12px 0;
+}
+
+.ad-detail-panel h3 {
+  margin-bottom:9px;
+}
+
+.ad-detail-panel p {
+  color:var(--muted);
+  line-height:1.8;
+  white-space:pre-wrap;
+}
+
+.ad-detail-image {
+  width:100%;
+  max-height:350px;
+  object-fit:contain;
+  border-radius:13px;
+  background:#0a1c11;
+}
+
+.ad-map {
+  width:100%;
+  height:300px;
+  border:0;
+  border-radius:12px;
+}
+
+.ad-empty {
+  text-align:center;
+  padding:40px 15px;
+  color:var(--muted);
+  line-height:1.8;
+}
+
+.ad-form-grid {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+}
+
+.ad-action {
+  width:100%;
+  margin-top:10px;
+}
+
+.ad-location-button {
+  width:100%;
+  padding:13px;
+  background:#173b23;
+  border:1px solid var(--green);
+  color:var(--green2);
+  border-radius:10px;
+  margin:8px 0;
+}
+
+@media(min-width:700px) {
+  .ad-category-list {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .ad-list {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .ad-screen {
+    padding:25px;
+  }
+}
+</style>
+
+<!-- ЗАРЫН ПЛАТФОРМ -->
+
+<div id="classifiedPlatform">
+
+  <!-- ҮНДСЭН 7 АНГИЛАЛ -->
+
+  <section id="adHome" class="ad-screen">
+    <h2 class="ad-heading">📢 Зарын платформ</h2>
+    <p class="ad-description">
+      Монголын нэгдсэн зарын зах зээл.
+      Ангиллаа сонгон заруудыг бүтэн дэлгэцээр үзээрэй.
+    </p>
+
+    <div class="ad-category-list">
+
+      <button class="ad-category-item"
+        onclick="openAdCategory('Үл хөдлөх')">
+        <span class="ad-category-icon">🏠</span>
+        <span>Үл хөдлөх
+          <small>Байр, хашаа байшин, объект</small>
+        </span>
+      </button>
+
+      <button class="ad-category-item"
+        onclick="openAdCategory('Автомашин')">
+        <span class="ad-category-icon">🚗</span>
+        <span>Автомашин
+          <small>Машин болон тээврийн хэрэгсэл</small>
+        </span>
+      </button>
+
+      <button class="ad-category-item"
+        onclick="openAdCategory('Ажлын зар')">
+        <span class="ad-category-icon">💼</span>
+        <span>Ажлын зар
+          <small>Салбар болон мэргэжлээр хайх</small>
+        </span>
+      </button>
+
+      <button class="ad-category-item"
+        onclick="openAdCategory('Сэлбэг, хэрэгсэл')">
+        <span class="ad-category-icon">⚙️</span>
+        <span>Сэлбэг, хэрэгсэл
+          <small>Автомашин болон тоног төхөөрөмж</small>
+        </span>
+      </button>
+
+      <button class="ad-category-item"
+        onclick="openAdCategory('Үйлчилгээ')">
+        <span class="ad-category-icon">🛠️</span>
+        <span>Үйлчилгээ
+          <small>Засвар, хүргэлт, бусад үйлчилгээ</small>
+        </span>
+      </button>
+
+      <button class="ad-category-item"
+        onclick="openAdCategory('Нийтийн байр, түрээс')">
+        <span class="ad-category-icon">🏢</span>
+        <span>Нийтийн байр, түрээс
+          <small>Өрөө, байр, түрээсийн үйлчилгээ</small>
+        </span>
+      </button>
+
+      <button class="ad-category-item"
+        onclick="openAdCategory('Бусад')">
+        <span class="ad-category-icon">📦</span>
+        <span>Бусад
+          <small>Бусад төрлийн зар</small>
+        </span>
+      </button>
+
+    </div>
+
+    <button class="btn btn-primary ad-action"
+      onclick="openNewAd()">
+      ＋ Зар нийтлэх
+    </button>
+  </section>
+
+  <!-- ДЭД АНГИЛАЛ -->
+
+  <section id="adSubcategories" class="ad-screen hidden">
+
+    <button class="ad-back" onclick="adGoBack()">
+      <span>←</span> Буцах
+    </button>
+
+    <h2 id="subcategoryTitle" class="ad-heading">
+      Ангилал сонгох
+    </h2>
+
+    <p class="ad-description">
+      Дэд ангиллаа сонгон бүх заруудыг үзнэ үү.
+    </p>
+
+    <div id="subcategoryList" class="ad-category-list"></div>
+  </section>
+
+  <!-- АЖЛЫН ЗАРЫН МЭРГЭЖИЛ -->
+
+  <section id="adProfessions" class="ad-screen hidden">
+
+    <button class="ad-back" onclick="adGoBack()">
+      <span>←</span> Буцах
+    </button>
+
+    <h2 id="professionTitle" class="ad-heading">
+      Мэргэжил сонгох
+    </h2>
+
+    <p class="ad-description">
+      Өөрийн хайж буй мэргэжлийг сонгоно уу.
+    </p>
+
+    <div id="professionList" class="ad-category-list"></div>
+  </section>
+
+  <!-- ЗАРЫН ЖАГСААЛТ -->
+
+  <section id="adResults" class="ad-screen hidden">
+
+    <button class="ad-back" onclick="adGoBack()">
+      <span>←</span> Буцах
+    </button>
+
+    <h2 id="resultsTitle" class="ad-heading">
+      Зар мэдээлэл
+    </h2>
+
+    <input id="classifiedSearch"
+      class="field"
+      placeholder="🔍 Энэ ангиллаас зар хайх..."
+      oninput="filterClassifiedResults()">
+
+    <div id="classifiedList" class="ad-list">
+      <p class="ad-empty">Заруудыг ачаалж байна...</p>
+    </div>
+  </section>
+
+  <!-- ЗАРЫН ДЭЛГЭРЭНГҮЙ -->
+
+  <section id="adDetails" class="ad-screen hidden">
+
+    <button class="ad-back" onclick="adGoBack()">
+      <span>←</span> Буцах
+    </button>
+
+    <div id="adDetailsContent"></div>
+  </section>
+
+  <!-- ЗАР НИЙТЛЭХ -->
+
+  <section id="adPublishScreen" class="ad-screen hidden">
+
+    <button class="ad-back" onclick="adGoBack()">
+      <span>←</span> Буцах
+    </button>
+
+    <h2 class="ad-heading">＋ Зар нийтлэх</h2>
+
+    <p class="ad-description">
+      Зар нийтлэхдээ мэдээллээ үнэн зөв бөглөнө үү.
+    </p>
+
+    <div class="ad-form-grid">
+
+      <select class="field" id="adCategory">
+        <option value="">Үндсэн ангилал сонгох</option>
+        <option>Үл хөдлөх</option>
+        <option>Автомашин</option>
+        <option>Ажлын зар</option>
+        <option>Сэлбэг, хэрэгсэл</option>
+        <option>Үйлчилгээ</option>
+        <option>Нийтийн байр, түрээс</option>
+        <option>Бусад</option>
+      </select>
+
+      <select class="field" id="adIndustry">
+        <option value="">Дэд ангилал / Салбар</option>
+      </select>
+
+      <select class="field" id="adProfession">
+        <option value="">Мэргэжил сонгох</option>
+      </select>
+
+      <input class="field" id="adTitle"
+        placeholder="Зарын гарчиг">
+
+      <textarea class="field" id="adDescription"
+        placeholder="Дэлгэрэнгүй мэдээлэл"></textarea>
+
+      <input class="field" id="adPrice"
+        type="number" min="0"
+        placeholder="Үнэ / Цалин ₮">
+
+      <input class="field" id="adPhone"
+        type="tel" placeholder="Утасны дугаар">
+
+      <select class="field" id="adEmployerType">
+        <option value="">Хувь хүн / Байгууллага</option>
+        <option value="individual">Хувь хүн</option>
+        <option value="company">Байгууллага</option>
+      </select>
+
+      <input class="field" id="adEmployerName"
+        placeholder="Нэр / Байгууллагын нэр">
+
+      <input class="field" id="adAddress"
+        placeholder="Хаяг, байршил">
+
+      <textarea class="field" id="adRequirements"
+        placeholder="Тавигдах шаардлага"></textarea>
+
+      <input class="field" id="adWorkLocation"
+        placeholder="Ажлын байршил">
+
+      <input class="field" id="adImage"
+        type="file" accept="image/*">
+
+      <button class="ad-location-button"
+        onclick="useCurrentAdLocation()">
+        📍 Миний одоогийн байршлыг авах
+      </button>
+
+      <input class="field" id="adLatitude"
+        type="number" step="any"
+        placeholder="Өргөрөг">
+
+      <input class="field" id="adLongitude"
+        type="number" step="any"
+        placeholder="Уртраг">
+
+      <button id="publishAdButton"
+        class="btn btn-primary ad-action"
+        onclick="publishAd()">
+        ЗАР НИЙТЛЭХ
+      </button>
+
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* =========================================
+ NEXORA PART 2 JAVASCRIPT
+========================================= */
 
 const adData = {
   "Үл хөдлөх": [
@@ -546,28 +2239,50 @@ const adData = {
     "2 өрөө байр",
     "3 өрөө байр",
     "4 өрөө байр",
+    "5 болон түүнээс дээш өрөө байр",
     "Объект",
     "Хаус",
+    "Газар",
+    "Оффис",
     "Бусад"
   ],
+
   "Автомашин": [
     "Суудлын автомашин",
     "Жийп",
     "Ачааны машин",
     "Мотоцикл",
     "Автобус",
+    "Цахилгаан автомашин",
     "Бусад"
   ],
-  "Ажлын зар": Object.keys(jobProfessions),
+
+  "Ажлын зар": [
+    "Барилга",
+    "Уул уурхай",
+    "Боловсрол",
+    "Эрүүл мэнд",
+    "Мэдээллийн технологи",
+    "Худалдаа",
+    "Үйлчилгээ",
+    "Тээвэр",
+    "Үйлдвэрлэл",
+    "Санхүү, нягтлан бодох",
+    "Хөдөө аж ахуй",
+    "Зочид буудал, ресторан"
+  ],
+
   "Сэлбэг, хэрэгсэл": [
     "Мотор",
     "Хурдны хайрцаг",
-    "Дугуй",
-    "Обуд",
     "Явах эд анги",
-    "Цахилгаан хэрэгсэл",
+    "Дугуй, обуд",
+    "Аккумулятор",
+    "Гэрэл, толь",
+    "Кузов",
     "Бусад"
   ],
+
   "Үйлчилгээ": [
     "Барилга засвар",
     "Цэвэрлэгээ",
@@ -576,29 +2291,126 @@ const adData = {
     "Автомашины засвар",
     "IT үйлчилгээ",
     "Гоо сайхан",
-    "Бусад"
+    "Бусад үйлчилгээ"
   ],
+
   "Нийтийн байр, түрээс": [
     "Нийтийн байр",
-    "Өрөө түрээс",
-    "Орон сууц түрээс",
-    "Хашаа байшин түрээс",
-    "Оффис түрээс",
+    "1 өрөө түрээс",
+    "2 өрөө түрээс",
+    "3 өрөө түрээс",
+    "Оюутны байр",
+    "Хамтран түрээслэх",
+    "Өрөө түрээслүүлэх",
     "Бусад"
   ],
+
   "Бусад": [
     "Төрөл бүрийн зар",
     "Хэрэгцээт мэдээлэл",
+    "Зарлал",
     "Бусад"
   ]
 };
 
+const jobProfessions = {
+  "Барилга": [
+    "Барилгын инженер",
+    "Архитектор",
+    "Цахилгаанчин",
+    "Сантехникч",
+    "Гагнуурчин",
+    "Мужаан",
+    "Өрлөгчин",
+    "Засалчин",
+    "Туслах ажилтан"
+  ],
+
+  "Уул уурхай": [
+    "Уул уурхайн инженер",
+    "Экскаваторын оператор",
+    "Жолооч",
+    "Маркшейдер",
+    "Геологич",
+    "Механик инженер",
+    "Цахилгаанчин"
+  ],
+
+  "Боловсрол": [
+    "Багш",
+    "Сургалтын менежер",
+    "Цэцэрлэгийн багш",
+    "Орчуулагч"
+  ],
+
+  "Эрүүл мэнд": [
+    "Эмч",
+    "Сувилагч",
+    "Эм зүйч",
+    "Лабораторийн ажилтан"
+  ],
+
+  "Мэдээллийн технологи": [
+    "Программист",
+    "Веб хөгжүүлэгч",
+    "Системийн админ",
+    "График дизайнер",
+    "IT инженер"
+  ],
+
+  "Худалдаа": [
+    "Худалдааны зөвлөх",
+    "Кассчин",
+    "Борлуулалтын менежер",
+    "Маркетингийн ажилтан"
+  ],
+
+  "Үйлчилгээ": [
+    "Тогооч",
+    "Зөөгч",
+    "Үсчин",
+    "Үйлчлэгч",
+    "Хамгаалагч"
+  ],
+
+  "Тээвэр": [
+    "Жолооч",
+    "Хүргэлтийн ажилтан",
+    "Логистикийн менежер"
+  ],
+
+  "Үйлдвэрлэл": [
+    "Үйлдвэрийн ажилтан",
+    "Технологич",
+    "Чанарын хяналтын ажилтан"
+  ],
+
+  "Санхүү, нягтлан бодох": [
+    "Нягтлан бодогч",
+    "Эдийн засагч",
+    "Санхүүгийн менежер"
+  ],
+
+  "Хөдөө аж ахуй": [
+    "Малын эмч",
+    "Агрономич",
+    "Малчин",
+    "Фермер"
+  ],
+
+  "Зочид буудал, ресторан": [
+    "Зочид буудлын ажилтан",
+    "Ресепшн",
+    "Тогооч",
+    "Зөөгч"
+  ]
+};
+
+let adScreenStack = [];
 let currentAdCategory = "";
 let currentAdIndustry = "";
 let currentAdProfession = "";
-let currentAdSubcategory = "";
-let currentSelectedAd = null;
-let adScreenStack = [];
+let classifiedResultCache = [];
 
 const adScreens = [
   "adHome",
@@ -609,19 +2421,13 @@ const adScreens = [
   "adPublishScreen"
 ];
 
-/* =====================================
-   FULL SCREEN NAVIGATION
-===================================== */
+function showAdScreen(id,saveHistory=true) {
+  const current = adScreens.find(
+    screen => !$(screen).classList.contains("hidden")
+  );
 
-function showAdScreen(id, saveHistory = true) {
-  if (saveHistory) {
-    const current = adScreens.find(
-      screen => !$(screen).classList.contains("hidden")
-    );
-
-    if (current && current !== id) {
-      adScreenStack.push(current);
-    }
+  if (saveHistory && current && current !== id) {
+    adScreenStack.push(current);
   }
 
   adScreens.forEach(screen => {
@@ -630,27 +2436,18 @@ function showAdScreen(id, saveHistory = true) {
 
   $(id).classList.remove("hidden");
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
 function adGoBack() {
-  if (adScreenStack.length) {
-    const previous = adScreenStack.pop();
-    showAdScreen(previous, false);
-  } else {
-    showAdScreen("adHome", false);
-  }
+  const previous = adScreenStack.pop() || "adHome";
+  showAdScreen(previous,false);
 }
 
 function openAdCategory(category) {
   currentAdCategory = category;
   currentAdIndustry = "";
   currentAdProfession = "";
-  currentAdSubcategory = "";
-
   adScreenStack = [];
 
   $("subcategoryTitle").textContent = category;
@@ -660,16 +2457,24 @@ function openAdCategory(category) {
 
   (adData[category] || []).forEach(name => {
     const button = document.createElement("button");
+    button.className = "ad-category-item";
 
-    button.className = "category";
-    button.textContent = name;
+    const icon = document.createElement("span");
+    icon.className = "ad-category-icon";
+    icon.textContent = "📂";
+
+    const label = document.createElement("span");
+    label.textContent = name;
+
+    button.append(icon,label);
 
     button.onclick = () => {
-      currentAdSubcategory = name;
+      currentAdIndustry = name;
 
       if (category === "Ажлын зар") {
         openProfessions(name);
       } else {
+        currentAdProfession = "";
         showClassifiedResults();
       }
     };
@@ -680,13 +2485,8 @@ function openAdCategory(category) {
   showAdScreen("adSubcategories");
 }
 
-/* =====================================
-   JOB INDUSTRY & PROFESSION
-===================================== */
-
 function openProfessions(industry) {
   currentAdIndustry = industry;
-  currentAdProfession = "";
 
   $("professionTitle").textContent =
     industry + " — Мэргэжил сонгох";
@@ -699,9 +2499,16 @@ function openProfessions(industry) {
 
   professions.forEach(name => {
     const button = document.createElement("button");
+    button.className = "ad-category-item";
 
-    button.className = "category";
-    button.textContent = name;
+    const icon = document.createElement("span");
+    icon.className = "ad-category-icon";
+    icon.textContent = "👤";
+
+    const label = document.createElement("span");
+    label.textContent = name;
+
+    button.append(icon,label);
 
     button.onclick = () => {
       currentAdProfession = name;
@@ -714,73 +2521,66 @@ function openProfessions(industry) {
   showAdScreen("adProfessions");
 }
 
-/* =====================================
-   CLASSIFIED RESULTS
-===================================== */
-
 async function showClassifiedResults() {
   $("resultsTitle").textContent =
     currentAdProfession ||
-    currentAdSubcategory ||
     currentAdIndustry ||
     currentAdCategory;
 
-  showAdScreen("adResults");
+  $("classifiedSearch").value = "";
 
   await loadClassifiedResults();
+
+  showAdScreen("adResults");
 }
 
 async function loadClassifiedResults() {
   const area = $("classifiedList");
 
   area.innerHTML =
-    '<p class="empty">Заруудыг ачаалж байна...</p>';
+    '<p class="ad-empty">Заруудыг ачаалж байна...</p>';
 
   let query = supabaseClient
     .from("classified_ads")
     .select("*")
-    .eq("status", "active")
-    .eq("category", currentAdCategory)
-    .order("created_at", { ascending: false });
+    .eq("status","active")
+    .eq("category",currentAdCategory)
+    .order("created_at",{ascending:false});
 
-  if (currentAdCategory === "Ажлын зар") {
-    if (currentAdIndustry) {
-      query = query.eq("industry", currentAdIndustry);
-    }
-
-    if (currentAdProfession) {
-      query = query.eq("profession", currentAdProfession);
-    }
-  } else if (currentAdSubcategory) {
-    query = query.eq("subcategory", currentAdSubcategory);
+  if (currentAdIndustry) {
+    query = query.eq("industry",currentAdIndustry);
   }
 
-  const { data, error } = await query;
+  if (currentAdProfession &&
+      currentAdCategory === "Ажлын зар") {
+    query = query.eq("profession",currentAdProfession);
+  }
+
+  const {data,error} = await query;
 
   if (error) {
     console.error(error);
-
     area.innerHTML =
-      '<p class="empty">Зар ачаалахад алдаа гарлаа.</p>';
-
+      '<p class="ad-empty">Зар ачаалахад алдаа гарлаа.</p>';
     return;
   }
 
-  renderClassifiedCards(area, data || []);
+  classifiedResultCache = data || [];
+  renderClassifiedCards(area,classifiedResultCache);
 }
 
-function renderClassifiedCards(area, ads) {
+function renderClassifiedCards(area,ads) {
   area.innerHTML = "";
 
   if (!ads.length) {
     area.innerHTML =
-      '<p class="empty">Одоогоор зар байхгүй байна.</p>';
+      '<p class="ad-empty">Одоогоор энэ ангилалд идэвхтэй зар алга.</p>';
     return;
   }
 
   ads.forEach(ad => {
     const card = document.createElement("article");
-    card.className = "ad-card";
+    card.className = "ad-result-card";
 
     const title = document.createElement("h3");
     title.textContent = ad.title;
@@ -788,243 +2588,211 @@ function renderClassifiedCards(area, ads) {
     const category = document.createElement("span");
     category.className = "status";
     category.textContent =
-      ad.profession ||
-      ad.industry ||
-      ad.subcategory ||
-      ad.category;
+      ad.profession || ad.industry ||
+      ad.subcategory || ad.category;
 
-    const price = document.createElement("p");
-    price.textContent =
-      ad.price != null
-        ? "Үнэ: " + formatPrice(ad.price)
-        : "Үнэ тохирно";
+    const price = document.createElement("div");
+    price.className = "price";
+    price.textContent = ad.price != null
+      ? formatPrice(ad.price)
+      : "Үнэ тохирно";
 
     const location = document.createElement("p");
     location.textContent =
-      "📍 " + (ad.work_location || ad.address || "Байршил тодорхойгүй");
+      "📍 " + (ad.work_location || ad.address ||
+      "Байршил тодорхойгүй");
 
     const description = document.createElement("p");
     description.textContent =
-      (ad.description || "").slice(0, 110);
+      (ad.description || "").slice(0,140);
 
     const button = document.createElement("button");
-    button.className = "btn btn-primary";
+    button.className = "btn btn-primary ad-action";
     button.textContent = "Дэлгэрэнгүй үзэх";
 
     button.onclick = () => openClassifiedDetails(ad);
 
     card.append(
-      title,
-      category,
-      price,
-      location,
-      description,
-      button
+      title,category,price,location,description,button
     );
 
     area.appendChild(card);
   });
 }
 
-/* =====================================
-   AD DETAILS
-===================================== */
+function filterClassifiedResults() {
+  const keyword =
+    $("classifiedSearch").value.trim().toLowerCase();
+
+  const filtered = classifiedResultCache.filter(ad => {
+    const text = [
+      ad.title,
+      ad.description,
+      ad.category,
+      ad.industry,
+      ad.profession,
+      ad.address
+    ].join(" ").toLowerCase();
+
+    return text.includes(keyword);
+  });
+
+  renderClassifiedCards($("classifiedList"),filtered);
+}
 
 function openClassifiedDetails(ad) {
-  currentSelectedAd = ad;
-
   const area = $("adDetailsContent");
   area.innerHTML = "";
 
   const title = document.createElement("h2");
-  title.className = "section-title";
+  title.className = "ad-heading";
   title.textContent = ad.title;
 
   area.appendChild(title);
 
   if (ad.image_path) {
-    const { data } = supabaseClient.storage
+    const {data} = supabaseClient.storage
       .from("classified-images")
       .getPublicUrl(ad.image_path);
 
     if (data?.publicUrl) {
       const image = document.createElement("img");
-
       image.src = data.publicUrl;
       image.alt = ad.title;
-
-      image.style.cssText =
-        "width:100%;max-height:350px;object-fit:contain;border-radius:14px";
-
+      image.className = "ad-detail-image";
       area.appendChild(image);
     }
   }
 
   const fields = [
-    ["Үндсэн ангилал", ad.category],
-    ["Дэд ангилал", ad.subcategory],
-    ["Салбар", ad.industry],
-    ["Мэргэжил", ad.profession],
-    ["Үнэ / Цалин", ad.price != null ? formatPrice(ad.price) : "Тохирно"],
-    ["Байгууллага", ad.employer_name],
-    ["Байгууллагын төрөл", ad.employer_type],
-    ["Хаяг", ad.address],
-    ["Ажлын байршил", ad.work_location],
-    ["Тавигдах шаардлага", ad.requirements],
-    ["Дэлгэрэнгүй мэдээлэл", ad.description]
+    ["Ангилал",ad.category],
+    ["Дэд ангилал",ad.subcategory],
+    ["Салбар",ad.industry],
+    ["Мэргэжил",ad.profession],
+    ["Үнэ / Цалин",
+      ad.price != null ? formatPrice(ad.price) : "Тохирно"],
+    ["Байгууллага",ad.employer_name],
+    ["Хаяг",ad.address],
+    ["Ажлын байршил",ad.work_location],
+    ["Тавигдах шаардлага",ad.requirements],
+    ["Дэлгэрэнгүй мэдээлэл",ad.description]
   ];
 
-  fields.forEach(([label, value]) => {
-    if (!value) return;
+  fields.forEach(([label,value]) => {
+    if (value == null || value === "") return;
 
     const panel = document.createElement("div");
-    panel.className = "panel";
+    panel.className = "ad-detail-panel";
 
     const heading = document.createElement("h3");
     heading.textContent = label;
 
     const content = document.createElement("p");
-    content.style.whiteSpace = "pre-wrap";
     content.textContent = value;
 
-    panel.append(heading, content);
+    panel.append(heading,content);
     area.appendChild(panel);
   });
 
   if (ad.phone) {
     const phone = document.createElement("a");
+    phone.className = "btn btn-primary ad-action";
+    phone.style.cssText =
+      "display:block;text-align:center;text-decoration:none";
 
-    phone.className = "btn btn-primary";
     phone.href =
-      "tel:" + ad.phone.replace(/[^\d+]/g, "");
+      "tel:" + ad.phone.replace(/[^\d+]/g,"");
 
     phone.textContent = "☎ Утасдах: " + ad.phone;
-
-    phone.style.cssText =
-      "display:block;text-align:center;margin:15px 0;text-decoration:none";
-
     area.appendChild(phone);
   }
+
+  const lat = Number(ad.latitude);
+  const lng = Number(ad.longitude);
 
   if (
     ad.latitude != null &&
     ad.longitude != null &&
-    Number.isFinite(Number(ad.latitude)) &&
-    Number.isFinite(Number(ad.longitude))
+    Number.isFinite(lat) &&
+    Number.isFinite(lng) &&
+    lat >= -90 && lat <= 90 &&
+    lng >= -180 && lng <= 180
   ) {
-    const mapPanel = document.createElement("div");
-    mapPanel.className = "panel";
+    const panel = document.createElement("div");
+    panel.className = "ad-detail-panel";
 
     const heading = document.createElement("h3");
     heading.textContent = "📍 Зарын байршил";
 
     const map = document.createElement("iframe");
-
-    map.src =
-      "https://www.openstreetmap.org/export/embed.html?marker=" +
-      encodeURIComponent(
-        ad.latitude + "," + ad.longitude
-      );
-
-    map.width = "100%";
-    map.height = "300";
+    map.className = "ad-map";
     map.loading = "lazy";
-    map.style.border = "0";
-    map.style.borderRadius = "12px";
+    map.src =
+      "https://www.openstreetmap.org/export/embed.html?bbox=" +
+      (lng - 0.01) + "," + (lat - 0.01) + "," +
+      (lng + 0.01) + "," + (lat + 0.01) +
+      "&layer=mapnik&marker=" + lat + "," + lng;
 
-    const directions = document.createElement("a");
-    directions.href =
+    const external = document.createElement("a");
+    external.href =
       "https://www.openstreetmap.org/?mlat=" +
-      encodeURIComponent(ad.latitude) +
-      "&mlon=" +
-      encodeURIComponent(ad.longitude);
+      lat + "&mlon=" + lng + "#map=16/" + lat + "/" + lng;
 
-    directions.target = "_blank";
-    directions.rel = "noopener noreferrer";
-    directions.className = "btn btn-primary";
-    directions.textContent = "Газрын зураг томоор нээх";
+    external.target = "_blank";
+    external.rel = "noopener";
+    external.textContent = "Газрын зураг дээр нээх";
 
-    mapPanel.append(heading, map, directions);
-    area.appendChild(mapPanel);
-  } else {
-    const location = document.createElement("p");
-    location.className = "empty";
-    location.textContent =
-      "Байршлын координат оруулаагүй байна.";
-
-    area.appendChild(location);
+    panel.append(heading,map,external);
+    area.appendChild(panel);
   }
 
   showAdScreen("adDetails");
 }
 
-/* =====================================
-   NEW AD FORM
-===================================== */
-
 function openNewAd() {
   adScreenStack = [];
-  showAdScreen("adPublishScreen", false);
+  showAdScreen("adPublishScreen",false);
 }
 
-function updateAdIndustryOptions() {
-  const category = $("adCategory").value;
+/* ЗАР НИЙТЛЭХ СОНГОЛТУУД */
+
+$("adCategory").addEventListener("change",function() {
+  const category = this.value;
 
   const industry = $("adIndustry");
   const profession = $("adProfession");
 
   industry.innerHTML =
-    '<option value="">Салбар сонгох</option>';
+    '<option value="">Дэд ангилал / Салбар</option>';
 
   profession.innerHTML =
     '<option value="">Мэргэжил сонгох</option>';
 
-  if (category === "Ажлын зар") {
-    Object.keys(jobProfessions).forEach(name => {
-      const option = document.createElement("option");
-
-      option.value = name;
-      option.textContent = name;
-
-      industry.appendChild(option);
-    });
-  } else {
-    (adData[category] || []).forEach(name => {
-      const option = document.createElement("option");
-
-      option.value = name;
-      option.textContent = name;
-
-      industry.appendChild(option);
-    });
-  }
-}
-
-function updateProfessionOptions() {
-  const industry = $("adIndustry").value;
-
-  const area = $("adProfession");
-
-  area.innerHTML =
-    '<option value="">Мэргэжил сонгох</option>';
-
-  (jobProfessions[industry] || []).forEach(name => {
+  (adData[category] || []).forEach(name => {
     const option = document.createElement("option");
-
     option.value = name;
     option.textContent = name;
-
-    area.appendChild(option);
+    industry.appendChild(option);
   });
-}
+});
 
-/* =====================================
-   CURRENT LOCATION
-===================================== */
+$("adIndustry").addEventListener("change",function() {
+  const professions = jobProfessions[this.value] || [];
+
+  $("adProfession").innerHTML =
+    '<option value="">Мэргэжил сонгох</option>';
+
+  professions.forEach(name => {
+    const option = document.createElement("option");
+    option.value = name;
+    option.textContent = name;
+    $("adProfession").appendChild(option);
+  });
+});
 
 function useCurrentAdLocation() {
   if (!navigator.geolocation) {
-    alert("Байршил тогтоох боломжгүй байна.");
+    alert("Төхөөрөмж байршил тогтоох боломжгүй байна.");
     return;
   }
 
@@ -1042,105 +2810,1943 @@ function useCurrentAdLocation() {
       alert("Байршлын зөвшөөрлөө шалгана уу.");
     },
     {
-      enableHighAccuracy: true,
-      timeout: 15000
+      enableHighAccuracy:true,
+      timeout:15000
     }
   );
 }
+</script>
 
-/* =====================================
-   PUBLISH CLASSIFIED AD
-===================================== */
+<!-- =========================================
+ NEXORA PART 3 — CLASSIFIED PLATFORM
+========================================= -->
 
-async function publishAd() {
+<style>
+/* FULL SCREEN CLASSIFIED SYSTEM */
+
+.ad-platform {
+  position:fixed;
+  inset:0;
+  z-index:500;
+  background:#07150e;
+  color:#f1fff3;
+  overflow-y:auto;
+  padding-bottom:25px;
+}
+
+.ad-screen {
+  min-height:100vh;
+  padding:15px;
+}
+
+.ad-top {
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:12px 0 20px;
+  border-bottom:1px solid #244b32;
+  margin-bottom:20px;
+}
+
+.ad-back {
+  background:none;
+  color:#a5ffb2;
+  font-size:27px;
+  padding:3px 8px;
+}
+
+.ad-heading {
+  font-size:21px;
+  font-weight:bold;
+}
+
+.ad-subtitle {
+  color:#a3b9a9;
+  font-size:12px;
+  margin-top:5px;
+}
+
+.ad-options {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+
+.ad-option {
+  background:#122b1e;
+  color:#f1fff3;
+  border:1px solid #244b32;
+  border-radius:13px;
+  padding:20px;
+  text-align:left;
+  font-size:16px;
+}
+
+.ad-option:active {
+  border-color:#39e75f;
+  background:#183b23;
+}
+
+.ad-option small {
+  display:block;
+  color:#a3b9a9;
+  margin-top:7px;
+}
+
+.ad-list {
+  display:flex;
+  flex-direction:column;
+  gap:13px;
+}
+
+.ad-item {
+  background:#122b1e;
+  border:1px solid #244b32;
+  border-radius:14px;
+  padding:16px;
+}
+
+.ad-item h3 {
+  font-size:17px;
+  margin-bottom:10px;
+}
+
+.ad-item p {
+  color:#a3b9a9;
+  font-size:13px;
+  line-height:1.8;
+  margin:5px 0;
+}
+
+.ad-price {
+  color:#39e75f!important;
+  font-size:19px!important;
+  font-weight:bold;
+}
+
+.ad-detail {
+  background:#122b1e;
+  border:1px solid #244b32;
+  padding:17px;
+  border-radius:14px;
+  margin:12px 0;
+}
+
+.ad-detail p {
+  white-space:pre-wrap;
+  line-height:1.8;
+  color:#c5d9ca;
+}
+
+.ad-map {
+  width:100%;
+  height:300px;
+  border:0;
+  border-radius:13px;
+}
+
+.ad-primary {
+  background:#39e75f;
+  color:#06140b;
+  font-weight:bold;
+  border:0;
+  border-radius:10px;
+  padding:14px;
+  width:100%;
+  margin-top:12px;
+}
+
+.ad-empty {
+  text-align:center;
+  color:#a3b9a9;
+  padding:35px 10px;
+}
+
+.ad-form input,
+.ad-form textarea,
+.ad-form select {
+  width:100%;
+  padding:14px;
+  margin:7px 0;
+  border-radius:10px;
+  border:1px solid #244b32;
+  background:#0d2116;
+  color:white;
+}
+
+.ad-form textarea {
+  min-height:110px;
+}
+
+.ad-form label {
+  display:block;
+  color:#a5ffb2;
+  font-size:13px;
+  margin-top:12px;
+}
+
+@media(min-width:700px) {
+  .ad-screen {
+    max-width:850px;
+    margin:auto;
+  }
+
+  .ad-options {
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+</style>
+
+<section id="nexoraAdPlatform" class="ad-platform hidden">
+
+  <!-- MAIN 7 CATEGORIES -->
+
+  <div id="adHome" class="ad-screen">
+
+    <h2 class="ad-heading">NEXORA ЗАРЫН ПЛАТФОРМ</h2>
+    <p class="ad-subtitle">
+      Монголын нэгдсэн зарын цахим платформ
+    </p>
+
+    <div class="ad-options" style="margin-top:25px">
+
+      <button class="ad-option" onclick="openAdCategory('Үл хөдлөх')">
+        🏠 Үл хөдлөх
+        <small>Орон сууц, хаус, объект</small>
+      </button>
+
+      <button class="ad-option" onclick="openAdCategory('Автомашин')">
+        🚗 Автомашин
+        <small>Автомашин болон тээврийн хэрэгсэл</small>
+      </button>
+
+      <button class="ad-option" onclick="openAdCategory('Ажлын зар')">
+        💼 Ажлын зар
+        <small>Салбар, мэргэжил, ажлын байр</small>
+      </button>
+
+      <button class="ad-option" onclick="openAdCategory('Сэлбэг, хэрэгсэл')">
+        ⚙️ Сэлбэг, хэрэгсэл
+        <small>Автомашины болон бусад сэлбэг</small>
+      </button>
+
+      <button class="ad-option" onclick="openAdCategory('Үйлчилгээ')">
+        🛠️ Үйлчилгээ
+        <small>Засвар, тээвэр, бусад үйлчилгээ</small>
+      </button>
+
+      <button class="ad-option" onclick="openAdCategory('Нийтийн байр, түрээс')">
+        🏢 Нийтийн байр, түрээс
+        <small>Өрөө, байр, түрээс</small>
+      </button>
+
+      <button class="ad-option" onclick="openAdCategory('Бусад')">
+        📦 Бусад
+        <small>Бусад төрлийн зар</small>
+      </button>
+
+    </div>
+
+    <button class="ad-primary" onclick="openNewAd()">
+      ＋ ЗАР НИЙТЛЭХ
+    </button>
+
+  </div>
+
+  <!-- SUBCATEGORY -->
+
+  <div id="adSubcategories" class="ad-screen hidden">
+
+    <div class="ad-top">
+      <button class="ad-back" onclick="adGoBack()">←</button>
+      <div>
+        <div id="subcategoryTitle" class="ad-heading"></div>
+        <div class="ad-subtitle">Дэд ангилал сонгоно уу</div>
+      </div>
+    </div>
+
+    <div id="subcategoryList" class="ad-options"></div>
+
+  </div>
+
+  <!-- JOB PROFESSIONS -->
+
+  <div id="adProfessions" class="ad-screen hidden">
+
+    <div class="ad-top">
+      <button class="ad-back" onclick="adGoBack()">←</button>
+      <div>
+        <div id="professionTitle" class="ad-heading"></div>
+        <div class="ad-subtitle">Мэргэжил сонгоно уу</div>
+      </div>
+    </div>
+
+    <div id="professionList" class="ad-options"></div>
+
+  </div>
+
+  <!-- RESULTS -->
+
+  <div id="adResults" class="ad-screen hidden">
+
+    <div class="ad-top">
+      <button class="ad-back" onclick="adGoBack()">←</button>
+      <div>
+        <div id="resultsTitle" class="ad-heading">Зарын жагсаалт</div>
+        <div class="ad-subtitle">Бүх зар доош дээш гүйлгэнэ</div>
+      </div>
+    </div>
+
+    <input
+      id="classifiedSearch"
+      class="field"
+      placeholder="🔍 Энэ ангиллаас хайх..."
+      oninput="filterClassifiedResults()"
+    >
+
+    <div id="classifiedList" class="ad-list"></div>
+
+  </div>
+
+  <!-- DETAILS -->
+
+  <div id="adDetails" class="ad-screen hidden">
+
+    <div class="ad-top">
+      <button class="ad-back" onclick="adGoBack()">←</button>
+      <div class="ad-heading">Зарын дэлгэрэнгүй</div>
+    </div>
+
+    <div id="adDetailsContent"></div>
+
+  </div>
+
+  <!-- PUBLISH -->
+
+  <div id="adPublishScreen" class="ad-screen hidden">
+
+    <div class="ad-top">
+      <button class="ad-back" onclick="adGoBack()">←</button>
+      <div>
+        <div class="ad-heading">Зар нийтлэх</div>
+        <div class="ad-subtitle">Мэдээллээ бүрэн бөглөнө үү</div>
+      </div>
+    </div>
+
+    <div class="ad-form">
+
+      <label>Үндсэн ангилал</label>
+      <select id="adCategory">
+        <option value="">Ангилал сонгох</option>
+        <option>Үл хөдлөх</option>
+        <option>Автомашин</option>
+        <option>Ажлын зар</option>
+        <option>Сэлбэг, хэрэгсэл</option>
+        <option>Үйлчилгээ</option>
+        <option>Нийтийн байр, түрээс</option>
+        <option>Бусад</option>
+      </select>
+
+      <label>Дэд ангилал / Салбар</label>
+      <select id="adIndustry">
+        <option value="">Сонгох</option>
+      </select>
+
+      <label>Мэргэжил (Ажлын зар)</label>
+      <select id="adProfession">
+        <option value="">Мэргэжил сонгох</option>
+      </select>
+
+      <label>Зарын гарчиг</label>
+      <input id="adTitle" placeholder="Зарын нэр">
+
+      <label>Дэлгэрэнгүй мэдээлэл</label>
+      <textarea id="adDescription" placeholder="Зарын тайлбар"></textarea>
+
+      <label>Үнэ / Цалин</label>
+      <input id="adPrice" type="number" min="0" placeholder="₮">
+
+      <label>Холбоо барих утас</label>
+      <input id="adPhone" type="tel" placeholder="Утасны дугаар">
+
+      <label>Байгууллага / Хувь хүн</label>
+      <select id="adEmployerType">
+        <option value="">Сонгох</option>
+        <option value="Хувь хүн">Хувь хүн</option>
+        <option value="Байгууллага">Байгууллага</option>
+      </select>
+
+      <input id="adEmployerName" placeholder="Нэр / Байгууллагын нэр">
+
+      <label>Хаяг</label>
+      <input id="adAddress" placeholder="Аймаг, хот, дүүрэг, хороо">
+
+      <label>Ажлын байр / Объектын байршил</label>
+      <input id="adWorkLocation" placeholder="Байршлын дэлгэрэнгүй">
+
+      <label>Тавигдах шаардлага</label>
+      <textarea id="adRequirements" placeholder="Нэмэлт мэдээлэл"></textarea>
+
+      <label>Зураг оруулах</label>
+      <input id="adImage" type="file" accept="image/*">
+
+      <label>Газрын зургийн өргөрөг</label>
+      <input id="adLatitude" type="number" step="any" placeholder="Latitude">
+
+      <label>Газрын зургийн уртраг</label>
+      <input id="adLongitude" type="number" step="any" placeholder="Longitude">
+
+      <button class="btn" onclick="useCurrentAdLocation()">
+        📍 Миний байршлыг авах
+      </button>
+
+      <button
+        id="publishAdButton"
+        class="ad-primary"
+        onclick="publishAd()">
+        ЗАР НИЙТЛЭХ
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+<script>
+/* =========================================
+  CATEGORY DATA
+========================================= */
+
+const adData = {
+
+  "Үл хөдлөх": [
+    "Хашаа байшин",
+    "1 өрөө байр",
+    "2 өрөө байр",
+    "3 өрөө байр",
+    "4 өрөө байр",
+    "5 ба түүнээс дээш өрөө",
+    "Объект",
+    "Хаус",
+    "Газар",
+    "Оффис",
+    "Бусад"
+  ],
+
+  "Автомашин": [
+    "Суудлын автомашин",
+    "Жийп",
+    "Ачааны машин",
+    "Мотоцикл",
+    "Автобус",
+    "Цахилгаан автомашин",
+    "Бусад"
+  ],
+
+  "Ажлын зар": [
+    "Барилга",
+    "Уул уурхай",
+    "Боловсрол",
+    "Эрүүл мэнд",
+    "Мэдээллийн технологи",
+    "Худалдаа",
+    "Үйлчилгээ",
+    "Тээвэр",
+    "Үйлдвэрлэл",
+    "Санхүү, нягтлан бодох",
+    "Хөдөө аж ахуй",
+    "Зочид буудал, ресторан"
+  ],
+
+  "Сэлбэг, хэрэгсэл": [
+    "Мотор",
+    "Хурдны хайрцаг",
+    "Явах эд анги",
+    "Дугуй",
+    "Обуд",
+    "Аккумулятор",
+    "Гэрэл",
+    "Кузов",
+    "Бусад"
+  ],
+
+  "Үйлчилгээ": [
+    "Барилга засвар",
+    "Цэвэрлэгээ",
+    "Тээвэр",
+    "Хүргэлт",
+    "Автомашины засвар",
+    "IT үйлчилгээ",
+    "Гоо сайхан",
+    "Бусад үйлчилгээ"
+  ],
+
+  "Нийтийн байр, түрээс": [
+    "Нийтийн байр",
+    "Өрөө түрээс",
+    "Байр түрээс",
+    "Оюутны байр",
+    "Хамтран түрээслэх",
+    "Бусад"
+  ],
+
+  "Бусад": [
+    "Төрөл бүрийн зар",
+    "Хэрэгцээт мэдээлэл",
+    "Бусад"
+  ]
+
+};
+
+/* =========================================
+  JOB PROFESSION DATA
+========================================= */
+
+const jobProfessions = {
+
+  "Барилга": [
+    "Барилгын инженер",
+    "Архитектор",
+    "Цахилгаанчин",
+    "Сантехникч",
+    "Гагнуурчин",
+    "Мужаан",
+    "Өрлөгчин",
+    "Засалчин",
+    "Туслах ажилтан"
+  ],
+
+  "Уул уурхай": [
+    "Уул уурхайн инженер",
+    "Экскаваторын оператор",
+    "Жолооч",
+    "Маркшейдер",
+    "Геологич",
+    "Механик инженер"
+  ],
+
+  "Боловсрол": [
+    "Багш",
+    "Сургалтын менежер",
+    "Цэцэрлэгийн багш",
+    "Орчуулагч"
+  ],
+
+  "Эрүүл мэнд": [
+    "Эмч",
+    "Сувилагч",
+    "Эм зүйч",
+    "Лабораторийн ажилтан"
+  ],
+
+  "Мэдээллийн технологи": [
+    "Программист",
+    "Веб хөгжүүлэгч",
+    "Системийн админ",
+    "График дизайнер",
+    "IT инженер"
+  ],
+
+  "Худалдаа": [
+    "Худалдааны зөвлөх",
+    "Кассчин",
+    "Борлуулалтын менежер",
+    "Маркетингийн ажилтан"
+  ],
+
+  "Үйлчилгээ": [
+    "Тогооч",
+    "Зөөгч",
+    "Үсчин",
+    "Үйлчлэгч",
+    "Хамгаалагч"
+  ],
+
+  "Тээвэр": [
+    "Жолооч",
+    "Хүргэлтийн ажилтан",
+    "Логистикийн менежер"
+  ],
+
+  "Үйлдвэрлэл": [
+    "Үйлдвэрийн ажилтан",
+    "Технологич",
+    "Чанарын хяналтын ажилтан"
+  ],
+
+  "Санхүү, нягтлан бодох": [
+    "Нягтлан бодогч",
+    "Эдийн засагч",
+    "Санхүүгийн менежер"
+  ],
+
+  "Хөдөө аж ахуй": [
+    "Малын эмч",
+    "Агрономич",
+    "Малчин",
+    "Фермер"
+  ],
+
+  "Зочид буудал, ресторан": [
+    "Зочид буудлын ажилтан",
+    "Ресепшн",
+    "Тогооч",
+    "Зөөгч"
+  ]
+
+};
+
+/* =========================================
+  SCREEN NAVIGATION
+========================================= */
+
+let adScreenStack = [];
+let currentAdCategory = "";
+let currentAdIndustry = "";
+let currentAdProfession = "";
+let currentClassifiedAds = [];
+
+const adScreens = [
+  "adHome",
+  "adSubcategories",
+  "adProfessions",
+  "adResults",
+  "adDetails",
+  "adPublishScreen"
+];
+
+function showAdScreen(id, saveHistory = true) {
+
+  const current = adScreens.find(
+    screen => !$(screen).classList.contains("hidden")
+  );
+
+  if (saveHistory && current && current !== id) {
+    adScreenStack.push(current);
+  }
+
+  adScreens.forEach(screen => {
+    $(screen).classList.add("hidden");
+  });
+
+  $(id).classList.remove("hidden");
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+function adGoBack() {
+
+  const previous = adScreenStack.pop() || "adHome";
+
+  showAdScreen(previous,false);
+
+}
+
+function openAdCategory(category) {
+
+  currentAdCategory = category;
+  currentAdIndustry = "";
+  currentAdProfession = "";
+
+  adScreenStack = [];
+
+  $("subcategoryTitle").textContent = category;
+
+  const area = $("subcategoryList");
+
+  area.innerHTML = "";
+
+  (adData[category] || []).forEach(name => {
+
+    const button = document.createElement("button");
+
+    button.className = "ad-option";
+    button.textContent = name;
+
+    button.onclick = () => {
+
+      currentAdIndustry = name;
+
+      if (category === "Ажлын зар") {
+        openProfessions(name);
+      } else {
+        showClassifiedResults();
+      }
+
+    };
+
+    area.appendChild(button);
+
+  });
+
+  showAdScreen("adSubcategories");
+
+}
+
+function openProfessions(industry) {
+
+  currentAdIndustry = industry;
+
+  $("professionTitle").textContent =
+    industry + " — Мэргэжил сонгох";
+
+  const area = $("professionList");
+
+  area.innerHTML = "";
+
+  const professions =
+    jobProfessions[industry] || ["Бусад мэргэжил"];
+
+  professions.forEach(name => {
+
+    const button = document.createElement("button");
+
+    button.className = "ad-option";
+    button.textContent = name;
+
+    button.onclick = () => {
+
+      currentAdProfession = name;
+
+      showClassifiedResults();
+
+    };
+
+    area.appendChild(button);
+
+  });
+
+  showAdScreen("adProfessions");
+
+}
+
+/* =========================================
+  LOAD CLASSIFIED ADS
+========================================= */
+
+async function showClassifiedResults() {
+
+  $("resultsTitle").textContent =
+    currentAdProfession ||
+    currentAdIndustry ||
+    currentAdCategory;
+
+  $("classifiedSearch").value = "";
+
+  showAdScreen("adResults");
+
+  await loadClassifiedResults();
+
+}
+
+async function loadClassifiedResults() {
+
+  const area = $("classifiedList");
+
+  area.innerHTML =
+    '<p class="ad-empty">Заруудыг ачаалж байна...</p>';
+
+  let query = supabaseClient
+    .from("classified_ads")
+    .select("*")
+    .eq("status","active")
+    .eq("category",currentAdCategory)
+    .order("created_at",{ascending:false});
+
+  if (currentAdCategory !== "Ажлын зар") {
+    query = query.eq("subcategory",currentAdIndustry);
+  }
+
+  if (currentAdCategory === "Ажлын зар") {
+
+    query = query
+      .eq("industry",currentAdIndustry)
+      .eq("profession",currentAdProfession);
+
+  }
+
+  const {data,error} = await query;
+
+  if (error) {
+
+    console.error(error);
+
+    area.innerHTML =
+      '<p class="ad-empty">Зар ачаалахад алдаа гарлаа.</p>';
+
+    return;
+
+  }
+
+  currentClassifiedAds = data || [];
+
+  renderClassifiedCards(
+    area,
+    currentClassifiedAds
+  );
+
+}
+
+/* =========================================
+  RENDER CLASSIFIED CARDS
+========================================= */
+
+function renderClassifiedCards(area,ads) {
+
+  area.innerHTML = "";
+
+  if (!ads.length) {
+
+    area.innerHTML =
+      '<p class="ad-empty">Одоогоор энэ ангилалд зар алга.</p>';
+
+    return;
+
+  }
+
+  ads.forEach(ad => {
+
+    const card = document.createElement("article");
+
+    card.className = "ad-item";
+
+    const title = document.createElement("h3");
+    title.textContent = ad.title;
+
+    const category = document.createElement("p");
+    category.textContent =
+      "Ангилал: " + (ad.subcategory || ad.industry || ad.category);
+
+    const price = document.createElement("p");
+
+    price.className = "ad-price";
+
+    price.textContent = ad.price != null
+      ? formatPrice(ad.price)
+      : "Үнэ тохирно";
+
+    const location = document.createElement("p");
+
+    location.textContent =
+      "📍 " + (ad.work_location || ad.address || "Байршил тодорхойгүй");
+
+    const description = document.createElement("p");
+
+    description.textContent =
+      (ad.description || "").slice(0,120);
+
+    const button = document.createElement("button");
+
+    button.className = "ad-primary";
+    button.textContent = "Дэлгэрэнгүй үзэх";
+
+    button.onclick = () => openClassifiedDetails(ad);
+
+    card.append(
+      title,
+      category,
+      price,
+      location,
+      description,
+      button
+    );
+
+    area.appendChild(card);
+
+  });
+
+}
+
+/* =========================================
+  SEARCH CLASSIFIED RESULTS
+========================================= */
+
+function filterClassifiedResults() {
+
+  const query =
+    $("classifiedSearch").value.trim().toLowerCase();
+
+  const filtered = currentClassifiedAds.filter(ad => {
+
+    const text = [
+      ad.title,
+      ad.description,
+      ad.address,
+      ad.industry,
+      ad.profession
+    ].join(" ").toLowerCase();
+
+    return text.includes(query);
+
+  });
+
+  renderClassifiedCards(
+    $("classifiedList"),
+    filtered
+  );
+
+}
+
+/* =========================================
+  CLASSIFIED DETAILS
+========================================= */
+
+function openClassifiedDetails(ad) {
+
+  const area = $("adDetailsContent");
+
+  area.innerHTML = "";
+
+  const title = document.createElement("h2");
+
+  title.className = "section-title";
+  title.textContent = ad.title;
+
+  area.appendChild(title);
+
+  if (ad.image_path) {
+
+    const {data} = supabaseClient.storage
+      .from("classified-images")
+      .getPublicUrl(ad.image_path);
+
+    if (data?.publicUrl) {
+
+      const image = document.createElement("img");
+
+      image.src = data.publicUrl;
+      image.alt = ad.title;
+
+      image.style.cssText =
+        "width:100%;max-height:330px;object-fit:contain;border-radius:13px";
+
+      area.appendChild(image);
+
+    }
+
+  }
+
+  const fields = [
+
+    ["Үндсэн ангилал",ad.category],
+    ["Дэд ангилал",ad.subcategory],
+    ["Салбар",ad.industry],
+    ["Мэргэжил",ad.profession],
+    ["Үнэ / Цалин",ad.price != null ? formatPrice(ad.price) : "Тохирно"],
+    ["Байгууллага",ad.employer_name],
+    ["Хаяг",ad.address],
+    ["Байршил",ad.work_location],
+    ["Тавигдах шаардлага",ad.requirements],
+    ["Дэлгэрэнгүй мэдээлэл",ad.description]
+
+  ];
+
+  fields.forEach(([label,value]) => {
+
+    if (!value) return;
+
+    const panel = document.createElement("div");
+
+    panel.className = "ad-detail";
+
+    const heading = document.createElement("h3");
+
+    heading.textContent = label;
+
+    const content = document.createElement("p");
+
+    content.textContent = value;
+
+    panel.append(heading,content);
+
+    area.appendChild(panel);
+
+  });
+
+  if (ad.phone) {
+
+    const phone = document.createElement("a");
+
+    phone.href =
+      "tel:" + ad.phone.replace(/[^\d+]/g,"");
+
+    phone.className = "ad-primary";
+
+    phone.style.cssText =
+      "display:block;text-align:center;text-decoration:none";
+
+    phone.textContent = "☎ Утасдах: " + ad.phone;
+
+    area.appendChild(phone);
+
+  }
+
+  if (
+    ad.latitude !== null &&
+    ad.longitude !== null &&
+    Number.isFinite(Number(ad.latitude)) &&
+    Number.isFinite(Number(ad.longitude))
+  ) {
+
+    const mapPanel = document.createElement("div");
+
+    mapPanel.className = "ad-detail";
+
+    const heading = document.createElement("h3");
+
+    heading.textContent = "📍 Байршлын газрын зураг";
+
+    const map = document.createElement("iframe");
+
+    map.className = "ad-map";
+
+    map.loading = "lazy";
+
+    map.src =
+      "https://www.openstreetmap.org/export/embed.html?marker=" +
+      encodeURIComponent(
+        ad.latitude + "," + ad.longitude
+      );
+
+    mapPanel.append(heading,map);
+
+    area.appendChild(mapPanel);
+
+    const direction = document.createElement("a");
+
+    direction.href =
+      "https://www.google.com/maps?q=" +
+      encodeURIComponent(
+        ad.latitude + "," + ad.longitude
+      );
+
+    direction.target = "_blank";
+    direction.rel = "noopener";
+
+    direction.className = "ad-primary";
+
+    direction.style.cssText =
+      "display:block;text-align:center;text-decoration:none";
+
+    direction.textContent = "🧭 Газрын зураг дээр нээх";
+
+    area.appendChild(direction);
+
+  }
+
+  showAdScreen("adDetails");
+
+}
+
+/* =========================================
+  PUBLISH NAVIGATION
+========================================= */
+
+function openNewAd() {
+
+  const userPromise = getCurrentUser();
+
+  userPromise.then(user => {
+
+    if (!user) {
+
+      alert("Зар нийтлэхийн тулд эхлээд нэвтэрнэ үү.");
+
+      switchTab("account");
+
+      return;
+
+    }
+
+    adScreenStack = [];
+
+    showAdScreen("adPublishScreen",false);
+
+  });
+
+}
+
+/* =========================================
+  FORM CATEGORY OPTIONS
+========================================= */
+
+$("adCategory").addEventListener("change",function() {
+
+  const category = this.value;
+
+  const industry = $("adIndustry");
+
+  const profession = $("adProfession");
+
+  industry.innerHTML =
+    '<option value="">Салбар / Дэд ангилал сонгох</option>';
+
+  profession.innerHTML =
+    '<option value="">Мэргэжил сонгох</option>';
+
+  (adData[category] || []).forEach(name => {
+
+    const option = document.createElement("option");
+
+    option.value = name;
+    option.textContent = name;
+
+    industry.appendChild(option);
+
+  });
+
+});
+
+$("adIndustry").addEventListener("change",function() {
+
+  const professions =
+    jobProfessions[this.value] || [];
+
+  $("adProfession").innerHTML =
+    '<option value="">Мэргэжил сонгох</option>';
+
+  professions.forEach(name => {
+
+    const option = document.createElement("option");
+
+    option.value = name;
+    option.textContent = name;
+
+    $("adProfession").appendChild(option);
+
+  });
+
+});
+
+/* =========================================
+  CURRENT LOCATION
+========================================= */
+
+function useCurrentAdLocation() {
+
+  if (!navigator.geolocation) {
+
+    alert("Байршил тогтоох боломжгүй байна.");
+
+    return;
+
+  }
+
+  navigator.geolocation.getCurrentPosition(
+
+    position => {
+
+      $("adLatitude").value =
+        position.coords.latitude;
+
+      $("adLongitude").value =
+        position.coords.longitude;
+
+      alert("Байршил амжилттай авлаа.");
+
+    },
+
+    () => {
+
+      alert(
+        "Байршлын зөвшөөрлийг шалгана уу."
+      );
+
+    },
+
+    {
+      enableHighAccuracy:true,
+      timeout:15000
+    }
+
+  );
+
+}
+
+</script>
+
+<!-- =========================================
+ NEXORA PART 4 — MARKETPLACE
+========================================= -->
+
+<style>
+.market-platform {
+  position:fixed;
+  inset:0;
+  z-index:400;
+  overflow-y:auto;
+  background:#07150e;
+  color:#f1fff3;
+  padding-bottom:30px;
+}
+
+.market-screen {
+  max-width:1100px;
+  min-height:100vh;
+  padding:16px;
+  margin:auto;
+}
+
+.market-heading {
+  font-size:23px;
+  margin:15px 0;
+}
+
+.market-search {
+  display:flex;
+  gap:8px;
+  margin:15px 0;
+}
+
+.market-search input {
+  flex:1;
+  min-width:0;
+}
+
+.market-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+
+.market-card {
+  background:#122b1e;
+  border:1px solid #244b32;
+  border-radius:13px;
+  padding:12px;
+  min-width:0;
+}
+
+.market-card img {
+  width:100%;
+  height:145px;
+  object-fit:cover;
+  border-radius:9px;
+  background:#0a1c11;
+}
+
+.market-card h3 {
+  font-size:14px;
+  margin:10px 0;
+  overflow-wrap:anywhere;
+}
+
+.market-card p {
+  color:#a3b9a9;
+  font-size:12px;
+  line-height:1.7;
+}
+
+.market-price {
+  color:#39e75f!important;
+  font-size:18px!important;
+  font-weight:bold;
+  margin:8px 0;
+}
+
+.market-button {
+  background:#39e75f;
+  color:#06140b;
+  padding:12px;
+  border:0;
+  border-radius:9px;
+  width:100%;
+  margin-top:9px;
+  font-weight:bold;
+}
+
+.market-secondary {
+  background:#10251a;
+  border:1px solid #244b32;
+  color:#a5ffb2;
+  padding:12px;
+  border-radius:9px;
+  width:100%;
+  margin-top:8px;
+}
+
+.market-category {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:9px;
+}
+
+.market-category button {
+  background:#122b1e;
+  color:#a5ffb2;
+  border:1px solid #244b32;
+  padding:15px 8px;
+  border-radius:10px;
+}
+
+.market-panel {
+  background:#122b1e;
+  border:1px solid #244b32;
+  border-radius:13px;
+  padding:15px;
+  margin:13px 0;
+}
+
+.market-form input,
+.market-form textarea,
+.market-form select {
+  width:100%;
+  padding:13px;
+  margin:7px 0;
+  border-radius:9px;
+  border:1px solid #244b32;
+  background:#0d2116;
+  color:white;
+}
+
+.market-empty {
+  text-align:center;
+  padding:30px 10px;
+  color:#a3b9a9;
+}
+
+.market-back {
+  background:none;
+  color:#a5ffb2;
+  font-size:27px;
+  padding:5px 10px;
+}
+
+.market-top {
+  display:flex;
+  align-items:center;
+  border-bottom:1px solid #244b32;
+  padding-bottom:12px;
+  margin-bottom:15px;
+}
+
+.market-hidden {
+  display:none!important;
+}
+
+@media(min-width:650px) {
+  .market-grid {
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  .market-category {
+    grid-template-columns:repeat(4,1fr);
+  }
+}
+</style>
+
+<section id="nexoraMarketPlatform" class="market-platform hidden">
+
+  <!-- MARKET HOME -->
+
+  <div id="marketHome" class="market-screen">
+
+    <h2 class="market-heading">🛍️ NEXORA ХУДАЛДАА</h2>
+
+    <p style="color:#a3b9a9">
+      Монголын нэгдсэн цахим худалдааны платформ
+    </p>
+
+    <div class="market-search">
+      <input
+        class="field"
+        id="marketSearch"
+        placeholder="Бараа хайх..."
+        onkeydown="if(event.key==='Enter')searchMarketProducts()">
+
+      <button class="btn btn-primary"
+        onclick="searchMarketProducts()">
+        Хайх
+      </button>
+    </div>
+
+    <h3 class="section-title">Худалдааны ангилал</h3>
+
+    <div class="market-category">
+
+      <button onclick="filterMarket('Бүгд')">🛍️ Бүгд</button>
+      <button onclick="filterMarket('Электрон бараа')">📱 Электрон</button>
+      <button onclick="filterMarket('Хувцас')">👕 Хувцас</button>
+      <button onclick="filterMarket('Гутал')">👟 Гутал</button>
+      <button onclick="filterMarket('Гэр ахуй')">🏠 Гэр ахуй</button>
+      <button onclick="filterMarket('Автомашин')">🚗 Автомашин</button>
+      <button onclick="filterMarket('Хүүхдийн бараа')">🧸 Хүүхэд</button>
+      <button onclick="filterMarket('Бусад')">📦 Бусад</button>
+
+    </div>
+
+    <h3 class="section-title">🔥 Шинэ бараанууд</h3>
+
+    <div id="marketProductList" class="market-grid">
+      <p class="market-empty">Бараа ачаалж байна...</p>
+    </div>
+
+    <div class="market-panel">
+
+      <button class="market-secondary"
+        onclick="openMarketScreen('marketPublish')">
+        ＋ Бараа худалдаанд гаргах
+      </button>
+
+      <button class="market-secondary"
+        onclick="openMarketScreen('marketCart');renderMarketCart()">
+        🛒 Миний сагс
+      </button>
+
+      <button class="market-secondary"
+        onclick="openMarketScreen('supplierScreen')">
+        🏪 Нийлүүлэгч болох
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- PRODUCT DETAIL -->
+
+  <div id="marketProductDetails" class="market-screen market-hidden">
+
+    <div class="market-top">
+      <button class="market-back"
+        onclick="openMarketScreen('marketHome')">←</button>
+      <h2>Барааны мэдээлэл</h2>
+    </div>
+
+    <div id="marketProductDetailContent"></div>
+
+  </div>
+
+  <!-- PUBLISH PRODUCT -->
+
+  <div id="marketPublish" class="market-screen market-hidden">
+
+    <div class="market-top">
+      <button class="market-back"
+        onclick="openMarketScreen('marketHome')">←</button>
+      <h2>Бараа нийтлэх</h2>
+    </div>
+
+    <div class="market-panel market-form">
+
+      <input id="marketProductTitle"
+        placeholder="Барааны нэр">
+
+      <select id="marketProductCategory">
+        <option value="">Ангилал сонгох</option>
+        <option>Электрон бараа</option>
+        <option>Хувцас</option>
+        <option>Гутал</option>
+        <option>Гэр ахуй</option>
+        <option>Автомашин</option>
+        <option>Хүүхдийн бараа</option>
+        <option>Бусад</option>
+      </select>
+
+      <input id="marketProductPrice"
+        type="number" min="1" placeholder="Үнэ ₮">
+
+      <textarea id="marketProductDescription"
+        placeholder="Барааны дэлгэрэнгүй тайлбар"></textarea>
+
+      <input id="marketProductPhone"
+        type="tel" placeholder="Холбоо барих утас">
+
+      <input id="marketProductLocation"
+        placeholder="Байршил">
+
+      <input id="marketProductImage"
+        type="file" accept="image/*">
+
+      <button class="market-button"
+        id="marketPublishButton"
+        onclick="publishMarketProduct()">
+        БАРАА НИЙТЛЭХ
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- CART -->
+
+  <div id="marketCart" class="market-screen market-hidden">
+
+    <div class="market-top">
+      <button class="market-back"
+        onclick="openMarketScreen('marketHome')">←</button>
+      <h2>🛒 Миний сагс</h2>
+    </div>
+
+    <div id="marketCartList"></div>
+
+    <div class="market-panel">
+
+      <h3>Нийт дүн</h3>
+
+      <h2 id="marketCartTotal"
+        style="color:#39e75f;margin:12px 0">0₮</h2>
+
+      <button class="market-button"
+        onclick="createMarketOrder()">
+        ЗАХИАЛГА ҮҮСГЭХ
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- SUPPLIER -->
+
+  <div id="supplierScreen" class="market-screen market-hidden">
+
+    <div class="market-top">
+      <button class="market-back"
+        onclick="openMarketScreen('marketHome')">←</button>
+      <h2>🏪 Нийлүүлэгчийн бүртгэл</h2>
+    </div>
+
+    <div class="market-panel market-form">
+
+      <select id="supplierType">
+        <option value="">Төрөл сонгох</option>
+        <option value="individual">Хувь хүн</option>
+        <option value="company">Байгууллага</option>
+      </select>
+
+      <input id="supplierName"
+        placeholder="Нэр / Байгууллагын нэр">
+
+      <input id="supplierRegisterNo"
+        placeholder="Регистр / Байгууллагын дугаар">
+
+      <input id="supplierPhone"
+        placeholder="Утас">
+
+      <input id="supplierEmail"
+        type="email" placeholder="И-мэйл">
+
+      <input id="supplierAddress"
+        placeholder="Хаяг">
+
+      <button class="market-button"
+        onclick="submitSupplier()">
+        БҮРТГҮҮЛЭХ
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- ADMIN -->
+
+  <div id="marketAdmin" class="market-screen market-hidden">
+
+    <div class="market-top">
+      <button class="market-back"
+        onclick="openMarketScreen('marketHome')">←</button>
+      <h2>⚙️ Админ самбар</h2>
+    </div>
+
+    <div class="market-panel">
+
+      <h3>Нийт бараа</h3>
+      <h2 id="adminProductCount">0</h2>
+
+      <h3>Нийт захиалга</h3>
+      <h2 id="adminOrderCount">0</h2>
+
+      <h3>Нийлүүлэгчийн хүсэлт</h3>
+      <h2 id="adminSupplierCount">0</h2>
+
+    </div>
+
+    <div id="adminProductList"></div>
+
+    <button class="market-button"
+      onclick="loadMarketAdmin()">
+      МЭДЭЭЛЭЛ ШИНЭЧЛЭХ
+    </button>
+
+  </div>
+
+</section>
+
+<!-- MARKET ADMIN OPENING -->
+<!-- Админ эрхтэй хэрэглэгчид л харагдах ёстой -->
+
+<script>
+/* =========================================
+  MARKET NAVIGATION
+========================================= */
+
+const marketScreens = [
+  "marketHome",
+  "marketProductDetails",
+  "marketPublish",
+  "marketCart",
+  "supplierScreen",
+  "marketAdmin"
+];
+
+let marketCategory = "Бүгд";
+let marketProducts = [];
+let marketCart = [];
+
+function openMarketScreen(id) {
+
+  marketScreens.forEach(screen => {
+    $(screen).classList.add("market-hidden");
+  });
+
+  $(id).classList.remove("market-hidden");
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+/* =========================================
+  PRODUCT SEARCH AND FILTER
+========================================= */
+
+function filterMarket(category) {
+
+  marketCategory = category;
+
+  renderMarketProducts();
+
+}
+
+function searchMarketProducts() {
+
+  renderMarketProducts();
+
+}
+
+function renderMarketProducts() {
+
+  const area = $("marketProductList");
+
+  const search = $("marketSearch")
+    .value.trim().toLowerCase();
+
+  area.innerHTML = "";
+
+  const filtered = marketProducts.filter(item => {
+
+    const categoryMatch =
+      marketCategory === "Бүгд" ||
+      item.category === marketCategory;
+
+    const text = [
+      item.title,
+      item.description,
+      item.category,
+      item.location
+    ].join(" ").toLowerCase();
+
+    return categoryMatch && text.includes(search);
+
+  });
+
+  if (!filtered.length) {
+
+    area.innerHTML =
+      '<p class="market-empty">Тохирох бараа олдсонгүй.</p>';
+
+    return;
+
+  }
+
+  filtered.forEach(item => {
+
+    const card = document.createElement("article");
+
+    card.className = "market-card";
+
+    const image = document.createElement("img");
+
+    image.src = item.image_url || "";
+    image.alt = item.title;
+
+    image.onerror = () => {
+      image.style.display = "none";
+    };
+
+    const title = document.createElement("h3");
+    title.textContent = item.title;
+
+    const price = document.createElement("p");
+    price.className = "market-price";
+    price.textContent = formatPrice(item.price);
+
+    const location = document.createElement("p");
+    location.textContent = "📍 " + (item.location || "Тодорхойгүй");
+
+    const button = document.createElement("button");
+    button.className = "market-button";
+    button.textContent = "Дэлгэрэнгүй";
+
+    button.onclick = () => openMarketProductDetails(item);
+
+    card.append(image,title,price,location,button);
+
+    area.appendChild(card);
+
+  });
+
+}
+
+/* =========================================
+  LOAD PRODUCTS FROM SUPABASE
+========================================= */
+
+async function loadMarketProducts() {
+
+  const area = $("marketProductList");
+
+  area.innerHTML =
+    '<p class="market-empty">Бараа ачаалж байна...</p>';
+
+  const {data,error} = await supabaseClient
+    .from("market_products")
+    .select("*")
+    .eq("status","active")
+    .order("created_at",{ascending:false});
+
+  if (error) {
+
+    console.error(error);
+
+    area.innerHTML =
+      '<p class="market-empty">Бараа ачаалахад алдаа гарлаа.</p>';
+
+    return;
+
+  }
+
+  marketProducts = data || [];
+
+  renderMarketProducts();
+
+}
+
+/* =========================================
+  PRODUCT DETAILS
+========================================= */
+
+function openMarketProductDetails(item) {
+
+  const area = $("marketProductDetailContent");
+
+  area.innerHTML = "";
+
+  const title = document.createElement("h2");
+  title.textContent = item.title;
+
+  const image = document.createElement("img");
+
+  image.src = item.image_url || "";
+  image.style.cssText =
+    "width:100%;max-height:350px;object-fit:contain;border-radius:12px";
+
+  const price = document.createElement("h2");
+
+  price.className = "market-price";
+  price.textContent = formatPrice(item.price);
+
+  const description = document.createElement("p");
+
+  description.textContent = item.description || "";
+
+  const location = document.createElement("p");
+
+  location.textContent =
+    "📍 Байршил: " + (item.location || "Тодорхойгүй");
+
+  const phone = document.createElement("p");
+
+  phone.textContent =
+    "☎ Утас: " + (item.phone || "Тодорхойгүй");
+
+  const add = document.createElement("button");
+
+  add.className = "market-button";
+  add.textContent = "🛒 Сагсанд нэмэх";
+
+  add.onclick = () => addMarketCart(item);
+
+  area.append(
+    title,
+    image,
+    price,
+    description,
+    location,
+    phone,
+    add
+  );
+
+  openMarketScreen("marketProductDetails");
+
+}
+
+/* =========================================
+  CART
+========================================= */
+
+function addMarketCart(item) {
+
+  const existing = marketCart.find(
+    x => x.id === item.id
+  );
+
+  if (existing) {
+    existing.quantity++;
+  } else {
+    marketCart.push({
+      id:item.id,
+      title:item.title,
+      price:Number(item.price),
+      quantity:1
+    });
+  }
+
+  alert("Сагсанд нэмэгдлээ.");
+
+  renderMarketCart();
+
+}
+
+function renderMarketCart() {
+
+  const area = $("marketCartList");
+
+  area.innerHTML = "";
+
+  let total = 0;
+
+  if (!marketCart.length) {
+
+    area.innerHTML =
+      '<p class="market-empty">Сагс хоосон байна.</p>';
+
+  }
+
+  marketCart.forEach((item,index) => {
+
+    total += item.price * item.quantity;
+
+    const panel = document.createElement("div");
+
+    panel.className = "market-panel";
+
+    const title = document.createElement("h3");
+
+    title.textContent = item.title;
+
+    const amount = document.createElement("p");
+
+    amount.textContent =
+      formatPrice(item.price) +
+      " × " + item.quantity;
+
+    const remove = document.createElement("button");
+
+    remove.className = "market-secondary";
+    remove.textContent = "Устгах";
+
+    remove.onclick = () => {
+
+      marketCart.splice(index,1);
+
+      renderMarketCart();
+
+    };
+
+    panel.append(title,amount,remove);
+
+    area.appendChild(panel);
+
+  });
+
+  $("marketCartTotal").textContent =
+    formatPrice(total);
+
+}
+
+/* =========================================
+  PUBLISH MARKET PRODUCT
+========================================= */
+
+async function publishMarketProduct() {
+
   const user = await getCurrentUser();
 
   if (!user) {
-    alert("Эхлээд нэвтэрнэ үү.");
+
+    alert("Нэвтэрч байж бараа нийтэлнэ.");
+
     switchTab("account");
+
     return;
+
   }
 
-  const category = $("adCategory").value;
-  const industry = $("adIndustry").value;
-  const profession = $("adProfession").value;
+  const title =
+    $("marketProductTitle").value.trim();
 
-  const title = $("adTitle").value.trim();
-  const description = $("adDescription").value.trim();
-  const phone = $("adPhone").value.trim();
-  const priceText = $("adPrice").value.trim();
+  const category =
+    $("marketProductCategory").value;
 
-  const employerType = $("adEmployerType").value;
-  const employerName = $("adEmployerName").value.trim();
+  const price =
+    Number($("marketProductPrice").value);
 
-  const address = $("adAddress").value.trim();
-  const requirements = $("adRequirements").value.trim();
-  const workLocation = $("adWorkLocation").value.trim();
+  const description =
+    $("marketProductDescription").value.trim();
 
-  const latitudeText = $("adLatitude").value.trim();
-  const longitudeText = $("adLongitude").value.trim();
+  const phone =
+    $("marketProductPhone").value.trim();
 
-  const file = $("adImage").files[0];
+  const location =
+    $("marketProductLocation").value.trim();
+
+  const file =
+    $("marketProductImage").files[0];
 
   if (
-    !category ||
     !title ||
+    !category ||
+    !Number.isFinite(price) ||
+    price <= 0 ||
     !description ||
-    !phone ||
-    !address
+    !phone
   ) {
-    alert("Шаардлагатай талбаруудыг бөглөнө үү.");
-    return;
-  }
 
-  if (
-    category === "Ажлын зар" &&
-    (!industry || !profession)
-  ) {
-    alert("Салбар болон мэргэжлийг сонгоно уу.");
+    alert("Бүх шаардлагатай талбарыг бөглөнө үү.");
+
     return;
+
   }
 
   if (file && (
     !file.type.startsWith("image/") ||
-    file.size > 5 * 1024 * 1024
+    file.size > 5*1024*1024
   )) {
-    alert("5MB-аас бага зураг сонгоно уу.");
+
+    alert("Зураг 5MB-аас бага байх ёстой.");
+
     return;
+
   }
 
-  if (
-    (latitudeText && !longitudeText) ||
-    (!latitudeText && longitudeText)
-  ) {
-    alert("Өргөрөг, уртрагийн хоёуланг оруулна уу.");
-    return;
-  }
-
-  let latitude = latitudeText
-    ? Number(latitudeText)
-    : null;
-
-  let longitude = longitudeText
-    ? Number(longitudeText)
-    : null;
-
-  if (
-    latitude !== null &&
-    (
-      !Number.isFinite(latitude) ||
-      !Number.isFinite(longitude) ||
-      latitude < -90 ||
-      latitude > 90 ||
-      longitude < -180 ||
-      longitude > 180
-    )
-  ) {
-    alert("Байршлын координат буруу байна.");
-    return;
-  }
-
-  const button = $("publishAdButton");
+  const button = $("marketPublishButton");
 
   button.disabled = true;
   button.textContent = "Хадгалж байна...";
@@ -1148,224 +4754,364 @@ async function publishAd() {
   let imagePath = null;
 
   try {
+
     if (file) {
+
       const extension =
-        file.name.split(".").pop()
-          .replace(/[^a-zA-Z0-9]/g, "") || "jpg";
+        file.name.split(".").pop().replace(/[^a-zA-Z0-9]/g,"") || "jpg";
 
       imagePath =
         user.id + "/" + crypto.randomUUID() + "." + extension;
 
-      const { error } = await supabaseClient.storage
-        .from("classified-images")
-        .upload(imagePath, file, {
-          contentType: file.type,
-          upsert: false
-        });
+      const {error:uploadError} =
+        await supabaseClient.storage
+          .from("market-images")
+          .upload(imagePath,file,{
+            contentType:file.type,
+            upsert:false
+          });
 
-      if (error) throw error;
+      if (uploadError) throw uploadError;
+
     }
 
-    const record = {
-      owner_id: user.id,
-      category,
-      subcategory: industry || null,
-      industry: industry || null,
-      profession: profession || null,
-      title,
-      description,
-      phone,
-      price: priceText ? Number(priceText) : null,
-      salary:
-        category === "Ажлын зар" && priceText
-          ? Number(priceText)
-          : null,
-      employer_type: employerType || null,
-      employer_name: employerName || null,
-      address,
-      requirements: requirements || null,
-      work_location: workLocation || null,
-      latitude,
-      longitude,
-      image_path: imagePath,
-      status: "pending_payment"
-    };
+    const {data:publicData} = imagePath
+      ? supabaseClient.storage
+          .from("market-images")
+          .getPublicUrl(imagePath)
+      : {data:{publicUrl:null}};
 
-    const { error } = await supabaseClient
-      .from("classified_ads")
-      .insert(record);
+    const {error} = await supabaseClient
+      .from("market_products")
+      .insert({
+        owner_id:user.id,
+        title,
+        category,
+        price,
+        description,
+        phone,
+        location,
+        image_path:imagePath,
+        image_url:publicData.publicUrl,
+        status:"pending"
+      });
 
     if (error) throw error;
 
-    alert("Зар амжилттай хадгалагдлаа!");
+    alert("Бараа нийтлэгдэх хүсэлт илгээгдлээ.");
 
     [
-      "adCategory",
-      "adIndustry",
-      "adProfession",
-      "adTitle",
-      "adDescription",
-      "adPhone",
-      "adPrice",
-      "adEmployerType",
-      "adEmployerName",
-      "adAddress",
-      "adRequirements",
-      "adWorkLocation",
-      "adLatitude",
-      "adLongitude",
-      "adImage"
-    ].forEach(id => {
-      if ($(id)) $(id).value = "";
-    });
+      "marketProductTitle",
+      "marketProductCategory",
+      "marketProductPrice",
+      "marketProductDescription",
+      "marketProductPhone",
+      "marketProductLocation",
+      "marketProductImage"
+    ].forEach(id => $(id).value = "");
 
-    showAdScreen("adHome", false);
+    await loadMarketProducts();
 
-    await loadPublishedAds();
-    await loadMyClassifiedAds();
+    openMarketScreen("marketHome");
 
-  } catch (error) {
+  } catch(error) {
+
     console.error(error);
 
     if (imagePath) {
       await supabaseClient.storage
-        .from("classified-images")
+        .from("market-images")
         .remove([imagePath]);
     }
 
-    alert("Зар хадгалахад алдаа гарлаа: " + error.message);
+    alert("Алдаа: " + error.message);
 
   } finally {
+
     button.disabled = false;
-    button.textContent = "ЗАР НИЙТЛЭХ";
-  }
-}
+    button.textContent = "БАРАА НИЙТЛЭХ";
 
-/* =====================================
-   HOME ADS
-===================================== */
-
-async function loadPublishedAds() {
-  const home = $("classifiedHomeList");
-
-  if (!home) return;
-
-  home.innerHTML =
-    '<p class="empty">Заруудыг ачаалж байна...</p>';
-
-  const { data, error } = await supabaseClient
-    .from("classified_ads")
-    .select("*")
-    .eq("status", "active")
-    .order("created_at", { ascending: false })
-    .limit(30);
-
-  if (error) {
-    console.error(error);
-
-    home.innerHTML =
-      '<p class="empty">Зар ачаалахад алдаа гарлаа.</p>';
-
-    return;
   }
 
-  renderClassifiedCards(home, data || []);
 }
 
-/* =====================================
-   MY CLASSIFIED ADS
-===================================== */
+/* =========================================
+  CREATE ORDER
+========================================= */
 
-async function loadMyClassifiedAds() {
-  const area = $("myClassifiedAdsList");
-
-  area.textContent = "Ачаалж байна...";
+async function createMarketOrder() {
 
   const user = await getCurrentUser();
 
   if (!user) {
-    area.textContent = "Эхлээд нэвтэрнэ үү.";
+
+    alert("Захиалга өгөхийн тулд нэвтэрнэ үү.");
+
+    switchTab("account");
+
     return;
+
   }
 
-  const { data, error } = await supabaseClient
-    .from("classified_ads")
-    .select("*")
-    .eq("owner_id", user.id)
-    .neq("status", "deleted")
-    .order("created_at", { ascending: false });
+  if (!marketCart.length) {
+
+    alert("Таны сагс хоосон байна.");
+
+    return;
+
+  }
+
+  const total = marketCart.reduce(
+    (sum,item) => sum + item.price * item.quantity,
+    0
+  );
+
+  const orderItems = marketCart.map(item => ({
+    product_id:item.id,
+    title:item.title,
+    price:item.price,
+    quantity:item.quantity
+  }));
+
+  const {data,error} = await supabaseClient
+    .from("market_orders")
+    .insert({
+      buyer_id:user.id,
+      items:orderItems,
+      total_amount:total,
+      status:"pending_payment",
+      payment_status:"unpaid"
+    })
+    .select()
+    .single();
 
   if (error) {
-    area.textContent = error.message;
+
+    console.error(error);
+
+    alert("Захиалга үүсгэхэд алдаа гарлаа: " + error.message);
+
     return;
+
   }
 
-  area.innerHTML = "";
+  marketCart = [];
 
-  if (!data || !data.length) {
-    area.textContent = "Танд одоогоор зар алга.";
-    return;
-  }
+  renderMarketCart();
 
-  data.forEach(ad => {
-    const card = document.createElement("div");
-    card.className = "panel";
+  alert(
+    "Захиалга амжилттай үүслээ. Захиалгын дугаар: " +
+    data.id
+  );
 
-    const title = document.createElement("h3");
-    title.textContent = ad.title;
-
-    const category = document.createElement("p");
-    category.textContent = "Ангилал: " + ad.category;
-
-    const status = document.createElement("p");
-    status.textContent =
-      "Төлөв: " + ad.status;
-
-    const remove = document.createElement("button");
-    remove.className = "btn btn-danger";
-    remove.textContent = "Устгах";
-
-    remove.onclick = () => deleteMyClassifiedAd(ad.id);
-
-    card.append(title, category, status, remove);
-    area.appendChild(card);
-  });
 }
 
-async function deleteMyClassifiedAd(id) {
-  if (!confirm("Энэ зарыг устгах уу?")) return;
+/* =========================================
+  SUPPLIER REGISTRATION
+========================================= */
+
+async function submitSupplier() {
 
   const user = await getCurrentUser();
 
-  if (!user) return;
+  if (!user) {
 
-  const { error } = await supabaseClient
-    .from("classified_ads")
-    .update({ status: "deleted" })
-    .eq("id", id)
-    .eq("owner_id", user.id);
+    alert("Нэвтэрч байж нийлүүлэгчээр бүртгүүлнэ.");
 
-  if (error) {
-    alert("Устгахад алдаа гарлаа: " + error.message);
+    switchTab("account");
+
     return;
+
   }
 
-  alert("Зар устгагдлаа.");
+  const record = {
 
-  await loadMyClassifiedAds();
-  await loadPublishedAds();
+    owner_id:user.id,
+
+    type:$("supplierType").value,
+
+    name:$("supplierName").value.trim(),
+
+    register_no:$("supplierRegisterNo").value.trim(),
+
+    phone:$("supplierPhone").value.trim(),
+
+    email:$("supplierEmail").value.trim(),
+
+    address:$("supplierAddress").value.trim(),
+
+    status:"pending"
+
+  };
+
+  if (
+    !record.type ||
+    !record.name ||
+    !record.phone ||
+    !record.address
+  ) {
+
+    alert("Шаардлагатай талбаруудыг бөглөнө үү.");
+
+    return;
+
+  }
+
+  const {error} = await supabaseClient
+    .from("market_suppliers")
+    .insert(record);
+
+  if (error) {
+
+    alert("Бүртгэл амжилтгүй: " + error.message);
+
+    return;
+
+  }
+
+  alert("Нийлүүлэгчийн хүсэлт амжилттай илгээгдлээ.");
+
 }
 
-/* =====================================
-   EVENT LISTENERS
-===================================== */
+/* =========================================
+  ADMIN DASHBOARD
+========================================= */
 
-$("adCategory").addEventListener(
-  "change",
-  updateAdIndustryOptions
-);
+async function loadMarketAdmin() {
 
-$("adIndustry").addEventListener(
-  "change",
-  updateProfessionOptions
-);
+  const user = await getCurrentUser();
+
+  if (!user) {
+
+    alert("Админ эрх шаардлагатай.");
+
+    return;
+
+  }
+
+  const {data:admin,error:adminError} = await supabaseClient
+    .from("profiles")
+    .select("role")
+    .eq("id",user.id)
+    .maybeSingle();
+
+  if (
+    adminError ||
+    !admin ||
+    admin.role !== "admin"
+  ) {
+
+    alert("Танд админ эрх байхгүй байна.");
+
+    return;
+
+  }
+
+  const [products,orders,suppliers] = await Promise.all([
+
+    supabaseClient
+      .from("market_products")
+      .select("id,title,status"),
+
+    supabaseClient
+      .from("market_orders")
+      .select("id,status"),
+
+    supabaseClient
+      .from("market_suppliers")
+      .select("id,status")
+
+  ]);
+
+  if (products.error || orders.error || suppliers.error) {
+
+    alert("Админ мэдээлэл ачаалахад алдаа гарлаа.");
+
+    return;
+
+  }
+
+  $("adminProductCount").textContent =
+    products.data.length;
+
+  $("adminOrderCount").textContent =
+    orders.data.length;
+
+  $("adminSupplierCount").textContent =
+    suppliers.data.length;
+
+  const area = $("adminProductList");
+
+  area.innerHTML = "";
+
+  products.data.forEach(item => {
+
+    const panel = document.createElement("div");
+
+    panel.className = "market-panel";
+
+    const title = document.createElement("h3");
+
+    title.textContent = item.title;
+
+    const status = document.createElement("p");
+
+    status.textContent = "Төлөв: " + item.status;
+
+    panel.append(title,status);
+
+    if (item.status === "pending") {
+
+      const approve = document.createElement("button");
+
+      approve.className = "market-button";
+
+      approve.textContent = "Зөвшөөрөх";
+
+      approve.onclick = () =>
+        updateMarketProductStatus(item.id,"active");
+
+      panel.appendChild(approve);
+
+    }
+
+    area.appendChild(panel);
+
+  });
+
+  openMarketScreen("marketAdmin");
+
+}
+
+async function updateMarketProductStatus(id,status) {
+
+  const {error} = await supabaseClient
+    .from("market_products")
+    .update({status})
+    .eq("id",id);
+
+  if (error) {
+
+    alert("Төлөв өөрчлөхөд алдаа гарлаа.");
+
+    return;
+
+  }
+
+  await loadMarketAdmin();
+
+  await loadMarketProducts();
+
+}
+
+/* =========================================
+  ADMIN BUTTON
+========================================= */
+
+async function openMarketAdmin() {
+
+  await loadMarketAdmin();
+
+}
+
+</script>
