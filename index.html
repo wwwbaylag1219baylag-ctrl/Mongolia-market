@@ -915,7 +915,14 @@ footer strong {
           onclick="useCurrentAdLocation()">
           📍 Миний байршлыг авах
         </button>
-
+<button class="market-secondary"
+  onclick="
+    $('nexoraMarketPlatform').classList.add('hidden');
+    $('nexoraAdPlatform').classList.remove('hidden');
+    showAdScreen('adHome',false);
+  ">
+  ← Зар руу буцах
+</button>
         <button class="btn btn-primary btn-block"
           id="publishAdButton"
           onclick="publishAd()">
@@ -930,7 +937,10 @@ footer strong {
   <!-- ==================================
        ХУДАЛДААНЫ ПЛАТФОРМ
   =================================== -->
-
+<button class="btn btn-primary"
+  onclick="openMarketPlatform()">
+  🛍️ Худалдааны платформ
+</button>
   <section id="marketPlatform" class="hidden">
 
     <nav class="main-tabs" id="marketTabs">
@@ -1255,7 +1265,6 @@ footer strong {
   <p>© 2026 NEXORA. Бүх эрх хамгаалагдсан.</p>
 </footer>
 
-<!-- 2-Р ХЭСЭГ ЭНДЭЭС ҮРГЭЛЖИЛНЭ -->
 
 <!-- =========================================
  NEXORA PART 2 / 4
