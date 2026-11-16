@@ -1,250 +1,259 @@
-NEXORA/
-│
-├── app/
-│   ├── _layout.tsx
-│   ├── index.tsx
-│   ├── ads/
-│   │   └── index.tsx
-│   └── shop/
-│       └── index.tsx
-│
-├── constants/
-│   └── Colors.ts
-│
-└── package.json
-const Colors = {
-  primary: "#243B8A",
-  secondary: "#087E72",
-  background: "#F4F6FA",
-  white: "#FFFFFF",
-  black: "#172033",
-  gray: "#64748B",
-  lightGray: "#E2E8F0",
-  danger: "#DC2626",
-  success: "#16A34A",
-};
 
-export default Colors;
-import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXORA</title>
 
-export default function RootLayout() {
-  return (
-    <>
-      <StatusBar style="dark" />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          animation: "slide_from_right",
-          contentStyle: {
-            backgroundColor: "#F4F6FA",
-          },
-        }}
-      />
-    </>
-  );
-}
-      import React from "react";
-
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  ScrollView,
-} from "react-native";
-
-import { useRouter } from "expo-router";
-
-import Colors from "../constants/Colors";
-
-export default function HomeScreen() {
-  const router = useRouter();
-
-  return (
-    <ScrollView style={styles.container}>
-
-      <View style={styles.header}>
-        <Text style={styles.logo}>NEXORA</Text>
-        <Text style={styles.subtitle}>
-          Нэг дор бүх боломж
-        </Text>
-      </View>
-
-      <View style={styles.welcome}>
-        <Text style={styles.title}>
-          Тавтай морил!
-        </Text>
-
-        <Text style={styles.description}>
-          Худалдаа, зар, ажил хайлт,
-          үйлчилгээ бүгд нэг дор.
-        </Text>
-      </View>
-
-      <Pressable
-        style={styles.adsCard}
-        onPress={() => router.push("/ads")}
-      >
-        <Text style={styles.icon}>📢</Text>
-
-        <Text style={styles.cardTitle}>
-          ЗАРЫН ПЛАТФОРМ
-        </Text>
-
-        <Text style={styles.cardDescription}>
-          Ажил, үл хөдлөх, автомашин,
-          үйлчилгээ болон бусад зар.
-        </Text>
-
-        <Text style={styles.buttonText}>
-          Зар үзэх →
-        </Text>
-      </Pressable>
-
-      <Pressable
-        style={styles.shopCard}
-        onPress={() => router.push("/shop")}
-      >
-        <Text style={styles.icon}>🛍️</Text>
-
-        <Text style={styles.cardTitle}>
-          ХУДАЛДААНЫ ПЛАТФОРМ
-        </Text>
-
-        <Text style={styles.cardDescription}>
-          Бараа үзэх, сагслах,
-          худалдан авах.
-        </Text>
-
-        <Text style={styles.buttonText}>
-          Дэлгүүр орох →
-        </Text>
-      </Pressable>
-
-      <Text style={styles.footer}>
-        © 2026 NEXORA
-      </Text>
-
-    </ScrollView>
-  );
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.background,
-    padding: 20,
-  },
-
-  header: {
-    marginTop: 45,
-    marginBottom: 35,
-  },
-
-  logo: {
-    fontSize: 34,
-    fontWeight: "900",
-    color: Colors.primary,
-    letterSpacing: 4,
-  },
-
-  subtitle: {
-    color: Colors.gray,
-    marginTop: 5,
-    fontSize: 14,
-  },
-
-  welcome: {
-    marginBottom: 25,
-  },
-
-  title: {
-    fontSize: 26,
-    fontWeight: "800",
-    color: Colors.black,
-  },
-
-  description: {
-    color: Colors.gray,
-    marginTop: 10,
-    lineHeight: 23,
-  },
-
-  adsCard: {
-    backgroundColor: Colors.primary,
-    padding: 24,
-    borderRadius: 22,
-    marginBottom: 20,
-  },
-
-  shopCard: {
-    backgroundColor: Colors.secondary,
-    padding: 24,
-    borderRadius: 22,
-    marginBottom: 20,
-  },
-
-  icon: {
-    fontSize: 38,
-    marginBottom: 15,
-  },
-
-  cardTitle: {
-    color: Colors.white,
-    fontSize: 19,
-    fontWeight: "900",
-  },
-
-  cardDescription: {
-    color: Colors.white,
-    marginTop: 12,
-    lineHeight: 23,
-  },
-
-  buttonText: {
-    color: Colors.white,
-    fontWeight: "800",
-    marginTop: 22,
-    fontSize: 15,
-  },
-
-  footer: {
-    textAlign: "center",
-    color: Colors.gray,
-    marginVertical: 30,
-  },
-});
-      import React from "react";
-import { View, Text } from "react-native";
-
-export default function AdsScreen() {
-  return (
-    <View style={{ flex: 1, padding: 25 }}>
-      <Text style={{ fontSize: 26, fontWeight: "bold" }}>
-        NEXORA ЗАР
-      </Text>
-
-      <Text style={{ marginTop: 15 }}>
-        Зарын платформ
-      </Text>
-    </View>
-  );
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6fa;
+  color: #172033;
 }
-       import React from "react";
-import { View, Text } from "react-native";
 
-export default function ShopScreen() {
-  return (
-    <View style={{ flex: 1, padding: 25 }}>
-      <Text style={{ fontSize: 26, fontWeight: "bold" }}>
-        NEXORA SHOP
-      </Text>
-
-      <Text style={{ marginTop: 15 }}>
-        Худалдааны платформ
-      </Text>
-    </View>
-  );
+header {
+  background: #243b8a;
+  color: white;
+  padding: 25px 20px;
+  border-radius: 0 0 25px 25px;
 }
-        
+
+.logo {
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: 4px;
+}
+
+header p {
+  margin-top: 8px;
+  opacity: .85;
+}
+
+.back {
+  display: inline-block;
+  color: white;
+  text-decoration: none;
+  margin-bottom: 20px;
+}
+
+.container {
+  padding: 20px;
+}
+
+.welcome {
+  margin: 15px 0 22px;
+}
+
+.welcome h2 {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.search {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 13px;
+  font-size: 15px;
+  margin-bottom: 18px;
+}
+
+.primary-btn {
+  display: block;
+  width: 100%;
+  padding: 17px;
+  background: #243b8a;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 13px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 28px;
+}
+
+h3 {
+  margin-bottom: 17px;
+  font-size: 20px;
+}
+
+.categories {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 13px;
+}
+
+.category {
+  background: white;
+  padding: 20px 13px;
+  border-radius: 16px;
+  text-decoration: none;
+  color: #172033;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.category span {
+  display: block;
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.category strong {
+  font-size: 14px;
+}
+
+.category small {
+  display: block;
+  color: #64748b;
+  margin-top: 8px;
+}
+
+.info {
+  background: #e8edff;
+  padding: 20px;
+  margin-top: 25px;
+  border-radius: 15px;
+  line-height: 1.7;
+}
+
+.info strong {
+  color: #243b8a;
+}
+
+footer {
+  text-align: center;
+  padding: 30px;
+  color: #64748b;
+  font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <a class="back" href="javascript:history.back()">← Буцах</a>
+  <div class="logo">NEXORA</div>
+  <p>Нэг дор бүх боломж</p>
+</header>
+
+<main class="container">
+
+  <div class="welcome">
+    <h2>Зарын платформ</h2>
+    <p>Хайсан бүхнээ нэг дороос олоорой.</p>
+  </div>
+
+  <input
+    class="search"
+    type="search"
+    id="search"
+    placeholder="🔍 Юу хайж байна вэ?"
+    oninput="searchCategories()"
+  >
+
+  <button class="primary-btn"
+    onclick="alert('Зар нийтлэх хэсгийг дараагийн хэсэгт холбоно.')">
+    ＋ ШИНЭ ЗАР НИЙТЛЭХ
+  </button>
+
+  <h3>Зарын ангилал</h3>
+
+  <div class="categories" id="categories">
+
+    <button class="category" onclick="openCategory('Ажлын зар')">
+      <span>💼</span>
+      <strong>Ажлын зар</strong>
+      <small>Ажил хайх, ажилтан авах</small>
+    </button>
+
+    <button class="category" onclick="openCategory('Үл хөдлөх')">
+      <span>🏠</span>
+      <strong>Үл хөдлөх</strong>
+      <small>Орон сууц, газар, оффис</small>
+    </button>
+
+    <button class="category" onclick="openCategory('Автомашин')">
+      <span>🚗</span>
+      <strong>Автомашин</strong>
+      <small>Машин худалдаа</small>
+    </button>
+
+    <button class="category" onclick="openCategory('Цахилгаан бараа')">
+      <span>📱</span>
+      <strong>Цахилгаан бараа</strong>
+      <small>Утас, компьютер</small>
+    </button>
+
+    <button class="category" onclick="openCategory('Үйлчилгээ')">
+      <span>🔧</span>
+      <strong>Үйлчилгээ</strong>
+      <small>Бүх төрлийн үйлчилгээ</small>
+    </button>
+
+    <button class="category" onclick="openCategory('Хувцас загвар')">
+      <span>👕</span>
+      <strong>Хувцас загвар</strong>
+      <small>Хувцас, гутал</small>
+    </button>
+
+    <button class="category" onclick="openCategory('Амьтан')">
+      <span>🐕</span>
+      <strong>Амьтан</strong>
+      <small>Тэжээвэр амьтан</small>
+    </button>
+
+    <button class="category" onclick="openCategory('Бусад')">
+      <span>📦</span>
+      <strong>Бусад</strong>
+      <small>Бусад төрлийн зар</small>
+    </button>
+
+  </div>
+
+  <div class="info">
+    <strong>NEXORA зарын нөхцөл</strong>
+    <p>
+      Эхний зар үнэгүй. Дараагийн зарууд
+      төлбөртэй. Энгийн зар 7 хоног байрлана.
+    </p>
+  </div>
+
+</main>
+
+<footer>
+  © 2026 NEXORA
+</footer>
+
+<script>
+function openCategory(name) {
+  alert(name + " ангиллын дэд хуудсыг дараагийн хэсэгт холбоно.");
+}
+
+function searchCategories() {
+  const value = document
+    .getElementById("search")
+    .value.toLowerCase();
+
+  document.querySelectorAll(".category").forEach(item => {
+    item.style.display =
+      item.innerText.toLowerCase().includes(value)
+      ? "block"
+      : "none";
+  });
+}
+</script>
+
+</body>
+</html>
