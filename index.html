@@ -632,5 +632,862 @@ button {
 
 <!-- 2-Р ХЭСГИЙГ ЭНД ҮРГЭЛЖЛҮҮЛНЭ -->
 
+<!-- ==========================================
+ NEXORA — 2-Р ХЭСЭГ
+ ЗАРЫН ПЛАТФОРМ
+ BLACK & GOLD LUXURY DESIGN
+========================================== -->
+
+<style>
+#nxAds {
+ display:none;
+ position:fixed;
+ inset:0;
+ z-index:5000;
+ overflow-y:auto;
+ background:#090a0c;
+ color:#f5f0e6;
+ font-family:Arial,sans-serif;
+}
+#nxAds * {box-sizing:border-box}
+#nxAds button,#nxAds input,#nxAds select,#nxAds textarea {font-family:inherit}
+#nxAds .gold {color:#d6b46a}
+#nxAds .header {
+ position:sticky;
+ top:0;
+ z-index:30;
+ background:#111214;
+ border-bottom:1px solid #554323;
+ padding:17px 20px;
+}
+#nxAds .top {
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:12px;
+}
+#nxAds .logo {
+ color:#d6b46a;
+ font-size:25px;
+ font-weight:900;
+ letter-spacing:4px;
+}
+#nxAds .back {
+ background:#202020;
+ color:#e3c57e;
+ border:1px solid #66532f;
+ padding:11px 16px;
+ border-radius:10px;
+ cursor:pointer;
+}
+#nxAds .container {
+ max-width:1100px;
+ margin:auto;
+ padding:22px;
+}
+#nxAds .hero {
+ padding:32px 22px;
+ border:1px solid #5b492b;
+ border-radius:20px;
+ background:linear-gradient(135deg,#292316,#101113 75%);
+ margin-bottom:22px;
+}
+#nxAds .hero h1 {
+ font-size:clamp(27px,5vw,40px);
+ color:#e0c27e;
+ margin-bottom:12px;
+}
+#nxAds .hero p {
+ color:#b9b2a3;
+ line-height:1.7;
+}
+#nxAds .search {
+ width:100%;
+ padding:17px;
+ border-radius:12px;
+ border:1px solid #5b492b;
+ background:#171819;
+ color:white;
+ font-size:15px;
+ margin-top:20px;
+ outline:none;
+}
+#nxAds .section-title {
+ color:#e0c27e;
+ font-size:21px;
+ margin:27px 0 16px;
+}
+#nxAds .categories {
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:12px;
+}
+#nxAds .category {
+ background:#151617;
+ border:1px solid #403721;
+ border-radius:15px;
+ color:#eee6d5;
+ padding:19px 12px;
+ text-align:left;
+ cursor:pointer;
+ min-height:112px;
+}
+#nxAds .category:active {
+ border-color:#d6b46a;
+}
+#nxAds .category .emoji {
+ font-size:29px;
+ display:block;
+ margin-bottom:12px;
+}
+#nxAds .category strong {
+ display:block;
+ color:#e0c27e;
+ font-size:14px;
+}
+#nxAds .category small {
+ display:block;
+ color:#99958d;
+ margin-top:7px;
+ line-height:1.5;
+}
+#nxAds .gold-btn {
+ display:block;
+ width:100%;
+ padding:16px;
+ border:0;
+ border-radius:12px;
+ background:linear-gradient(135deg,#e5c77f,#a9823e);
+ color:#17130b;
+ font-weight:bold;
+ font-size:16px;
+ cursor:pointer;
+ margin-top:20px;
+}
+#nxAds .dark-btn {
+ width:100%;
+ padding:14px;
+ border:1px solid #69532f;
+ border-radius:11px;
+ background:#1b1b1b;
+ color:#e4c77f;
+ cursor:pointer;
+ margin-top:12px;
+}
+#nxAds .panel {
+ background:#151617;
+ border:1px solid #413721;
+ border-radius:16px;
+ padding:18px;
+ margin-top:18px;
+}
+#nxAds .field {
+ display:block;
+ width:100%;
+ padding:15px;
+ margin:11px 0;
+ border:1px solid #49402e;
+ border-radius:10px;
+ background:#202123;
+ color:white;
+ font-size:15px;
+}
+#nxAds .field::placeholder {color:#918b80}
+#nxAds label {
+ display:block;
+ color:#d6b46a;
+ font-weight:bold;
+ margin-top:16px;
+}
+#nxAds .muted {
+ color:#aaa398;
+ font-size:14px;
+ line-height:1.7;
+}
+#nxAds .sub-list button {
+ display:block;
+ width:100%;
+ text-align:left;
+ padding:16px;
+ margin:8px 0;
+ border:1px solid #443a28;
+ border-radius:11px;
+ background:#171819;
+ color:#e9d9b7;
+ cursor:pointer;
+}
+#nxAds .ad-card {
+ background:#171819;
+ border:1px solid #443a28;
+ border-radius:15px;
+ padding:16px;
+ margin:13px 0;
+ cursor:pointer;
+}
+#nxAds .ad-card img {
+ width:100%;
+ max-height:210px;
+ object-fit:cover;
+ border-radius:10px;
+ margin-bottom:12px;
+}
+#nxAds .ad-card h3 {
+ color:#e3c47a;
+ margin-bottom:10px;
+}
+#nxAds .price {
+ color:#d6b46a;
+ font-size:19px;
+ font-weight:bold;
+ margin:10px 0;
+}
+#nxAds .screen {display:none}
+#nxAds .screen.active {display:block}
+#nxAds .detail-image {
+ width:100%;
+ max-height:350px;
+ object-fit:contain;
+ background:#171819;
+ border-radius:14px;
+ margin-top:15px;
+}
+#nxAds .map-frame {
+ width:100%;
+ height:280px;
+ border:0;
+ border-radius:13px;
+ margin-top:13px;
+ background:#242424;
+}
+#nxAds .info-line {
+ padding:12px 0;
+ border-bottom:1px solid #38332a;
+ line-height:1.6;
+}
+#nxAds footer {
+ text-align:center;
+ padding:30px;
+ color:#827b70;
+ font-size:12px;
+}
+@media(min-width:650px) {
+ #nxAds .categories {grid-template-columns:repeat(4,1fr)}
+}
+</style>
+
+<section id="nxAds">
+
+ <!-- HEADER -->
+ <header class="header">
+  <div class="top">
+   <button class="back" onclick="nxAdsBack()">← Буцах</button>
+   <div class="logo">NEXORA</div>
+   <span class="gold">ЗАР</span>
+  </div>
+ </header>
+
+ <main class="container">
+
+  <!-- SCREEN 1: MAIN -->
+  <div id="nxAdsHome" class="screen active">
+
+   <div class="hero">
+    <p class="gold">NEXORA CLASSIFIEDS</p>
+    <h1>Зарын платформ</h1>
+    <p>Хайсан бүхнээ нэг дороос олоорой.</p>
+
+    <input id="nxAdsSearch" class="search"
+     placeholder="⌕ Зар, бараа, үйлчилгээ хайх..."
+     oninput="nxAdsSearch()">
+   </div>
+
+   <button class="gold-btn" onclick="nxAdsOpenPublish()">
+    ＋ ШИНЭ ЗАР НИЙТЛЭХ
+   </button>
+
+   <h2 class="section-title">Зарын үндсэн ангилал</h2>
+
+   <div class="categories" id="nxAdsCategories">
+
+    <button class="category" onclick="nxAdsOpenCategory('Ажлын байр')">
+     <span class="emoji">💼</span>
+     <strong>Ажлын байр</strong>
+     <small>Ажил хайх, ажилтан авах</small>
+    </button>
+
+    <button class="category" onclick="nxAdsOpenCategory('Үл хөдлөх хөрөнгө')">
+     <span class="emoji">🏠</span>
+     <strong>Үл хөдлөх хөрөнгө</strong>
+     <small>Орон сууц, газар, оффис</small>
+    </button>
+
+    <button class="category" onclick="nxAdsOpenCategory('Автомашин')">
+     <span class="emoji">🚘</span>
+     <strong>Автомашин</strong>
+     <small>Машин, сэлбэг хэрэгсэл</small>
+    </button>
+
+    <button class="category" onclick="nxAdsOpenCategory('Цахилгаан бараа')">
+     <span class="emoji">📱</span>
+     <strong>Цахилгаан бараа</strong>
+     <small>Утас, компьютер, техник</small>
+    </button>
+
+    <button class="category" onclick="nxAdsOpenCategory('Хувцас загвар')">
+     <span class="emoji">👔</span>
+     <strong>Хувцас загвар</strong>
+     <small>Хувцас, гутал, цүнх</small>
+    </button>
+
+    <button class="category" onclick="nxAdsOpenCategory('Үйлчилгээ')">
+     <span class="emoji">🛠️</span>
+     <strong>Үйлчилгээ</strong>
+     <small>Бүх төрлийн үйлчилгээ</small>
+    </button>
+
+    <button class="category" onclick="nxAdsOpenCategory('Тавилга')">
+     <span class="emoji">🛋️</span>
+     <strong>Тавилга</strong>
+     <small>Гэр болон оффисын тавилга</small>
+    </button>
+
+    <button class="category" onclick="nxAdsOpenCategory('Бусад')">
+     <span class="emoji">📦</span>
+     <strong>Бусад</strong>
+     <small>Бусад төрлийн зар</small>
+    </button>
+
+   </div>
+
+   <h2 class="section-title">Сүүлд нэмэгдсэн зарууд</h2>
+   <div id="nxAdsLatest"></div>
+
+   <div class="panel">
+    <h3 class="gold">NEXORA зарын үйлчилгээ</h3>
+    <p class="muted">
+     Эхний зар үнэгүй. Дараагийн заруудад
+     төлбөрийн нөхцөл үйлчилнэ. Төлбөрийг
+     админ шалгаж баталгаажуулна.
+    </p>
+   </div>
+
+  </div>
+
+  <!-- SCREEN 2: CATEGORY -->
+  <div id="nxAdsCategory" class="screen">
+
+   <h2 class="section-title" id="nxAdsCategoryTitle">
+    Ангилал
+   </h2>
+
+   <p class="muted">Дэд ангиллаа сонгоно уу.</p>
+
+   <div class="sub-list" id="nxAdsSubcategories"></div>
+
+   <button class="dark-btn" onclick="nxAdsShowAllCategory()">
+    Бүх зар харах
+   </button>
+
+  </div>
+
+  <!-- SCREEN 3: RESULTS -->
+  <div id="nxAdsResultsScreen" class="screen">
+
+   <h2 class="section-title" id="nxAdsResultsTitle">
+    Зар хайх
+   </h2>
+
+   <div id="nxAdsResults"></div>
+
+  </div>
+
+  <!-- SCREEN 4: PUBLISH -->
+  <div id="nxAdsPublish" class="screen">
+
+   <h2 class="section-title">Шинэ зар нийтлэх</h2>
+
+   <p class="muted">
+    Зар оруулах мэдээллээ үнэн зөв бөглөнө үү.
+   </p>
+
+   <form id="nxAdsPublishForm">
+
+    <label>Үндсэн ангилал</label>
+    <select id="nxAdsFormCategory" class="field" required>
+     <option value="">Ангилал сонгох</option>
+    </select>
+
+    <label>Дэд ангилал</label>
+    <select id="nxAdsFormSub" class="field" required>
+     <option value="">Дэд ангилал сонгох</option>
+    </select>
+
+    <label>Зарын гарчиг</label>
+    <input id="nxAdsTitle" class="field"
+     placeholder="Зарын гарчиг" required maxlength="120">
+
+    <label>Үнэ (₮)</label>
+    <input id="nxAdsPrice" class="field"
+     type="number" min="0" placeholder="Үнэ">
+
+    <label>Байршил</label>
+    <input id="nxAdsLocation" class="field"
+     placeholder="Хот, дүүрэг, хороо" required>
+
+    <label>Холбоо барих утас</label>
+    <input id="nxAdsPhone" class="field"
+     type="tel" placeholder="Утасны дугаар" required>
+
+    <label>Дэлгэрэнгүй мэдээлэл</label>
+    <textarea id="nxAdsDescription" class="field"
+     rows="5" placeholder="Зарын дэлгэрэнгүй..." required></textarea>
+
+    <label>Зарын зураг</label>
+    <input id="nxAdsImage" class="field"
+     type="file" accept="image/*">
+
+    <img id="nxAdsImagePreview"
+     style="display:none;width:100%;max-height:250px;object-fit:contain;border-radius:12px;">
+
+    <button class="gold-btn" type="submit">
+     ЗАРЫН МЭДЭЭЛЭЛ ХАДГАЛАХ
+    </button>
+
+   </form>
+
+  </div>
+
+  <!-- SCREEN 5: DETAIL -->
+  <div id="nxAdsDetail" class="screen">
+
+   <h2 class="section-title">ЗАРЫН ДЭЛГЭРЭНГҮЙ</h2>
+
+   <div class="panel">
+
+    <img id="nxAdsDetailImage"
+     class="detail-image" style="display:none;">
+
+    <h2 id="nxAdsDetailTitle" class="gold"
+     style="margin:18px 0;"></h2>
+
+    <div id="nxAdsDetailPrice" class="price"></div>
+
+    <div class="info-line" id="nxAdsDetailCategory"></div>
+    <div class="info-line" id="nxAdsDetailLocation"></div>
+    <div class="info-line" id="nxAdsDetailPhone"></div>
+
+    <h3 class="gold" style="margin-top:20px;">
+     Дэлгэрэнгүй мэдээлэл
+    </h3>
+
+    <p id="nxAdsDetailDescription"
+     class="muted" style="margin-top:12px;white-space:pre-wrap;"></p>
+
+   </div>
+
+   <!-- MAP BELOW AD INFORMATION -->
+   <div class="panel">
+
+    <h3 class="gold">📍 Зарын байршил</h3>
+
+    <p id="nxAdsMapAddress" class="muted"
+     style="margin-top:10px;"></p>
+
+    <iframe id="nxAdsMap"
+     class="map-frame"
+     loading="lazy"
+     referrerpolicy="no-referrer-when-downgrade"
+     title="Зарын байршлын газрын зураг">
+    </iframe>
+
+    <button class="gold-btn" onclick="nxAdsOpenMap()">
+     🗺 GOOGLE MAPS ДЭЭР НЭЭХ
+    </button>
+
+   </div>
+
+   <button class="dark-btn" onclick="nxAdsCallSeller()">
+    📞 ХОЛБОО БАРИХ
+   </button>
+
+  </div>
+
+ </main>
+
+ <footer>© 2026 NEXORA — ALL RIGHTS RESERVED</footer>
+
+</section>
+
+<script>
+(function(){
+
+ const categories = {
+  "Ажлын байр":[
+   "Бүх ажлын байр","Оффисын ажил",
+   "Инженер, техникийн ажил","Барилга",
+   "Үйлчилгээ","Борлуулалт","Жолооч",
+   "IT, программ хангамж","Цагийн ажил",
+   "Зайнаас ажиллах","Түр ажил"
+  ],
+  "Үл хөдлөх хөрөнгө":[
+   "Орон сууц","Хашаа байшин","Газар",
+   "Оффис","Үйлдвэр, агуулах","Түрээс"
+  ],
+  "Автомашин":[
+   "Суудлын машин","Жийп","Ачааны машин",
+   "Мотоцикл","Сэлбэг хэрэгсэл"
+  ],
+  "Цахилгаан бараа":[
+   "Гар утас","Компьютер","Телевизор",
+   "Гэр ахуйн цахилгаан бараа"
+  ],
+  "Хувцас загвар":[
+   "Эрэгтэй хувцас","Эмэгтэй хувцас",
+   "Хүүхдийн хувцас","Гутал","Цүнх"
+  ],
+  "Үйлчилгээ":[
+   "Засвар үйлчилгээ","Цэвэрлэгээ",
+   "Сургалт","Тээвэр","Гоо сайхан"
+  ],
+  "Тавилга":[
+   "Гэрийн тавилга","Оффисын тавилга",
+   "Гал тогооны тавилга"
+  ],
+  "Бусад":["Бусад зар"]
+ };
+
+ const KEY = "nexoraAds";
+ let currentCategory = "";
+ let currentSubcategory = "";
+ let currentAd = null;
+ let imageData = "";
+
+ const el = id => document.getElementById(id);
+
+ function loadAds(){
+  try {
+   const saved = JSON.parse(localStorage.getItem(KEY) || "[]");
+   return Array.isArray(saved) ? saved : [];
+  } catch(e) {
+   return [];
+  }
+ }
+
+ function saveAds(ads){
+  localStorage.setItem(KEY,JSON.stringify(ads));
+  window.nexoraAds = ads;
+ }
+
+ function showScreen(id){
+  document.querySelectorAll("#nxAds .screen").forEach(s=>{
+   s.classList.remove("active");
+  });
+  el(id).classList.add("active");
+  el("nxAds").scrollTop = 0;
+ }
+
+ window.openNxAds = function(){
+  el("nxAds").style.display = "block";
+  showScreen("nxAdsHome");
+  renderLatest();
+ };
+
+ window.closeNxAds = function(){
+  el("nxAds").style.display = "none";
+ };
+
+ window.nxAdsBack = function(){
+  const active = document.querySelector("#nxAds .screen.active");
+  if(!active) return;
+
+  if(active.id === "nxAdsHome"){
+   closeNxAds();
+  } else if(active.id === "nxAdsCategory" ||
+            active.id === "nxAdsResultsScreen"){
+   showScreen("nxAdsHome");
+  } else if(active.id === "nxAdsPublish" ||
+            active.id === "nxAdsDetail"){
+   showScreen("nxAdsHome");
+  }
+ };
+
+ window.nxAdsOpenCategory = function(category){
+  currentCategory = category;
+  el("nxAdsCategoryTitle").textContent = category;
+
+  const list = el("nxAdsSubcategories");
+  list.innerHTML = "";
+
+  (categories[category] || []).forEach(sub=>{
+   const button = document.createElement("button");
+   button.textContent = "›  " + sub;
+   button.onclick = ()=>showResults(category,sub);
+   list.appendChild(button);
+  });
+
+  showScreen("nxAdsCategory");
+ };
+
+ window.nxAdsShowAllCategory = function(){
+  showResults(currentCategory,"Бүх зар");
+ };
+
+ function showResults(category,sub){
+  currentCategory = category;
+  currentSubcategory = sub;
+
+  el("nxAdsResultsTitle").textContent =
+   category + " / " + sub;
+
+  const results = el("nxAdsResults");
+  results.innerHTML = "";
+
+  const ads = loadAds().filter(ad=>
+   ad.status === "published" &&
+   ad.category === category &&
+   (sub === "Бүх зар" ||
+    sub === "Бүх ажлын байр" ||
+    ad.subcategory === sub)
+  );
+
+  renderCards(ads,results);
+  showScreen("nxAdsResultsScreen");
+ }
+
+ function renderCards(ads,container){
+  if(!ads.length){
+   container.innerHTML =
+    '<div class="panel muted">Одоогоор нийтлэгдсэн зар байхгүй байна.</div>';
+   return;
+  }
+
+  ads.forEach(ad=>{
+   const card = document.createElement("div");
+   card.className = "ad-card";
+
+   if(ad.image){
+    const img = document.createElement("img");
+    img.src = ad.image;
+    card.appendChild(img);
+   }
+
+   const title = document.createElement("h3");
+   title.textContent = ad.title;
+
+   const price = document.createElement("div");
+   price.className = "price";
+   price.textContent = ad.price
+    ? Number(ad.price).toLocaleString("mn-MN")+" ₮"
+    : "Үнэ тохиролцоно";
+
+   const location = document.createElement("p");
+   location.className = "muted";
+   location.textContent = "📍 "+ad.location;
+
+   card.append(title,price,location);
+   card.onclick = ()=>openDetail(ad.id);
+   container.appendChild(card);
+  });
+ }
+
+ function renderLatest(){
+  const container = el("nxAdsLatest");
+  container.innerHTML = "";
+
+  const latest = loadAds()
+   .filter(ad=>ad.status === "published")
+   .slice()
+   .reverse()
+   .slice(0,6);
+
+  renderCards(latest,container);
+ }
+
+ window.nxAdsSearch = function(){
+  const query = el("nxAdsSearch").value.trim().toLowerCase();
+  const results = el("nxAdsResults");
+  results.innerHTML = "";
+
+  const matches = loadAds().filter(ad=>
+   ad.status === "published" &&
+   (ad.title+" "+ad.category+" "+ad.subcategory+" "+
+    ad.description+" "+ad.location).toLowerCase().includes(query)
+  );
+
+  el("nxAdsResultsTitle").textContent = "Хайлтын үр дүн";
+  renderCards(matches,results);
+
+  if(query) showScreen("nxAdsResultsScreen");
+  else showScreen("nxAdsHome");
+ };
+
+ window.nxAdsOpenPublish = function(){
+  showScreen("nxAdsPublish");
+ };
+
+ // Form categories
+ Object.keys(categories).forEach(category=>{
+  const option = document.createElement("option");
+  option.value = category;
+  option.textContent = category;
+  el("nxAdsFormCategory").appendChild(option);
+ });
+
+ el("nxAdsFormCategory").addEventListener("change",function(){
+  const sub = el("nxAdsFormSub");
+  sub.innerHTML = '<option value="">Дэд ангилал сонгох</option>';
+
+  (categories[this.value] || []).forEach(name=>{
+   const option = document.createElement("option");
+   option.value = name;
+   option.textContent = name;
+   sub.appendChild(option);
+  });
+ });
+
+ el("nxAdsImage").addEventListener("change",function(){
+  const file = this.files[0];
+  imageData = "";
+
+  if(!file){
+   el("nxAdsImagePreview").style.display = "none";
+   return;
+  }
+
+  if(!file.type.startsWith("image/") ||
+     file.size > 2*1024*1024){
+   alert("Зураг 2MB-аас бага хэмжээтэй байх ёстой.");
+   this.value = "";
+   return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(){
+   imageData = reader.result;
+   el("nxAdsImagePreview").src = imageData;
+   el("nxAdsImagePreview").style.display = "block";
+  };
+  reader.readAsDataURL(file);
+ });
+
+ el("nxAdsPublishForm").addEventListener("submit",function(event){
+  event.preventDefault();
+
+  const category = el("nxAdsFormCategory").value;
+  const subcategory = el("nxAdsFormSub").value;
+  const title = el("nxAdsTitle").value.trim();
+  const location = el("nxAdsLocation").value.trim();
+  const phone = el("nxAdsPhone").value.trim();
+  const description = el("nxAdsDescription").value.trim();
+
+  if(!category || !subcategory || !title ||
+     !location || !phone || !description){
+   alert("Шаардлагатай мэдээллийг бүрэн бөглөнө үү.");
+   return;
+  }
+
+  const ads = loadAds();
+
+  const ad = {
+   id:"NX-"+Date.now(),
+   title,
+   category,
+   subcategory,
+   price:el("nxAdsPrice").value,
+   location,
+   phone,
+   description,
+   image:imageData,
+   status:"pending_payment",
+   paymentStatus:"not_paid",
+   createdAt:new Date().toISOString()
+  };
+
+  ads.push(ad);
+
+  try {
+   saveAds(ads);
+  } catch(error) {
+   alert("Зураг эсвэл мэдээлэл хадгалахад багтаамж хүрэлцэхгүй байна.");
+   return;
+  }
+
+  alert("Зар бүртгэгдлээ. Төлбөр болон админы баталгаажуулалт шаардлагатай.");
+
+  this.reset();
+  imageData = "";
+  el("nxAdsImagePreview").style.display = "none";
+
+  showScreen("nxAdsHome");
+  renderLatest();
+ });
+
+ function openDetail(id){
+  const ad = loadAds().find(item=>String(item.id)===String(id));
+  if(!ad) return;
+
+  currentAd = ad;
+
+  el("nxAdsDetailTitle").textContent = ad.title;
+  el("nxAdsDetailPrice").textContent = ad.price
+   ? Number(ad.price).toLocaleString("mn-MN")+" ₮"
+   : "Үнэ тохиролцоно";
+
+  el("nxAdsDetailCategory").textContent =
+   "Ангилал: "+ad.category+" / "+ad.subcategory;
+
+  el("nxAdsDetailLocation").textContent =
+   "📍 Байршил: "+ad.location;
+
+  el("nxAdsDetailPhone").textContent =
+   "📞 Утас: "+ad.phone;
+
+  el("nxAdsDetailDescription").textContent = ad.description;
+
+  const img = el("nxAdsDetailImage");
+  if(ad.image){
+   img.src = ad.image;
+   img.style.display = "block";
+  } else {
+   img.style.display = "none";
+  }
+
+  // Map appears BELOW the ad information
+  el("nxAdsMapAddress").textContent = ad.location;
+
+  el("nxAdsMap").src =
+   "https://www.google.com/maps?q="+
+   encodeURIComponent(ad.location)+
+   "&output=embed";
+
+  showScreen("nxAdsDetail");
+ }
+
+ window.nxAdsOpenMap = function(){
+  if(!currentAd) return;
+
+  const url = "https://www.google.com/maps/search/?api=1&query="+
+   encodeURIComponent(currentAd.location);
+
+  window.open(url,"_blank");
+ };
+
+ window.nxAdsCallSeller = function(){
+  if(!currentAd || !currentAd.phone){
+   alert("Утасны мэдээлэл байхгүй байна.");
+   return;
+  }
+  window.location.href = "tel:"+currentAd.phone;
+ };
+
+ // Initialize
+ window.nexoraAds = loadAds();
+ renderLatest();
+
+})();
+</script>
+
+<!-- NEXORA 2-Р ХЭСЭГ ДУУСАВ -->
+
 </body>
 </html>
