@@ -294,7 +294,7 @@ function searchCategories() {
 
   <div id="nexoraAdResults" style="margin-top:25px;"></div>
 
-  <button onclick="openNexoraPublish()" style="width:100%;padding:17px;background:#087e72;color:white;border:0;border-radius:14px;font-size:17px;font-weight:bold;margin-top:25px;">
+ <button onclick="openNexoraPublishFull()"  style="width:100%;padding:17px;background:#087e72;color:white;border:0;border-radius:14px;font-size:17px;font-weight:bold;margin-top:25px;">
     ＋ Зар нийтлэх
   </button>
 
@@ -769,6 +769,917 @@ function applyNexoraJob() {
 
 }
 
+</script>
+
+<!-- =====================================
+ NEXORA - 4-Р ХЭСЭГ
+ БҮРЭН ЗАР НИЙТЛЭХ СИСТЕМ
+===================================== -->
+
+<style>
+#nexoraPublishFull {
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  overflow-y:auto;
+  background:#f4f6fa;
+  padding:20px;
+  font-family:Arial,sans-serif;
+}
+.nx4-input {
+  display:block;
+  width:100%;
+  padding:15px;
+  margin:12px 0;
+  border:1px solid #dbe1eb;
+  border-radius:12px;
+  background:white;
+  font-size:15px;
+}
+.nx4-label {
+  display:block;
+  margin-top:16px;
+  font-weight:bold;
+  color:#243b8a;
+}
+.nx4-submit {
+  width:100%;
+  padding:17px;
+  border:0;
+  border-radius:13px;
+  background:#243b8a;
+  color:white;
+  font-size:17px;
+  font-weight:bold;
+  margin-top:20px;
+}
+</style>
+
+<section id="nexoraPublishFull">
+
+  <button onclick="closeNexoraPublishFull()"
+    style="padding:12px 18px;border:0;border-radius:10px;background:white;font-size:16px;">
+    ← Буцах
+  </button>
+
+  <h2 style="color:#243b8a;margin-top:22px;">
+    ШИНЭ ЗАР НИЙТЛЭХ
+  </h2>
+
+  <p style="color:#64748b;margin-top:8px;">
+    Зар нийтлэхэд шаардлагатай мэдээллээ бүрэн оруулна уу.
+  </p>
+
+  <form id="nexoraFullForm">
+
+    <label class="nx4-label">Зарын ангилал</label>
+    <select id="nx4Category" class="nx4-input" required>
+      <option value="">Ангилал сонгох</option>
+      <option>Ажлын байр</option>
+      <option>Үл хөдлөх хөрөнгө</option>
+      <option>Автомашин</option>
+      <option>Цахилгаан бараа</option>
+      <option>Хувцас загвар</option>
+      <option>Үйлчилгээ</option>
+      <option>Тавилга</option>
+      <option>Бусад</option>
+    </select>
+
+    <label class="nx4-label">Дэд ангилал</label>
+    <select id="nx4Subcategory" class="nx4-input" required>
+      <option value="">Эхлээд ангилал сонгоно уу</option>
+    </select>
+
+    <label class="nx4-label">Зарын гарчиг</label>
+    <input id="nx4Title" class="nx4-input"
+      placeholder="Жишээ: Борлуулалтын менежер ажилд авна"
+      required>
+
+    <label class="nx4-label">Байгууллагын нэр</label>
+    <input id="nx4Company" class="nx4-input"
+      placeholder="Байгууллагын нэр">
+
+    <label class="nx4-label">Цалин / Үнэ</label>
+    <input id="nx4Salary" class="nx4-input"
+      placeholder="Жишээ: 2,500,000₮">
+
+    <label class="nx4-label">Ажлын цаг</label>
+    <input id="nx4Time" class="nx4-input"
+      placeholder="Жишээ: 09:00-18:00">
+
+    <label class="nx4-label">Ажлын төрөл</label>
+    <select id="nx4Type" class="nx4-input">
+      <option>Бүтэн цагийн</option>
+      <option>Цагийн ажил</option>
+      <option>Түр ажил</option>
+      <option>Зайнаас ажиллах</option>
+      <option>Гэрээт ажил</option>
+    </select>
+
+    <label class="nx4-label">Байршил</label>
+    <input id="nx4Location" class="nx4-input"
+      placeholder="Жишээ: Улаанбаатар, Хан-Уул дүүрэг"
+      required>
+
+    <label class="nx4-label">Холбоо барих утас</label>
+    <input id="nx4Phone" class="nx4-input"
+      type="tel" placeholder="Утасны дугаар"
+      required>
+
+    <label class="nx4-label">Зарын дэлгэрэнгүй</label>
+    <textarea id="nx4Description" class="nx4-input"
+      rows="6" placeholder="Зарын дэлгэрэнгүй мэдээлэл..."
+      required></textarea>
+
+    <label class="nx4-label">Зарын зураг</label>
+    <input id="nx4Image" class="nx4-input"
+      type="file" accept="image/*">
+
+    <img id="nx4Preview"
+      style="display:none;width:100%;max-height:250px;object-fit:contain;border-radius:12px;background:white;">
+
+    <button type="submit" class="nx4-submit">
+      ЗАР НИЙТЛЭХ
+    </button>
+
+  </form>
+</section>
+
+<script>
+(function() {
+
+  const category = document.getElementById("nx4Category");
+  const subcategory = document.getElementById("nx4Subcategory");
+  const imageInput = document.getElementById("nx4Image");
+  const preview = document.getElementById("nx4Preview");
+  const form = document.getElementById("nexoraFullForm");
+
+  const subcategories = {
+    "Ажлын байр": [
+      "Бүх ажлын байр",
+      "Оффисын ажил",
+      "Инженер, техникийн ажил",
+      "Барилга",
+      "Үйлчилгээ",
+      "Борлуулалт",
+      "Жолооч",
+      "IT, программ хангамж",
+      "Цагийн ажил",
+      "Зайнаас ажиллах",
+      "Түр ажил"
+    ],
+    "Үл хөдлөх хөрөнгө": [
+      "Орон сууц",
+      "Хашаа байшин",
+      "Газар",
+      "Оффис",
+      "Үйлдвэр, агуулах",
+      "Түрээс"
+    ],
+    "Автомашин": [
+      "Суудлын машин",
+      "Жийп",
+      "Ачааны машин",
+      "Мотоцикл",
+      "Сэлбэг хэрэгсэл"
+    ],
+    "Цахилгаан бараа": [
+      "Гар утас",
+      "Компьютер",
+      "Телевизор",
+      "Гэр ахуйн цахилгаан бараа"
+    ],
+    "Хувцас загвар": [
+      "Эрэгтэй хувцас",
+      "Эмэгтэй хувцас",
+      "Хүүхдийн хувцас",
+      "Гутал",
+      "Цүнх"
+    ],
+    "Үйлчилгээ": [
+      "Засвар үйлчилгээ",
+      "Цэвэрлэгээ",
+      "Сургалт",
+      "Тээвэр",
+      "Гоо сайхан"
+    ],
+    "Тавилга": [
+      "Гэрийн тавилга",
+      "Оффисын тавилга",
+      "Гал тогооны тавилга"
+    ],
+    "Бусад": ["Бусад зар"]
+  };
+
+  category.addEventListener("change", function() {
+    subcategory.innerHTML =
+      '<option value="">Дэд ангилал сонгох</option>';
+
+    (subcategories[this.value] || []).forEach(function(item) {
+      const option = document.createElement("option");
+      option.value = item;
+      option.textContent = item;
+      subcategory.appendChild(option);
+    });
+  });
+
+  imageInput.addEventListener("change", function() {
+    const file = this.files[0];
+
+    if (!file) {
+      preview.style.display = "none";
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      alert("Зөвхөн зураг сонгоно уу.");
+      this.value = "";
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Зургийн хэмжээ 5MB-аас бага байх ёстой.");
+      this.value = "";
+      return;
+    }
+
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = "block";
+  });
+
+  window.openNexoraPublishFull = function() {
+    document.getElementById("nexora-ads").style.display = "none";
+    document.getElementById("nexora-job-detail").style.display = "none";
+    document.getElementById("nexoraPublishFull").style.display = "block";
+  };
+
+  window.closeNexoraPublishFull = function() {
+    document.getElementById("nexoraPublishFull").style.display = "none";
+    document.getElementById("nexora-ads").style.display = "block";
+  };
+
+  form.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const file = imageInput.files[0];
+
+    const ad = {
+      id: Date.now(),
+      title: document.getElementById("nx4Title").value.trim(),
+      category: category.value,
+      subcategory: subcategory.value,
+      company: document.getElementById("nx4Company").value.trim(),
+      salary: document.getElementById("nx4Salary").value.trim(),
+      workTime: document.getElementById("nx4Time").value.trim(),
+      workType: document.getElementById("nx4Type").value,
+      location: document.getElementById("nx4Location").value.trim(),
+      phone: document.getElementById("nx4Phone").value.trim(),
+      description: document.getElementById("nx4Description").value.trim(),
+      image: "",
+      createdAt: new Date().toISOString(),
+      status: "pending_payment",
+      paymentStatus: "not_paid"
+    };
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = function() {
+        ad.image = reader.result;
+        saveNexoraFullAd(ad);
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      saveNexoraFullAd(ad);
+    }
+  });
+
+  function saveNexoraFullAd(ad) {
+
+    if (!Array.isArray(window.nexoraAds)) {
+      window.nexoraAds = [];
+    }
+
+    window.nexoraAds.push(ad);
+
+    try {
+      localStorage.setItem(
+        "nexoraAds",
+        JSON.stringify(window.nexoraAds)
+      );
+    } catch(error) {
+      alert("Хадгалах багтаамж хүрэлцэхгүй байна. Зургийн хэмжээг багасгана уу.");
+      return;
+    }
+
+    alert(
+      "Зар бүртгэгдлээ. Төлбөрийн болон админы баталгаажуулалтын дараа нийтэд харагдана."
+    );
+
+    form.reset();
+    preview.style.display = "none";
+
+    closeNexoraPublishFull();
+  }
+
+})();
+</script>
+<!-- NEXORA 4-Р ХЭСЭГ ДУУСАВ -->
+
+<!-- =====================================
+ NEXORA - 5-Р ХЭСЭГ
+ ЗАРЫН ТӨЛБӨР, БАТАЛГААЖУУЛАЛТ
+===================================== -->
+
+<style>
+.nx5-overlay {
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:10001;
+  overflow-y:auto;
+  background:#f4f6fa;
+  padding:20px;
+  font-family:Arial,sans-serif;
+}
+.nx5-card {
+  background:white;
+  padding:20px;
+  border-radius:16px;
+  margin-top:16px;
+}
+.nx5-btn {
+  width:100%;
+  padding:15px;
+  border:0;
+  border-radius:12px;
+  background:#243b8a;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  margin-top:12px;
+}
+.nx5-input {
+  width:100%;
+  padding:14px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  margin-top:12px;
+  box-sizing:border-box;
+}
+.nx5-muted {
+  color:#64748b;
+  line-height:1.7;
+}
+</style>
+
+<section id="nexoraPaymentPage" class="nx5-overlay">
+
+  <button onclick="nx5ClosePayment()"
+    style="padding:12px 18px;border:0;border-radius:10px;background:white;">
+    ← Буцах
+  </button>
+
+  <h2 style="color:#243b8a;margin-top:25px;">
+    NEXORA ЗАРЫН ТӨЛБӨР
+  </h2>
+
+  <div class="nx5-card">
+    <h3>Төлбөрийн нөхцөл</h3>
+    <p class="nx5-muted">
+      Эхний зар үнэгүй.
+      Дараагийн зарууд төлбөртэй.
+      Энгийн зар 7 хоног байрлана.
+    </p>
+
+    <h2 id="nx5Price" style="color:#087e72;margin-top:15px;">
+      10,000₮
+    </h2>
+  </div>
+
+  <div class="nx5-card">
+    <h3>Банк сонгох</h3>
+
+    <select id="nx5Bank" class="nx5-input">
+      <option value="ХААН Банк">ХААН Банк</option>
+      <option value="ХАС Банк">ХАС Банк</option>
+    </select>
+
+    <p style="margin-top:15px;font-weight:bold;">
+      Дансны дугаар
+    </p>
+
+    <p id="nx5Account" style="color:#243b8a;font-size:20px;font-weight:bold;">
+      Админ тохируулаагүй
+    </p>
+
+    <p id="nx5AccountName" class="nx5-muted">
+      Данс эзэмшигчийн нэр
+    </p>
+
+    <button class="nx5-btn"
+      onclick="nx5CopyAccount()">
+      Дансны дугаар хуулах
+    </button>
+  </div>
+
+  <div class="nx5-card">
+    <h3>Шилжүүлгийн мэдээлэл</h3>
+
+    <input id="nx5Sender"
+      class="nx5-input"
+      placeholder="Шилжүүлэг хийсэн хүний нэр">
+
+    <input id="nx5Reference"
+      class="nx5-input"
+      placeholder="Гүйлгээний утга / баримтын дугаар">
+
+    <label style="display:block;margin-top:15px;font-weight:bold;">
+      Шилжүүлгийн баримтын зураг
+    </label>
+
+    <input id="nx5Receipt"
+      class="nx5-input"
+      type="file"
+      accept="image/*">
+
+    <button class="nx5-btn"
+      onclick="nx5SubmitPayment()">
+      ТӨЛБӨРИЙН МЭДЭЭЛЭЛ ИЛГЭЭХ
+    </button>
+  </div>
+
+  <p class="nx5-muted" style="margin-top:18px;">
+    Таны төлбөрийг админ шалгаж баталгаажуулсны дараа зар нийтлэгдэнэ.
+  </p>
+
+</section>
+
+
+<script>
+(function() {
+
+  const CONFIG_KEY = "nexoraPaymentConfig";
+  const PAYMENT_KEY = "nexoraPayments";
+  const AD_KEY = "nexoraAds";
+
+  const defaultConfig = {
+    price: 10000,
+    accounts: {
+      "ХААН Банк": {
+        number: "",
+        name: ""
+      },
+      "ХАС Банк": {
+        number: "",
+        name: ""
+      }
+    }
+  };
+
+  function getConfig() {
+    try {
+      return {
+        ...defaultConfig,
+        ...JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}")
+      };
+    } catch(e) {
+      return defaultConfig;
+    }
+  }
+
+  function getAds() {
+    try {
+      return JSON.parse(localStorage.getItem(AD_KEY) || "[]");
+    } catch(e) {
+      return [];
+    }
+  }
+
+  function saveAds(ads) {
+    localStorage.setItem(AD_KEY, JSON.stringify(ads));
+    window.nexoraAds = ads;
+  }
+
+  function getPayments() {
+    try {
+      return JSON.parse(localStorage.getItem(PAYMENT_KEY) || "[]");
+    } catch(e) {
+      return [];
+    }
+  }
+
+  function savePayments(data) {
+    localStorage.setItem(PAYMENT_KEY, JSON.stringify(data));
+  }
+
+  let selectedAdId = null;
+
+  window.nx5OpenPayment = function(adId) {
+
+    selectedAdId = adId;
+
+    const ads = getAds();
+    const ad = ads.find(item => String(item.id) === String(adId));
+
+    if (!ad) {
+      alert("Зар олдсонгүй.");
+      return;
+    }
+
+    const userAds = ads.filter(item =>
+      item.ownerId === ad.ownerId &&
+      item.id !== ad.id
+    );
+
+    const isFirst = !ad.paidFree &&
+      userAds.length === 0;
+
+    const config = getConfig();
+
+    document.getElementById("nx5Price").textContent =
+      isFirst ? "ҮНЭГҮЙ" :
+      Number(config.price).toLocaleString("mn-MN") + "₮";
+
+    document.getElementById("nexoraPaymentPage").style.display = "block";
+
+    if (isFirst) {
+      nx5ActivateFree(ad);
+    } else {
+      nx5UpdateBank();
+    }
+  };
+
+  function nx5ActivateFree(ad) {
+    const ads = getAds();
+
+    const index = ads.findIndex(item => item.id === ad.id);
+
+    if (index < 0) return;
+
+    ads[index].paymentStatus = "free";
+    ads[index].status = "published";
+    ads[index].publishedAt = new Date().toISOString();
+    ads[index].expiresAt =
+      new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+
+    saveAds(ads);
+
+    alert("Таны эхний зар үнэгүй нийтлэгдлээ. 7 хоногийн хугацаатай.");
+
+    document.getElementById("nexoraPaymentPage").style.display = "none";
+  }
+
+  function nx5UpdateBank() {
+
+    const bank = document.getElementById("nx5Bank").value;
+    const config = getConfig();
+    const account = config.accounts[bank] || {};
+
+    document.getElementById("nx5Account").textContent =
+      account.number || "Админ дансны дугаар тохируулаагүй";
+
+    document.getElementById("nx5AccountName").textContent =
+      account.name || "Данс эзэмшигчийн нэр тохируулаагүй";
+
+  }
+
+  document.getElementById("nx5Bank")
+    .addEventListener("change", nx5UpdateBank);
+
+  window.nx5CopyAccount = function() {
+    const number = document.getElementById("nx5Account").textContent;
+
+    if (!number || number.includes("тохируулаагүй")) {
+      alert("Админ эхлээд банкны дансаа тохируулна уу.");
+      return;
+    }
+
+    navigator.clipboard.writeText(number)
+      .then(() => alert("Дансны дугаар хууллаа."))
+      .catch(() => alert("Дансны дугаар: " + number));
+  };
+
+  window.nx5SubmitPayment = async function() {
+
+    const sender = document.getElementById("nx5Sender").value.trim();
+    const reference = document.getElementById("nx5Reference").value.trim();
+    const file = document.getElementById("nx5Receipt").files[0];
+
+    if (!sender || !reference || !file) {
+      alert("Шилжүүлгийн бүх мэдээллийг бөглөнө үү.");
+      return;
+    }
+
+    if (!file.type.startsWith("image/") || file.size > 5 * 1024 * 1024) {
+      alert("Зураг 5MB-аас бага хэмжээтэй байх ёстой.");
+      return;
+    }
+
+    const ads = getAds();
+    const ad = ads.find(item => String(item.id) === String(selectedAdId));
+
+    if (!ad) {
+      alert("Зар олдсонгүй.");
+      return;
+    }
+
+    const config = getConfig();
+    const bank = document.getElementById("nx5Bank").value;
+
+    const reader = new FileReader();
+
+    reader.onload = function() {
+
+      const payments = getPayments();
+
+      payments.push({
+        id: Date.now(),
+        adId: ad.id,
+        bank: bank,
+        amount: Number(config.price),
+        sender: sender,
+        reference: reference,
+        receipt: reader.result,
+        status: "pending",
+        createdAt: new Date().toISOString()
+      });
+
+      savePayments(payments);
+
+      const index = ads.findIndex(item => item.id === ad.id);
+
+      ads[index].paymentStatus = "pending";
+      ads[index].status = "pending_admin";
+
+      saveAds(ads);
+
+      alert("Төлбөрийн мэдээлэл бүртгэгдлээ. Админы шалгалтыг хүлээнэ үү.");
+
+      document.getElementById("nexoraPaymentPage").style.display = "none";
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  window.nx5ClosePayment = function() {
+    document.getElementById("nexoraPaymentPage").style.display = "none";
+  };
+
+  // Админы дансны тохиргоо
+  window.nx5SaveBankConfig = function(data) {
+    const config = getConfig();
+
+    config.accounts = {
+      ...config.accounts,
+      ...data.accounts
+    };
+
+    if (data.price !== undefined) {
+      config.price = Number(data.price);
+    }
+
+    localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+    alert("Төлбөрийн тохиргоо хадгалагдлаа.");
+  };
+
+})();
+const NEXORA_BANKS = [
+  {
+    name: "ХААН БАНК",
+    accountHolder: "У.Нямбаяр",
+    accountNumber: ""
+  },
+  {
+    name: "ХАС БАНК",
+    accountHolder: "Б.Баярлхагва",
+    accountNumber: ""
+  }
+];  
+</script>
+
+<!-- NEXORA 5-Р ХЭСЭГ ДУУСАВ -->
+
+<!-- NEXORA PAYMENT SECTION -->
+
+<section id="nexora-payment" style="
+display:none;
+padding:20px;
+background:#f4f6fa;
+min-height:100vh;
+font-family:Arial,sans-serif;
+">
+
+<button onclick="closeNexoraPayment()"
+style="padding:12px 18px;border:0;border-radius:10px;background:white;">
+← Буцах
+</button>
+
+<h2 style="color:#243b8a;margin:25px 0 10px;">
+NEXORA ТӨЛБӨР
+</h2>
+
+<p>Төлбөр шилжүүлэх банкаа сонгоно уу.</p>
+
+<select id="paymentBank"
+onchange="showNexoraBank()"
+class="nexora-input">
+<option value="">Банк сонгох</option>
+<option value="0">ХААН БАНК</option>
+<option value="1">ХАС БАНК</option>
+</select>
+
+<div id="bankInformation"
+style="display:none;background:white;padding:18px;border-radius:15px;margin-top:15px;">
+
+<h3 id="bankName"></h3>
+<p id="bankHolder" style="margin-top:12px;"></p>
+
+<p style="margin-top:12px;">Дансны дугаар:</p>
+
+<strong id="bankAccount"
+style="font-size:20px;color:#243b8a;"></strong>
+
+<button onclick="copyNexoraAccount()"
+style="display:block;width:100%;padding:13px;margin-top:12px;background:#243b8a;color:white;border:0;border-radius:10px;">
+Данс хуулах
+</button>
+
+<h3 style="margin-top:20px;">Төлбөрийн дүн</h3>
+
+<strong id="paymentAmount">0 ₮</strong>
+
+<p style="margin-top:15px;">Гүйлгээний утга</p>
+
+<input id="paymentReference"
+class="nexora-input"
+readonly>
+
+<button onclick="copyNexoraReference()"
+style="padding:12px;border:0;border-radius:10px;background:#e8edff;">
+Гүйлгээний утга хуулах
+</button>
+
+</div>
+
+<div style="background:white;padding:18px;border-radius:15px;margin-top:18px;">
+
+<h3>Төлбөрийн баримт</h3>
+
+<input type="file"
+id="paymentReceipt"
+accept="image/*">
+
+<button onclick="submitNexoraPayment()"
+style="width:100%;padding:16px;background:#087e72;color:white;border:0;border-radius:12px;margin-top:18px;font-size:16px;font-weight:bold;">
+Төлбөрийн хүсэлт илгээх
+</button>
+
+</div>
+
+<p id="paymentMessage" style="margin-top:15px;"></p>
+
+</section>
+
+<script>
+let nexoraPaymentAdId = null;
+
+let nexoraPaymentAmount = 5000;
+
+function openNexoraPayment(adId, amount = 5000) {
+
+  nexoraPaymentAdId = adId;
+  nexoraPaymentAmount = amount;
+
+  document.getElementById("nexora-ads").style.display = "none";
+
+  document.getElementById("nexora-payment").style.display = "block";
+
+  document.getElementById("paymentAmount").textContent =
+    Number(amount).toLocaleString("mn-MN") + " ₮";
+
+  document.getElementById("paymentReference").value =
+    "NEXORA-" + adId;
+
+  window.scrollTo(0, 0);
+}
+
+function closeNexoraPayment() {
+  document.getElementById("nexora-payment").style.display = "none";
+  document.getElementById("nexora-ads").style.display = "block";
+}
+
+function showNexoraBank() {
+
+  const index = document.getElementById("paymentBank").value;
+
+  const info = document.getElementById("bankInformation");
+
+  if (index === "") {
+    info.style.display = "none";
+    return;
+  }
+
+  const bank = NEXORA_BANKS[Number(index)];
+
+  document.getElementById("bankName").textContent = bank.name;
+  document.getElementById("bankHolder").textContent =
+    "Данс эзэмшигч: " + bank.accountHolder;
+
+  document.getElementById("bankAccount").textContent =
+    bank.accountNumber || "Дансны дугаар оруулаагүй байна";
+
+  info.style.display = "block";
+}
+
+function copyNexoraAccount() {
+  const bank = NEXORA_BANKS[
+    Number(document.getElementById("paymentBank").value)
+  ];
+
+  if (!bank || !bank.accountNumber) {
+    alert("Дансны дугаар тохируулаагүй байна.");
+    return;
+  }
+
+  navigator.clipboard.writeText(bank.accountNumber);
+  alert("Дансны дугаар хуулагдлаа.");
+}
+
+function copyNexoraReference() {
+  const value = document.getElementById("paymentReference").value;
+  navigator.clipboard.writeText(value);
+  alert("Гүйлгээний утга хуулагдлаа.");
+}
+
+async function submitNexoraPayment() {
+
+  const bankIndex = document.getElementById("paymentBank").value;
+  const receipt = document.getElementById("paymentReceipt").files[0];
+
+  if (!nexoraPaymentAdId) {
+    alert("Зарын мэдээлэл олдсонгүй.");
+    return;
+  }
+
+  if (bankIndex === "" || !receipt) {
+    alert("Банк сонгож, баримтаа хавсаргана уу.");
+    return;
+  }
+
+  const bank = NEXORA_BANKS[Number(bankIndex)];
+
+  if (!bank.accountNumber) {
+    alert("Энэ банкны дансны дугаар тохируулаагүй байна.");
+    return;
+  }
+
+  const { data: userData } = await nexoraDB.auth.getUser();
+
+  if (!userData.user) {
+    alert("Төлбөрийн хүсэлт илгээхийн тулд нэвтэрнэ үү.");
+    return;
+  }
+
+  const filePath =
+    userData.user.id + "/" +
+    Date.now() + "_" +
+    receipt.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+
+  const upload = await nexoraDB.storage
+    .from("nexora-receipts")
+    .upload(filePath, receipt);
+
+  if (upload.error) {
+    alert("Баримт хадгалахад алдаа гарлаа: " + upload.error.message);
+    return;
+  }
+
+  const result = await nexoraDB
+    .from("nexora_payments")
+    .insert({
+      ad_id: nexoraPaymentAdId,
+      user_id: userData.user.id,
+      bank_name: bank.name,
+      account_holder: bank.accountHolder,
+      amount: nexoraPaymentAmount,
+      reference: document.getElementById("paymentReference").value,
+      receipt_path: filePath,
+      status: "pending"
+    });
+
+  if (result.error) {
+    alert("Төлбөрийн хүсэлт хадгалагдсангүй: " + result.error.message);
+    return;
+  }
+
+  document.getElementById("paymentMessage").textContent =
+    "Төлбөрийн хүсэлт амжилттай илгээгдлээ. Админ шалгаж баталгаажуулна.";
+
+  alert("Төлбөрийн хүсэлт илгээгдлээ.");
+}
 </script>
 
 </body>
