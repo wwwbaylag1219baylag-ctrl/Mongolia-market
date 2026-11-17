@@ -514,3 +514,157 @@ function requireAdmin() {
 }
 
 console.log("NEXORA — 2-р хэсэг амжилттай ачааллаа.");
+     
+/* ======================================
+   NEXORA — 3-Р ХЭСЭГ
+   НЭМЭЛТ АЖИЛЛАГААНЫ ЗАСВАР
+====================================== */
+
+/* ӨГӨГДӨЛ ШАЛГАХ */
+
+function validateDatabase() {
+  if (!db || typeof db !== "object") {
+    throw new Error("Өгөгдлийн бүтэц буруу байна.");
+  }
+
+  db.ads = Array.isArray(db.ads) ? db.ads : [];
+  db.products = Array.isArray(db.products)
+    ? db.products : [];
+  db.payments = Array.isArray(db.payments)
+    ? db.payments : [];
+
+  db.settings = db.settings || {};
+  db.settings.bankAccounts =
+    Array.isArray(db.settings.bankAccounts)
+      ? db.settings.bankAccounts
+      : [];
+
+  return true;
+}
+
+/* БАНКНЫ ДАНС ХУУЛАХ */
+
+async function copyBankAccount(accountNumber) {
+  if (!accountNumber) {
+    showToast("Дансны дугаар олдсонгүй.");
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(
+      String(accountNumber)
+    );
+
+    showToast("Дансны дугаар хуулагдлаа.");
+  } catch (error) {
+    showToast("Дансны дугаар: " + accountNumber);
+  }
+}
+
+/* ЗАРЫН ЖАГСААЛТ ШИНЭЧЛЭХ */
+
+function refreshAds() {
+  if (document.getElementById("adsScreen")
+      ?.classList.contains("hidden") === false) {
+    renderPlatform("ads");
+  }
+}
+
+/* БАРААНЫ ЖАГСААЛТ ШИНЭЧЛЭХ */
+
+function refreshProducts() {
+  if (document.getElementById("shopScreen")
+      ?.classList.contains("hidden") === false) {
+    renderPlatform("shop");
+  }
+}
+
+/* ТӨЛБӨРИЙН ТӨЛӨВ ШАЛГАХ */
+
+function getPaymentStatus(paymentID) {
+  const payment = db.payments.find(
+    item => item.id === paymentID
+  );
+
+  if (!payment) return null;
+
+  return {
+    id: payment.id,
+    status: payment.status,
+    amount: payment.amount,
+    title: payment.title,
+    createdAt: payment.createdAt
+  };
+}
+
+/* ИДЭВХТЭЙ ЗАРЫН ТОО */
+
+function getActiveAdsCount() {
+  return db.ads.filter(
+    item => item.status === "active"
+  ).length;
+}
+
+/* ИДЭВХТЭЙ БАРААНЫ ТОО */
+
+function getActiveProductsCount() {
+  return db.products.filter(
+    item => item.status === "active"
+  ).length;
+}
+
+/* АДМИНЫ САМБАР ШИНЭЧЛЭХ */
+
+function refreshAdminDashboard() {
+  if (!adminLoggedIn) return;
+
+  renderAdmin();
+}
+
+/* ӨГӨГДӨЛ ХАДГАЛАЛТЫН ШАЛГАЛТ */
+
+function checkStorage() {
+  try {
+    const testKey = DB_KEY + "_TEST";
+
+    localStorage.setItem(testKey, "OK");
+
+    const result = localStorage.getItem(testKey);
+
+    localStorage.removeItem(testKey);
+
+    return result === "OK";
+  } catch (error) {
+    return false;
+  }
+}
+
+/* СИСТЕМИЙН ЭХЛЭЛИЙН ШАЛГАЛТ */
+
+function nexoraSystemCheck() {
+  try {
+    validateDatabase();
+
+    if (!checkStorage()) {
+      showToast("Өгөгдөл хадгалах боломжгүй байна.");
+      return false;
+    }
+
+    console.log("NEXORA SYSTEM: READY");
+    console.log("Идэвхтэй зар:", getActiveAdsCount());
+    console.log("Идэвхтэй бараа:", getActiveProductsCount());
+
+    return true;
+  } catch (error) {
+    console.error("NEXORA SYSTEM ERROR:", error);
+    showToast("Системийн шалгалтад алдаа гарлаа.");
+    return false;
+  }
+}
+
+/* ЭХЛЭЛ */
+
+nexoraSystemCheck();
+
+console.log("NEXORA — 3-р хэсэг ачаалагдлаа.");
+
