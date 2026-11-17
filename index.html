@@ -1130,28 +1130,34 @@ button {
 
 const DB_KEY = "NEXORA_DATABASE_V1";
 
+
+
 const DEFAULT_DB = {
   settings: {
     adFee: 5000,
     shopFee: 30000,
-    bankName: "Хас банк",
-    accountOwner: "Б.Баярлхагва",
-    accountNumber: "5000619081",
-    paymentInstruction: "Гүйлгээний утгад NEXORA гэж бичнэ үү."
+
+    bankAccounts: [
+      {
+        bankName: "Хаан банк",
+        accountOwner: "У.Нямбаяр",
+        accountNumber: "5517307418"
+      },
+      {
+        bankName: "Хас банк",
+        accountOwner: "Б.Баярлхагва",
+        accountNumber: "5000619081"
+      }
+    ],
+
+    paymentInstruction:
+      "Гүйлгээний утгад NEXORA гэж бичнэ үү."
   },
+
   ads: [],
   products: [],
   payments: []
 };
-
-let db = loadDatabase();
-let currentType = "";
-let currentPaymentType = "";
-let adminLoggedIn = false;
-
-/* ======================================
-   ӨГӨГДӨЛ ХАДГАЛАХ
-====================================== */
 
 function loadDatabase() {
   try {
@@ -1166,17 +1172,25 @@ function loadDatabase() {
     return {
       settings: {
         ...DEFAULT_DB.settings,
-        ...(parsed.settings || {})
+        ...(parsed.settings || {}),
+
+        bankAccounts:
+          parsed.settings?.bankAccounts ??
+          DEFAULT_DB.settings.bankAccounts
       },
+
       ads: Array.isArray(parsed.ads) ? parsed.ads : [],
       products: Array.isArray(parsed.products) ? parsed.products : [],
       payments: Array.isArray(parsed.payments) ? parsed.payments : []
     };
+
   } catch (error) {
     console.error("Өгөгдөл унших алдаа:", error);
+
     return JSON.parse(JSON.stringify(DEFAULT_DB));
   }
 }
+
 
 function saveDatabase() {
   try {
@@ -1441,18 +1455,15 @@ document.getElementById("createForm").addEventListener(
    ТӨЛБӨР
 ====================================== */
 
+ 
 function openPayment(type, paymentID = null) {
   currentPaymentType = type;
 
-  let payment;
-
-  if (paymentID) {
-    payment = db.payments.find(p => p.id === paymentID);
-  } else {
-    payment = db.payments.find(p =>
-      p.type === type && p.status === "unpaid"
-    );
-  }
+  const payment = paymentID
+    ? db.payments.find(p => p.id === paymentID)
+    : db.payments.find(p =>
+        p.type === type && p.status === "unpaid"
+      );
 
   if (!payment) {
     showToast("Төлбөрийн хүсэлт олдсонгүй.");
@@ -1465,20 +1476,104 @@ function openPayment(type, paymentID = null) {
   }
 
   const settings = db.settings;
+  const дансууд = settings.bankAccounts || [];
+
+  if (дансууд.length === 0) {
+    showToast("Банкны данс бүртгэгдээгүй байна.");
+    return;
+  }
 
   document.getElementById("paymentInfo").innerHTML = `
     <div class="payment-account">
-      <p>Үйлчилгээ: <strong>${escapeHTML(payment.title)}</strong></p>
-      <p>Төлөх дүн: <strong>${formatMoney(payment.amount)}</strong></p>
+
+      <p>Үйлчилгээ:
+        <strong>${escapeHTML(payment.title)}</strong>
+      </p>
+
+      <p>Төлөх дүн:
+        <strong>${formatMoney(payment.amount)}</strong>
+      </p>
+
       <hr>
-      <p>Банк: <strong>${escapeHTML(settings.bankName)}</strong></p>
-      <p>Данс эзэмшигч: <strong>${escapeHTML(settings.accountOwner)}</strong></p>
-      <p>Дансны дугаар: <strong>${escapeHTML(settings.accountNumber)}</strong></p>
-      <p>${escapeHTML(settings.paymentInstruction)}</p>
-      <button type="button" class="primary-btn" id="copyBankAccount">
-        Данс хуулах
-      </button>
+
+      <label>Төлбөр шилжүүлэх дансаа сонгоно уу</label>
+
+      <select id="selectedBank">
+        ${дансууд.map((данс, дугаар) => `
+          <option value="${дугаар}">
+            ${escapeHTML(данс.bankName)}
+          </option>
+        `).join("")}
+      </select>
+
+      <div id="selectedBankInfo"></div>
+
+      <p>${escapeHTML(settings.paymentInstruction || "")}</p>
+
     </div>
+
+    <p class="help-text">
+      Шилжүүлэг хийсний дараа гүйлгээний утгаа оруулна уу.
+      Админ төлбөрийг шалгаж баталгаажуулна.
+    </p>
+  `;
+
+  document.getElementById("paymentForm").reset();
+
+  document.getElementById("paymentForm").classList.remove("hidden");
+
+  document.getElementById("paymentForm").dataset.paymentId =
+    payment.id;
+
+  // Данс сонгох
+  const сонголт = document.getElementById("selectedBank");
+
+  сонголт.addEventListener("change", updateSelectedBank);
+
+  function updateSelectedBank() {
+    const дугаар = Number(сонголт.value);
+    const данс = дансууд[дугаар];
+
+    if (!данс) return;
+
+    document.getElementById("selectedBankInfo").innerHTML = `
+      <p>Банк: <strong>${escapeHTML(данс.bankName)}</strong></p>
+
+      <p>Данс эзэмшигч:
+        <strong>${escapeHTML(данс.accountOwner)}</strong>
+      </p>
+
+      <p>Дансны дугаар:
+        <strong>${escapeHTML(данс.accountNumber)}</strong>
+      </p>
+
+      <button type="button"
+        class="primary-btn"
+        id="copySelectedBank">
+        Дансны дугаар хуулах
+      </button>
+    `;
+
+    document.getElementById("copySelectedBank").onclick =
+      async function() {
+        try {
+          await navigator.clipboard.writeText(
+            данс.accountNumber
+          );
+          showToast("Дансны дугаар хуулагдлаа.");
+        } catch {
+          showToast("Данс: " + данс.accountNumber);
+        }
+      };
+  }
+
+  updateSelectedBank();
+
+  openModal("paymentModal");
+}
+
+  <div id="selectedBankInfo" class="payment-account"></div>
+`;
     <p class="help-text">
       Шилжүүлэг хийсний дараа гүйлгээний утгаа оруулна уу.
       Админ төлбөрийг шалгаж баталгаажуулна.
