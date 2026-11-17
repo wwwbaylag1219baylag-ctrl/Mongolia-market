@@ -1111,25 +1111,26 @@ button {
       <div id="paymentRequests"></div>
     </section>
 
-    <section class="admin-panel">
-      <h2>Зар болон барааны удирдлага</h2>
-      <div id="adminItems"></div>
-    </section>
-  </main>
+    
+<section class="admin-panel">
+  <h2>Зар болон барааны удирдлага</h2>
+  <div id="adminItems"></div>
+</section>
+</main>
 </section>
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script src="script.js"></script>
-<script>  
-"use strict";
+</body>
+</html>
+
 
 /* ======================================
    NEXORA — ҮНДСЭН JAVASCRIPT
 ====================================== */
 
 const DB_KEY = "NEXORA_DATABASE_V1";
-
 
 
 const DEFAULT_DB = {
@@ -1158,7 +1159,9 @@ const DEFAULT_DB = {
   products: [],
   payments: []
 };
-
+ }
+  
+  
 function loadDatabase() {
   try {
     const saved = localStorage.getItem(DB_KEY);
