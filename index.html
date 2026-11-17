@@ -452,28 +452,6 @@ button {
 
   </div>
 
-  <div class="nx-features">
-
-    <div class="nx-feature">
-      <span>♛</span>
-      <h3>PREMIUM</h3>
-      <p>Тансаг, орчин үеийн хэрэглэгчийн орчин</p>
-    </div>
-
-    <div class="nx-feature">
-      <span>⌖</span>
-      <h3>LOCATION</h3>
-      <p>Зарын байршил болон газрын зураг</p>
-    </div>
-
-    <div class="nx-feature">
-      <span>◈</span>
-      <h3>SECURITY</h3>
-      <p>Хэрэглэгч болон админы хамгаалалт</p>
-    </div>
-
-  </div>
-
 </main>
 
 <footer class="nx-footer">
@@ -486,32 +464,62 @@ button {
 
 </div>
 
-
-
-<section id="nx-ads" class="nx-page">
-  <!-- 2-р хэсгийн зарын платформыг эндээс нээнэ -->
-</section>
+</div>
 
 
 
 <section id="nx-shop" class="nx-page">
+
   <header class="nx-header">
     <button class="nx-back"
       onclick="nxNavigate('nx-home')">
       ← Буцах
     </button>
+
     <div class="nx-logo">NEXORA SHOP</div>
+
     <button class="nx-btn"
       onclick="nxNavigate('nx-profile')">
       Профайл
     </button>
   </header>
 
-  <div class="nx-placeholder">
-    <h2>ХУДАЛДААНЫ ПЛАТФОРМ</h2>
-    <p>5-р хэсэгт худалдааны бүх систем холбогдоно.</p>
-  </div>
+  <main class="nx-container">
+
+    <h1>ХУДАЛДААНЫ ПЛАТФОРМ</h1>
+    <p>Өөрийн дэлгүүрээ нээж, бараагаа худалдаалаарай.</p>
+
+    <div class="nx-platforms">
+
+      <article class="nx-platform-card">
+        <h2>🏪 ДЭЛГҮҮР НЭЭХ</h2>
+        <p>Өөрийн онлайн дэлгүүрийг үүсгээрэй.</p>
+
+        <button onclick="nxNavigate('nx-open-shop')">
+          ДЭЛГҮҮР НЭЭХ →
+        </button>
+      </article>
+
+      <article class="nx-platform-card">
+        <h2>🛍️ БАРАА ҮЗЭХ</h2>
+        <p>Бусад дэлгүүрийн бараа бүтээгдэхүүн үзэх.</p>
+      </article>
+
+      <article class="nx-platform-card">
+        <h2>🛒 МИНИЙ САГС</h2>
+        <p>Сагсанд нэмсэн бараагаа харах.</p>
+      </article>
+
+      <article class="nx-platform-card">
+        <h2>📦 МИНИЙ ЗАХИАЛГА</h2>
+        <p>Худалдан авалтын захиалгаа харах.</p>
+      </article>
+
+    </div>
+
+  </main>
 </section>
+
 
 
 <section id="nx-profile" class="nx-page">
@@ -2844,7 +2852,8 @@ root.insertAdjacentHTML("beforeend", `
 
   </div>
 </div>
-`);
+
+</section>
 
 // Category data
 const categories = {
