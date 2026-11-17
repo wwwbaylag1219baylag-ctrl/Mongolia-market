@@ -1184,7 +1184,7 @@ button {
     grid-template-columns: 1fr;
   }
 }
-</styla>
+
 /* ======================================
    NEXORA — ҮНДСЭН JAVASCRIPT
    1-Р ХЭСЭГ
@@ -1853,4 +1853,472 @@ function nexoraSystemCheck() {
 nexoraSystemCheck();
 
 console.log("NEXORA — 3-р хэсэг ачаалагдлаа.");
+
+/* ======================================
+   NEXORA — 4-Р ХЭСЭГ
+   ДУТУУ ФУНКЦҮҮД
+====================================== */
+
+/* ЗАР, БАРАА ХАРУУЛАХ */
+
+function renderPlatform(type) {
+  const isAd = type === "ads";
+  const collection = isAd ? db.ads : db.products;
+
+  const grid = document.getElementById(
+    isAd ? "adsGrid" : "shopGrid"
+  );
+
+  const count = document.getElementById(
+    isAd ? "adsCount" : "shopCount"
+  );
+
+  const empty = document.getElementById(
+    isAd ? "adsEmpty" : "shopEmpty"
+  );
+
+  if (!grid) return;
+
+  const search = document.getElementById(
+    isAd ? "adsSearch" : "shopSearch"
+  )?.value.toLowerCase().trim() || "";
+
+  const category = document.getElementById(
+    isAd ? "adsCategory" : "shopCategory"
+  )?.value || "";
+
+  const filtered = collection.filter(item => {
+    return item.status === "active" &&
+      (!search ||
+        item.name.toLowerCase().includes(search) ||
+        item.description.toLowerCase().includes(search)) &&
+      (!category || item.category === category);
+  });
+
+  grid.innerHTML = filtered.map(item => `
+    <article class="item-card">
+      ${
+        item.image
+          ? `<img class="item-image"
+              src="${escapeHTML(item.image)}"
+              alt="${escapeHTML(item.name)}"
+              onerror="this.style.display='none'">`
+          : `<div class="item-placeholder">🛍️</div>`
+      }
+
+      <div class="item-info">
+        <span class="item-category">
+          ${escapeHTML(item.category)}
+        </span>
+
+        <h3>${escapeHTML(item.name)}</h3>
+
+        <div class="item-price">
+          ${formatMoney(item.price)}
+        </div>
+
+        <p class="item-description">
+          ${escapeHTML(item.description)}
+        </p>
+
+        ${
+          item.storeName
+            ? `<small>Дэлгүүр: ${escapeHTML(item.storeName)}</small>`
+            : ""
+        }
+
+        <small>Утас: ${escapeHTML(item.phone)}</small>
+
+        <div class="item-footer">
+          <button type="button"
+            onclick="contactSeller('${escapeHTML(item.phone)}')">
+            Холбогдох
+          </button>
+        </div>
+      </div>
+    </article>
+  `).join("");
+
+  if (count) {
+    count.textContent = filtered.length +
+      (isAd ? " зар" : " бараа");
+  }
+
+  if (empty) {
+    empty.classList.toggle("hidden", filtered.length > 0);
+  }
+}
+
+/* ХУДАЛДАГЧТАЙ ХОЛБОГДОХ */
+
+function contactSeller(phone) {
+  const number = String(phone).replace(/[^\d+]/g, "");
+
+  if (!number) {
+    showToast("Утасны дугаар олдсонгүй.");
+    return;
+  }
+
+  window.location.href = "tel:" + number;
+}
+
+/* ТӨЛБӨРИЙН ЦОНХ */
+
+function openPayment(type, paymentID = null) {
+  const payment = paymentID
+    ? db.payments.find(p => p.id === paymentID)
+    : null;
+
+  const amount = payment
+    ? payment.amount
+    : type === "ad"
+      ? db.settings.adFee
+      : db.settings.shopFee;
+
+  const accounts = db.settings.bankAccounts || [];
+
+  const accountHTML = accounts.map(account => `
+    <div class="payment-account">
+      <strong>${escapeHTML(account.bankName)}</strong><br>
+      Данс эзэмшигч:
+      ${escapeHTML(account.accountOwner)}<br>
+      Данс:
+      <strong>${escapeHTML(account.accountNumber)}</strong>
+      <button type="button"
+        onclick="copyBankAccount('${escapeHTML(account.accountNumber)}')">
+        Данс хуулах
+      </button>
+    </div>
+  `).join("");
+
+  document.getElementById("paymentInfo").innerHTML = `
+    <div class="payment-account">
+      <strong>Төлөх дүн: ${formatMoney(amount)}</strong>
+      <hr>
+      ${escapeHTML(db.settings.paymentInstruction || "")}
+      ${accountHTML}
+    </div>
+  `;
+
+  const form = document.getElementById("paymentForm");
+  form.dataset.paymentId = payment?.id || "";
+
+  form.reset();
+
+  openModal("paymentModal");
+}
+
+/* ТӨЛБӨРИЙН ХҮСЭЛТ ИЛГЭЭХ */
+
+function submitPayment(event) {
+  event.preventDefault();
+
+  const paymentID =
+    document.getElementById("paymentForm").dataset.paymentId;
+
+  const payment = db.payments.find(
+    p => p.id === paymentID
+  );
+
+  if (!payment) {
+    showToast("Төлбөрийн бүртгэл олдсонгүй.");
+    return;
+  }
+
+  if (!["unpaid", "rejected"].includes(payment.status)) {
+    showToast("Энэ төлбөрийн хүсэлт өмнө нь илгээгдсэн байна.");
+    return;
+  }
+
+  const payerName =
+    document.getElementById("payerName").value.trim();
+
+  const reference =
+    document.getElementById("paymentReference").value.trim();
+
+  const receipt =
+    document.getElementById("receiptUrl").value.trim();
+
+  if (!payerName || !reference) {
+    showToast("Мэдээллээ бүрэн оруулна уу.");
+    return;
+  }
+
+  if (receipt) {
+    try {
+      const url = new URL(receipt);
+      if (!["http:", "https:"].includes(url.protocol)) {
+        throw new Error();
+      }
+    } catch {
+      showToast("Баримтын холбоос буруу байна.");
+      return;
+    }
+  }
+
+  const oldPayment = { ...payment };
+
+  payment.payerName = payerName;
+  payment.reference = reference;
+  payment.receipt = receipt;
+  payment.status = "review";
+
+  if (!saveDatabase()) {
+    Object.assign(payment, oldPayment);
+    return;
+  }
+
+  closeModal("paymentModal");
+  showToast("Төлбөрийн хүсэлт илгээгдлээ.");
+
+  renderAdmin();
+}
+
+document.getElementById("paymentForm").addEventListener(
+  "submit",
+  submitPayment
+);
+
+/* АДМИН НЭВТРЭХ */
+
+function openAdminLogin() {
+  openModal("adminLoginModal");
+}
+
+document.getElementById("adminLoginForm").addEventListener(
+  "submit",
+  function(event) {
+    event.preventDefault();
+
+    const password =
+      document.getElementById("adminPassword").value;
+
+    if (password !== "092112") {
+      showToast("Нууц үг буруу байна.");
+      return;
+    }
+
+    adminLoggedIn = true;
+
+    closeModal("adminLoginModal");
+    hideAllScreens();
+
+    document.getElementById("adminScreen")
+      .classList.remove("hidden");
+
+    renderAdmin();
+
+    showToast("Админ самбарт нэвтэрлээ.");
+  }
+);
+
+/* АДМИН ГАРАХ */
+
+function adminLogout() {
+  adminLoggedIn = false;
+  showHome();
+  showToast("Системээс гарлаа.");
+}
+
+/* АДМИН САМБАР */
+
+function renderAdmin() {
+  if (!adminLoggedIn) return;
+
+  document.getElementById("statAds").textContent =
+    db.ads.length;
+
+  document.getElementById("statProducts").textContent =
+    db.products.length;
+
+  document.getElementById("statPayments").textContent =
+    db.payments.length;
+
+  document.getElementById("statApproved").textContent =
+    db.payments.filter(p => p.status === "approved").length;
+
+  document.getElementById("adFee").value =
+    db.settings.adFee;
+
+  document.getElementById("shopFee").value =
+    db.settings.shopFee;
+
+  const account = db.settings.bankAccounts[0] || {};
+
+  document.getElementById("bankName").value =
+    account.bankName || "";
+
+  document.getElementById("accountOwner").value =
+    account.accountOwner || "";
+
+  document.getElementById("accountNumber").value =
+    account.accountNumber || "";
+
+  document.getElementById("paymentInstruction").value =
+    db.settings.paymentInstruction || "";
+
+  renderPaymentRequests();
+  renderAdminItems();
+}
+
+/* ТӨЛБӨРИЙН ХҮСЭЛТИЙН ЖАГСААЛТ */
+
+function renderPaymentRequests() {
+  const container =
+    document.getElementById("paymentRequests");
+
+  if (!container) return;
+
+  container.innerHTML = db.payments.map(payment => `
+    <div class="admin-row">
+      <div>
+        <strong>${escapeHTML(payment.title)}</strong>
+        <small>
+          ${formatMoney(payment.amount)} ·
+          ${escapeHTML(payment.payerName || "Төлөгч тодорхойгүй")}
+        </small>
+        <small>
+          Гүйлгээ: ${escapeHTML(payment.reference || "-")}
+        </small>
+        <span class="status ${escapeHTML(payment.status)}">
+          ${escapeHTML(statusText(payment.status))}
+        </span>
+        ${
+          payment.receipt
+            ? `<p><a href="${escapeHTML(payment.receipt)}"
+                 target="_blank" rel="noopener noreferrer">
+                 Баримт харах
+               </a></p>`
+            : ""
+        }
+      </div>
+
+      <div class="admin-actions">
+        ${
+          payment.status === "review"
+            ? `
+              <button class="approve-btn"
+                onclick="approvePayment('${payment.id}')">
+                Батлах
+              </button>
+              <button class="reject-btn"
+                onclick="rejectPayment('${payment.id}')">
+                Татгалзах
+              </button>
+            `
+            : ""
+        }
+      </div>
+    </div>
+  `).join("") || "<p>Төлбөрийн хүсэлт алга.</p>";
+}
+
+/* ЗАР БАРААНЫ АДМИН УДИРДЛАГА */
+
+function renderAdminItems() {
+  const container = document.getElementById("adminItems");
+
+  if (!container) return;
+
+  const allItems = [
+    ...db.ads.map(item => ({ ...item, type: "ad" })),
+    ...db.products.map(item => ({ ...item, type: "product" }))
+  ];
+
+  container.innerHTML = allItems.map(item => `
+    <div class="admin-row">
+      <div>
+        <strong>${escapeHTML(item.name)}</strong>
+        <small>
+          ${item.type === "ad" ? "Зар" : "Бараа"} ·
+          ${formatMoney(item.price)}
+        </small>
+        <span class="status ${escapeHTML(item.status)}">
+          ${escapeHTML(statusText(item.status))}
+        </span>
+      </div>
+
+      <div class="admin-actions">
+        <button class="delete-btn"
+          onclick="deletePlatformItem('${item.id}', '${item.type}')">
+          Устгах
+        </button>
+      </div>
+    </div>
+  `).join("") || "<p>Бүртгэлтэй мэдээлэл алга.</p>";
+}
+
+/* ТОХИРГОО ХАДГАЛАХ */
+
+document.getElementById("settingsForm").addEventListener(
+  "submit",
+  function(event) {
+    event.preventDefault();
+
+    if (!adminLoggedIn) return;
+
+    const adFee = Number(
+      document.getElementById("adFee").value
+    );
+
+    const shopFee = Number(
+      document.getElementById("shopFee").value
+    );
+
+    if (
+      !Number.isSafeInteger(adFee) || adFee < 0 ||
+      !Number.isSafeInteger(shopFee) || shopFee < 0
+    ) {
+      showToast("Төлбөрийн дүн буруу байна.");
+      return;
+    }
+
+    const oldSettings = JSON.parse(
+      JSON.stringify(db.settings)
+    );
+
+    db.settings.adFee = adFee;
+    db.settings.shopFee = shopFee;
+    db.settings.paymentInstruction =
+      document.getElementById("paymentInstruction").value.trim();
+
+    if (!updateBankSettings()) {
+      db.settings = oldSettings;
+      return;
+    }
+
+    if (!saveDatabase()) {
+      db.settings = oldSettings;
+      return;
+    }
+
+    showToast("Тохиргоо хадгалагдлаа.");
+    renderAdmin();
+  }
+);
+
+/* ХАЙЛТ */
+
+document.getElementById("adsSearch").addEventListener(
+  "input", () => renderPlatform("ads")
+);
+
+document.getElementById("adsCategory").addEventListener(
+  "change", () => renderPlatform("ads")
+);
+
+document.getElementById("shopSearch").addEventListener(
+  "input", () => renderPlatform("shop")
+);
+
+document.getElementById("shopCategory").addEventListener(
+  "change", () => renderPlatform("shop")
+);
+
+/* ЭХЛЭЛИЙН ТОХИРГОО */
+
+renderPlatform("ads");
+renderPlatform("shop");
+
+console.log("NEXORA — 4-р хэсэг ачаалагдлаа.");
 
