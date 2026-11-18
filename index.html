@@ -3381,18 +3381,20 @@
   .nx-platform-back{width:38px;height:38px;flex:0 0 38px;display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.22);border-radius:12px;background:rgba(255,255,255,.06);color:inherit;font-size:30px;line-height:1;cursor:pointer}
 
 
-/* Ажлын байрны 10 салбарыг 5 + 5 гэсэн хоёр эгнээнд харуулна. */
+/* Ажлын байрны салбарын картууд: том дэлгэцэд 5 багана, утсанд 2 багана. */
 .nx-job-sector-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
-.nx-job-sector-grid .nx-choice-card{min-width:0;min-height:62px;padding:8px 7px;display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:7px;text-align:left;border-left:3px solid rgba(214,173,85,.55);border-top:1px solid rgba(214,173,85,.34)}
-.nx-job-sector-grid .nx-choice-index{flex:0 0 23px;width:23px;height:23px;font-size:8px}
-.nx-job-sector-grid .nx-choice-name{flex:1;min-width:0;font-size:10px;line-height:1.2;overflow-wrap:anywhere}
-.nx-job-sector-grid .nx-choice-arrow{display:block;flex:0 0 auto;font-size:17px}
-@media(max-width:360px){
-  .nx-job-sector-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
-  .nx-job-sector-grid .nx-choice-card{min-height:66px;padding:6px 4px;gap:4px;border-radius:9px}
-  .nx-job-sector-grid .nx-choice-index{flex-basis:19px;width:19px;height:19px;font-size:7px;border-radius:6px}
-  .nx-job-sector-grid .nx-choice-name{font-size:8px;line-height:1.15}
-  .nx-job-sector-grid .nx-choice-arrow{font-size:13px}
+.nx-job-sector-grid .nx-choice-card{box-sizing:border-box;width:100%;min-width:0;min-height:68px;padding:10px 11px;display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;text-align:left;white-space:normal;border-left:3px solid rgba(214,173,85,.55);border-top:1px solid rgba(214,173,85,.34)}
+.nx-job-sector-grid .nx-choice-index{flex:0 0 32px;width:32px;height:32px;font-size:10px}
+.nx-job-sector-grid .nx-choice-name{display:block;flex:1 1 auto;min-width:0;font-size:13px;line-height:1.3;overflow-wrap:normal;word-break:normal}
+.nx-job-sector-grid .nx-choice-arrow{display:block;flex:0 0 auto;font-size:18px}
+@media(max-width:1100px){
+  .nx-job-sector-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+}
+@media(max-width:420px){
+  .nx-job-sector-grid{grid-template-columns:1fr;gap:8px}
+  .nx-job-sector-grid .nx-choice-card{min-height:62px;padding:9px 11px;gap:10px}
+  .nx-job-sector-grid .nx-choice-index{flex-basis:30px;width:30px;height:30px;font-size:10px}
+  .nx-job-sector-grid .nx-choice-name{font-size:13px;line-height:1.25}
 }
 /* Ангиллын шатлал, сонголтын өнгөний ялгарал */
 .nx-category-path{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:2px 0 12px;padding:10px 12px;border:1px solid rgba(214,173,85,.28);border-radius:11px;background:linear-gradient(100deg,rgba(214,173,85,.13),rgba(214,173,85,.035));color:#aaa39a;font-size:11px;font-weight:700;letter-spacing:.04em}
