@@ -469,7 +469,7 @@
 
         <div style="height:16px"></div>
 
-        <div class="welcome-panel">
+        <div class="welcome-panel" id="nexora-auth-panel">
           <h2>Хэрэглэгчийн бүртгэл</h2>
           <p>
             Бүртгүүлэх болон нэвтрэх үйлдлийг
@@ -607,6 +607,288 @@
     </script>
 
   </main>
+  
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+(function () {
+  const SUPABASE_URL =
+    "https://grbpbmowhkbtuxostfny.supabase.co";
+
+  const SUPABASE_KEY =
+    "sb_publishable_wspX-C4VBPJMmvWuQgsMTw_h40w8O3x";
+
+  const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+  const panel = document.getElementById("nexora-auth-panel");
+
+  if (!panel) {
+    console.error("NEXORA auth panel олдсонгүй.");
+    return;
+  }
+
+  let currentMode = "login";
+
+  function safe(value) {
+    return String(value || "").replace(/[&<>"']/g, function (c) {
+      return {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[c];
+    });
+  }
+
+  function showMessage(message, isError) {
+    const box = document.getElementById("nexora-auth-message");
+    if (!box) return;
+
+    box.textContent = message;
+    box.style.display = "block";
+    box.style.color = isError ? "#ff8b8b" : "#b9e9a5";
+  }
+
+  function renderForm(mode) {
+    currentMode = mode;
+
+    panel.innerHTML = `
+      <h2>Хэрэглэгчийн бүртгэл</h2>
+
+      <div style="display:flex;gap:10px;margin:16px 0;">
+        <button type="button" data-mode="login"
+          style="flex:1;padding:12px;border-radius:10px;
+          border:1px solid #d6ad55;background:${mode === "login" ? "#d6ad55" : "#191919"};
+          color:${mode === "login" ? "#090909" : "#f7f5ef"};">
+          Нэвтрэх
+        </button>
+
+        <button type="button" data-mode="register"
+          style="flex:1;padding:12px;border-radius:10px;
+          border:1px solid #d6ad55;background:${mode === "register" ? "#d6ad55" : "#191919"};
+          color:${mode === "register" ? "#090909" : "#f7f5ef"};">
+          Бүртгүүлэх
+        </button>
+      </div>
+
+      <form id="nexora-auth-form">
+        ${mode === "register" ? `
+          <label>Овог, нэр</label>
+          <input name="full_name" type="text" required
+            placeholder="Нэрээ оруулна уу"
+            autocomplete="name"
+            style="${inputStyle}">
+
+          <label>Утасны дугаар</label>
+          <input name="phone" type="tel"
+            placeholder="Утасны дугаар"
+            autocomplete="tel"
+            style="${inputStyle}">
+        ` : ""}
+
+        <label>И-мэйл хаяг</label>
+        <input name="email" type="email" required
+          placeholder="name@example.com"
+          autocomplete="email"
+          style="${inputStyle}">
+
+        <label>Нууц үг</label>
+        <input name="password" type="password" required
+          minlength="${mode === "register" ? "8" : "1"}"
+          placeholder="${mode === "register" ? "8-аас дээш тэмдэгт" : "Нууц үг"}"
+          autocomplete="${mode === "register" ? "new-password" : "current-password"}"
+          style="${inputStyle}">
+
+        <div id="nexora-auth-message"
+          style="display:none;margin:14px 0;font-size:13px;line-height:1.6;">
+        </div>
+
+        <button id="nexora-auth-submit" type="submit"
+          style="width:100%;padding:15px;margin-top:16px;
+          border:0;border-radius:12px;background:#d6ad55;
+          color:#090909;font-weight:bold;">
+          ${mode === "register" ? "Бүртгэл үүсгэх" : "Нэвтрэх"}
+        </button>
+      </form>
+    `;
+  }
+
+  const inputStyle =
+    "display:block;width:100%;box-sizing:border-box;" +
+    "padding:13px;margin:7px 0 15px;border-radius:10px;" +
+    "border:1px solid rgba(214,173,85,.4);" +
+    "background:#111;color:#fff;";
+
+  async function checkAdmin(user) {
+    const result = await db
+      .from("nexora_admins")
+      .select("user_id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (result.error) {
+      console.warn("Админы эрх шалгахад алдаа:", result.error.message);
+      return false;
+    }
+
+    return !!result.data;
+  }
+
+  async function renderUser(user) {
+    if (!user) {
+      renderForm(currentMode);
+      return;
+    }
+
+    const isAdmin = await checkAdmin(user);
+    const name =
+      user.user_metadata?.full_name || user.email || "Хэрэглэгч";
+
+    panel.innerHTML = `
+      <h2>Миний бүртгэл</h2>
+
+      <p style="margin:12px 0;color:#f7f5ef;">
+        ${safe(name)}
+      </p>
+
+      <p style="color:#aaa39a;font-size:13px;word-break:break-all;">
+        ${safe(user.email)}
+      </p>
+
+      <p style="margin:16px 0;color:#d6ad55;">
+        ${isAdmin ? "Администраторын бүртгэл" : "Энгийн хэрэглэгч"}
+      </p>
+
+      <button id="nexora-logout" type="button"
+        style="width:100%;padding:14px;border:1px solid #d6ad55;
+        border-radius:10px;background:#191919;color:#d6ad55;">
+        Системээс гарах
+      </button>
+    `;
+
+    const logoutButton = document.getElementById("nexora-logout");
+
+    logoutButton.addEventListener("click", async function () {
+      logoutButton.disabled = true;
+
+      const { error } = await db.auth.signOut();
+
+      if (error) {
+        alert("Гарахад алдаа гарлаа: " + error.message);
+        logoutButton.disabled = false;
+        return;
+      }
+
+      currentMode = "login";
+      renderForm("login");
+    });
+  }
+
+  panel.addEventListener("click", function (event) {
+    const button = event.target.closest("[data-mode]");
+    if (!button) return;
+
+    renderForm(button.dataset.mode);
+  });
+
+  panel.addEventListener("submit", async function (event) {
+    if (event.target.id !== "nexora-auth-form") return;
+
+    event.preventDefault();
+
+    const form = event.target;
+    const formData = new FormData(form);
+
+    const email = String(formData.get("email") || "").trim();
+    const password = String(formData.get("password") || "");
+    const submit = document.getElementById("nexora-auth-submit");
+
+    submit.disabled = true;
+    submit.textContent = "Түр хүлээнэ үү...";
+
+    try {
+      if (currentMode === "register") {
+        const fullName = String(
+          formData.get("full_name") || ""
+        ).trim();
+
+        const phone = String(
+          formData.get("phone") || ""
+        ).trim();
+
+        const { data, error } = await db.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            data: {
+              full_name: fullName,
+              phone: phone
+            }
+          }
+        });
+
+        if (error) throw error;
+
+        if (data.session) {
+          await renderUser(data.user);
+        } else {
+          renderForm("login");
+          showMessage(
+            "Бүртгэл үүслээ. И-мэйл хаягтаа очсон баталгаажуулах холбоосыг нээнэ үү.",
+            false
+          );
+        }
+      } else {
+        const { data, error } = await db.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+
+        if (error) throw error;
+
+        await renderUser(data.user);
+      }
+    } catch (error) {
+      showMessage(
+        error.message || "Алдаа гарлаа. Дахин оролдоно уу.",
+        true
+      );
+
+      submit.disabled = false;
+      submit.textContent =
+        currentMode === "register" ? "Бүртгэл үүсгэх" : "Нэвтрэх";
+    }
+  });
+
+  async function initialize() {
+    const { data, error } = await db.auth.getSession();
+
+    if (error) {
+      showMessage(error.message, true);
+      return;
+    }
+
+    await renderUser(data.session?.user || null);
+  }
+
+  db.auth.onAuthStateChange(function (event, session) {
+    if (event === "SIGNED_OUT") {
+      currentMode = "login";
+      renderForm("login");
+    }
+  });
+
+  renderForm("login");
+  initialize();
+
+  window.NEXORA_SUPABASE = db;
+})();
+</script>
+
 
 </body>
 </html>
