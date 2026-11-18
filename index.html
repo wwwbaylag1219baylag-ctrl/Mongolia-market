@@ -300,18 +300,18 @@
 @media(max-width:430px){#nexora-admin-app{padding:18px 12px 32px}#nexora-admin-app .nx-admin-head .nexora-ad-heading{font-size:21px}#nexora-admin-app .nx-admin-tabs{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#nexora-admin-app .nx-admin-tabs button{min-height:44px;font-size:12px}#nexora-admin-app .nx-admin-stat{padding:13px}#nexora-admin-app .nx-admin-stat-value{font-size:24px}}
 
 
-/* NEXORA Тусламж төв */
+/* NEXORA Тусламж төв — screenshot-той ижил өргөн, дугуй булантай бүлгүүд */
 .nx-help-screen{max-width:1000px;margin:0 auto;padding:22px 18px 60px;color:#f7f5ef}
 .nx-help-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
 .nx-help-back{border:1px solid rgba(214,173,85,.45);background:#1c1b17;color:#e8c56f;border-radius:11px;padding:10px 13px;font-weight:700}
 .nx-help-title{font-size:27px;font-weight:850;color:#e3bd65;margin:0}
-.nx-help-intro{color:#aaa39a;line-height:1.6;margin:8px 0 18px}
-.nx-help-search{width:100%;box-sizing:border-box;background:#191919;color:#fff;border:1px solid rgba(214,173,85,.45);border-radius:13px;padding:15px 16px;font-size:15px;outline:none;margin-bottom:18px}
+.nx-help-intro{color:#aaa39a;font-size:18px;line-height:1.6;margin:8px 0 18px}
+.nx-help-search{width:100%;min-height:52px;box-sizing:border-box;background:#191919;color:#fff;border:1px solid rgba(214,173,85,.5);border-radius:18px;padding:16px 20px;font-size:17px;outline:none;margin-bottom:18px}
 .nx-help-search:focus{border-color:#e4bd63;box-shadow:0 0 0 3px rgba(214,173,85,.12)}
-.nx-help-group{border:1px solid rgba(214,173,85,.28);border-radius:15px;background:linear-gradient(120deg,#201f1a,#151515);margin:0 0 12px;overflow:hidden}
-.nx-help-group>summary{list-style:none;cursor:pointer;padding:16px;display:flex;align-items:center;gap:11px;color:#e7c36e;font-weight:800}
+.nx-help-group{border:1px solid rgba(214,173,85,.34);border-radius:19px;background:linear-gradient(120deg,#201f1a,#151515);margin:0 0 14px;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}
+.nx-help-group>summary{list-style:none;cursor:pointer;min-height:66px;box-sizing:border-box;padding:18px 22px;display:flex;align-items:center;gap:11px;color:#e7c36e;font-size:17px;font-weight:800;line-height:1.35}
 .nx-help-group>summary::-webkit-details-marker,.nx-help-q>summary::-webkit-details-marker{display:none}
-.nx-help-group>summary:after{content:"＋";margin-left:auto;color:#d6ad55;font-size:20px}
+.nx-help-group>summary:after{content:"＋";margin-left:auto;color:#d6ad55;font-size:27px;font-weight:400;line-height:1;flex:0 0 auto}
 .nx-help-group[open]>summary:after{content:"−"}
 .nx-help-items{padding:0 14px 12px}
 .nx-help-q{border-top:1px solid rgba(214,173,85,.15);padding:0 2px}
@@ -321,7 +321,15 @@
 .nx-help-answer{padding:0 8px 15px 24px;color:#bdb7ad;font-size:14px;line-height:1.7}
 .nx-help-answer strong{color:#f0d48f}
 .nx-help-empty{display:none;color:#c9b98f;text-align:center;padding:22px}
-@media(max-width:520px){.nx-help-screen{padding:16px 12px 40px}.nx-help-title{font-size:22px}.nx-help-group>summary{padding:14px;font-size:14px}}
+@media(max-width:520px){
+  .nx-help-screen{padding:16px 12px 40px}
+  .nx-help-title{font-size:22px}
+  .nx-help-intro{font-size:17px;line-height:1.7;margin-bottom:18px}
+  .nx-help-search{min-height:48px;padding:14px 16px;font-size:16px;border-radius:16px}
+  .nx-help-group{border-radius:18px;margin-bottom:13px}
+  .nx-help-group>summary{min-height:62px;padding:17px 16px;font-size:16px;gap:9px}
+  .nx-help-group>summary:after{font-size:25px}
+}
 
 </style>
 </head>
