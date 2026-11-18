@@ -10,14 +10,14 @@ Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return new Response("Method not allowed", { status: 405, headers: cors });
 
-  const expectedSecret = Deno.env.get("CRON_SECRET");
+  const expectedSecret = Deno.env.get("cron_secret");
   const suppliedSecret = req.headers.get("x-cron-secret");
   if (!expectedSecret || !suppliedSecret || suppliedSecret !== expectedSecret) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...cors, "Content-Type": "application/json" } });
   }
 
-  const resendKey = Deno.env.get("RESEND_API_KEY");
-  const fromEmail = Deno.env.get("RESEND_FROM_EMAIL");
+  const resendKey = Deno.env.get("resend_api_key");
+  const fromEmail = Deno.env.get("resend_from_email");
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   if (!resendKey || !fromEmail || !supabaseUrl || !serviceRoleKey) {
