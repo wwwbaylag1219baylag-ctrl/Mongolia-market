@@ -4025,5 +4025,46 @@
 })();
 </script>
 
+
+<script>
+(function(){
+  const url="https://grbpbmowhkbtuxostfny.supabase.co";
+  const key="sb_publishable_wspX-C4VBPJMmvWuQgsMTw_h40w8O3x";
+  if(!window.supabase?.createClient)return;
+  const db=window.supabase.createClient(url,key);
+  function apply(config){
+    const t={background:"#090909",panel:"#171717",text:"#f7f5ef",accent:"#d6ad55",button:"#d6ad55",button_text:"#090909",...(config||{})};
+    const style=document.getElementById("nx-public-theme");
+    const css=`
+      :root{
+        --black:${t.background}!important;
+        --dark:${t.background}!important;
+        --panel:${t.panel}!important;
+        --panel-light:${t.panel}!important;
+        --gold:${t.accent}!important;
+        --gold-light:${t.accent}!important;
+        --white:${t.text}!important;
+        --muted:${t.text}!important;
+        --border:${t.accent}66!important;
+      }
+      html,body,.screen{background:${t.background}!important;color:${t.text}!important}
+      .topbar,.bottom-nav,.nav-bar,.page-header,.page-content,.content-panel,.welcome-panel,.auth-panel{color:${t.text}}
+      .card,.panel,.welcome-panel,.auth-panel,.ad-card,.product-card,.profile-card,.category-card,.choice-card,.modal-content,.form-section,.listing-card{background:${t.panel}!important;color:${t.text}!important;border-color:${t.accent}66!important}
+      h1,h2,h3,.logo,.section-title,.page-title,.gold-text,.price,.category-title{color:${t.accent}!important}
+      button.primary,button.submit-btn,.primary-button,.btn-primary,.publish-button,.action-primary,.auth-submit{background:${t.button}!important;color:${t.button_text}!important;border-color:${t.button}!important}
+      input,select,textarea{background:${t.panel}!important;color:${t.text}!important;border-color:${t.accent}88!important}
+      input::placeholder,textarea::placeholder{color:${t.text}99!important}
+      a{color:${t.accent}}
+      `;
+    let el=document.getElementById("nx-public-theme");
+    if(!el){el=document.createElement("style");el.id="nx-public-theme";document.head.appendChild(el);}
+    el.textContent=css;
+  }
+  db.from("nexora_settings").select("admin_theme_config").eq("id",1).single()
+    .then(({data,error})=>{if(!error&&data?.admin_theme_config)apply(data.admin_theme_config);})
+    .catch(err=>console.warn("NEXORA theme load:",err));
+})();
+</script>
+
 </body>
 </html>
