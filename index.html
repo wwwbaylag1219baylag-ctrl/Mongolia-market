@@ -358,36 +358,8 @@
         <div class="header-space"></div>
       </header>
 
-      <main class="page-content">
-
-        <div class="welcome-panel">
-          <h2>Зарын платформ</h2>
-          <p>
-            Хэрэгтэй зараа хайж, өөрийн зараа нийтэлж,
-            Монгол даяар худалдан авагч болон худалдагчтай холбогдоорой.
-          </p>
-        </div>
-
-        <div style="height:22px"></div>
-
-        <div class="welcome-panel">
-          <h2>Зарын ангилал</h2>
-          <p>
-            Дараагийн хэсэгт үндсэн ангилал,
-            дэд ангилал болон зарын жагсаалтыг холбоно.
-          </p>
-        </div>
-
-        <div style="height:16px"></div>
-
-        <div class="welcome-panel">
-          <h2>Зар оруулах</h2>
-          <p>
-            Зар нийтлэх дэлгэцийг дараагийн хэсэгт
-            бүтэн дэлгэцээр нэмж холбоно.
-          </p>
-        </div>
-
+      <main class="page-content" id="market-app">
+        <div class="welcome-panel">Худалдааны платформ ачаалж байна…</div>
       </main>
 
       <footer class="footer">NEXORA</footer>
@@ -395,54 +367,18 @@
     </section>
 
 
-    <!-- ХУДАЛДААНЫ ПЛАТФОРМ -->
-    <section id="shop" class="screen">
-
+    <!-- АДМИН САМБАР -->
+    <section id="admin" class="screen">
       <header class="topbar">
-        <button class="back-button" type="button"
-          onclick="NEXORA.back()" aria-label="Буцах">‹</button>
-
-        <div class="page-heading">ХУДАЛДААНЫ ПЛАТФОРМ</div>
-
+        <button class="back-button" type="button" onclick="NEXORA.back()" aria-label="Буцах">‹</button>
+        <div class="page-heading">АДМИН УДИРДЛАГА</div>
         <div class="header-space"></div>
       </header>
-
-      <main class="page-content">
-
-        <div class="welcome-panel">
-          <h2>Худалдааны платформ</h2>
-          <p>
-            Бараа бүтээгдэхүүн үзэх, дэлгүүр сонгох,
-            захиалга хийх нэгдсэн худалдааны орчин.
-          </p>
-        </div>
-
-        <div style="height:22px"></div>
-
-        <div class="welcome-panel">
-          <h2>Барааны ангилал</h2>
-          <p>
-            Дараагийн хэсэгт барааны ангилал,
-            бүтээгдэхүүний жагсаалт болон хайлтыг холбоно.
-          </p>
-        </div>
-
-        <div style="height:16px"></div>
-
-        <div class="welcome-panel">
-          <h2>Миний сагс</h2>
-          <p>
-            Худалдан авах бараа, сагс болон захиалгын
-            дэлгэцүүдийг дараагийн хэсэгт бүтэн дэлгэцээр нэмнэ.
-          </p>
-        </div>
-
+      <main class="page-content" id="nexora-admin-app">
+        <div class="welcome-panel">Админ самбар ачаалж байна…</div>
       </main>
-
-      <footer class="footer">NEXORA</footer>
-
+      <footer class="footer">NEXORA ADMIN</footer>
     </section>
-
 
     <!-- ПРОФАЙЛ -->
     <section id="profile" class="screen">
@@ -514,7 +450,8 @@
           "home",
           "ads",
           "shop",
-          "profile"
+          "profile",
+          "admin"
         ];
 
         let currentScreen = "home";
@@ -763,12 +700,25 @@
         ${isAdmin ? "Администраторын бүртгэл" : "Энгийн хэрэглэгч"}
       </p>
 
+      ${isAdmin ? `
+        <button id="nexora-admin-open" type="button"
+          style="width:100%;padding:14px;margin:0 0 12px;border:1px solid #d6ad55;
+          border-radius:10px;background:#d6ad55;color:#090909;font-weight:700;">
+          ⚙ Админ удирдлагын самбар
+        </button>
+      ` : ""}
+
       <button id="nexora-logout" type="button"
         style="width:100%;padding:14px;border:1px solid #d6ad55;
         border-radius:10px;background:#191919;color:#d6ad55;">
         Системээс гарах
       </button>
     `;
+
+    const adminOpen = document.getElementById("nexora-admin-open");
+    if (adminOpen) adminOpen.addEventListener("click", function () {
+      if (window.NEXORA) window.NEXORA.open("admin");
+    });
 
     const logoutButton = document.getElementById("nexora-logout");
 
@@ -2907,6 +2857,145 @@
   window.NEXORA_SHOW_CREATE_AD = showCreateForm;
 })();
     </script>          
+
+
+<style>
+#market-app,#nexora-admin-app{padding:16px 14px 32px;min-height:calc(100vh - 90px);color:#f7f5ef}
+.nx-market-toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0}
+.nx-market-input,.nx-market-select,.nx-market-textarea{width:100%;padding:13px;border:1px solid rgba(214,173,85,.4);border-radius:10px;background:#171717;color:#f7f5ef;margin:7px 0 13px}
+.nx-market-btn{padding:12px 15px;border:1px solid #d6ad55;border-radius:10px;background:#d6ad55;color:#090909;font-weight:700}
+.nx-market-btn.secondary{background:#191919;color:#d6ad55}
+.nx-market-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.nx-market-card,.nx-admin-card{padding:14px;border:1px solid rgba(214,173,85,.3);border-radius:13px;background:#171717;margin:10px 0;min-width:0}
+.nx-market-card h3,.nx-admin-card h3{font-size:15px;margin:7px 0;color:#f7f5ef;overflow-wrap:anywhere}
+.nx-market-price{color:#d6ad55;font-weight:800;margin:8px 0}
+.nx-market-muted{color:#aaa39a;font-size:12px;line-height:1.5}
+.nx-admin-tabs{display:flex;gap:8px;overflow:auto;padding:4px 0 12px}
+.nx-admin-tabs button{white-space:nowrap;padding:10px 12px;border:1px solid #6b5832;border-radius:9px;background:#191919;color:#d6ad55}
+.nx-admin-tabs button.active{background:#d6ad55;color:#090909}
+.nx-admin-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.nx-admin-actions button{padding:9px 12px;border:0;border-radius:8px;font-weight:700}
+.nx-admin-approve{background:#b9e9a5;color:#10200b}.nx-admin-reject{background:#542323;color:#ffdada}
+@media(max-width:360px){.nx-market-grid{grid-template-columns:1fr}}
+</style>
+<script>
+(function(){
+  const db=window.NEXORA_SUPABASE,host=document.getElementById("market-app");
+  if(!db||!host)return;
+  let products=[],cart=[],marketUser=null,searchText="";
+  const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const money=v=>Number(v||0).toLocaleString("mn-MN")+" ₮";
+  async function loadProducts(){
+    host.innerHTML='<p class="nx-market-muted">Бараануудыг ачаалж байна…</p>';
+    const {data,error}=await db.from("market_products").select("id,title,category,price,description,phone,location,image_url,status,created_at").eq("status","active").order("created_at",{ascending:false}).limit(100);
+    if(error){host.innerHTML='<p>Бараа ачаалж чадсангүй: '+esc(error.message)+'</p>';return;}
+    products=data||[];render();
+  }
+  function render(){
+    const filtered=products.filter(p=>(p.title+" "+p.category+" "+(p.description||"")).toLowerCase().includes(searchText.toLowerCase()));
+    host.innerHTML=`
+      <div class="nexora-ad-heading">ХУДАЛДААНЫ ПЛАТФОРМ</div>
+      <p class="nx-market-muted">Бараа бүтээгдэхүүн хайж, сагсандаа нэмээд захиалга үүсгэнэ.</p>
+      <div class="nx-market-toolbar">
+        <button class="nx-market-btn" id="nx-market-publish">+ Бараа нийтлэх</button>
+        <button class="nx-market-btn secondary" id="nx-market-cart">🛒 Сагс (${cart.reduce((n,x)=>n+x.qty,0)})</button>
+        <button class="nx-market-btn secondary" id="nx-market-refresh">Шинэчлэх</button>
+      </div>
+      <input class="nx-market-input" id="nx-market-search" placeholder="Бараа, ангиллаар хайх…" value="${esc(searchText)}">
+      <div class="nx-market-grid">${filtered.map(p=>`
+        <article class="nx-market-card">
+          ${p.image_url?`<img src="${esc(p.image_url)}" alt="" style="width:100%;height:125px;object-fit:cover;border-radius:9px">`:""}
+          <div class="nx-market-muted">${esc(p.category)}</div><h3>${esc(p.title)}</h3>
+          <div class="nx-market-price">${money(p.price)}</div>
+          <div class="nx-market-muted">${esc(p.location||"Байршил оруулаагүй")}</div>
+          <button class="nx-market-btn" data-cart-add="${esc(p.id)}" style="width:100%;margin-top:10px">Сагсанд нэмэх</button>
+        </article>`).join("")||'<p class="nx-market-muted">Одоогоор идэвхтэй бараа алга.</p>'}</div>`;
+    document.getElementById("nx-market-search").addEventListener("input",e=>{searchText=e.target.value;const pos=e.target.selectionStart;render();const el=document.getElementById("nx-market-search");el.focus();el.setSelectionRange(pos,pos);});
+    document.getElementById("nx-market-publish").onclick=showPublish;
+    document.getElementById("nx-market-cart").onclick=showCart;
+    document.getElementById("nx-market-refresh").onclick=loadProducts;
+    host.querySelectorAll("[data-cart-add]").forEach(b=>b.onclick=()=>{const p=products.find(x=>x.id===b.dataset.cartAdd);if(!p)return;const old=cart.find(x=>x.id===p.id);if(old)old.qty++;else cart.push({id:p.id,title:p.title,price:Number(p.price),qty:1});render();});
+  }
+  async function showPublish(){
+    const {data}=await db.auth.getUser();marketUser=data.user;
+    if(!marketUser){host.innerHTML='<button class="nx-market-btn secondary" id="nx-market-back">‹ Буцах</button><h2>Нэвтэрч орно уу</h2><p class="nx-market-muted">Бараа нийтлэхийн тулд нэвтэрнэ.</p>';document.getElementById("nx-market-back").onclick=loadProducts;return;}
+    host.innerHTML=`<button class="nx-market-btn secondary" id="nx-market-back">‹ Буцах</button><h2 class="nexora-ad-heading">БАРАА НИЙТЛЭХ</h2>
+      <form id="nx-market-form">
+      <label>Барааны нэр *</label><input class="nx-market-input" name="title" required maxlength="120">
+      <label>Ангилал *</label><input class="nx-market-input" name="category" required maxlength="80" placeholder="Жишээ: Электрон бараа">
+      <label>Үнэ (₮) *</label><input class="nx-market-input" name="price" type="number" min="0" step="1" required>
+      <label>Тайлбар</label><textarea class="nx-market-textarea" name="description" rows="4"></textarea>
+      <label>Холбоо барих утас</label><input class="nx-market-input" name="phone" type="tel">
+      <label>Байршил</label><input class="nx-market-input" name="location">
+      <button class="nx-market-btn" type="submit">Хяналтад илгээх</button></form><p id="nx-market-msg" class="nx-market-muted"></p>`;
+    document.getElementById("nx-market-back").onclick=loadProducts;
+    document.getElementById("nx-market-form").onsubmit=async e=>{
+      e.preventDefault();const form=e.currentTarget,btn=form.querySelector("button[type=submit]");btn.disabled=true;
+      const v=Object.fromEntries(new FormData(form).entries());
+      const {error}=await db.from("market_products").insert({owner_id:marketUser.id,title:v.title.trim(),category:v.category.trim(),price:Number(v.price),description:v.description.trim(),phone:v.phone.trim(),location:v.location.trim(),status:"pending"});
+      if(error){document.getElementById("nx-market-msg").textContent="Алдаа: "+error.message;btn.disabled=false;return;}
+      host.innerHTML='<h2 class="nexora-ad-heading">ХҮСЭЛТ ИЛГЭЭГДЛЭЭ</h2><p class="nx-market-muted">Бараа админы хяналтад орлоо. Батлагдсаны дараа нийтэд харагдана.</p><button class="nx-market-btn" id="nx-market-back">Бараа үзэх</button>';
+      document.getElementById("nx-market-back").onclick=loadProducts;
+    };
+  }
+  function showCart(){
+    host.innerHTML=`<button class="nx-market-btn secondary" id="nx-cart-back">‹ Буцах</button><h2 class="nexora-ad-heading">МИНИЙ САГС</h2>
+      ${cart.map(x=>`<div class="nx-market-card"><b>${esc(x.title)}</b><p>${money(x.price)} × ${x.qty}</p><button class="nx-market-btn secondary" data-cart-minus="${esc(x.id)}">−</button> <button class="nx-market-btn secondary" data-cart-plus="${esc(x.id)}">+</button> <button class="nx-market-btn secondary" data-cart-remove="${esc(x.id)}">Устгах</button></div>`).join("")||'<p class="nx-market-muted">Сагс хоосон байна.</p>'}
+      <h3>Нийт: ${money(cart.reduce((n,x)=>n+x.price*x.qty,0))}</h3><button class="nx-market-btn" id="nx-cart-order" ${cart.length?"":"disabled"}>Захиалга үүсгэх</button><p id="nx-market-msg" class="nx-market-muted"></p>`;
+    document.getElementById("nx-cart-back").onclick=render;
+    host.querySelectorAll("[data-cart-minus]").forEach(b=>b.onclick=()=>{const x=cart.find(x=>x.id===b.dataset.cartMinus);if(x){x.qty--;if(x.qty<=0)cart=cart.filter(y=>y!==x);}showCart();});
+    host.querySelectorAll("[data-cart-plus]").forEach(b=>b.onclick=()=>{const x=cart.find(x=>x.id===b.dataset.cartPlus);if(x)x.qty++;showCart();});
+    host.querySelectorAll("[data-cart-remove]").forEach(b=>b.onclick=()=>{cart=cart.filter(x=>x.id!==b.dataset.cartRemove);showCart();});
+    document.getElementById("nx-cart-order").onclick=placeOrder;
+  }
+  async function placeOrder(){
+    const {data,error:authError}=await db.auth.getUser();if(authError||!data.user){document.getElementById("nx-market-msg").textContent="Захиалга үүсгэхийн тулд нэвтэрнэ үү.";return;}
+    if(!cart.length)return;
+    const items=cart.map(x=>({product_id:x.id,title:x.title,unit_price:x.price,quantity:x.qty}));
+    const total=cart.reduce((n,x)=>n+x.price*x.qty,0);
+    const {data:order,error}=await db.from("market_orders").insert({buyer_id:data.user.id,items,total_amount:total,status:"pending_payment",payment_status:"unpaid"}).select("id").single();
+    if(error){document.getElementById("nx-market-msg").textContent="Алдаа: "+error.message;return;}
+    cart=[];host.innerHTML='<h2 class="nexora-ad-heading">ЗАХИАЛГА ҮҮСЛЭЭ</h2><p class="nx-market-muted">Захиалгын дугаар: '+esc(order.id)+'<br>Төлбөрийн дэлгэрэнгүй алхмыг дараагийн шатанд холбоно.</p><button class="nx-market-btn" id="nx-market-back">Бараа үзэх</button>';document.getElementById("nx-market-back").onclick=loadProducts;
+  }
+  loadProducts();
+})();
+</script>
+<script>
+(function(){
+ const db=window.NEXORA_SUPABASE,root=document.getElementById("nexora-admin-app");
+ if(!db||!root)return;
+ let activeTab="overview";
+ const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ const money=v=>Number(v||0).toLocaleString("mn-MN")+" ₮";
+ const tabs=[["overview","Тойм"],["ads","Үнэгүй зар"],["payments","Зарын төлбөр"],["products","Бараа"],["stores","Дэлгүүрийн төлбөр"],["suppliers","Нийлүүлэгч"],["orders","Захиалга"]];
+ async function adminCheck(){const {data,error}=await db.auth.getUser();if(error||!data.user)return false;const {data:row,error:e}=await db.from("nexora_admins").select("user_id").eq("user_id",data.user.id).maybeSingle();return !e&&!!row;}
+ function shell(body){root.innerHTML='<div class="nexora-ad-heading">АДМИН УДИРДЛАГА</div><p class="nx-market-muted">Зарын болон худалдааны хүсэлтүүдийг хянах самбар.</p><div class="nx-admin-tabs">'+tabs.map(t=>'<button data-admin-tab="'+t[0]+'" class="'+(activeTab===t[0]?'active':'')+'">'+t[1]+'</button>').join("")+'</div><div id="nx-admin-body">'+body+'</div>';root.querySelectorAll("[data-admin-tab]").forEach(b=>b.onclick=()=>{activeTab=b.dataset.adminTab;loadTab();});}
+ async function query(table,columns,filters=[]){let q=db.from(table).select(columns).order("created_at",{ascending:false}).limit(50);filters.forEach(([k,v])=>q=q.eq(k,v));return await q;}
+ function cards(rows,type){if(!rows||!rows.length)return '<p class="nx-market-muted">Хүлээгдэж буй хүсэлт алга.</p>';return rows.map(r=>{const title=r.title||r.store_name||r.name||("Хүсэлт "+String(r.id||"").slice(0,8));const detail=[r.category,r.package_type,r.bank_name,r.transfer_reference,r.phone,r.location].filter(Boolean).join(" · ");return '<article class="nx-admin-card"><h3>'+esc(title)+'</h3><p class="nx-market-price">'+money(r.price??r.amount??r.total_amount)+'</p><p class="nx-market-muted">'+esc(detail)+'</p><p class="nx-market-muted">Төлөв: '+esc(r.status||r.payment_status||"—")+' · '+esc(r.created_at?new Date(r.created_at).toLocaleString("mn-MN"):"")+'</p>'+(r.receipt_path?'<p class="nx-market-muted">Баримтын файл: '+esc(r.receipt_path)+'</p>':"")+'<div class="nx-admin-actions">'+(type?'<button class="nx-admin-approve" data-review="'+type+'" data-id="'+esc(r.id)+'" data-action="approve">Зөвшөөрөх</button><button class="nx-admin-reject" data-review="'+type+'" data-id="'+esc(r.id)+'" data-action="reject">Татгалзах</button>':"")+'</div></article>';}).join("");}
+ async function loadTab(){
+   shell('<p class="nx-market-muted">Мэдээлэл татаж байна…</p>');const body=document.getElementById("nx-admin-body");
+   if(activeTab==="overview"){const names=["classified_ads","payment_requests","market_products","nexora_store_payments","market_suppliers","market_orders"];const rs=await Promise.all(names.map(t=>db.from(t).select("id",{count:"exact",head:true})));body.innerHTML='<div class="nx-market-grid">'+names.map((t,i)=>'<div class="nx-market-card"><div class="nx-market-muted">'+esc(t)+'</div><div class="nx-market-price" style="font-size:24px">'+(rs[i].count??"—")+'</div></div>').join("")+'</div>';return;}
+   const cfg={ads:["classified_ads","id,title,category,price,status,package_type,package_days,package_amount,created_at",[["status","pending_review"]],"free_ad"],payments:["payment_requests","id,ad_id,user_id,amount,package_days,transfer_reference,receipt_path,status,created_at",[["status","pending_review"]],"ad_payment"],products:["market_products","id,title,category,price,owner_id,status,created_at",[["status","pending"]],"product"],stores:["nexora_store_payments","id,store_id,user_id,amount,bank_name,transfer_reference,receipt_path,status,created_at",[["status","pending"]],"store_payment"],suppliers:["market_suppliers","id,name,type,register_no,phone,email,address,status,created_at",[["status","pending"]],"supplier"],orders:["market_orders","id,buyer_id,items,total_amount,status,payment_status,created_at",[],""]}[activeTab];
+   const [table,cols,filters,type]=cfg;const {data,error}=await query(table,cols,filters);if(error){body.innerHTML='<p style="color:#ff9999">Алдаа: '+esc(error.message)+'</p>';return;}
+   if(activeTab==="orders")body.innerHTML=(data||[]).map(o=>'<article class="nx-admin-card"><h3>Захиалга '+esc(o.id)+'</h3><p class="nx-market-price">'+money(o.total_amount)+'</p><p class="nx-market-muted">Төлөв: '+esc(o.status)+' · Төлбөр: '+esc(o.payment_status)+'</p><pre style="white-space:pre-wrap;color:#aaa39a;font-size:11px">'+esc(JSON.stringify(o.items,null,2))+'</pre></article>').join("")||'<p class="nx-market-muted">Захиалга алга.</p>';
+   else body.innerHTML=cards(data,type);
+   body.querySelectorAll("[data-review]").forEach(b=>b.onclick=()=>review(b.dataset.review,b.dataset.id,b.dataset.action));
+ }
+ async function review(type,id,action){
+   if(!confirm(action==="approve"?"Энэ хүсэлтийг зөвшөөрөх үү?":"Энэ хүсэлтээс татгалзах уу?"))return;
+   let result;
+   if(type==="ad_payment")result=await db.rpc(action==="approve"?"admin_approve_payment_request":"admin_reject_payment_request",{p_request_id:id});
+   else if(type==="free_ad")result=await db.rpc("admin_review_free_ad",{p_ad_id:id,p_approve:action==="approve"});
+   else if(type==="store_payment")result=action==="approve"?await db.rpc("nexora_approve_store_payment",{p_payment_id:id}):await db.rpc("nexora_reject_store_payment",{p_payment_id:id,p_note:"Админы шийдвэрээр татгалзсан"});
+   else if(type==="product")result=await db.from("market_products").update({status:action==="approve"?"active":"rejected"}).eq("id",id);
+   else if(type==="supplier")result=await db.from("market_suppliers").update({status:action==="approve"?"approved":"rejected"}).eq("id",id);
+   if(result?.error){alert("Үйлдэл амжилтгүй: "+result.error.message);return;}alert("Хүсэлтийг шийдвэрлэлээ.");loadTab();
+ }
+ async function init(){if(!(await adminCheck())){root.innerHTML='<p style="color:#ff9999">Админ эрх шаардлагатай.</p>';return;}loadTab();}
+ const oldOpen=window.NEXORA?.open;
+ if(window.NEXORA&&oldOpen)window.NEXORA.open=function(name){oldOpen(name);if(name==="admin")init();};
+})();
+</script>
 
 </body>
 </html>
