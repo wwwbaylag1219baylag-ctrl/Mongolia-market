@@ -3069,7 +3069,8 @@
       phone: pendingAd.phone,
       latitude: pendingAd.latitude,
       longitude: pendingAd.longitude,
-      status: packageInfo.amount === 0 ? "active" : "pending_payment",
+      // Үнэгүй энгийн зар админы хяналтад орно; төлбөртэй багц төлбөр хүлээнэ.
+      status: packageInfo.amount === 0 ? "pending_review" : "pending_payment",
       package_type: packageInfo.type,
       package_days: packageInfo.days,
       package_amount: packageInfo.amount,
