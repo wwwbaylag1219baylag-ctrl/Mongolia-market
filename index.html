@@ -3134,7 +3134,7 @@
  async function query(table,columns,filters=[]){let q=db.from(table).select(columns).order("created_at",{ascending:false}).limit(50);filters.forEach(([k,v])=>q=q.eq(k,v));return await q;}
  async function cards(rows,type){
    if(!rows||!rows.length)return '<p class="nx-market-muted">Хүлээгдэж буй хүсэлт алга.</p>';
-   return await Promise.all(rows.map(async r=>{
+   return (await Promise.all(rows.map(async r=>{
      const title=r.title||r.store_name||r.name||("Хүсэлт "+String(r.id||"").slice(0,8));
      const detail=[r.owner_type==="company"?"Байгууллага":r.owner_type==="individual"?"Хувь хүн":null,r.phone,r.bank_name,r.transfer_reference,r.category,r.package_type,r.location].filter(Boolean).join(" · ");
      let receiptHtml="";
@@ -3143,7 +3143,7 @@
        receiptHtml=data?.signedUrl?'<p><a href="'+esc(data.signedUrl)+'" target="_blank" rel="noopener" style="color:#d6ad55">Төлбөрийн баримт үзэх</a></p>':'<p class="nx-market-muted">Баримт: '+esc(r.receipt_path)+'</p>';
      }
      return '<article class="nx-admin-card"><h3>'+esc(title)+'</h3><p class="nx-market-price">'+money(r.price??r.amount??r.total_amount)+'</p><p class="nx-market-muted">'+esc(detail)+'</p><p class="nx-market-muted">Төлөв: '+esc(r.status||r.payment_status||"—")+' · '+esc(r.created_at?new Date(r.created_at).toLocaleString("mn-MN"):"")+'</p>'+receiptHtml+'<div class="nx-admin-actions">'+(type?'<button class="nx-admin-approve" data-review="'+type+'" data-id="'+esc(r.id)+'" data-action="approve">Зөвшөөрөх</button><button class="nx-admin-reject" data-review="'+type+'" data-id="'+esc(r.id)+'" data-action="reject">Татгалзах</button>':"")+'</div></article>';
-   })).join("");
+   }))).join("");
  }
  async function loadTab(){
    shell('<p class="nx-market-muted">Мэдээлэл татаж байна…</p>');
