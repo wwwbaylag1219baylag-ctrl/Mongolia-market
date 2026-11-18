@@ -889,6 +889,221 @@
 })();
 </script>
 
+<style>
+  #ads .page-content {
+    width: 100%;
+    min-height: calc(100vh - 100px);
+    box-sizing: border-box;
+    padding: 18px 14px 30px;
+  }
+
+  .nexora-ad-heading {
+    color: #d6ad55;
+    font-size: 23px;
+    font-weight: 800;
+    margin: 8px 0;
+  }
+
+  .nexora-ad-description {
+    color: #aaa39a;
+    font-size: 14px;
+    margin-bottom: 22px;
+  }
+
+  .nexora-ad-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .nexora-ad-category {
+    min-height: 135px;
+    padding: 18px 12px;
+    border: 1px solid rgba(214,173,85,.35);
+    border-radius: 16px;
+    background: #171717;
+    color: #f7f5ef;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+    font: inherit;
+    transition: .2s;
+  }
+
+  .nexora-ad-category:active,
+  .nexora-ad-category.selected {
+    border-color: #d6ad55;
+    background: #292317;
+  }
+
+  .nexora-ad-icon {
+    font-size: 30px;
+  }
+
+  .nexora-ad-name {
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 700;
+  }
+
+  .nexora-ad-number {
+    color: #d6ad55;
+    font-size: 11px;
+  }
+
+  .nexora-ad-selected {
+    display: none;
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #d6ad55;
+    border-radius: 12px;
+    color: #f7f5ef;
+    background: #171717;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 360px) {
+    .nexora-ad-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .nexora-ad-category {
+      min-height: 105px;
+    }
+  }
+</style>
+
+<script>
+(function () {
+  const adsScreen = document.getElementById("ads");
+
+  if (!adsScreen) {
+    console.error("Зарын платформын ads дэлгэц олдсонгүй.");
+    return;
+  }
+
+  const content = adsScreen.querySelector(".page-content");
+
+  if (!content) {
+    console.error("Зарын платформын page-content олдсонгүй.");
+    return;
+  }
+
+  const categories = [
+    {
+      number: 1,
+      name: "Автомашин, тээврийн хэрэгсэл",
+      icon: "🚗"
+    },
+    {
+      number: 2,
+      name: "Үл хөдлөх хөрөнгө",
+      icon: "🏠"
+    },
+    {
+      number: 3,
+      name: "Ажлын байр",
+      icon: "💼"
+    },
+    {
+      number: 4,
+      name: "Үйлчилгээ",
+      icon: "🛠️"
+    },
+    {
+      number: 8,
+      name: "Мал аж ахуй, газар тариалан",
+      icon: "🐎"
+    },
+    {
+      number: 9,
+      name: "Барилгын материал, тоног төхөөрөмж",
+      icon: "🏗️"
+    },
+    {
+      number: 11,
+      name: "Спорт, аялал, амралт",
+      icon: "🏕️"
+    },
+    {
+      number: 12,
+      name: "Бусад зар",
+      icon: "📦"
+    }
+  ];
+
+  window.NEXORA_AD_CATEGORIES = categories;
+  window.NEXORA_AD_SELECTED_CATEGORY = null;
+
+  function renderCategories() {
+    content.innerHTML = `
+      <div class="nexora-ad-heading">
+        ЗАРЫН ПЛАТФОРМ
+      </div>
+
+      <div class="nexora-ad-description">
+        Зар оруулах эсвэл хайх ангиллаа сонгоно уу.
+      </div>
+
+      <div class="nexora-ad-grid" id="nexora-ad-grid">
+        ${categories.map(category => `
+          <button
+            type="button"
+            class="nexora-ad-category"
+            data-category-number="${category.number}"
+            aria-pressed="false"
+          >
+            <span class="nexora-ad-icon">${category.icon}</span>
+            <span class="nexora-ad-name">${category.name}</span>
+            <span class="nexora-ad-number">
+              АНГИЛАЛ ${category.number}
+            </span>
+          </button>
+        `).join("")}
+      </div>
+
+      <div
+        class="nexora-ad-selected"
+        id="nexora-ad-selected"
+        aria-live="polite"
+      ></div>
+    `;
+
+    const grid = document.getElementById("nexora-ad-grid");
+    const selectedBox = document.getElementById("nexora-ad-selected");
+
+    grid.addEventListener("click", function (event) {
+      const button = event.target.closest("[data-category-number]");
+
+      if (!button) return;
+
+      const number = Number(button.dataset.categoryNumber);
+      const selected = categories.find(item => item.number === number);
+
+      if (!selected) return;
+
+      window.NEXORA_AD_SELECTED_CATEGORY = selected;
+
+      grid.querySelectorAll(".nexora-ad-category").forEach(item => {
+        const isSelected = item === button;
+        item.classList.toggle("selected", isSelected);
+        item.setAttribute("aria-pressed", String(isSelected));
+      });
+
+      selectedBox.style.display = "block";
+      selectedBox.textContent =
+        "Сонгосон ангилал: " + selected.name +
+        ". Дэд ангиллыг дараагийн 6-р хэсэгт холбоно.";
+    });
+  }
+
+  renderCategories();
+})();
+</script>
+
 
 </body>
 </html>
