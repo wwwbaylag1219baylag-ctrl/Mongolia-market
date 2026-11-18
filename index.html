@@ -2923,6 +2923,8 @@
       <div class="nx-market-toolbar">
         <button class="nx-market-btn" id="nx-market-publish">+ Бараа нийтлэх</button>
         <button class="nx-market-btn secondary" id="nx-market-cart">🛒 Сагс (${cart.reduce((n,x)=>n+x.qty,0)})</button>
+        <button class="nx-market-btn secondary" id="nx-market-store">Дэлгүүр нээх</button>
+        <button class="nx-market-btn secondary" id="nx-market-supplier">Нийлүүлэгч болох</button>
         <button class="nx-market-btn secondary" id="nx-market-refresh">Шинэчлэх</button>
       </div>
       <input class="nx-market-input" id="nx-market-search" placeholder="Бараа, ангиллаар хайх…" value="${esc(searchText)}">
@@ -2938,7 +2940,89 @@
     document.getElementById("nx-market-publish").onclick=showPublish;
     document.getElementById("nx-market-cart").onclick=showCart;
     document.getElementById("nx-market-refresh").onclick=loadProducts;
+    document.getElementById("nx-market-store").onclick=showStore;
+    document.getElementById("nx-market-supplier").onclick=showSupplier;
     host.querySelectorAll("[data-cart-add]").forEach(b=>b.onclick=()=>{const p=products.find(x=>x.id===b.dataset.cartAdd);if(!p)return;const old=cart.find(x=>x.id===p.id);if(old)old.qty++;else cart.push({id:p.id,title:p.title,price:Number(p.price),qty:1});render();});
+  }
+
+  async function showStore(){
+    const {data,error:authError}=await db.auth.getUser();
+    if(authError||!data.user){host.innerHTML='<button class="nx-market-btn secondary" id="nx-store-back">‹ Буцах</button><h2 class="nexora-ad-heading">ДЭЛГҮҮР НЭЭХ</h2><p class="nx-market-muted">Дэлгүүр нээхийн тулд эхлээд нэвтэрнэ үү.</p>';document.getElementById("nx-store-back").onclick=loadProducts;return;}
+    marketUser=data.user;
+    const [storeRes,settingsRes,banksRes]=await Promise.all([
+      db.from("nexora_store_profiles").select("id,store_name,owner_type,phone").eq("user_id",marketUser.id).maybeSingle(),
+      db.from("nexora_settings").select("individual_price,company_price,duration_days").eq("id",1).single(),
+      db.from("bank_accounts").select("id,bank_name,account_number,account_holder").eq("is_active",true).order("display_order")
+    ]);
+    if(storeRes.error){host.innerHTML='<p>Дэлгүүрийн мэдээлэл уншихад алдаа: '+esc(storeRes.error.message)+'</p>';return;}
+    if(settingsRes.error||banksRes.error){host.innerHTML='<p>Төлбөрийн мэдээлэл уншихад алдаа гарлаа.</p>';return;}
+    const settings=settingsRes.data,banks=banksRes.data||[];
+    if(!storeRes.data){
+      host.innerHTML=`<button class="nx-market-btn secondary" id="nx-store-back">‹ Буцах</button><h2 class="nexora-ad-heading">ДЭЛГҮҮР БҮРТГҮҮЛЭХ</h2><p class="nx-market-muted">Дэлгүүрийн төрөл болон нэрээ оруулна уу.</p>
+        <form id="nx-store-form"><label>Дэлгүүрийн нэр *</label><input class="nx-market-input" name="store_name" required maxlength="100">
+        <label>Эзэмшигчийн төрөл</label><select class="nx-market-select" name="owner_type"><option value="individual">Хувь хүн</option><option value="company">Компани</option></select>
+        <label>Утас</label><input class="nx-market-input" name="phone" type="tel">
+        <p class="nx-market-muted">Хувь хүний эрх: ${money(settings.individual_price)} · Байгууллагын эрх: ${money(settings.company_price)} · ${settings.duration_days} хоног</p>
+        <button class="nx-market-btn" type="submit">Дэлгүүр бүртгүүлэх</button></form><p id="nx-store-msg" class="nx-market-muted"></p>`;
+      document.getElementById("nx-store-back").onclick=loadProducts;
+      document.getElementById("nx-store-form").onsubmit=async e=>{
+        e.preventDefault();const v=Object.fromEntries(new FormData(e.currentTarget).entries());
+        const {data:created,error}=await db.from("nexora_store_profiles").insert({user_id:marketUser.id,store_name:v.store_name.trim(),owner_type:v.owner_type,phone:v.phone.trim()}).select("id,store_name,owner_type,phone").single();
+        if(error){document.getElementById("nx-store-msg").textContent="Бүртгэхэд алдаа: "+error.message;return;}
+        showStorePayment(created,settings,banks);
+      };
+      return;
+    }
+    const {data:pending,error}=await db.from("nexora_store_payments").select("id,status,amount,created_at").eq("store_id",storeRes.data.id).eq("status","pending").order("created_at",{ascending:false}).limit(1).maybeSingle();
+    if(error){host.innerHTML='<p>Төлбөрийн хүсэлт шалгахад алдаа: '+esc(error.message)+'</p>';return;}
+    if(pending){host.innerHTML='<button class="nx-market-btn secondary" id="nx-store-back">‹ Буцах</button><h2 class="nexora-ad-heading">'+esc(storeRes.data.store_name)+'</h2><p class="nx-market-muted">Төлбөрийн хүсэлт хяналтад байна.</p><p class="nx-market-price">'+money(pending.amount)+'</p><p class="nx-market-muted">Илгээсэн: '+esc(new Date(pending.created_at).toLocaleString("mn-MN"))+'</p>';document.getElementById("nx-store-back").onclick=loadProducts;return;}
+    const {data:sub}=await db.from("nexora_subscriptions").select("status,expires_at").eq("store_id",storeRes.data.id).eq("status","active").order("expires_at",{ascending:false}).limit(1).maybeSingle();
+    host.innerHTML='<button class="nx-market-btn secondary" id="nx-store-back">‹ Буцах</button><h2 class="nexora-ad-heading">'+esc(storeRes.data.store_name)+'</h2><p class="nx-market-muted">Дэлгүүрийн төлөв: '+(sub&&new Date(sub.expires_at)>new Date()?"Идэвхтэй":"Идэвхгүй")+'</p><button class="nx-market-btn" id="nx-store-renew">Эрх сунгах / төлбөр хийх</button>';
+    document.getElementById("nx-store-back").onclick=loadProducts;
+    document.getElementById("nx-store-renew").onclick=()=>showStorePayment(storeRes.data,settings,banks);
+  }
+  function showStorePayment(store,settings,banks){
+    const amount=store.owner_type==="company"?Number(settings.company_price):Number(settings.individual_price);
+    host.innerHTML=`<button class="nx-market-btn secondary" id="nx-store-back">‹ Буцах</button><h2 class="nexora-ad-heading">ДЭЛГҮҮРИЙН ТӨЛБӨР</h2>
+      <p class="nx-market-muted">${esc(store.store_name)} · ${store.owner_type==="company"?"Байгууллага":"Хувь хүн"}</p>
+      <p class="nx-market-price">${money(amount)} / ${settings.duration_days} хоног</p>
+      <form id="nx-store-payment-form">
+      <label>Төлбөр шилжүүлэх данс *</label><select class="nx-market-select" name="bank_id" required>${banks.map(b=>'<option value="'+esc(b.id)+'">'+esc(b.bank_name)+' · '+esc(b.account_number)+' · '+esc(b.account_holder)+'</option>').join("")}</select>
+      <label>Гүйлгээний утга / дугаар *</label><input class="nx-market-input" name="transfer_reference" required maxlength="120">
+      <label>Төлбөрийн баримт *</label><input class="nx-market-input" name="receipt" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required>
+      <button class="nx-market-btn" type="submit">Төлбөрийн хүсэлт илгээх</button></form><p id="nx-store-payment-msg" class="nx-market-muted"></p>`;
+    document.getElementById("nx-store-back").onclick=showStore;
+    document.getElementById("nx-store-payment-form").onsubmit=async e=>{
+      e.preventDefault();const form=e.currentTarget,btn=form.querySelector("button[type=submit]");btn.disabled=true;
+      const v=Object.fromEntries(new FormData(form).entries()),bank=banks.find(x=>x.id===v.bank_id),file=v.receipt;
+      if(!bank||!file){btn.disabled=false;return;}
+      if(file.size>5*1024*1024){document.getElementById("nx-store-payment-msg").textContent="Баримт 5MB-аас бага байх ёстой.";btn.disabled=false;return;}
+      const ext=(file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"")||"jpg";
+      const path=marketUser.id+"/store/"+store.id+"/"+Date.now()+"."+ext;
+      const {error:uploadError}=await db.storage.from("payment-receipts").upload(path,file,{contentType:file.type||"application/octet-stream",upsert:false});
+      if(uploadError){document.getElementById("nx-store-payment-msg").textContent="Баримт upload хийхэд алдаа: "+uploadError.message;btn.disabled=false;return;}
+      const {error:insertError}=await db.from("nexora_store_payments").insert({store_id:store.id,user_id:marketUser.id,amount,bank_name:bank.bank_name,transfer_reference:v.transfer_reference.trim(),receipt_path:path,status:"pending"});
+      if(insertError){await db.storage.from("payment-receipts").remove([path]);document.getElementById("nx-store-payment-msg").textContent="Хүсэлт хадгалахад алдаа: "+insertError.message;btn.disabled=false;return;}
+      host.innerHTML='<h2 class="nexora-ad-heading">ТӨЛБӨРИЙН ХҮСЭЛТ ИЛГЭЭГДЛЭЭ</h2><p class="nx-market-muted">Админ төлбөрийг шалгаж, зөвшөөрсний дараа дэлгүүрийн эрх идэвхжинэ.</p><button class="nx-market-btn" id="nx-store-back">Дэлгүүр рүү буцах</button>';document.getElementById("nx-store-back").onclick=loadProducts;
+    };
+  }
+  async function showSupplier(){
+    const {data,error}=await db.auth.getUser();
+    if(error||!data.user){host.innerHTML='<button class="nx-market-btn secondary" id="nx-supplier-back">‹ Буцах</button><p>Нийлүүлэгчийн бүртгэлд нэвтрэх шаардлагатай.</p>';document.getElementById("nx-supplier-back").onclick=loadProducts;return;}
+    const user=data.user;
+    const {data:existing,error:e}=await db.from("market_suppliers").select("id,name,type,status,created_at").eq("owner_id",user.id).maybeSingle();
+    if(e){host.innerHTML='<p>Мэдээлэл уншихад алдаа: '+esc(e.message)+'</p>';return;}
+    if(existing){host.innerHTML='<button class="nx-market-btn secondary" id="nx-supplier-back">‹ Буцах</button><h2 class="nexora-ad-heading">НИЙЛҮҮЛЭГЧИЙН БҮРТГЭЛ</h2><p>'+esc(existing.name)+'</p><p class="nx-market-muted">Төлөв: '+esc(existing.status)+'</p>';document.getElementById("nx-supplier-back").onclick=loadProducts;return;}
+    host.innerHTML=`<button class="nx-market-btn secondary" id="nx-supplier-back">‹ Буцах</button><h2 class="nexora-ad-heading">НИЙЛҮҮЛЭГЧЭЭР БҮРТГҮҮЛЭХ</h2><form id="nx-supplier-form">
+      <label>Нийлүүлэгчийн нэр *</label><input class="nx-market-input" name="name" required>
+      <label>Төрөл</label><select class="nx-market-select" name="type"><option value="manufacturer">Үйлдвэрлэгч</option><option value="importer">Импортлогч</option><option value="wholesale">Бөөний нийлүүлэгч</option><option value="other">Бусад</option></select>
+      <label>Регистр / байгууллагын дугаар</label><input class="nx-market-input" name="register_no">
+      <label>Утас *</label><input class="nx-market-input" name="phone" required>
+      <label>И-мэйл</label><input class="nx-market-input" name="email" type="email">
+      <label>Хаяг</label><input class="nx-market-input" name="address">
+      <button class="nx-market-btn" type="submit">Хяналтад илгээх</button></form><p id="nx-supplier-msg" class="nx-market-muted"></p>`;
+    document.getElementById("nx-supplier-back").onclick=loadProducts;
+    document.getElementById("nx-supplier-form").onsubmit=async e=>{e.preventDefault();const v=Object.fromEntries(new FormData(e.currentTarget).entries());const {error}=await db.from("market_suppliers").insert({owner_id:user.id,name:v.name.trim(),type:v.type,register_no:v.register_no.trim(),phone:v.phone.trim(),email:v.email.trim(),address:v.address.trim(),status:"pending"});if(error){document.getElementById("nx-supplier-msg").textContent="Алдаа: "+error.message;return;}host.innerHTML='<h2 class="nexora-ad-heading">ХҮСЭЛТ ИЛГЭЭГДЛЭЭ</h2><p class="nx-market-muted">Нийлүүлэгчийн хүсэлт админы хяналтад орлоо.</p><button class="nx-market-btn" id="nx-supplier-back">Буцах</button>';document.getElementById("nx-supplier-back").onclick=loadProducts;};
   }
   async function showPublish(){
     const {data}=await db.auth.getUser();marketUser=data.user;
