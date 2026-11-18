@@ -3573,11 +3573,25 @@
     if(error){host.innerHTML='<p>Бараа ачаалж чадсангүй: '+esc(error.message)+'</p>';return;}
     products=await Promise.all((data||[]).map(async p=>{
       let displayUrl="";
-      const objectPath=p.image_path||((p.image_url||"").split("/storage/v1/object/public/classified-images/")[1]||"").split("?")[0];
+      const rawImageUrl=String(p.image_url||"").trim();
+      let objectPath=String(p.image_path||"").trim();
+      let buckets=objectPath?["market-product-images","classified-images"]:[];
+      if(!objectPath&&rawImageUrl){
+        const storageMatch=rawImageUrl.match(/\\/storage\\/v1\\/object\\/(?:public|sign)\\/([^/]+)\\/(.+?)(?:\\?.*)?$/);
+        if(storageMatch){
+          buckets=[storageMatch[1]];
+          objectPath=storageMatch[2];
+        }else{
+          displayUrl=rawImageUrl;
+        }
+      }
       if(objectPath){
-        const signed=await db.storage.from(p.image_path?"market-product-images":"classified-images").createSignedUrl(decodeURIComponent(objectPath),3600);
-        if(!signed.error&&signed.data?.signedUrl)displayUrl=signed.data.signedUrl;
-        else console.warn("Барааны зураг уншихад алдаа:",signed.error?.message);
+        try{objectPath=decodeURIComponent(objectPath);}catch(_){}
+        for(const bucket of [...new Set(buckets)]){
+          const signed=await db.storage.from(bucket).createSignedUrl(objectPath,3600);
+          if(!signed.error&&signed.data?.signedUrl){displayUrl=signed.data.signedUrl;break;}
+          console.warn("Барааны зураг уншихад алдаа ("+bucket+"):",signed.error?.message);
+        }
       }
       return {...p,_displayImageUrl:displayUrl};
     }));
