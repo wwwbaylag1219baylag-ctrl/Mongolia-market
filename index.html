@@ -2262,440 +2262,498 @@
 </style>
 
 <script>
+
 (function () {
   const screen = document.getElementById("ads");
   if (!screen) return;
 
   const content = screen.querySelector(".page-content");
-  if (!content) return;
-
   const db = window.NEXORA_SUPABASE;
+  if (!content || !db) return;
 
-  function escapeHTML(value) {
+  let pendingAd = null;
+  let selectedPackage = null;
+  let selectedBank = null;
+  let createdAdId = null;
+
+  const packages = [
+    { type: "basic", name: "Энгийн", days: 7, amount: 0 },
+    { type: "featured", name: "Онцгой", days: 7, amount: 5000 },
+    { type: "vip", name: "VIP", days: 14, amount: 10000 },
+    { type: "premium", name: "Premium", days: 14, amount: 20000 }
+  ];
+
+  function esc(value) {
     return String(value == null ? "" : value).replace(/[&<>"']/g, function (c) {
       return {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
+        "&": "&amp;", "<": "&lt;", ">": "&gt;",
+        '"': "&quot;", "'": "&#39;"
       }[c];
     });
   }
 
-  function getSelection() {
-    return window.NEXORA_AD_SELECTION || null;
-  }
-
-  function showMessage(message, success) {
-    const box = document.getElementById("nx-create-message");
-    if (!box) return;
-
+  function message(text, error) {
+    const box = document.getElementById("nx-flow-message");
+    if (!box) {
+      alert(text);
+      return;
+    }
     box.style.display = "block";
-    box.style.color = success ? "#b9e9a5" : "#ff9999";
-    box.textContent = message;
+    box.style.color = error ? "#ff9999" : "#b9e9a5";
+    box.textContent = text;
   }
 
-  function addCreateButton() {
-    const results = document.getElementById("nx-ad-results");
-    if (!results) return;
+  function priceToNumber(value) {
+    let s = String(value || "").trim().toLowerCase();
+    if (!s) return null;
 
-    if (document.getElementById("nx-create-ad-open")) return;
+    s = s.replace(/\s+/g, "").replace(/₮/g, "");
+    let multiplier = 1;
 
-    const button = document.createElement("button");
-    button.type = "button";
-    button.id = "nx-create-ad-open";
-    button.className = "nx-create-open";
-    button.textContent = "+ Шинэ зар нийтлүүлэх";
+    if (s.endsWith("сая")) {
+      multiplier = 1000000;
+      s = s.slice(0, -3);
+    } else if (s.endsWith("мянга")) {
+      multiplier = 1000;
+      s = s.slice(0, -5);
+    } else if (s.endsWith("мян")) {
+      multiplier = 1000;
+      s = s.slice(0, -3);
+    } else if (s.endsWith("к")) {
+      multiplier = 1000;
+      s = s.slice(0, -1);
+    }
 
-    results.parentNode.insertBefore(button, results);
+    s = s.replace(",", ".");
+    if (!/^\d+(\.\d+)?$/.test(s)) return NaN;
+
+    const result = Number(s) * multiplier;
+    if (!Number.isSafeInteger(Math.round(result))) return NaN;
+    return Math.round(result);
   }
 
-  
-     
+  function money(value) {
+    return Number(value || 0).toLocaleString("mn-MN") + " ₮";
+  }
 
-  function showCreateForm() {
-    const selection = getSelection();
-
+  function showCreateForm(values) {
+    const selection = window.NEXORA_AD_SELECTION;
     if (!selection) {
       alert("Эхлээд зарын ангилал сонгоно уу.");
       return;
     }
 
+    const data = values || pendingAd || {};
     content.innerHTML = `
       <div class="nx-create-screen">
+        <button class="nx-create-back" type="button"
+          data-nx-create-back>‹ Буцах</button>
 
-        <button type="button"
-          class="nx-create-back"
-          data-nx-create-back>
-          ‹ Буцах
-        </button>
-
-        <div class="nx-create-title">
-          ШИНЭ ЗАР НИЙТЛҮҮЛЭХ
-        </div>
+        <div class="nx-create-title">ШИНЭ ЗАР НИЙТЛҮҮЛЭХ</div>
 
         <div class="nx-create-category">
-          <strong>Үндсэн ангилал:</strong>
-          ${escapeHTML(selection.category)}
-          <br>
-          <strong>Дэд ангилал:</strong>
-          ${escapeHTML(selection.subcategory)}
+          <strong>Үндсэн ангилал:</strong> ${esc(selection.category)}
+          <br><strong>Дэд ангилал:</strong> ${esc(selection.subcategory)}
         </div>
 
         <form id="nx-create-ad-form">
+          <label class="nx-create-label">Зарын гарчиг *</label>
+          <input class="nx-create-input" name="title" required
+            maxlength="150" value="${esc(data.title || "")}"
+            placeholder="Жишээ: 3 өрөө байр зарна">
 
-          <label class="nx-create-label" for="nx-ad-title">
-            Зарын гарчиг *
-          </label>
+          <label class="nx-create-label">Үнэ (₮)</label>
+          <input class="nx-create-input" name="price" type="text"
+            value="${esc(data.priceText || "")}"
+            placeholder="Жишээ: 200 сая, 500 мянга, 200000000">
 
-          <input class="nx-create-input"
-            id="nx-ad-title"
-            name="title"
-            type="text"
-            maxlength="150"
-            placeholder="Жишээ: 3 өрөө байр зарна"
-            required>
+          <label class="nx-create-label">Дэлгэрэнгүй тайлбар *</label>
+          <textarea class="nx-create-textarea" name="description"
+            required maxlength="10000">${esc(data.description || "")}</textarea>
 
-          <label class="nx-create-label" for="nx-ad-price">
-            Үнэ (₮)
-          </label>
+          <label class="nx-create-label">Холбоо барих утас *</label>
+          <input class="nx-create-input" name="phone" type="tel"
+            required maxlength="30" value="${esc(data.phone || "")}">
 
-          <input class="nx-create-input"
-            id="nx-ad-price"
-            name="price"
-            type="number"
-            min="0"
-            step="1"
-            placeholder="Үнийг оруулна уу">
-
-          <label class="nx-create-label" for="nx-ad-description">
-            Дэлгэрэнгүй тайлбар *
-          </label>
-
-          <textarea class="nx-create-textarea"
-            id="nx-ad-description"
-            name="description"
-            maxlength="10000"
-            placeholder="Зарынхаа дэлгэрэнгүй мэдээллийг бичнэ үү"
-            required></textarea>
-
-          <label class="nx-create-label" for="nx-ad-phone">
-            Холбоо барих утас *
-          </label>
-
-          <input class="nx-create-input"
-            id="nx-ad-phone"
-            name="phone"
-            type="tel"
-            maxlength="30"
-            placeholder="Утасны дугаар"
-            required>
-
-          <label class="nx-create-label" for="nx-ad-images">
-            Зарын зураг (6 хүртэл зураг)
-          </label>
-
-          <input
-            id="nx-ad-images"
-            name="images"
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            multiple
-            style="width:100%;padding:14px 0;color:#fff;">
+          <label class="nx-create-label">Зарын зураг (6 хүртэл)</label>
+          <input id="nx-ad-images" type="file"
+            accept="image/jpeg,image/png,image/webp" multiple
+            style="width:100%;padding:14px 0;color:white;">
 
           <div id="nx-ad-image-preview"
             style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0;">
           </div>
 
-          <div id="nx-create-message"
-            class="nx-create-message"
-            role="status">
-          </div>
+          <div id="nx-flow-message" class="nx-create-message"></div>
 
-          <button type="submit"
-            id="nx-create-submit"
-            class="nx-create-submit">
-            ЗАР НИЙТЛҮҮЛЭХ
+          <button class="nx-create-submit" id="nx-create-submit" type="submit">
+            ҮРГЭЛЖЛҮҮЛЭХ
           </button>
-
         </form>
+      </div>
+    `;
+
+    const preview = document.getElementById("nx-ad-image-preview");
+    (data.files || []).forEach(function (file) {
+      const img = document.createElement("img");
+      img.src = URL.createObjectURL(file);
+      img.style.cssText = "width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;";
+      preview.appendChild(img);
+    });
+  }
+
+  function showPackages() {
+    content.innerHTML = `
+      <div class="nx-create-screen">
+        <button class="nx-create-back" type="button"
+          data-nx-package-back>‹ Зар засах</button>
+
+        <div class="nx-create-title">ЗАРЫН БАГЦ СОНГОХ</div>
+        <p style="color:#aaa;margin:10px 0 18px;line-height:1.6;">
+          Зараа нийтлүүлэх хугацаа болон багцаа сонгоно уу.
+        </p>
+
+        ${packages.map(function (p) {
+          return `
+            <button type="button" data-package="${p.type}"
+              style="display:block;width:100%;text-align:left;padding:18px;margin:12px 0;border:1px solid #d6ad55;border-radius:13px;background:#191919;color:white;">
+              <strong style="color:#f0d28a;font-size:18px;">${p.name}</strong>
+              <div style="margin-top:8px;color:#aaa;">
+                Хугацаа: ${p.days} хоног
+              </div>
+              <div style="margin-top:8px;color:#d6ad55;font-size:19px;font-weight:bold;">
+                ${p.amount === 0 ? "ҮНЭГҮЙ" : money(p.amount)}
+              </div>
+            </button>
+          `;
+        }).join("")}
+
+        <div id="nx-flow-message" class="nx-create-message"></div>
       </div>
     `;
   }
 
   async function uploadAdImages(adId, userId, files) {
-    const bucket = "classified-images";
-    const uploadedPaths = [];
-    const imageRows = [];
+    const paths = [];
+    const rows = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+        throw new Error("Зөвхөн JPG, PNG, WEBP зураг оруулна уу.");
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        throw new Error("Нэг зураг 5MB-аас хэтрэх ёсгүй.");
+      }
+
+      const name = Date.now() + "_" + i + "_" +
+        file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const path = userId + "/" + adId + "/" + name;
+
+      const uploaded = await db.storage.from("classified-images")
+        .upload(path, file, {
+          cacheControl: "3600",
+          upsert: false,
+          contentType: file.type
+        });
+
+      if (uploaded.error) throw uploaded.error;
+
+      paths.push(path);
+      rows.push({
+        ad_id: adId,
+        owner_id: userId,
+        image_path: path,
+        display_order: i
+      });
+    }
+
+    if (rows.length) {
+      const saved = await db.from("ad_images").insert(rows);
+      if (saved.error) {
+        await db.storage.from("classified-images").remove(paths);
+        throw saved.error;
+      }
+    }
+  }
+
+  async function createAd(packageInfo) {
+    const session = await db.auth.getSession();
+    if (session.error) throw session.error;
+
+    const user = session.data.session?.user;
+    if (!user) throw new Error("Эхлээд профайл хэсэгт нэвтэрнэ үү.");
+
+    const selection = window.NEXORA_AD_SELECTION;
+    if (!selection) throw new Error("Зарын ангилал олдсонгүй.");
+
+    const expires = new Date();
+    expires.setDate(expires.getDate() + packageInfo.days);
+
+    const result = await db.from("classified_ads").insert({
+      owner_id: user.id,
+      title: pendingAd.title,
+      category: selection.category,
+      subcategory: selection.subcategory,
+      description: pendingAd.description,
+      price: pendingAd.price,
+      phone: pendingAd.phone,
+      status: packageInfo.amount === 0 ? "pending_review" : "pending_payment",
+      package_type: packageInfo.type,
+      package_days: packageInfo.days,
+      package_amount: packageInfo.amount,
+      expires_at: expires.toISOString()
+    }).select("id").single();
+
+    if (result.error) throw result.error;
+
+    createdAdId = result.data.id;
+
+    if (pendingAd.files.length) {
+      await uploadAdImages(createdAdId, user.id, pendingAd.files);
+    }
+
+    return user;
+  }
+
+  async function showBanks() {
+    content.innerHTML = `
+      <div class="nx-create-screen">
+        <button class="nx-create-back" type="button"
+          data-nx-bank-back>‹ Багц руу буцах</button>
+        <div class="nx-create-title">БАНК СОНГОХ</div>
+        <p style="color:#aaa;line-height:1.6;">
+          ${esc(selectedPackage.name)} багц — ${money(selectedPackage.amount)}
+        </p>
+        <div id="nx-bank-list" style="margin-top:18px;">Банкны мэдээлэл ачаалж байна...</div>
+        <div id="nx-flow-message" class="nx-create-message"></div>
+      </div>
+    `;
+
+    const list = document.getElementById("nx-bank-list");
+    const result = await db.from("bank_accounts")
+      .select("id,bank_name,account_number,account_holder")
+      .eq("is_active", true)
+      .order("display_order", { ascending: true });
+
+    if (result.error) {
+      list.textContent = "Банкны мэдээлэл ачаалж чадсангүй: " + result.error.message;
+      return;
+    }
+
+    if (!result.data || !result.data.length) {
+      list.textContent = "Одоогоор идэвхтэй банкны данс бүртгэгдээгүй байна.";
+      return;
+    }
+
+    list.innerHTML = result.data.map(function (bank) {
+      return `
+        <button type="button" data-bank-id="${esc(bank.id)}"
+          style="display:block;width:100%;padding:18px;margin:12px 0;text-align:left;border:1px solid #d6ad55;border-radius:12px;background:#191919;color:#f0d28a;">
+          <strong>${esc(bank.bank_name)}</strong>
+          <div style="margin-top:8px;color:white;">${esc(bank.account_number)}</div>
+          <div style="margin-top:5px;color:#aaa;">${esc(bank.account_holder)}</div>
+        </button>
+      `;
+    }).join("");
+
+    window.NEXORA_BANK_CACHE = result.data;
+  }
+
+  function showReceiptForm() {
+    content.innerHTML = `
+      <div class="nx-create-screen">
+        <button class="nx-create-back" type="button"
+          data-nx-receipt-back>‹ Банк руу буцах</button>
+
+        <div class="nx-create-title">ШИЛЖҮҮЛГИЙН БАРИМТ</div>
+
+        <div class="nx-create-category">
+          <strong>Багц:</strong> ${esc(selectedPackage.name)}
+          <br><strong>Төлөх дүн:</strong> ${money(selectedPackage.amount)}
+          <br><strong>Банк:</strong> ${esc(selectedBank.bank_name)}
+          <br><strong>Данс:</strong> ${esc(selectedBank.account_number)}
+          <br><strong>Данс эзэмшигч:</strong> ${esc(selectedBank.account_holder)}
+        </div>
+
+        <form id="nx-receipt-form">
+          <label class="nx-create-label">Гүйлгээний утга / лавлах дугаар *</label>
+          <input class="nx-create-input" name="reference"
+            required maxlength="150"
+            placeholder="Банкны гүйлгээний утгаа оруулна уу">
+
+          <label class="nx-create-label">Төлбөрийн баримт *</label>
+          <input class="nx-create-input" name="receipt" type="file"
+            accept="image/jpeg,image/png,image/webp,application/pdf" required>
+
+          <div id="nx-flow-message" class="nx-create-message"></div>
+
+          <button class="nx-create-submit" id="nx-receipt-submit" type="submit">
+            ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭХ
+          </button>
+        </form>
+      </div>
+    `;
+  }
+
+  async function submitReceipt(event) {
+    event.preventDefault();
+
+    const form = event.target;
+    const button = document.getElementById("nx-receipt-submit");
+    const reference = String(new FormData(form).get("reference") || "").trim();
+    const file = form.elements.receipt.files[0];
+
+    if (!file) {
+      message("Төлбөрийн баримтын файл сонгоно уу.", true);
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      message("Баримтын файл 8MB-аас хэтрэх ёсгүй.", true);
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = "ИЛГЭЭЖ БАЙНА...";
 
     try {
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
+      const session = await db.auth.getSession();
+      if (session.error) throw session.error;
+      const user = session.data.session?.user;
+      if (!user) throw new Error("Нэвтрэх шаардлагатай.");
 
-        if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
-          throw new Error("Зөвхөн JPG, PNG, WEBP зураг оруулна уу.");
-        }
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const path = user.id + "/" + createdAdId + "/" +
+        Date.now() + "_" + safeName;
 
-        if (file.size > 5 * 1024 * 1024) {
-          throw new Error("Нэг зураг 5MB-аас хэтрэх ёсгүй.");
-        }
-
-        const originalName = file.name
-          .replace(/[^a-zA-Z0-9._-]/g, "_");
-
-        const uniqueName =
-          Date.now() + "_" + i + "_" + originalName;
-
-        const path = userId + "/" + adId + "/" + uniqueName;
-
-        const uploadResult = await db.storage
-          .from(bucket)
-          .upload(path, file, {
-            cacheControl: "3600",
-            upsert: false,
-            contentType: file.type
-          });
-
-        if (uploadResult.error) {
-          throw uploadResult.error;
-        }
-
-        uploadedPaths.push(path);
-
-        imageRows.push({
-          ad_id: adId,
-          owner_id: userId,
-          image_path: path,
-          display_order: i
+      const upload = await db.storage.from("payment-receipts")
+        .upload(path, file, {
+          upsert: false,
+          contentType: file.type
         });
+
+      if (upload.error) throw upload.error;
+
+      const inserted = await db.from("payment_requests").insert({
+        ad_id: createdAdId,
+        user_id: user.id,
+        bank_account_id: selectedBank.id,
+        package_days: selectedPackage.days,
+        amount: selectedPackage.amount,
+        transfer_reference: reference,
+        receipt_path: path,
+        status: "pending_review"
+      });
+
+      if (inserted.error) {
+        await db.storage.from("payment-receipts").remove([path]);
+        throw inserted.error;
       }
 
-      if (imageRows.length > 0) {
-        const saveImages = await db
-          .from("ad_images")
-          .insert(imageRows);
-
-        if (saveImages.error) {
-          throw saveImages.error;
-        }
-      }
-
-      return uploadedPaths;
-
+      showComplete(true);
     } catch (error) {
-      if (uploadedPaths.length > 0) {
-        await db.storage
-          .from(bucket)
-          .remove(uploadedPaths);
-      }
-
-      throw error;
+      message("Илгээхэд алдаа гарлаа: " + error.message, true);
+      button.disabled = false;
+      button.textContent = "ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭХ";
     }
+  }
+
+  function showComplete(paid) {
+    content.innerHTML = `
+      <div class="nx-create-screen">
+        <div class="nx-create-title">
+          ${paid ? "ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭЛЭЭ" : "ЗАРЫГ ХЯНАЛТАД ИЛГЭЭЛЭЭ"}
+        </div>
+        <div class="nx-create-category">
+          Таны зар системд хадгалагдлаа.
+          <br><br>
+          <strong>Зарын дугаар:</strong> ${esc(createdAdId)}
+          <br><strong>Багц:</strong> ${esc(selectedPackage.name)}
+          <br><strong>Хугацаа:</strong> ${selectedPackage.days} хоног
+          <br><strong>Төлөв:</strong>
+          ${paid ? "Төлбөрийн баталгаажуулалт хүлээгдэж байна." : "Админы хяналт хүлээгдэж байна."}
+          <br><br>
+          ${paid
+            ? "Админ шилжүүлгийг шалгаж баталгаажуулсны дараа зар идэвхжинэ."
+            : "Админ зарын мэдээллийг шалгаж баталгаажуулсны дараа зар идэвхжинэ."}
+        </div>
+        <button class="nx-create-submit" type="button"
+          data-nx-create-finish>ЗАРЫН ЖАГСААЛТ РУУ БУЦАХ</button>
+      </div>
+    `;
   }
 
   async function saveAd(event) {
     event.preventDefault();
 
     const form = event.target;
-    const submit = document.getElementById("nx-create-submit");
+    const data = new FormData(form);
 
-    if (!db) {
-      showMessage("Supabase холболт олдсонгүй.", false);
-      return;
-    }
-
-    const selection = getSelection();
-
-    if (!selection) {
-      showMessage("Зарын ангилал олдсонгүй.", false);
-      return;
-    }
-
-    const formData = new FormData(form);
-
-    const title = String(formData.get("title") || "").trim();
-    const description = String(formData.get("description") || "").trim();
-    const phone = String(formData.get("phone") || "").trim();
-    const priceText = String(formData.get("price") || "").trim();
-
-    const imageInput = document.getElementById("nx-ad-images");
-    const imageFiles = imageInput
-      ? Array.from(imageInput.files || [])
-      : [];
+    const title = String(data.get("title") || "").trim();
+    const description = String(data.get("description") || "").trim();
+    const phone = String(data.get("phone") || "").trim();
+    const priceText = String(data.get("price") || "").trim();
+    const price = priceToNumber(priceText);
+    const input = document.getElementById("nx-ad-images");
+    const files = input ? Array.from(input.files || []) : [];
 
     if (!title || !description || !phone) {
-      showMessage("Одтой талбаруудыг бүрэн бөглөнө үү.", false);
+      message("Одтой талбаруудыг бүрэн бөглөнө үү.", true);
+      return;
+    }
+    if (priceText && (!Number.isFinite(price) || price < 0)) {
+      message("Үнийг зөв бичнэ үү. Жишээ: 200 сая, 500 мянга.", true);
+      return;
+    }
+    if (files.length > 6) {
+      message("6 хүртэл зураг сонгоно уу.", true);
       return;
     }
 
-    if (imageFiles.length > 6) {
-      showMessage("Нэг зар дээр 6 хүртэл зураг оруулна уу.", false);
+    pendingAd = {
+      title: title,
+      description: description,
+      phone: phone,
+      price: price,
+      priceText: priceText,
+      files: files
+    };
+
+    const session = await db.auth.getSession();
+    if (session.error) {
+      message(session.error.message, true);
+      return;
+    }
+    if (!session.data.session?.user) {
+      message("Үргэлжлүүлэхийн өмнө профайл хэсэгт нэвтэрнэ үү.", true);
       return;
     }
 
-    let price = null;
-
-    if (priceText !== "") {
-      price = Number(priceText);
-
-      if (!Number.isFinite(price) || price < 0) {
-        showMessage("Үнийг зөв оруулна уу.", false);
-        return;
-      }
-    }
-
-    submit.disabled = true;
-    submit.textContent = "ХАДГАЛЖ БАЙНА...";
-
-    try {
-      const sessionResult = await db.auth.getSession();
-
-      if (sessionResult.error) {
-        throw sessionResult.error;
-      }
-
-      const user = sessionResult.data.session?.user;
-
-      if (!user) {
-        throw new Error("Эхлээд нэвтэрнэ үү.");
-      }
-
-      const insertResult = await db
-        .from("classified_ads")
-        .insert({
-          owner_id: user.id,
-          title: title,
-          category: selection.category,
-          subcategory: selection.subcategory,
-          description: description,
-          price: price,
-          phone: phone,
-          status: "pending_payment"
-        })
-        .select("id")
-        .single();
-
-      if (insertResult.error) {
-        throw insertResult.error;
-      }
-
-      const adId = insertResult.data.id;
-      let imageWarning = "";
-      let uploadedCount = 0;
-
-      if (imageFiles.length > 0) {
-        try {
-          const paths = await uploadAdImages(
-            adId,
-            user.id,
-            imageFiles
-          );
-
-          uploadedCount = paths.length;
-
-        } catch (imageError) {
-          imageWarning =
-            "Зар хадгалагдсан боловч зураг оруулахад алдаа гарлаа: " +
-            imageError.message;
-        }
-      }
-
-      content.innerHTML = `
-        <div class="nx-create-screen">
-
-          <div class="nx-create-title">
-            ЗАР АМЖИЛТТАЙ ХАДГАЛАГДЛАА
-          </div>
-
-          <div class="nx-create-category">
-            Таны зар мэдээллийн санд хадгалагдлаа.
-            <br><br>
-            <strong>Төлөв:</strong>
-            Төлбөр хүлээгдэж байна
-            <br>
-            <strong>Зарын дугаар:</strong>
-            ${escapeHTML(adId)}
-            <br>
-            <strong>Хадгалсан зураг:</strong>
-            ${uploadedCount}
-          </div>
-
-          ${
-            imageWarning
-              ? `<div class="nx-create-message">${escapeHTML(imageWarning)}</div>`
-              : ""
-          }
-
-          <button type="button"
-            class="nx-create-submit"
-            data-nx-create-finish>
-            ЗАРЫН ЖАГСААЛТ РУУ БУЦАХ
-          </button>
-
-        </div>
-      `;
-
-    } catch (error) {
-      showMessage(
-        "Зар хадгалахад алдаа гарлаа: " + error.message,
-        false
-      );
-
-      submit.disabled = false;
-      submit.textContent = "ЗАР НИЙТЛҮҮЛЭХ";
-    }
+    showPackages();
   }
 
-      
-  content.addEventListener("click", function (event) {
-    if (event.target.closest("#nx-create-ad-open")) {
-      showCreateForm();
-      return;
-    }
-
-    if (event.target.closest("[data-nx-create-back]")) {
-      if (typeof window.NEXORA_AD_RELOAD === "function") {
-        window.NEXORA_AD_RELOAD();
-      }
-      return;
-    }
-
-    if (event.target.closest("[data-nx-create-finish]")) {
-      if (typeof window.NEXORA_AD_RELOAD === "function") {
-        window.NEXORA_AD_RELOAD();
-      }
-    }
+  content.addEventListener("submit", function (event) {
+    if (event.target.id === "nx-create-ad-form") saveAd(event);
+    if (event.target.id === "nx-receipt-form") submitReceipt(event);
   });
 
   content.addEventListener("change", function (event) {
-    if (event.target.id !== "nx-ad-images") {
-      return;
-    }
+    if (event.target.id !== "nx-ad-images") return;
 
     const files = Array.from(event.target.files || []);
     const preview = document.getElementById("nx-ad-image-preview");
-
-    if (!preview) return;
-
     preview.innerHTML = "";
 
     if (files.length > 6) {
-      showMessage("6 хүртэл зураг сонгоно уу.", false);
+      message("6 хүртэл зураг сонгоно уу.", true);
       event.target.value = "";
       return;
     }
 
     for (const file of files) {
-      if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
-        showMessage("Зөвхөн JPG, PNG, WEBP зураг оруулна уу.", false);
-        event.target.value = "";
-        preview.innerHTML = "";
-        return;
-      }
-
-      if (file.size > 5 * 1024 * 1024) {
-        showMessage("Нэг зураг 5MB-аас хэтрэх ёсгүй.", false);
+      if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) ||
+          file.size > 5 * 1024 * 1024) {
+        message("Зураг JPG, PNG, WEBP форматтай, 5MB-аас бага байх ёстой.", true);
         event.target.value = "";
         preview.innerHTML = "";
         return;
@@ -2703,41 +2761,98 @@
     }
 
     files.forEach(function (file) {
-      const image = document.createElement("img");
-
-      image.src = URL.createObjectURL(file);
-      image.alt = "Зарын зураг";
-
-      image.style.width = "100%";
-      image.style.aspectRatio = "1 / 1";
-      image.style.objectFit = "cover";
-      image.style.borderRadius = "10px";
-
-      preview.appendChild(image);
+      const img = document.createElement("img");
+      img.src = URL.createObjectURL(file);
+      img.style.cssText = "width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;";
+      preview.appendChild(img);
     });
   });
 
-  content.addEventListener("submit", function (event) {
-    if (event.target.id === "nx-create-ad-form") {
-      saveAd(event);
+  content.addEventListener("click", async function (event) {
+    const target = event.target;
+
+    if (target.closest("#nx-create-ad-open")) {
+      pendingAd = null;
+      showCreateForm();
+      return;
+    }
+
+    if (target.closest("[data-nx-create-back]") ||
+        target.closest("[data-nx-create-finish]")) {
+      if (typeof window.NEXORA_AD_RELOAD === "function") {
+        window.NEXORA_AD_RELOAD();
+      }
+      return;
+    }
+
+    if (target.closest("[data-nx-package-back]")) {
+      showCreateForm(pendingAd);
+      return;
+    }
+
+    const packageButton = target.closest("[data-package]");
+    if (packageButton) {
+      selectedPackage = packages.find(function (p) {
+        return p.type === packageButton.dataset.package;
+      });
+      if (!selectedPackage) return;
+
+      packageButton.disabled = true;
+      packageButton.textContent = "ЗАР ҮҮСГЭЖ БАЙНА...";
+
+      try {
+        await createAd(selectedPackage);
+        if (selectedPackage.amount === 0) {
+          showComplete(false);
+        } else {
+          await showBanks();
+        }
+      } catch (error) {
+        message("Зар үүсгэхэд алдаа гарлаа: " + error.message, true);
+        packageButton.disabled = false;
+      }
+      return;
+    }
+
+    if (target.closest("[data-nx-bank-back]")) {
+      showPackages();
+      return;
+    }
+
+    const bankButton = target.closest("[data-bank-id]");
+    if (bankButton) {
+      selectedBank = (window.NEXORA_BANK_CACHE || []).find(function (b) {
+        return String(b.id) === bankButton.dataset.bankId;
+      });
+      if (selectedBank) showReceiptForm();
+      return;
+    }
+
+    if (target.closest("[data-nx-receipt-back]")) {
+      await showBanks();
+      return;
     }
   });
 
-  const observer = new MutationObserver(function () {
-    addCreateButton();
-  });
+  function addCreateButton() {
+    const results = document.getElementById("nx-ad-results");
+    if (!results || document.getElementById("nx-create-ad-open")) return;
 
-  observer.observe(content, {
-    childList: true,
-    subtree: true
-  });
+    const button = document.createElement("button");
+    button.type = "button";
+    button.id = "nx-create-ad-open";
+    button.className = "nx-create-open";
+    button.textContent = "+ Шинэ зар нийтлүүлэх";
+    results.parentNode.insertBefore(button, results);
+  }
 
+  const observer = new MutationObserver(addCreateButton);
+  observer.observe(content, { childList: true, subtree: true });
   addCreateButton();
 
   window.NEXORA_SHOW_CREATE_AD = showCreateForm;
-
 })();
-</script>
+    </script>          
 
 </body>
 </html>
