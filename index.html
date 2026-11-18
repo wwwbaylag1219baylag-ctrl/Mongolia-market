@@ -4055,6 +4055,19 @@
       input,select,textarea{background:${t.panel}!important;color:${t.text}!important;border-color:${t.accent}88!important}
       input::placeholder,textarea::placeholder{color:${t.text}99!important}
       a{color:${t.accent}}
+      /* Зар болон худалдааны ангиллын дэлгэцүүдэд theme өнгийг шууд хэрэгжүүлэх */
+      #ads,#shop{background:${t.background}!important;color:${t.text}!important}
+      #ads .topbar,#shop .topbar{background:${t.background}!important;border-color:${t.accent}66!important}
+      #ads .nexora-ad-heading,#shop .nexora-ad-heading{color:${t.accent}!important}
+      #ads .nexora-ad-description,#shop .nx-screen-subtitle{color:${t.text}bb!important}
+      #ads .nexora-ad-category,#shop .nx-choice-card{background:${t.panel}!important;color:${t.text}!important;border-color:${t.accent}88!important;box-shadow:0 3px 12px #0003}
+      #ads .nexora-ad-category:active,#ads .nexora-ad-category.selected,#shop .nx-choice-card:active,#shop .nx-choice-card[aria-expanded="true"]{background:${t.accent}22!important;border-color:${t.accent}!important}
+      #ads .nexora-ad-number,#shop .nx-choice-index,#shop .nx-choice-arrow,#shop .nx-category-path strong,#shop .nx-category-path b{color:${t.accent}!important}
+      #shop .nx-platform-back,#shop .nx-market-btn.secondary{background:${t.panel}!important;color:${t.accent}!important;border-color:${t.accent}88!important}
+      #shop .nx-market-btn:not(.secondary){background:${t.button}!important;color:${t.button_text}!important;border-color:${t.button}!important}
+      #shop .nx-market-card,#shop .nx-market-card h3{background:${t.panel}!important;color:${t.text}!important;border-color:${t.accent}66!important}
+      #shop .nx-market-price{color:${t.accent}!important}
+      #shop .nx-market-input,#shop .nx-market-select,#shop .nx-market-textarea{background:${t.panel}!important;color:${t.text}!important;border-color:${t.accent}88!important}
       `;
     let el=document.getElementById("nx-public-theme");
     if(!el){el=document.createElement("style");el.id="nx-public-theme";document.head.appendChild(el);}
