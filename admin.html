@@ -1,0 +1,214 @@
+<!DOCTYPE html><html lang="mn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#090909"><title>NEXORA | Админ</title><style>
+:root{--black:#090909;--white:#f7f5ef;--gold:#d6ad55;--muted:#aaa39a}*{box-sizing:border-box;margin:0;padding:0}html,body{min-height:100%;background:#090909;color:#f7f5ef;font-family:Arial,sans-serif}body{padding:18px 14px 36px}button,input{font:inherit}.nexora-ad-heading{color:#d6ad55;font-size:23px;font-weight:800;margin:8px 0}.nx-market-price{color:#d6ad55;font-weight:800;margin:8px 0}.nx-market-muted{color:#aaa39a;font-size:12px;line-height:1.5}
+/* NEXORA ADMIN — цэгцтэй удирдлагын интерфэйс */
+#nexora-admin-app{max-width:1120px;padding:22px 16px 40px}
+#nexora-admin-app .nx-admin-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:18px}
+#nexora-admin-app .nx-admin-head .nexora-ad-heading{margin:0 0 7px;font-size:24px;letter-spacing:.4px}
+#nexora-admin-app .nx-admin-subtitle{color:#aaa39a;font-size:13px;line-height:1.6}
+#nexora-admin-app .nx-admin-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 12px}
+#nexora-admin-app .nx-admin-search{flex:1;min-width:0;min-height:42px;padding:10px 13px;border:1px solid rgba(214,173,85,.25);border-radius:11px;background:#151515;color:#f7f5ef;font:inherit;font-size:13px;outline:none}#nexora-admin-app .nx-admin-search:focus{border-color:#d6ad55;box-shadow:0 0 0 3px rgba(214,173,85,.12)}#nexora-admin-app .nx-admin-card[hidden]{display:none}
+#nexora-admin-app .nx-admin-refresh{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:10px 14px;border:1px solid rgba(214,173,85,.45);border-radius:11px;background:#191919;color:#f0d28a;font-weight:700}
+#nexora-admin-app .nx-admin-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;overflow:visible;padding:0;margin:14px 0 4px}
+#nexora-admin-app .nx-admin-tabs button{min-width:0;min-height:48px;white-space:normal;padding:10px 8px;border:1px solid rgba(214,173,85,.28);border-radius:11px;background:#151515;color:#c9c1b5;font-size:12px;font-weight:700;line-height:1.35}
+#nexora-admin-app .nx-admin-tabs button.active{border-color:#d6ad55;background:linear-gradient(135deg,#e2bd6d,#c99b3e);color:#17120a;box-shadow:0 5px 16px rgba(214,173,85,.13)}
+#nexora-admin-app .nx-admin-section-title{margin:22px 0 5px;color:#f0d28a;font-size:18px}
+#nexora-admin-app .nx-admin-section-note{margin-bottom:14px;color:#aaa39a;font-size:12px;line-height:1.6}
+#nexora-admin-app .nx-admin-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#nexora-admin-app .nx-admin-stat{min-width:0;padding:16px;border:1px solid rgba(214,173,85,.25);border-radius:14px;background:linear-gradient(145deg,#202020,#141414)}
+#nexora-admin-app .nx-admin-stat-label{color:#bcb3a5;font-size:12px;line-height:1.5}
+#nexora-admin-app .nx-admin-stat-value{margin-top:8px;color:#f0d28a;font-size:27px;font-weight:800;font-variant-numeric:tabular-nums}
+#nexora-admin-app .nx-admin-stat-link{display:block;margin-top:10px;padding:0;border:0;background:none;color:#d6ad55;font-size:12px;text-align:left}
+#nexora-admin-app .nx-admin-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+#nexora-admin-app .nx-admin-card{margin:0;padding:17px;border:1px solid rgba(214,173,85,.22);border-radius:14px;background:#171717;min-width:0}
+#nexora-admin-app .nx-admin-card h3{margin:0 0 9px;color:#f7f5ef;font-size:16px;line-height:1.45;overflow-wrap:anywhere}
+#nexora-admin-app .nx-admin-card .nx-market-price{margin:8px 0;color:#f0d28a;font-size:19px;font-weight:800}
+#nexora-admin-app .nx-admin-meta{display:grid;gap:6px;margin:12px 0;color:#aaa39a;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+#nexora-admin-app .nx-admin-meta strong{color:#d8d0c3;font-weight:600}
+#nexora-admin-app .nx-admin-status{display:inline-flex;align-items:center;width:max-content;max-width:100%;padding:5px 9px;border:1px solid rgba(214,173,85,.25);border-radius:20px;color:#f0d28a;font-size:11px;font-weight:700}
+#nexora-admin-app .nx-admin-receipt{display:inline-flex;margin:5px 0 2px;color:#e5bd68;font-size:12px;font-weight:700;text-decoration:none}
+#nexora-admin-app .nx-admin-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.07)}
+#nexora-admin-app .nx-admin-actions button{flex:1;min-height:42px;padding:10px 12px;border-radius:10px;font-size:12px}
+#nexora-admin-app .nx-admin-approve{background:#b9e9a5;color:#10200b}
+#nexora-admin-app .nx-admin-reject{border:1px solid #754040;background:#351d1d;color:#ffdada}
+#nexora-admin-app .nx-admin-empty{margin-top:14px;padding:28px 16px;border:1px dashed rgba(214,173,85,.3);border-radius:14px;color:#aaa39a;text-align:center;font-size:13px;line-height:1.7}
+#nexora-admin-app .nx-admin-error{margin-top:14px;padding:15px;border:1px solid #754040;border-radius:12px;background:#281919;color:#ffc1c1;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+#nexora-admin-app .nx-admin-order-items{margin-top:12px;padding:12px;border-radius:10px;background:#101010;color:#aaa39a;font-size:11px;white-space:pre-wrap;overflow-wrap:anywhere}
+#nexora-admin-app .nx-admin-loading{padding:24px 12px;color:#aaa39a;text-align:center}
+@media(max-width:680px){#nexora-admin-app .nx-admin-stats{grid-template-columns:repeat(2,minmax(0,1fr))}#nexora-admin-app .nx-admin-list{grid-template-columns:1fr}#nexora-admin-app .nx-admin-toolbar{align-items:stretch;flex-direction:column}#nexora-admin-app .nx-admin-refresh{width:100%}}
+@media(max-width:430px){#nexora-admin-app{padding:18px 12px 32px}#nexora-admin-app .nx-admin-head .nexora-ad-heading{font-size:21px}#nexora-admin-app .nx-admin-tabs{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#nexora-admin-app .nx-admin-tabs button{min-height:44px;font-size:12px}#nexora-admin-app .nx-admin-stat{padding:13px}#nexora-admin-app .nx-admin-stat-value{font-size:24px}}
+
+
+#nexora-admin-app{width:100%;margin:0 auto}#nexora-admin-app .nx-admin-head-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}#nexora-admin-app .nx-admin-home,#nexora-admin-app .nx-admin-logout{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:9px 12px;border:1px solid rgba(214,173,85,.4);border-radius:10px;background:#171717;color:#e8c778;text-decoration:none;font-size:12px;font-weight:700}
+.nx-admin-login{max-width:440px;margin:8vh auto 0;padding:26px 20px;border:1px solid rgba(214,173,85,.35);border-radius:18px;background:#151515}.nx-admin-login h1{color:#e8c778;font-size:22px;margin-bottom:10px}.nx-admin-login p{color:#aaa39a;font-size:13px;line-height:1.6;margin-bottom:18px}.nx-admin-login label{display:block;color:#ddd4c5;font-size:13px;margin:12px 0 6px}.nx-admin-login input{display:block;width:100%;min-height:46px;padding:12px;border:1px solid rgba(214,173,85,.35);border-radius:10px;background:#090909;color:#fff}.nx-admin-login #nx-admin-login-message{min-height:18px;margin:10px 0;color:#b9e9a5;overflow-wrap:anywhere}.nx-admin-login #nx-admin-login-message.is-error{color:#ffaaaa}.nx-admin-login-submit{width:100%;min-height:46px;margin:8px 0 14px;border:0;border-radius:10px;background:#d6ad55;color:#090909;font-weight:800}.nx-admin-login a{color:#d6ad55;font-size:13px;text-decoration:none}
+@media(max-width:680px){body{padding:12px 8px 28px}#nexora-admin-app .nx-admin-head{flex-direction:column}#nexora-admin-app .nx-admin-head-actions{width:100%}#nexora-admin-app .nx-admin-home,#nexora-admin-app .nx-admin-logout{flex:1}}
+</style></head><body><main id="nexora-admin-app"><div class="nx-admin-loading">Админ самбар ачаалж байна…</div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>(function(){const u="https://grbpbmowhkbtuxostfny.supabase.co",k="sb_publishable_wspX-C4VBPJMmvWuQgsMTw_h40w8O3x";window.NEXORA_SUPABASE=window.supabase.createClient(u,k);})();</script><script>(function(){
+ const db=window.NEXORA_SUPABASE,root=document.getElementById("nexora-admin-app");
+ if(!db||!root)return;
+ let activeTab="overview";
+ const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ const money=v=>Number(v||0).toLocaleString("mn-MN")+" ₮";
+ const tabs=[
+  ["overview","Тойм"],["ads","Үнэгүй зар"],["payments","Зарын төлбөр"],["products","Бараа"],
+  ["stores","Дэлгүүрийн төлбөр"],["suppliers","Нийлүүлэгч"],["orders","Захиалга"],["orderpayments","Захиалгын төлбөр"]
+ ];
+ const sections={
+  ads:["Үнэгүй зарын хүсэлт","Шинээр ирсэн, хяналт хүлээж буй зарууд"],
+  payments:["Зарын төлбөр","Төлбөрийн баримт болон багцын мэдээлэл"],
+  products:["Бараа бүтээгдэхүүн","Нийтлэх зөвшөөрөл хүлээж буй бараа"],
+  stores:["Дэлгүүрийн төлбөр","Дэлгүүрийн эрх нээх, сунгах төлбөрийн хүсэлт"],
+  suppliers:["Нийлүүлэгч","Нийлүүлэгчийн бүртгэлийн хүсэлт"],
+  orders:["Захиалгууд","Худалдан авагчдын захиалгын мэдээлэл"],
+  orderpayments:["Захиалгын төлбөр","Захиалгын төлбөрийн баримт шалгах хэсэг"]
+ };
+ const statusNames={pending:"Хүлээгдэж байна",pending_review:"Хяналтад",approved:"Зөвшөөрсөн",active:"Идэвхтэй",rejected:"Татгалзсан",pending_payment:"Төлбөр хүлээгдэж байна",paid:"Төлөгдсөн",unpaid:"Төлөгдөөгүй",processing:"Боловсруулж байна",completed:"Дууссан",cancelled:"Цуцалсан"};
+ async function adminCheck(){
+  const {data,error}=await db.auth.getUser();
+  if(error||!data.user)return false;
+  const {data:row,error:e}=await db.from("nexora_admins").select("user_id").eq("user_id",data.user.id).maybeSingle();
+  if(e)throw e;
+  return !!row;
+ }
+ function shell(body){
+   root.innerHTML='<div class="nx-admin-head"><div><div class="nexora-ad-heading">АДМИН УДИРДЛАГА</div><p class="nx-admin-subtitle">NEXORA платформын зар, худалдаа, төлбөр болон хүсэлтүүдийн нэгдсэн удирдлага.</p></div><div class="nx-admin-head-actions"><a class="nx-admin-home" href="./index.html">← Хэрэглэгчийн сайт</a><button class="nx-admin-logout" id="nx-admin-logout" type="button">Гарах</button></div></div>'+
+    '<nav class="nx-admin-tabs" aria-label="Админ цэс">'+tabs.map(t=>'<button type="button" data-admin-tab="'+t[0]+'" class="'+(activeTab===t[0]?'active':'')+'">'+t[1]+'</button>').join("")+'</nav>'+
+    '<div class="nx-admin-toolbar"><input id="nx-admin-search" class="nx-admin-search" type="search" placeholder="Энэ жагсаалтаас хайх…" aria-label="Админ жагсаалтаас хайх"><button class="nx-admin-refresh" id="nx-admin-refresh" type="button">↻ Шинэчлэх</button></div>'+
+    '<div id="nx-admin-body">'+body+'</div>';
+   root.querySelectorAll("[data-admin-tab]").forEach(b=>b.onclick=()=>{activeTab=b.dataset.adminTab;loadTab();});
+   document.getElementById("nx-admin-refresh").onclick=loadTab;
+   document.getElementById("nx-admin-logout").onclick=async()=>{await db.auth.signOut();renderLogin();};
+   const search=document.getElementById("nx-admin-search");
+   search.oninput=()=>{const term=search.value.trim().toLocaleLowerCase("mn");root.querySelectorAll("#nx-admin-body .nx-admin-card").forEach(card=>{card.hidden=!!term&&!card.textContent.toLocaleLowerCase("mn").includes(term);});};
+  }
+  async function query(table,columns,filters=[]){
+  let q=db.from(table).select(columns).order("created_at",{ascending:false}).limit(50);
+  filters.forEach(([k,v])=>q=q.eq(k,v));
+  return await q;
+ }
+ function empty(message){return '<div class="nx-admin-empty">◇<br>'+esc(message)+'</div>';}
+ async function cards(rows,type){
+  if(!rows||!rows.length)return empty("Одоогоор хүлээгдэж буй хүсэлт алга.");
+  const html=await Promise.all(rows.map(async r=>{
+   const title=r.title||r.store_name||r.name||("Хүсэлт "+String(r.id||"").slice(0,8));
+   const details=[];
+   if(r.owner_type)details.push(["Эзэмшигч",r.owner_type==="company"?"Байгууллага":r.owner_type==="individual"?"Хувь хүн":r.owner_type]);
+   if(r.phone)details.push(["Утас",r.phone]);
+   if(r.email)details.push(["И-мэйл",r.email]);
+   if(r.bank_name)details.push(["Банк",r.bank_name]);
+   if(r.transfer_reference)details.push(["Гүйлгээний утга",r.transfer_reference]);
+   if(r.category)details.push(["Ангилал",r.category]);
+   if(r.package_type)details.push(["Багц",r.package_type]);
+   if(r.location||r.address)details.push(["Байршил",r.location||r.address]);
+   if(r.register_no)details.push(["Регистр",r.register_no]);
+   if(r.ad_id)details.push(["Зарын дугаар",String(r.ad_id).slice(0,12)]);
+   if(r.order_id)details.push(["Захиалгын дугаар",String(r.order_id).slice(0,12)]);
+   let receiptHtml="";
+   if(r.receipt_path){
+    const {data,error}=await db.storage.from("payment-receipts").createSignedUrl(r.receipt_path,1800);
+    receiptHtml=data?.signedUrl?'<a class="nx-admin-receipt" href="'+esc(data.signedUrl)+'" target="_blank" rel="noopener">↗ Төлбөрийн баримт үзэх</a>':'<span class="nx-market-muted">Баримтын холбоос үүссэнгүй'+(error?": "+esc(error.message):"")+'</span>';
+   }
+   const amount=r.price??r.amount??r.total_amount;
+   const priceHtml=amount!==null&&amount!==undefined?'<p class="nx-market-price">'+money(amount)+'</p>':"";
+   const meta=details.map(d=>'<div><strong>'+esc(d[0])+':</strong> '+esc(d[1])+'</div>').join("");
+   const created=r.created_at?new Date(r.created_at).toLocaleString("mn-MN"):"—";
+   const status=statusNames[r.status||r.payment_status]||r.status||r.payment_status||"—";
+   return '<article class="nx-admin-card"><h3>'+esc(title)+'</h3>'+priceHtml+
+    '<span class="nx-admin-status">'+esc(status)+'</span>'+
+    '<div class="nx-admin-meta">'+meta+'<div><strong>Огноо:</strong> '+esc(created)+'</div></div>'+
+    receiptHtml+'<div class="nx-admin-actions">'+(type?'<button type="button" class="nx-admin-approve" data-review="'+type+'" data-id="'+esc(r.id)+'" data-action="approve">✓ Зөвшөөрөх</button><button type="button" class="nx-admin-reject" data-review="'+type+'" data-id="'+esc(r.id)+'" data-action="reject">✕ Татгалзах</button>':"")+'</div></article>';
+  }));
+  return '<div class="nx-admin-list">'+html.join("")+'</div>';
+ }
+ async function overview(){
+  const stats=[
+   ["Үнэгүй зар","classified_ads","status","pending_review","ads"],
+   ["Зарын төлбөр","payment_requests","status","pending_review","payments"],
+   ["Бараа","market_products","status","pending","products"],
+   ["Дэлгүүрийн төлбөр","nexora_store_payments","status","pending","stores"],
+   ["Нийлүүлэгч","market_suppliers","status","pending","suppliers"],
+   ["Захиалгын төлбөр","market_order_payment_requests","status","pending_review","orderpayments"],
+   ["Нийт захиалга","market_orders",null,null,"orders"]
+  ];
+  const results=await Promise.all(stats.map(async x=>{
+   let q=db.from(x[1]).select("id",{count:"exact",head:true});
+   if(x[2])q=q.eq(x[2],x[3]);
+   const {count,error}=await q;
+   if(error)throw new Error(x[0]+": "+error.message);
+   return count??0;
+  }));
+  return '<h2 class="nx-admin-section-title">Хяналтын тойм</h2><p class="nx-admin-section-note">Шийдвэр хүлээж буй хүсэлтийн тоо болон захиалгын нийт бүртгэл.</p><div class="nx-admin-stats">'+stats.map((x,i)=>
+   '<div class="nx-admin-stat"><div class="nx-admin-stat-label">'+x[0]+'</div><div class="nx-admin-stat-value">'+results[i]+'</div><button type="button" class="nx-admin-stat-link" data-open-tab="'+x[4]+'">Жагсаалт харах →</button></div>'
+  ).join("")+'</div>';
+ }
+ async function loadTab(){
+  shell('<div class="nx-admin-loading">Мэдээлэл ачаалж байна…</div>');
+  const body=document.getElementById("nx-admin-body");
+  try{
+   if(activeTab==="overview"){
+    body.innerHTML=await overview();
+    body.querySelectorAll("[data-open-tab]").forEach(b=>b.onclick=()=>{activeTab=b.dataset.openTab;loadTab();});
+    return;
+   }
+   const cfg={
+    ads:["classified_ads","id,title,category,price,status,package_type,package_days,package_amount,created_at",[["status","pending_review"]],"free_ad"],
+    payments:["payment_requests","id,ad_id,user_id,amount,package_days,transfer_reference,receipt_path,status,created_at",[["status","pending_review"]],"ad_payment"],
+    products:["market_products","id,title,category,price,owner_id,status,created_at",[["status","pending"]],"product"],
+    stores:["nexora_store_payments","id,store_id,user_id,amount,bank_name,transfer_reference,receipt_path,status,created_at",[["status","pending"]],"store_payment"],
+    suppliers:["market_suppliers","id,name,type,register_no,phone,email,address,status,created_at",[["status","pending"]],"supplier"],
+    orders:["market_orders","id,buyer_id,items,total_amount,status,payment_status,created_at",[],""],
+    orderpayments:["market_order_payment_requests","id,order_id,buyer_id,bank_account_id,amount,transfer_reference,receipt_path,status,created_at",[["status","pending_review"]],"order_payment"]
+   }[activeTab];
+   const [table,cols,filters,type]=cfg;
+   body.innerHTML='<h2 class="nx-admin-section-title">'+sections[activeTab][0]+'</h2><p class="nx-admin-section-note">'+sections[activeTab][1]+'</p><div class="nx-admin-loading">Жагсаалт ачаалж байна…</div>';
+   const {data,error}=await query(table,cols,filters);
+   if(error)throw error;
+   if(activeTab==="stores"&&data?.length){
+    const ids=[...new Set(data.map(r=>r.store_id).filter(Boolean))];
+    if(ids.length){
+     const {data:profiles,error:profileError}=await db.from("nexora_store_profiles").select("id,store_name,owner_type,phone").in("id",ids);
+     if(profileError)throw profileError;
+     const byId=new Map((profiles||[]).map(p=>[p.id,p]));
+     data.forEach(r=>Object.assign(r,byId.get(r.store_id)||{}));
+    }
+   }
+   if(activeTab==="orders"){
+    body.innerHTML='<h2 class="nx-admin-section-title">'+sections.orders[0]+'</h2><p class="nx-admin-section-note">'+sections.orders[1]+'</p>'+
+     ((data||[]).length?'<div class="nx-admin-list">'+data.map(o=>'<article class="nx-admin-card"><h3>Захиалга #'+esc(String(o.id).slice(0,12))+'</h3><p class="nx-market-price">'+money(o.total_amount)+'</p><div class="nx-admin-meta"><div><strong>Захиалгын төлөв:</strong> '+esc(statusNames[o.status]||o.status||"—")+'</div><div><strong>Төлбөр:</strong> '+esc(statusNames[o.payment_status]||o.payment_status||"—")+'</div><div><strong>Огноо:</strong> '+esc(o.created_at?new Date(o.created_at).toLocaleString("mn-MN"):"—")+'</div></div><pre class="nx-admin-order-items">'+esc(JSON.stringify(o.items,null,2))+'</pre></article>').join("")+'</div>':empty("Одоогоор захиалга бүртгэгдээгүй байна."));
+   }else{
+    body.innerHTML='<h2 class="nx-admin-section-title">'+sections[activeTab][0]+'</h2><p class="nx-admin-section-note">'+sections[activeTab][1]+'</p>'+await cards(data,type);
+   }
+   body.querySelectorAll("[data-review]").forEach(b=>b.onclick=()=>review(b.dataset.review,b.dataset.id,b.dataset.action));
+  }catch(e){
+   body.innerHTML='<div class="nx-admin-error">Мэдээлэл татахад алдаа гарлаа: '+esc(e?.message||e)+'</div><button class="nx-admin-refresh" id="nx-admin-retry" type="button">↻ Дахин оролдох</button>';
+   const retry=document.getElementById("nx-admin-retry");
+   if(retry)retry.onclick=loadTab;
+  }
+ }
+ async function review(type,id,action){
+  if(!confirm(action==="approve"?"Энэ хүсэлтийг зөвшөөрөх үү?":"Энэ хүсэлтээс татгалзах уу?"))return;
+  let result;
+  try{
+   if(type==="ad_payment")result=await db.rpc(action==="approve"?"admin_approve_payment_request":"admin_reject_payment_request",{p_request_id:id});
+   else if(type==="free_ad")result=await db.rpc("admin_review_free_ad",{p_ad_id:id,p_approve:action==="approve"});
+   else if(type==="store_payment")result=action==="approve"?await db.rpc("nexora_approve_store_payment",{p_payment_id:id}):await db.rpc("nexora_reject_store_payment",{p_payment_id:id,p_note:"Админы шийдвэрээр татгалзсан"});
+   else if(type==="order_payment")result=await db.rpc("nexora_review_market_order_payment",{p_payment_id:id,p_approve:action==="approve",p_note:action==="approve"?null:"Админы шийдвэрээр татгалзсан"});
+   else if(type==="product")result=await db.from("market_products").update({status:action==="approve"?"active":"rejected"}).eq("id",id);
+   else if(type==="supplier")result=await db.from("market_suppliers").update({status:action==="approve"?"approved":"rejected"}).eq("id",id);
+   if(result?.error)throw result.error;
+   alert("Хүсэлтийг амжилттай шийдвэрлэлээ.");
+   await loadTab();
+  }catch(e){alert("Үйлдэл амжилтгүй: "+(e?.message||e));}
+ }
+ function renderLogin(message="",isError=false){
+   root.innerHTML='<section class="nx-admin-login"><h1>АДМИН НЭВТРЭХ</h1><p>Зөвхөн NEXORA админы эрхтэй бүртгэлээр нэвтэрнэ үү.</p><form id="nx-admin-login-form"><label for="nx-admin-email">И-мэйл</label><input id="nx-admin-email" name="email" type="email" autocomplete="username" required><label for="nx-admin-password">Нууц үг</label><input id="nx-admin-password" name="password" type="password" autocomplete="current-password" required><p id="nx-admin-login-message" class="'+(isError?'is-error':'')+'">'+esc(message)+'</p><button class="nx-admin-login-submit" type="submit">Нэвтрэх</button></form><a href="./index.html">← Хэрэглэгчийн сайт руу буцах</a></section>';
+   document.getElementById("nx-admin-login-form").onsubmit=async e=>{e.preventDefault();const form=e.currentTarget,button=form.querySelector("button[type=submit]"),v=Object.fromEntries(new FormData(form).entries());button.disabled=true;button.textContent="Шалгаж байна…";const {error}=await db.auth.signInWithPassword({email:String(v.email).trim(),password:v.password});if(error){renderLogin(error.message,true);return;}await init();};
+  }
+  async function init(){
+   root.innerHTML='<div class="nx-admin-loading">Админ эрх шалгаж байна…</div>';
+   try{const {data,error}=await db.auth.getUser();if(error)throw error;if(!data.user){renderLogin();return;}
+    if(!(await adminCheck())){root.innerHTML='<section class="nx-admin-login"><h1>ХАНДАХ ЭРХГҮЙ</h1><p>Энэ бүртгэлд NEXORA админы эрх олгогдоогүй байна.</p><button class="nx-admin-login-submit" id="nx-admin-denied-logout" type="button">Өөр бүртгэлээр нэвтрэх</button><a href="./index.html">Хэрэглэгчийн сайт руу буцах</a></section>';document.getElementById("nx-admin-denied-logout").onclick=async()=>{await db.auth.signOut();renderLogin();};return;}
+    loadTab();
+   }catch(e){root.innerHTML='<div class="nx-admin-error">Админ эрх шалгахад алдаа гарлаа: '+esc(e?.message||e)+'</div>';}
+  }
+  init();
+})();</script></body></html>
