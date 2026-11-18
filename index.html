@@ -3571,34 +3571,58 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   `;
   document.head.appendChild(productTileStyle);
 
+  async function compressMarketProductImage(file){
+    // Гар утасны том зургийг 1440px хүртэл багасгаж WebP болгоно.
+    if(!file||!file.type.startsWith("image/"))return file;
+    try{
+      const bitmap=await createImageBitmap(file);
+      const scale=Math.min(1,1440/Math.max(bitmap.width,bitmap.height));
+      const canvas=document.createElement("canvas");
+      canvas.width=Math.max(1,Math.round(bitmap.width*scale));
+      canvas.height=Math.max(1,Math.round(bitmap.height*scale));
+      const ctx=canvas.getContext("2d");
+      if(!ctx){bitmap.close?.();return file;}
+      ctx.drawImage(bitmap,0,0,canvas.width,canvas.height);
+      bitmap.close?.();
+      const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/webp",0.82));
+      if(!blob||blob.size>=file.size)return file;
+      return new File([blob],file.name.replace(/\\.[^.]+$/,"")+".webp",{type:"image/webp",lastModified:Date.now()});
+    }catch(err){console.warn("Зургийг шахаж чадсангүй, эх файлыг ашиглана:",err);return file;}
+  }
+
   async function loadProducts(){
     host.innerHTML='<p class="nx-market-muted">Бараануудыг ачаалж байна…</p>';
     const {data,error}=await db.from("market_products").select("id,title,category,price,description,phone,location,image_path,image_url,status,created_at").eq("status","active").order("created_at",{ascending:false}).limit(100);
     if(error){host.innerHTML='<p>Бараа ачаалж чадсангүй: '+esc(error.message)+'</p>';return;}
-    products=await Promise.all((data||[]).map(async p=>{
-      let displayUrl="";
+    const rows=(data||[]).map(p=>{
       const rawImageUrl=String(p.image_url||"").trim();
-      let objectPath=String(p.image_path||"").trim();
-      let buckets=objectPath?["market-product-images","classified-images"]:[];
+      let objectPath=String(p.image_path||"").trim(),buckets=objectPath?["market-product-images","classified-images"]:[];
+      let displayUrl="";
       if(!objectPath&&rawImageUrl){
-        const storageMatch=rawImageUrl.match(/\/storage\/v1\/object\/(?:public|sign)\/([^/]+)\/(.+?)(?:\?.*)?$/);
-        if(storageMatch){
-          buckets=[storageMatch[1]];
-          objectPath=storageMatch[2];
-        }else{
-          displayUrl=rawImageUrl;
-        }
+        const m=rawImageUrl.match(/\\/storage\\/v1\\/object\\/(?:public|sign)\\/([^/]+)\\/(.+?)(?:\\?.*)?$/);
+        if(m){buckets=[m[1]];objectPath=m[2];}else displayUrl=rawImageUrl;
       }
-      if(objectPath){
-        try{objectPath=decodeURIComponent(objectPath);}catch(_){}
-        for(const bucket of [...new Set(buckets)]){
-          const signed=await db.storage.from(bucket).createSignedUrl(objectPath,3600);
-          if(!signed.error&&signed.data?.signedUrl){displayUrl=signed.data.signedUrl;break;}
-          console.warn("Барааны зураг уншихад алдаа ("+bucket+"):",signed.error?.message);
-        }
-      }
-      return {...p,_displayImageUrl:displayUrl};
-    }));
+      if(objectPath){try{objectPath=decodeURIComponent(objectPath);}catch(_){}}
+      return {...p,_displayImageUrl:displayUrl,_objectPath:objectPath,_buckets:[...new Set(buckets)]};
+    });
+    // Нэг нэгээр нь 100 хүсэлт явуулахын оронд зурагны URL-уудыг багцаар үүсгэнэ.
+    const groups=new Map();
+    rows.forEach((p,i)=>{if(!p._displayImageUrl&&p._objectPath&&p._buckets[0]){const b=p._buckets[0];if(!groups.has(b))groups.set(b,[]);groups.get(b).push({p,i});}});
+    for(const [bucket,items] of groups){
+      try{
+        const result=await db.storage.from(bucket).createSignedUrls(items.map(x=>x.p._objectPath),3600);
+        (items||[]).forEach((item,j)=>{const signed=result.data?.[j];if(!result.error&&signed?.signedUrl&&!signed.error)item.p._displayImageUrl=signed.signedUrl;});
+      }catch(err){console.warn("Барааны зургийн багц URL үүсгэхэд алдаа ("+bucket+"):",err);}
+    }
+    // Үндсэн bucket-д байхгүй хуучин зургуудыг нөөц bucket-ээс шалгана.
+    const fallback=rows.filter(p=>!p._displayImageUrl&&p._objectPath&&p._buckets[1]);
+    const fallbackGroups=new Map();
+    fallback.forEach(p=>{const b=p._buckets[1];if(!fallbackGroups.has(b))fallbackGroups.set(b,[]);fallbackGroups.get(b).push(p);});
+    for(const [bucket,items] of fallbackGroups){
+      try{const result=await db.storage.from(bucket).createSignedUrls(items.map(p=>p._objectPath),3600);items.forEach((p,j)=>{const signed=result.data?.[j];if(!result.error&&signed?.signedUrl&&!signed.error)p._displayImageUrl=signed.signedUrl;});}
+      catch(err){console.warn("Хуучин барааны зургийн URL алдаа ("+bucket+"):",err);}
+    }
+    products=rows.map(p=>{const {_objectPath,_buckets,...clean}=p;return clean;});
     render();
   }
   function render(){
@@ -3614,11 +3638,11 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         <button class="nx-market-btn secondary" id="nx-market-refresh">Шинэчлэх</button>
       </div>
       <input class="nx-market-input" id="nx-market-search" placeholder="Бараа, ангиллаар хайх…" value="${esc(searchText)}">
-      <div class="nx-market-grid ${filtered.some(p=>Number(productViewStates[p.id]||0)===1)?"is-product-focused":""}">${filtered.map(p=>{
+      <div class="nx-market-grid ${filtered.some(p=>Number(productViewStates[p.id]||0)===1)?"is-product-focused":""}">${filtered.map((p,index)=>{
         const view=Number(productViewStates[p.id]||0);
         return `
         <article class="nx-market-product-tile ${view===1?"is-expanded":view===2?"is-compact":""}">
-          ${p._displayImageUrl?`<img class="nx-market-product-image" src="${esc(p._displayImageUrl)}" alt="${esc(p.title)}" data-product-toggle="${esc(p.id)}" loading="lazy">`:'<div class="nx-market-product-no-image">Зураг байхгүй</div>'}
+          ${p._displayImageUrl?`<img class="nx-market-product-image" src="${esc(p._displayImageUrl)}" alt="${esc(p.title)}" data-product-toggle="${esc(p.id)}" loading="${index<4?"eager":"lazy"}" fetchpriority="${index<2?"high":"auto"}" decoding="async">`:'<div class="nx-market-product-no-image">Зураг байхгүй</div>'}
           <div class="nx-market-price">${money(p.price)}</div>
           ${view===1?`<div class="nx-market-product-info">
             <h3>${esc(p.title)}</h3>
@@ -3812,14 +3836,17 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       const v=Object.fromEntries(new FormData(form).entries()),file=v.product_image;
       if(!file||!["image/jpeg","image/png","image/webp"].includes(file.type)){msg.textContent="JPG, PNG эсвэл WEBP зураг сонгоно уу.";btn.disabled=false;return;}
       if(file.size>5*1024*1024){msg.textContent="Зураг 5MB-аас бага байх ёстой.";btn.disabled=false;return;}
-      const ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg";
+      msg.textContent="Зургийг бэлдэж байна…";
+      const uploadFile=await compressMarketProductImage(file);
+      const ext=uploadFile.type==="image/webp"?"webp":uploadFile.type==="image/png"?"png":"jpg";
       const path=marketUser.id+"/market-products/"+Date.now()+"."+ext;
-      const {error:uploadError}=await db.storage.from("market-product-images").upload(path,file,{cacheControl:"3600",upsert:false,contentType:file.type});
+      msg.textContent=uploadFile===file?"Зургийг байршуулж байна…":"Зургийг шахлаа. Байршуулж байна…";
+      const {error:uploadError}=await db.storage.from("market-product-images").upload(path,uploadFile,{cacheControl:"31536000",upsert:false,contentType:uploadFile.type});
       if(uploadError){msg.textContent="Зураг оруулахад алдаа: "+uploadError.message;btn.disabled=false;return;}
       const {data:stillActive,error:checkError}=await db.from("nexora_subscriptions").select("id").eq("store_id",store.id).eq("user_id",marketUser.id).eq("status","active").gt("expires_at",new Date().toISOString()).limit(1).maybeSingle();
       if(checkError||!stillActive){await db.storage.from("market-product-images").remove([path]);msg.textContent=checkError?"Дэлгүүрийн эрхийг шалгаж чадсангүй: "+checkError.message:"Дэлгүүрийн эрх идэвхгүй болсон байна. Эхлээд эрхээ сунгана уу.";btn.disabled=false;return;}
       const {error}=await db.from("market_products").insert({owner_id:marketUser.id,title:v.title.trim(),category:v.category.trim(),price:Number(v.price),description:v.description.trim(),phone:v.phone.trim(),location:v.location.trim(),image_path:path,image_url:null,status:"active"});
-      if(error){await db.storage.from("classified-images").remove([path]);msg.textContent="Алдаа: "+error.message;btn.disabled=false;return;}
+      if(error){await db.storage.from("market-product-images").remove([path]);msg.textContent="Алдаа: "+error.message;btn.disabled=false;return;}
       host.innerHTML='<h2 class="nexora-ad-heading">БАРАА НИЙТЛЭГДЛЭЭ</h2><p class="nx-market-muted">Таны бараа дэлгүүрт шууд нийтлэгдлээ.</p><button class="nx-market-btn" id="nx-market-back">Бараа үзэх</button>';
       document.getElementById("nx-market-back").onclick=loadProducts;
     };
