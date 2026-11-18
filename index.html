@@ -4068,6 +4068,24 @@
       #shop .nx-market-card,#shop .nx-market-card h3{background:${t.panel}!important;color:${t.text}!important;border-color:${t.accent}66!important}
       #shop .nx-market-price{color:${t.accent}!important}
       #shop .nx-market-input,#shop .nx-market-select,#shop .nx-market-textarea{background:${t.panel}!important;color:${t.text}!important;border-color:${t.accent}88!important}
+
+      /* ЗАРЫН ПЛАТФОРМ + ЗАР НИЙТЛЭХ БҮХ ДЭЛГЭЦ */
+      #ads .nx-category-heading,#ads .nx-full-screen,#ads .nx-create-screen{background:${t.background}!important;color:${t.text}!important}
+      #ads .nx-screen-title,#ads .nx-category-heading .nx-screen-title,#ads .nx-create-title{color:${t.accent}!important}
+      #ads .nx-screen-subtitle,#ads .nx-create-screen p,#ads .nx-create-category,#ads .nx-create-message{color:${t.text}!important}
+      #ads .nx-subcategory-item,#ads .nx-choice-card,#ads .nx-accordion-option,#ads .nx-selected-info{background:${t.panel}!important;color:${t.text}!important;border-color:${t.accent}88!important}
+      #ads .nx-subcategory-item:active,#ads .nx-subcategory-item[aria-expanded="true"],#ads .nx-choice-card:active,#ads .nx-selected-info{background:${t.accent}22!important;border-color:${t.accent}!important}
+      #ads .nx-subcategory-item span:last-child,#ads .nx-choice-index,#ads .nx-choice-arrow,#ads .nx-category-path strong,#ads .nx-category-path b{color:${t.accent}!important}
+      #ads .nx-create-toggle,#ads .nx-create-open,#ads .nx-create-submit{background:${t.button}!important;color:${t.button_text}!important;border-color:${t.button}!important}
+      #ads .nx-create-collapse,#ads .nx-create-back,#ads .nx-back,#ads .nx-platform-back{background:${t.panel}!important;color:${t.accent}!important;border-color:${t.accent}88!important}
+      #ads .nx-create-label{color:${t.accent}!important}
+      #ads .nx-create-input,#ads .nx-create-textarea,#ads .nx-create-screen input,#ads .nx-create-screen select,#ads .nx-create-screen textarea{background:${t.panel}!important;color:${t.text}!important;border-color:${t.accent}88!important}
+      #ads .nx-create-input::placeholder,#ads .nx-create-textarea::placeholder,#ads .nx-create-screen input::placeholder,#ads .nx-create-screen textarea::placeholder{color:${t.text}99!important}
+      #ads .nx-create-screen option{background:${t.panel}!important;color:${t.text}!important}
+      #ads .nx-create-message{background:${t.panel}!important;border-color:${t.accent}88!important}
+      #ads .nx-create-category{background:${t.panel}!important;border-color:${t.accent}66!important}
+      #ads .nx-create-screen .nx-map-button,#ads .nx-create-screen [type="button"]{border-color:${t.accent}88}
+      #ads .nx-create-screen [type="submit"]{background:${t.button}!important;color:${t.button_text}!important}
       `;
     let el=document.getElementById("nx-public-theme");
     if(!el){el=document.createElement("style");el.id="nx-public-theme";document.head.appendChild(el);}
