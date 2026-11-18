@@ -3669,17 +3669,33 @@
       <label>Барааны нэр *</label><input class="nx-market-input" name="title" required maxlength="120">
       <label>Ангилал *</label><input class="nx-market-input" name="category" required maxlength="80" placeholder="Жишээ: Электрон бараа">
       <label>Үнэ (₮) *</label><input class="nx-market-input" name="price" type="number" min="0" step="1" required>
+      <label>Барааны зураг *</label><input class="nx-market-input" name="product_image" type="file" accept="image/jpeg,image/png,image/webp" required>
+      <p class="nx-market-muted">JPG, PNG эсвэл WEBP · 5MB хүртэл. Барааны тод, өөрийн зургийг оруулна уу.</p>
+      <img id="nx-market-image-preview" alt="Барааны зургийн урьдчилсан харагдац" style="display:none;width:100%;max-height:220px;object-fit:contain;border:1px solid rgba(214,173,85,.3);border-radius:10px;margin:4px 0 12px">
       <label>Тайлбар</label><textarea class="nx-market-textarea" name="description" rows="4"></textarea>
       <label>Холбоо барих утас</label><input class="nx-market-input" name="phone" type="tel">
       <label>Байршил</label><input class="nx-market-input" name="location">
       <button class="nx-market-btn" type="submit">Хяналтад илгээх</button></form><p id="nx-market-msg" class="nx-market-muted"></p>`;
     document.getElementById("nx-market-back").onclick=loadProducts;
+    const imageInput=document.querySelector('#nx-market-form [name="product_image"]');
+    imageInput.addEventListener("change",()=>{
+      const file=imageInput.files[0],preview=document.getElementById("nx-market-image-preview");
+      if(!file){preview.removeAttribute("src");preview.style.display="none";return;}
+      preview.src=URL.createObjectURL(file);preview.style.display="block";
+    });
     document.getElementById("nx-market-form").onsubmit=async e=>{
-      e.preventDefault();const form=e.currentTarget,btn=form.querySelector("button[type=submit]");btn.disabled=true;
-      const v=Object.fromEntries(new FormData(form).entries());
-      const {error}=await db.from("market_products").insert({owner_id:marketUser.id,title:v.title.trim(),category:v.category.trim(),price:Number(v.price),description:v.description.trim(),phone:v.phone.trim(),location:v.location.trim(),status:"pending"});
-      if(error){document.getElementById("nx-market-msg").textContent="Алдаа: "+error.message;btn.disabled=false;return;}
-      host.innerHTML='<h2 class="nexora-ad-heading">ХҮСЭЛТ ИЛГЭЭГДЛЭЭ</h2><p class="nx-market-muted">Бараа админы хяналтад орлоо. Батлагдсаны дараа нийтэд харагдана.</p><button class="nx-market-btn" id="nx-market-back">Бараа үзэх</button>';
+      e.preventDefault();const form=e.currentTarget,btn=form.querySelector("button[type=submit]"),msg=document.getElementById("nx-market-msg");btn.disabled=true;
+      const v=Object.fromEntries(new FormData(form).entries()),file=v.product_image;
+      if(!file||!["image/jpeg","image/png","image/webp"].includes(file.type)){msg.textContent="JPG, PNG эсвэл WEBP зураг сонгоно уу.";btn.disabled=false;return;}
+      if(file.size>5*1024*1024){msg.textContent="Зураг 5MB-аас бага байх ёстой.";btn.disabled=false;return;}
+      const ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg";
+      const path=marketUser.id+"/market-products/"+Date.now()+"."+ext;
+      const {error:uploadError}=await db.storage.from("classified-images").upload(path,file,{cacheControl:"3600",upsert:false,contentType:file.type});
+      if(uploadError){msg.textContent="Зураг оруулахад алдаа: "+uploadError.message;btn.disabled=false;return;}
+      const {data:publicData}=db.storage.from("classified-images").getPublicUrl(path);
+      const {error}=await db.from("market_products").insert({owner_id:marketUser.id,title:v.title.trim(),category:v.category.trim(),price:Number(v.price),description:v.description.trim(),phone:v.phone.trim(),location:v.location.trim(),image_url:publicData.publicUrl,status:"pending"});
+      if(error){await db.storage.from("classified-images").remove([path]);msg.textContent="Алдаа: "+error.message;btn.disabled=false;return;}
+      host.innerHTML='<h2 class="nexora-ad-heading">ХҮСЭЛТ ИЛГЭЭГДЛЭЭ</h2><p class="nx-market-muted">Зурагтай барааны хүсэлт админы хяналтад орлоо. Батлагдсаны дараа нийтэд харагдана.</p><button class="nx-market-btn" id="nx-market-back">Бараа үзэх</button>';
       document.getElementById("nx-market-back").onclick=loadProducts;
     };
   }
