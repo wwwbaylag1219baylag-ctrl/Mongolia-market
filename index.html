@@ -1538,41 +1538,26 @@
   function showListingPlaceholder(item) {
     currentSubcategory = item;
 
-    content.innerHTML = `
-      <div class="nx-full-screen">
-        ${backButton()}
-
-        <div class="nx-screen-title">
-          ${item}
-        </div>
-
-        <div class="nx-screen-subtitle">
-          Сонгосон дэд ангилал
-        </div>
-
-        <div class="nx-selected-info">
-          <strong>Таны сонголт:</strong><br>
-          ${currentCategory.name}<br>
-          ${currentGroup}<br>
-          ${item}
-        </div>
-
-        <div style="height:18px"></div>
-
-        <div class="nx-empty-info">
-          Зар жагсаалт, зарын дэлгэрэнгүй болон зар нэмэх
-          үйлдлийг дараагийн хэсгүүдэд Supabase мэдээллийн
-          сантай холбоно.
-        </div>
-      </div>
-    `;
-
     window.NEXORA_AD_SELECTION = {
       category: currentCategory.name,
       categoryNumber: currentCategory.number,
       group: currentGroup,
       subcategory: item
     };
+
+    // Сонгосон дэд ангиллыг бодит зарын жагсаалттай холбоно.
+    if (typeof window.NEXORA_AD_RELOAD === "function") {
+      window.NEXORA_AD_RELOAD();
+      return;
+    }
+
+    content.innerHTML = `
+      <div class="nx-full-screen">
+        ${backButton()}
+        <div class="nx-screen-title">${item}</div>
+        <div class="nx-list-message">Зарын жагсаалт ачаалж байна...</div>
+      </div>
+    `;
   }
 
   content.addEventListener("click", function (event) {
