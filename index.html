@@ -3625,7 +3625,7 @@
             ${p.location?`<div class="nx-market-muted">Байршил: ${esc(p.location)}</div>`:""}
             ${p.phone?`<div class="nx-market-muted">Утас: ${esc(p.phone)}</div>`:""}
           </div>`:""}
-          ${view===2?`<button class="nx-market-btn nx-market-add-cart" type="button" data-cart-add="${esc(p.id)}">Сагслах</button>`:""}
+          <button class="nx-market-btn nx-market-add-cart" type="button" data-cart-add="${esc(p.id)}">🛒 Сагслах</button>
         </article>`;
       }).join("")||'<p class="nx-market-muted">Одоогоор идэвхтэй бараа алга.</p>'}</div>`;
     host.querySelectorAll("[data-product-toggle]").forEach(img=>img.addEventListener("click",()=>{
