@@ -50,7 +50,7 @@
  const money=v=>Number(v||0).toLocaleString("mn-MN")+" ₮";
  const tabs=[
   ["overview","Тойм"],["ads","Үнэгүй зар"],["payments","Зарын төлбөр"],["products","Бараа"],
-  ["stores","Дэлгүүрийн төлбөр"],["suppliers","Нийлүүлэгч"],["orders","Захиалга"],["orderpayments","Захиалгын төлбөр"]
+  ["stores","Дэлгүүрийн төлбөр"],["suppliers","Нийлүүлэгч"],["orders","Захиалга"],["orderpayments","Захиалгын төлбөр"],["pricing","Зарын үнэ"]
  ];
  const sections={
   ads:["Үнэгүй зарын хүсэлт","Шинээр ирсэн, хяналт хүлээж буй зарууд"],
@@ -59,7 +59,8 @@
   stores:["Дэлгүүрийн төлбөр","Дэлгүүрийн эрх нээх, сунгах төлбөрийн хүсэлт"],
   suppliers:["Нийлүүлэгч","Нийлүүлэгчийн бүртгэлийн хүсэлт"],
   orders:["Захиалгууд","Худалдан авагчдын захиалгын мэдээлэл"],
-  orderpayments:["Захиалгын төлбөр","Захиалгын төлбөрийн баримт шалгах хэсэг"]
+  orderpayments:["Захиалгын төлбөр","Захиалгын төлбөрийн баримт шалгах хэсэг"],
+  pricing:["Зарын үнийн тохиргоо","Багцын үнэ, хугацаа болон үнэгүй зарын лимитийг удирдах"]
  };
  const statusNames={pending:"Хүлээгдэж байна",pending_review:"Хяналтад",approved:"Зөвшөөрсөн",active:"Идэвхтэй",rejected:"Татгалзсан",pending_payment:"Төлбөр хүлээгдэж байна",paid:"Төлөгдсөн",unpaid:"Төлөгдөөгүй",processing:"Боловсруулж байна",completed:"Дууссан",cancelled:"Цуцалсан"};
  async function adminCheck(){
@@ -140,10 +141,19 @@
    '<div class="nx-admin-stat"><div class="nx-admin-stat-label">'+x[0]+'</div><div class="nx-admin-stat-value">'+results[i]+'</div><button type="button" class="nx-admin-stat-link" data-open-tab="'+x[4]+'">Жагсаалт харах →</button></div>'
   ).join("")+'</div>';
  }
+ async function loadPricing(){
+  const body=document.getElementById("nx-admin-body");
+  body.innerHTML='<h2 class="nx-admin-section-title">Зарын үнийн тохиргоо</h2><p class="nx-admin-section-note">Өөрчлөлт хадгалагдмагц хэрэглэгчдийн багц сонгох хэсэгт шинэ үнэ үйлчилнэ.</p><div class="nx-admin-loading">Тохиргоо ачаалж байна…</div>';
+  const {data,error}=await db.from("nexora_settings").select("ad_package_config").eq("id",1).single();if(error)throw error;
+  const cfg=data.ad_package_config||{},fields=[["basic","Энгийн зар"],["featured","Онцгой"],["vip","VIP"],["premium","Premium"]];
+  body.innerHTML='<h2 class="nx-admin-section-title">Зарын үнийн тохиргоо</h2><p class="nx-admin-section-note">Үнэ, хугацаа болон үнэгүй зарын тоог тохируулна.</p><form id="nx-pricing-form"><div class="nx-admin-list">'+fields.map(([key,label])=>{const v=cfg[key]||{};return '<section class="nx-admin-card"><h3>'+label+'</h3><label class="nx-admin-meta">Үнэ (₮)<input name="'+key+'_amount" type="number" min="0" required value="'+Number(v.amount??0)+'" class="nx-admin-search"></label><label class="nx-admin-meta">Хугацаа (хоног)<input name="'+key+'_days" type="number" min="1" max="365" required value="'+Number(v.days??7)+'" class="nx-admin-search"></label>'+(key==="basic"?'<label class="nx-admin-meta">Үнэгүй энгийн зарын тоо<input name="basic_free_limit" type="number" min="0" max="100" required value="'+Number(v.free_limit??1)+'" class="nx-admin-search"></label>':"")+'</section>';}).join("")+'</div><button class="nx-admin-refresh" style="margin-top:16px;width:100%" type="submit">✓ ҮНИЙН ТОХИРГОО ХАДГАЛАХ</button><p id="nx-pricing-message" class="nx-admin-section-note"></p></form>';
+  document.getElementById("nx-pricing-form").onsubmit=async e=>{e.preventDefault();const v=Object.fromEntries(new FormData(e.currentTarget).entries()),next={};fields.forEach(([key])=>{next[key]={amount:Number(v[key+"_amount"]),days:Number(v[key+"_days"])};if(key==="basic")next[key].free_limit=Number(v.basic_free_limit);});const msg=document.getElementById("nx-pricing-message");const {error:saveError}=await db.from("nexora_settings").update({ad_package_config:next,updated_at:new Date().toISOString()}).eq("id",1);if(saveError){msg.textContent="Алдаа: "+saveError.message;msg.style.color="#ffaaaa";return;}msg.textContent="Амжилттай хадгаллаа. Шинэ үнэ хэрэглэгчдэд үйлчилнэ.";msg.style.color="#b9e9a5";};
+ }
  async function loadTab(){
   shell('<div class="nx-admin-loading">Мэдээлэл ачаалж байна…</div>');
   const body=document.getElementById("nx-admin-body");
   try{
+   if(activeTab==="pricing"){await loadPricing();return;}
    if(activeTab==="overview"){
     body.innerHTML=await overview();
     body.querySelectorAll("[data-open-tab]").forEach(b=>b.onclick=()=>{activeTab=b.dataset.openTab;loadTab();});
