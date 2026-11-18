@@ -1881,7 +1881,7 @@
           value="${escapeHTML(searchText)}"
         >
 
-        <div id="nx-ad-results">
+        <div id="nx-ad-results" data-selection-key="${escapeHTML(getSelectionKey(selection))}">
           <div class="nx-list-message">Заруудыг ачаалж байна...</div>
         </div>
 
@@ -1991,6 +1991,8 @@
 
       ads = result.data || [];
       loading = false;
+      const loadedResults = document.getElementById("nx-ad-results");
+      if (loadedResults) loadedResults.dataset.loaded = "true";
       renderFilteredAds();
 
     } catch (error) {
@@ -2161,12 +2163,16 @@
 
   const observer = new MutationObserver(function () {
     const selection = getCurrentSelection();
-
     if (!selection) return;
 
-    const key = getSelectionKey(selection);
+    const results = document.getElementById("nx-ad-results");
+    if (!results || loading) return;
 
-    if (key !== loadedSelectionKey) {
+    const key = getSelectionKey(selection);
+    const screenKey = results.dataset.selectionKey || "";
+
+    // Ижил ангилал руу буцаж орсон ч шинээр үүссэн жагсаалтыг дахин татна.
+    if (key !== loadedSelectionKey || screenKey !== key || results.dataset.loaded !== "true") {
       loadedSelectionKey = key;
       ads = [];
       searchText = "";
