@@ -50,7 +50,7 @@
  const money=v=>Number(v||0).toLocaleString("mn-MN")+" ₮";
  const tabs=[
   ["overview","Тойм"],["ads","Үнэгүй зар"],["payments","Зарын төлбөр"],["products","Бараа"],
-  ["stores","Дэлгүүрийн төлбөр"],["suppliers","Нийлүүлэгч"],["orders","Захиалга"],["orderpayments","Захиалгын төлбөр"],["pricing","Зарын үнэ"]
+  ["stores","Дэлгүүрийн төлбөр"],["suppliers","Нийлүүлэгч"],["orders","Захиалга"],["orderpayments","Захиалгын төлбөр"],["pricing","Зарын үнэ"],["theme","Өнгөний тохиргоо"]
  ];
  const sections={
   ads:["Үнэгүй зарын хүсэлт","Шинээр ирсэн, хяналт хүлээж буй зарууд"],
@@ -60,7 +60,8 @@
   suppliers:["Нийлүүлэгч","Нийлүүлэгчийн бүртгэлийн хүсэлт"],
   orders:["Захиалгууд","Худалдан авагчдын захиалгын мэдээлэл"],
   orderpayments:["Захиалгын төлбөр","Захиалгын төлбөрийн баримт шалгах хэсэг"],
-  pricing:["Зарын үнийн тохиргоо","Багцын үнэ, хугацаа болон үнэгүй зарын лимитийг удирдах"]
+  pricing:["Зарын үнийн тохиргоо","Багцын үнэ, хугацаа болон үнэгүй зарын лимитийг удирдах"],
+  theme:["Дэлгэц ба товчлуурын өнгө","Админ самбарын харагдах өнгийг өөрчлөх"]
  };
  const statusNames={pending:"Хүлээгдэж байна",pending_review:"Хяналтад",approved:"Зөвшөөрсөн",active:"Идэвхтэй",rejected:"Татгалзсан",pending_payment:"Төлбөр хүлээгдэж байна",paid:"Төлөгдсөн",unpaid:"Төлөгдөөгүй",processing:"Боловсруулж байна",completed:"Дууссан",cancelled:"Цуцалсан"};
  async function adminCheck(){
@@ -149,11 +150,37 @@
   body.innerHTML='<h2 class="nx-admin-section-title">Зарын үнийн тохиргоо</h2><p class="nx-admin-section-note">Үнэ, хугацаа болон үнэгүй зарын тоог тохируулна.</p><form id="nx-pricing-form"><div class="nx-admin-list">'+fields.map(([key,label])=>{const v=cfg[key]||{};return '<section class="nx-admin-card"><h3>'+label+'</h3><label class="nx-admin-meta">Үнэ (₮)<input name="'+key+'_amount" type="number" min="0" required value="'+Number(v.amount??0)+'" class="nx-admin-search"></label><label class="nx-admin-meta">Хугацаа (хоног)<input name="'+key+'_days" type="number" min="1" max="365" required value="'+Number(v.days??7)+'" class="nx-admin-search"></label>'+(key==="basic"?'<label class="nx-admin-meta">Үнэгүй энгийн зарын тоо<input name="basic_free_limit" type="number" min="0" max="100" required value="'+Number(v.free_limit??1)+'" class="nx-admin-search"></label>':"")+'</section>';}).join("")+'</div><button class="nx-admin-refresh" style="margin-top:16px;width:100%" type="submit">✓ ҮНИЙН ТОХИРГОО ХАДГАЛАХ</button><p id="nx-pricing-message" class="nx-admin-section-note"></p></form>';
   document.getElementById("nx-pricing-form").onsubmit=async e=>{e.preventDefault();const v=Object.fromEntries(new FormData(e.currentTarget).entries()),next={};fields.forEach(([key])=>{next[key]={amount:Number(v[key+"_amount"]),days:Number(v[key+"_days"])};if(key==="basic")next[key].free_limit=Number(v.basic_free_limit);});const msg=document.getElementById("nx-pricing-message");const {error:saveError}=await db.from("nexora_settings").update({ad_package_config:next,updated_at:new Date().toISOString()}).eq("id",1);if(saveError){msg.textContent="Алдаа: "+saveError.message;msg.style.color="#ffaaaa";return;}msg.textContent="Амжилттай хадгаллаа. Шинэ үнэ хэрэглэгчдэд үйлчилнэ.";msg.style.color="#b9e9a5";};
  }
+ async function applyAdminTheme(config){
+  const t={background:"#090909",panel:"#171717",text:"#f7f5ef",accent:"#d6ad55",button:"#d6ad55",button_text:"#090909",...(config||{})};
+  let style=document.getElementById("nx-admin-custom-theme");if(!style){style=document.createElement("style");style.id="nx-admin-custom-theme";document.head.appendChild(style);}
+  style.textContent=`
+   body{background:${t.background}!important;color:${t.text}!important}
+   #nexora-admin-app .nx-admin-card,#nexora-admin-app .nx-admin-stat,.nx-admin-login{background:${t.panel}!important;color:${t.text}!important}
+   #nexora-admin-app .nx-admin-card h3,#nexora-admin-app .nx-admin-section-title,#nexora-admin-app .nx-admin-head .nexora-ad-heading{color:${t.accent}!important}
+   #nexora-admin-app .nx-admin-tabs button,#nexora-admin-app .nx-admin-refresh,#nexora-admin-app .nx-admin-home,#nexora-admin-app .nx-admin-logout{border-color:${t.accent}!important}
+   #nexora-admin-app .nx-admin-tabs button.active,#nexora-admin-app .nx-admin-refresh,#nexora-admin-app .nx-admin-home,#nexora-admin-app .nx-admin-logout,.nx-admin-login-submit{background:${t.button}!important;color:${t.button_text}!important}
+   #nexora-admin-app .nx-admin-search,.nx-admin-login input{background:${t.panel}!important;color:${t.text}!important;border-color:${t.accent}!important}
+   #nexora-admin-app .nx-admin-status{border-color:${t.accent}!important;color:${t.accent}!important}
+  `;
+ }
+ async function loadTheme(){
+  const body=document.getElementById("nx-admin-body");
+  const {data,error}=await db.from("nexora_settings").select("admin_theme_config").eq("id",1).single();if(error)throw error;
+  const t={background:"#090909",panel:"#171717",text:"#f7f5ef",accent:"#d6ad55",button:"#d6ad55",button_text:"#090909",...(data.admin_theme_config||{})};
+  const fields=[["background","Дэлгэцийн үндсэн өнгө"],["panel","Карт, самбарын өнгө"],["text","Үндсэн бичвэрийн өнгө"],["accent","Гарчиг, хүрээний өнгө"],["button","Товчлуурын дэвсгэр өнгө"],["button_text","Товчлуурын бичвэрийн өнгө"]];
+  body.innerHTML='<h2 class="nx-admin-section-title">Дэлгэц ба товчлуурын өнгө</h2><p class="nx-admin-section-note">Өнгө сонгоод урьдчилан харах боломжтой. Хадгалсны дараа дараагийн нэвтрэлтэд мөн хэвээр байна.</p><form id="nx-theme-form"><div class="nx-admin-list">'+fields.map(([key,label])=>'<label class="nx-admin-card nx-admin-meta" style="display:flex;align-items:center;justify-content:space-between;gap:12px">'+label+'<input name="'+key+'" type="color" value="'+t[key]+'" style="width:58px;height:42px;border:0;background:transparent;cursor:pointer"></label>').join("")+'</div><div class="nx-admin-card" style="margin-top:14px"><strong>Урьдчилан харах</strong><div id="nx-theme-preview" style="margin-top:12px;padding:18px;border-radius:12px;background:'+t.background+';color:'+t.text+'"><div style="padding:16px;border-radius:10px;background:'+t.panel+';color:'+t.accent+'">NEXORA АДМИН</div><button type="button" id="nx-theme-preview-button" style="margin-top:12px;padding:11px 18px;border:0;border-radius:9px;background:'+t.button+';color:'+t.button_text+'">Жишээ товчлуур</button></div></div><button class="nx-admin-refresh" style="margin-top:16px;width:100%" type="submit">✓ ӨНГӨНИЙ ТОХИРГОО ХАДГАЛАХ</button><p id="nx-theme-message" class="nx-admin-section-note" style="margin-top:12px"></p></form>';
+  const form=document.getElementById("nx-theme-form");
+  const values=()=>Object.fromEntries(new FormData(form).entries());
+  const preview=()=>{const v=values(),p=document.getElementById("nx-theme-preview"),b=document.getElementById("nx-theme-preview-button");p.style.background=v.background;p.style.color=v.text;p.firstElementChild.style.background=v.panel;p.firstElementChild.style.color=v.accent;b.style.background=v.button;b.style.color=v.button_text;};
+  form.querySelectorAll('input[type="color"]').forEach(el=>el.addEventListener("input",preview));
+  form.onsubmit=async e=>{e.preventDefault();const next=values(),msg=document.getElementById("nx-theme-message");const {error:saveError}=await db.from("nexora_settings").update({admin_theme_config:next,updated_at:new Date().toISOString()}).eq("id",1);if(saveError){msg.textContent="Хадгалахад алдаа гарлаа: "+saveError.message;return;}await applyAdminTheme(next);msg.textContent="Өнгөний тохиргоо амжилттай хадгалагдлаа.";msg.style.color="#b9e9a5";};
+ }
  async function loadTab(){
   shell('<div class="nx-admin-loading">Мэдээлэл ачаалж байна…</div>');
   const body=document.getElementById("nx-admin-body");
   try{
    if(activeTab==="pricing"){await loadPricing();return;}
+   if(activeTab==="theme"){await loadTheme();return;}
    if(activeTab==="overview"){
     body.innerHTML=await overview();
     body.querySelectorAll("[data-open-tab]").forEach(b=>b.onclick=()=>{activeTab=b.dataset.openTab;loadTab();});
@@ -231,6 +258,7 @@
   async function init(){
    root.innerHTML='<div class="nx-admin-loading">Админ эрх шалгаж байна…</div>';
    try{const {data,error}=await db.auth.getUser();if(error)throw error;if(!data.user){renderLogin();return;}
+    const {data:themeRow}=await db.from("nexora_settings").select("admin_theme_config").eq("id",1).maybeSingle();if(themeRow?.admin_theme_config)applyAdminTheme(themeRow.admin_theme_config);
     if(!(await adminCheck())){root.innerHTML='<section class="nx-admin-login"><h1>ХАНДАХ ЭРХГҮЙ</h1><p>Энэ бүртгэлд NEXORA админы эрх олгогдоогүй байна.</p><button class="nx-admin-login-submit" id="nx-admin-denied-logout" type="button">Өөр бүртгэлээр нэвтрэх</button><a href="./index.html">Хэрэглэгчийн сайт руу буцах</a></section>';document.getElementById("nx-admin-denied-logout").onclick=async()=>{await db.auth.signOut();renderLogin();};return;}
     loadTab();
    }catch(e){root.innerHTML='<div class="nx-admin-error">Админ эрх шалгахад алдаа гарлаа: '+esc(e?.message||e)+'</div>';}
