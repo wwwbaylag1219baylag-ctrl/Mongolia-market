@@ -299,6 +299,30 @@
 @media(max-width:680px){#nexora-admin-app .nx-admin-stats{grid-template-columns:repeat(2,minmax(0,1fr))}#nexora-admin-app .nx-admin-list{grid-template-columns:1fr}#nexora-admin-app .nx-admin-toolbar{align-items:stretch;flex-direction:column}#nexora-admin-app .nx-admin-refresh{width:100%}}
 @media(max-width:430px){#nexora-admin-app{padding:18px 12px 32px}#nexora-admin-app .nx-admin-head .nexora-ad-heading{font-size:21px}#nexora-admin-app .nx-admin-tabs{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#nexora-admin-app .nx-admin-tabs button{min-height:44px;font-size:12px}#nexora-admin-app .nx-admin-stat{padding:13px}#nexora-admin-app .nx-admin-stat-value{font-size:24px}}
 
+
+/* NEXORA Тусламж төв */
+.nx-help-screen{max-width:1000px;margin:0 auto;padding:22px 18px 60px;color:#f7f5ef}
+.nx-help-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.nx-help-back{border:1px solid rgba(214,173,85,.45);background:#1c1b17;color:#e8c56f;border-radius:11px;padding:10px 13px;font-weight:700}
+.nx-help-title{font-size:27px;font-weight:850;color:#e3bd65;margin:0}
+.nx-help-intro{color:#aaa39a;line-height:1.6;margin:8px 0 18px}
+.nx-help-search{width:100%;box-sizing:border-box;background:#191919;color:#fff;border:1px solid rgba(214,173,85,.45);border-radius:13px;padding:15px 16px;font-size:15px;outline:none;margin-bottom:18px}
+.nx-help-search:focus{border-color:#e4bd63;box-shadow:0 0 0 3px rgba(214,173,85,.12)}
+.nx-help-group{border:1px solid rgba(214,173,85,.28);border-radius:15px;background:linear-gradient(120deg,#201f1a,#151515);margin:0 0 12px;overflow:hidden}
+.nx-help-group>summary{list-style:none;cursor:pointer;padding:16px;display:flex;align-items:center;gap:11px;color:#e7c36e;font-weight:800}
+.nx-help-group>summary::-webkit-details-marker,.nx-help-q>summary::-webkit-details-marker{display:none}
+.nx-help-group>summary:after{content:"＋";margin-left:auto;color:#d6ad55;font-size:20px}
+.nx-help-group[open]>summary:after{content:"−"}
+.nx-help-items{padding:0 14px 12px}
+.nx-help-q{border-top:1px solid rgba(214,173,85,.15);padding:0 2px}
+.nx-help-q>summary{cursor:pointer;list-style:none;padding:13px 5px;color:#f4f0e7;font-weight:650;line-height:1.45}
+.nx-help-q>summary:before{content:"›";color:#d6ad55;font-size:20px;margin-right:10px}
+.nx-help-q[open]>summary{color:#e9c66e}
+.nx-help-answer{padding:0 8px 15px 24px;color:#bdb7ad;font-size:14px;line-height:1.7}
+.nx-help-answer strong{color:#f0d48f}
+.nx-help-empty{display:none;color:#c9b98f;text-align:center;padding:22px}
+@media(max-width:520px){.nx-help-screen{padding:16px 12px 40px}.nx-help-title{font-size:22px}.nx-help-group>summary{padding:14px;font-size:14px}}
+
 </style>
 </head>
 
@@ -312,12 +336,10 @@
       <header class="topbar">
         <div class="logo">NEXORA</div>
 
-        <button
-          class="profile-button"
-          type="button"
-          onclick="NEXORA.open('profile')">
-          ☰ Профайл
-        </button>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button class="profile-button" type="button" onclick="NEXORA.open('help')">❔ Тусламж</button>
+          <button class="profile-button" type="button" onclick="NEXORA.open('profile')">☰ Профайл</button>
+        </div>
       </header>
 
       <div class="home-content">
@@ -489,7 +511,54 @@
 
 <!-- 2-Р ХЭСЭГ ДУУСАВ -->
 
-    <!-- ========== NEXORA NAVIGATION ========== -->
+    
+    <section id="help" class="screen">
+      <div class="nx-help-screen">
+        <div class="nx-help-head"><button class="nx-help-back" type="button" onclick="NEXORA.back()">← Буцах</button><h1 class="nx-help-title">Тусламж төв</h1></div>
+        <p class="nx-help-intro">NEXORA ашиглахтай холбоотой түгээмэл асуулт, хариултууд. Асуултаа хайх эсвэл доорх бүлгүүдийг нээнэ үү.</p>
+        <input id="nx-help-search" class="nx-help-search" type="search" placeholder="Асуулт хайх... (жишээ нь: VIP, зар, дэлгүүр)" aria-label="Тусламжийн асуулт хайх">
+        <div id="nx-help-groups">
+          <details class="nx-help-group" open><summary>🛍️ Худалдан авагчдад</summary><div class="nx-help-items">
+            <details class="nx-help-q"><summary>Зарын эзэнтэй хэрхэн холбогдох вэ?</summary><div class="nx-help-answer">Сонирхож буй зараа нээгээд зар дээр харагдах холбоо барих мэдээлэл эсвэл холбогдох товчийг ашиглана. Утасны мэдээлэл байхгүй бол платформд байгаа мессежийн боломжийг ашиглан холбогдоорой.</div></details>
+            <details class="nx-help-q"><summary>Зарын талаар хэрхэн гомдол гаргах вэ?</summary><div class="nx-help-answer">Луйвар, худал мэдээлэл, хориотой бараа эсвэл сэжигтэй үйлдэл илэрвэл тухайн зарын мэдээллийг тэмдэглэн админд мэдэгдэнэ үү. Гомдолдоо шалтгаан болон нотлох мэдээллээ тодорхой бичээрэй.</div></details>
+            <details class="nx-help-q"><summary>Сэжигтэй зар таарвал яах вэ?</summary><div class="nx-help-answer">Урьдчилгаа мөнгө шилжүүлэхээс болгоомжилж, бараа болон худалдагчийн мэдээллийг нягтална уу. Сэжигтэй тохиолдлыг админд мэдэгдээрэй.</div></details>
+          </div></details>
+          <details class="nx-help-group"><summary>👤 Бүртгэл ба хувийн мэдээлэл</summary><div class="nx-help-items">
+            <details class="nx-help-q"><summary>Хэрхэн бүртгүүлэх вэ?</summary><div class="nx-help-answer">Профайл хэсэгт орж бүртгүүлэх горимыг сонгон шаардлагатай мэдээллээ бөглөнө. Дэлгэц дээрх баталгаажуулах зааврыг дагана уу.</div></details>
+            <details class="nx-help-q"><summary>Утасны дугаараа хэрхэн баталгаажуулах вэ?</summary><div class="nx-help-answer">Бүртгэл эсвэл нэвтрэх үед системээс санал болгосон баталгаажуулах алхмыг дагана. Баталгаажуулах кодоо бусдад дамжуулж болохгүй.</div></details>
+            <details class="nx-help-q"><summary>Баталгаажуулах код ирэхгүй бол яах вэ?</summary><div class="nx-help-answer">Утасны дугаараа зөв оруулсан эсэх, сүлжээ болон мессеж хүлээн авах боломжтой эсэхээ шалгаад хэсэг хугацааны дараа дахин оролдоно уу.</div></details>
+            <details class="nx-help-q"><summary>Хувийн мэдээллээ хэрхэн өөрчлөх вэ?</summary><div class="nx-help-answer">Профайл болон тохиргооны хэсэгт байгаа мэдээлэл засах боломжийг ашиглана. Зарим мэдээллийг өөрчлөхөд дахин баталгаажуулалт шаардагдаж болно.</div></details>
+          </div></details>
+          <details class="nx-help-group"><summary>📢 Зар нийтлэх ба удирдах</summary><div class="nx-help-items">
+            <details class="nx-help-q"><summary>Зар хэрхэн оруулах вэ?</summary><div class="nx-help-answer">Зарын платформд орж зар нэмэх үйлдлийг сонгоно. Тохирох үндсэн болон дэд ангиллаа сонгож, гарчиг, үнэ, тайлбар, байршил, зураг зэрэг мэдээллийг үнэн зөв бөглөөд нийтлэх хүсэлтээ илгээнэ.</div></details>
+            <details class="nx-help-q"><summary>Ямар зураг оруулах вэ?</summary><div class="nx-help-answer">Зарлаж буй бараа, үйлчилгээтэй холбоотой, тод, бодит зургийг ашиглаарай. Холбоо барих утас, хаяг, төөрөгдүүлэх текст болон тухайн зартаа хамааралгүй зураг бүү оруулаарай.</div></details>
+            <details class="nx-help-q"><summary>Зарын тайлбарт юу бичих вэ?</summary><div class="nx-help-answer">Бараа, үйлчилгээ эсвэл ажлын байрны талаар дэлгэрэнгүй, үнэн зөв мэдээлэл бичнэ. Нөхцөл байдал, онцлог, хэмжээ, байршил болон худалдан авагчид хэрэгтэй мэдээллийг оруулбал зохимжтой.</div></details>
+            <details class="nx-help-q"><summary>Зар яагаад хяналтад ордог вэ?</summary><div class="nx-help-answer">Зарын мэдээлэл платформын дүрэмд нийцэж байгаа эсэхийг шалгаж, хэрэглэгчдийг залилан болон хориотой агуулгаас хамгаалах зорилгоор хяналт хийдэг.</div></details>
+            <details class="nx-help-q"><summary>Зар буцаагдсан бол яах вэ?</summary><div class="nx-help-answer">Миний зарууд хэсгээс тухайн зарын төлөв болон буцаалтын тайлбарыг шалгана. Алдаатай мэдээллээ засаж, шаардлагатай бол дахин хяналтад илгээнэ.</div></details>
+            <details class="nx-help-q"><summary>Зараа хэрхэн засах, устгах вэ?</summary><div class="nx-help-answer">Миний зарууд хэсгээс өөрчлөх зартаа орж засварлах эсвэл устгах боломжийг ашиглана. Устгахын өмнө сонголтоо нягтална уу.</div></details>
+            <details class="nx-help-q"><summary>Зараа аль ангилалд байршуулах вэ?</summary><div class="nx-help-answer">Зарлаж буй бараа, үйлчилгээ эсвэл ажлын байртай хамгийн ойр тохирох ангилал, дэд ангиллыг сонгоно. Зөв ангилал нь таны зарыг сонирхсон хүмүүст олоход тусална.</div></details>
+          </div></details>
+          <details class="nx-help-group"><summary>⭐ Зар сурталчилгааны багцууд ба төлбөр</summary><div class="nx-help-items">
+            <details class="nx-help-q"><summary>Энгийн, Онцгой, VIP, Premium багцууд ямар ялгаатай вэ?</summary><div class="nx-help-answer"><strong>Энгийн:</strong> үнэгүй, 7 хоног. <strong>Онцгой:</strong> 5,000₮, 7 хоног. <strong>VIP:</strong> 10,000₮, 14 хоног. <strong>Premium:</strong> 20,000₮, 14 хоног.</div></details>
+            <details class="nx-help-q"><summary>Зараа хэрхэн Онцгой, VIP эсвэл Premium болгох вэ?</summary><div class="nx-help-answer">Зарын платформын багц сонгох хэсэгт тухайн зартаа тохирох үйлчилгээг сонгон, дэлгэц дээрх төлбөрийн зааврыг дагана.</div></details>
+            <details class="nx-help-q"><summary>Төлбөр төлсөн ч багц идэвхжээгүй бол яах вэ?</summary><div class="nx-help-answer">Төлбөрийн баримт, гүйлгээний утга, зарын дугаараа хадгалж, админд мэдэгдэнэ үү. Нэг төлбөрийг дахин давтан төлөхөөс өмнө төлөвөө шалгаарай.</div></details>
+            <details class="nx-help-q"><summary>Төлбөрийн мэдээллээ хэрхэн шалгах вэ?</summary><div class="nx-help-answer">Таны бүртгэлд төлбөрийн түүх эсвэл гүйлгээний мэдээлэл харагддаг хэсэг байвал тэндээс төлөвөө шалгана. Харагдахгүй тохиолдолд гүйлгээний баримтаа админд илгээнэ үү.</div></details>
+          </div></details>
+          <details class="nx-help-group"><summary>🏪 Дэлгүүр ба байгууллага</summary><div class="nx-help-items">
+            <details class="nx-help-q"><summary>Дэлгүүр хэрхэн нээх вэ?</summary><div class="nx-help-answer">Худалдааны платформын дэлгүүр нээх хүсэлтийн хэсэгт байгууллага, холбоо барих болон шаардлагатай мэдээллээ бөглөж хүсэлт илгээнэ. Хүсэлтийг админ хянаж баталгаажуулна.</div></details>
+            <details class="nx-help-q"><summary>Дэлгүүр нээх хүсэлт батлагдаагүй бол яах вэ?</summary><div class="nx-help-answer">Хүсэлтийн төлөвөө шалгана уу. Нэмэлт мэдээлэл шаардлагатай бол админы зааврын дагуу мэдээллээ бүрдүүлж дахин илгээнэ.</div></details>
+            <details class="nx-help-q"><summary>Байгууллагын лого хэрхэн нэмэх вэ?</summary><div class="nx-help-answer">Дэлгүүр эсвэл байгууллагын тохиргоонд лого оруулах боломж байгаа бол тухайн хэсгээс чанартай, байгууллагатай холбоотой логогоо байршуулна.</div></details>
+          </div></details>
+          <details class="nx-help-group"><summary>💬 Сэтгэгдэл ба үнэлгээ</summary><div class="nx-help-items">
+            <details class="nx-help-q"><summary>Худалдагчид хэрхэн үнэлгээ өгөх вэ?</summary><div class="nx-help-answer">Худалдагчтай харилцаж, бодит туршлага авсны дараа үнэлгээ болон сэтгэгдэл үлдээх боломж нээгдсэн бол үнэн зөв, соёлтой байдлаар бичнэ үү.</div></details>
+            <details class="nx-help-q"><summary>Зохисгүй сэтгэгдэл байвал яах вэ?</summary><div class="nx-help-answer">Сэтгэгдлийн талаар админд мэдэгдэж, ямар шалтгаанаар зохисгүй гэж үзэж байгаагаа тайлбарлана уу.</div></details>
+          </div></details>
+        </div>
+        <p id="nx-help-empty" class="nx-help-empty">Таны хайлтад тохирох асуулт олдсонгүй.</p>
+      </div>
+    </section>
+
+<!-- ========== NEXORA NAVIGATION ========== -->
 
     <script>
       (function () {
@@ -500,7 +569,8 @@
           "shop",
           "profile",
           "myads",
-          "myorders"
+          "myorders",
+          "help"
         ];
 
         let currentScreen = "home";
@@ -3817,6 +3887,27 @@
   }catch(e){ordersHost.innerHTML='<p style="color:#ff9999">'+esc(e.message)+'</p>';}
  }
  document.addEventListener("click",e=>{if(e.target.closest("#nexora-my-ads-open"))loadAds();if(e.target.closest("#nexora-my-orders-open"))loadOrders();});
+})();
+</script>
+
+
+<script>
+(function(){
+ const input=document.getElementById("nx-help-search"),host=document.getElementById("nx-help-groups"),empty=document.getElementById("nx-help-empty");
+ if(!input||!host||!empty)return;
+ input.addEventListener("input",function(){
+  const q=this.value.trim().toLocaleLowerCase("mn");let count=0;
+  host.querySelectorAll(".nx-help-group").forEach(group=>{
+   let has=false;
+   group.querySelectorAll(".nx-help-q").forEach(item=>{
+    const match=!q||item.textContent.toLocaleLowerCase("mn").includes(q);
+    item.hidden=!match;if(match){has=true;count++;}
+    if(q&&match){group.open=true;item.open=true;}else if(!q)item.open=false;
+   });
+   group.hidden=!has;if(!q)group.open=false;
+  });
+  empty.style.display=count?"none":"block";
+ });
 })();
 </script>
 
