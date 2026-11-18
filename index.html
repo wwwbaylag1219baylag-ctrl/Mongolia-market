@@ -2976,10 +2976,22 @@
     const {data:pending,error}=await db.from("nexora_store_payments").select("id,status,amount,created_at").eq("store_id",storeRes.data.id).eq("status","pending").order("created_at",{ascending:false}).limit(1).maybeSingle();
     if(error){host.innerHTML='<p>Төлбөрийн хүсэлт шалгахад алдаа: '+esc(error.message)+'</p>';return;}
     if(pending){host.innerHTML='<button class="nx-market-btn secondary" id="nx-store-back">‹ Буцах</button><h2 class="nexora-ad-heading">'+esc(storeRes.data.store_name)+'</h2><p class="nx-market-muted">Төлбөрийн хүсэлт хяналтад байна.</p><p class="nx-market-price">'+money(pending.amount)+'</p><p class="nx-market-muted">Илгээсэн: '+esc(new Date(pending.created_at).toLocaleString("mn-MN"))+'</p>';document.getElementById("nx-store-back").onclick=loadProducts;return;}
-    const {data:sub}=await db.from("nexora_subscriptions").select("status,expires_at").eq("store_id",storeRes.data.id).eq("status","active").order("expires_at",{ascending:false}).limit(1).maybeSingle();
-    host.innerHTML='<button class="nx-market-btn secondary" id="nx-store-back">‹ Буцах</button><h2 class="nexora-ad-heading">'+esc(storeRes.data.store_name)+'</h2><p class="nx-market-muted">Дэлгүүрийн төлөв: '+(sub&&new Date(sub.expires_at)>new Date()?"Идэвхтэй":"Идэвхгүй")+'</p><button class="nx-market-btn" id="nx-store-renew">Эрх сунгах / төлбөр хийх</button>';
+    const [subRes,notificationsRes]=await Promise.all([
+      db.from("nexora_subscriptions").select("id,status,starts_at,expires_at").eq("store_id",storeRes.data.id).eq("status","active").order("expires_at",{ascending:false}).limit(1).maybeSingle(),
+      db.from("nexora_store_notifications").select("id,title,message,created_at,read_at,email_sent_at").eq("store_id",storeRes.data.id).order("created_at",{ascending:false}).limit(10)
+    ]);
+    const sub=subRes.data,notifications=notificationsRes.data||[];
+    const remaining=sub?Math.max(0,Math.ceil((new Date(sub.expires_at)-Date.now())/86400000)):0;
+    const noticeHtml='<section class="nx-admin-card" style="margin-top:14px"><h3>МЭДЭГДЭЛ</h3>'+
+      (notifications.length?notifications.map(n=>'<article style="padding:10px 0;border-bottom:1px solid #34312c"><strong>'+esc(n.title)+'</strong><p class="nx-market-muted">'+esc(n.message)+'</p><p class="nx-market-muted">'+esc(new Date(n.created_at).toLocaleString("mn-MN"))+'</p>'+(n.read_at?'':'<button class="nx-market-btn secondary" data-store-notice-read="'+esc(n.id)+'">Уншсан</button>')+'</article>').join(''):'<p class="nx-market-muted">Одоогоор хугацааны сануулга алга.</p>')+'</section>';
+    host.innerHTML='<button class="nx-market-btn secondary" id="nx-store-back">‹ Буцах</button><h2 class="nexora-ad-heading">'+esc(storeRes.data.store_name)+'</h2><p class="nx-market-muted">Дэлгүүрийн төлөв: '+(sub&&new Date(sub.expires_at)>new Date()?"Идэвхтэй":"Идэвхгүй")+'</p>'+(sub?'<p class="nx-market-muted">Дуусах огноо: '+esc(new Date(sub.expires_at).toLocaleString("mn-MN"))+' · Үлдсэн: '+remaining+' хоног</p>':'')+noticeHtml+'<button class="nx-market-btn" id="nx-store-renew">Эрх сунгах / төлбөр хийх</button>';
     document.getElementById("nx-store-back").onclick=loadProducts;
     document.getElementById("nx-store-renew").onclick=()=>showStorePayment(storeRes.data,settings,banks);
+    host.querySelectorAll("[data-store-notice-read]").forEach(b=>b.onclick=async()=>{
+      const {error}=await db.from("nexora_store_notifications").update({read_at:new Date().toISOString()}).eq("id",b.dataset.storeNoticeRead);
+      if(error){alert("Мэдэгдэл шинэчлэхэд алдаа: "+error.message);return;}
+      showStore();
+    });
   }
   function showStorePayment(store,settings,banks){
     const amount=store.owner_type==="company"?Number(settings.company_price):Number(settings.individual_price);
