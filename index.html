@@ -713,29 +713,13 @@
     "border:1px solid rgba(214,173,85,.4);" +
     "background:#111;color:#fff;";
 
-  async function checkAdmin(user) {
-    const result = await db
-      .from("nexora_admins")
-      .select("user_id")
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    if (result.error) {
-      console.warn("Админы эрх шалгахад алдаа:", result.error.message);
-      return false;
-    }
-
-    return !!result.data;
-  }
-
-  async function renderUser(user) {
+    async function renderUser(user) {
     if (!user) {
       renderForm(currentMode);
       return;
     }
 
-    const isAdmin = await checkAdmin(user);
-    const name =
+     const name =
       user.user_metadata?.full_name || user.email || "Хэрэглэгч";
 
     panel.innerHTML = `
@@ -749,19 +733,7 @@
         ${safe(user.email)}
       </p>
 
-      <p style="margin:16px 0;color:#d6ad55;">
-        ${isAdmin ? "Администраторын бүртгэл" : "Энгийн хэрэглэгч"}
-      </p>
-
-      ${isAdmin ? `
-        <button id="nexora-admin-open" type="button"
-          style="width:100%;padding:14px;margin:0 0 12px;border:1px solid #d6ad55;
-          border-radius:10px;background:#d6ad55;color:#090909;font-weight:700;">
-          ⚙ Админ удирдлагын самбар
-        </button>
-      ` : ""}
-
-      <button id="nexora-my-ads-open" type="button"
+       <button id="nexora-my-ads-open" type="button"
         style="width:100%;padding:13px;margin:0 0 10px;border:1px solid #d6ad55;
         border-radius:10px;background:#191919;color:#d6ad55;font-weight:700;">
         Миний зарууд
@@ -779,12 +751,7 @@
       </button>
     `;
 
-    const adminOpen = document.getElementById("nexora-admin-open");
-    if (adminOpen) adminOpen.addEventListener("click", function () {
-      window.location.href = "./admin.html";
-    });
-
-    const logoutButton = document.getElementById("nexora-logout");
+     const logoutButton = document.getElementById("nexora-logout");
 
     logoutButton.addEventListener("click", async function () {
       logoutButton.disabled = true;
