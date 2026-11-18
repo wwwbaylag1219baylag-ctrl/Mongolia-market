@@ -1530,6 +1530,7 @@
 
     content.innerHTML = `
       <div class="nx-full-screen">
+        ${backButton()}
         <div class="nx-screen-title">${category.icon} ${category.name}</div>
         <div class="nx-screen-subtitle">
           Дэд ангиллын таб дээр дарж дэлгэж, дахин дарж хумина уу.
@@ -1571,7 +1572,7 @@
 
     content.innerHTML = `
       <div class="nx-full-screen">
-
+        ${backButton()}
         <div class="nx-screen-title">${group}</div>
 
         <div class="nx-screen-subtitle">
@@ -1930,14 +1931,6 @@
             </div>
           </div>
         </div>
-
-        <input
-          id="nx-ad-search"
-          class="nx-list-search"
-          type="search"
-          placeholder="Зарын гарчиг, тайлбараар хайх..."
-          value="${escapeHTML(searchText)}"
-        >
 
         <div id="nx-ad-results" data-selection-key="${escapeHTML(getSelectionKey(selection))}">
           <div class="nx-list-message">Заруудыг ачаалж байна...</div>
@@ -2934,20 +2927,12 @@
   });
 
   function addCreateButton() {
-    const results = document.getElementById("nx-ad-results");
-    if (!results || document.getElementById("nx-create-ad-open")) return;
-
-    const button = document.createElement("button");
-    button.type = "button";
-    button.id = "nx-create-ad-open";
-    button.className = "nx-create-open";
-    button.textContent = "+ Шинэ зар нийтлүүлэх";
-    results.parentNode.insertBefore(button, results);
+    const button = document.getElementById("nx-create-ad-open");
+    if (button) button.remove();
   }
 
   const observer = new MutationObserver(addCreateButton);
   observer.observe(content, { childList: true, subtree: true });
-  addCreateButton();
 
   window.NEXORA_SHOW_CREATE_AD = showCreateForm;
 })();
