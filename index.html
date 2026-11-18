@@ -2971,7 +2971,23 @@
     });
   }
 
-  function showPackages() {
+  async function showPackages() {
+    try {
+      const {data:sessionData}=await db.auth.getSession();
+      const user=sessionData.session?.user;
+      if(!user)throw new Error("Эхлээд нэвтэрнэ үү.");
+      const {data:settings,error:settingsError}=await db.from("nexora_settings").select("ad_package_config").eq("id",1).single();
+      if(settingsError)throw settingsError;
+      const config=settings?.ad_package_config||{};
+      const basic=config.basic||{amount:0,days:7,free_limit:1};
+      const {count,error:countError}=await db.from("classified_ads").select("id",{count:"exact",head:true}).eq("owner_id",user.id).eq("package_type","basic");
+      if(countError)throw countError;
+      packages.forEach(p=>{const v=config[p.type]||{};p.days=Number(v.days??p.days);p.amount=Number(v.amount??p.amount);});
+      packages.find(p=>p.type==="basic").amount=(count||0)<Number(basic.free_limit??1)?0:Number(basic.amount??0);
+    } catch(error) {
+      message("Зарын багцын үнийг ачаалж чадсангүй: "+error.message,true);
+      return;
+    }
     content.innerHTML = `
       <div class="nx-create-screen">
         <button class="nx-create-back" type="button"
