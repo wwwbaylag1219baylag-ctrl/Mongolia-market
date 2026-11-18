@@ -2311,6 +2311,9 @@
     results.parentNode.insertBefore(button, results);
   }
 
+  
+     
+
   function showCreateForm() {
     const selection = getSelection();
 
@@ -2346,64 +2349,71 @@
             Зарын гарчиг *
           </label>
 
-          <input
-            class="nx-create-input"
+          <input class="nx-create-input"
             id="nx-ad-title"
             name="title"
             type="text"
             maxlength="150"
             placeholder="Жишээ: 3 өрөө байр зарна"
-            required
-          >
+            required>
 
           <label class="nx-create-label" for="nx-ad-price">
             Үнэ (₮)
           </label>
 
-          <input
-            class="nx-create-input"
+          <input class="nx-create-input"
             id="nx-ad-price"
             name="price"
             type="number"
             min="0"
             step="1"
-            placeholder="Үнийг оруулна уу"
-          >
+            placeholder="Үнийг оруулна уу">
 
           <label class="nx-create-label" for="nx-ad-description">
             Дэлгэрэнгүй тайлбар *
           </label>
 
-          <textarea
-            class="nx-create-textarea"
+          <textarea class="nx-create-textarea"
             id="nx-ad-description"
             name="description"
             maxlength="10000"
             placeholder="Зарынхаа дэлгэрэнгүй мэдээллийг бичнэ үү"
-            required
-          ></textarea>
+            required></textarea>
 
           <label class="nx-create-label" for="nx-ad-phone">
             Холбоо барих утас *
           </label>
 
-          <input
-            class="nx-create-input"
+          <input class="nx-create-input"
             id="nx-ad-phone"
             name="phone"
             type="tel"
             maxlength="30"
             placeholder="Утасны дугаар"
-            required
-          >
+            required>
+
+          <label class="nx-create-label" for="nx-ad-images">
+            Зарын зураг (6 хүртэл зураг)
+          </label>
+
+          <input
+            id="nx-ad-images"
+            name="images"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            multiple
+            style="width:100%;padding:14px 0;color:#fff;">
+
+          <div id="nx-ad-image-preview"
+            style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0;">
+          </div>
 
           <div id="nx-create-message"
             class="nx-create-message"
             role="status">
           </div>
 
-          <button
-            type="submit"
+          <button type="submit"
             id="nx-create-submit"
             class="nx-create-submit">
             ЗАР НИЙТЛҮҮЛЭХ
@@ -2414,6 +2424,76 @@
     `;
   }
 
+  async function uploadAdImages(adId, userId, files) {
+    const bucket = "classified-images";
+    const uploadedPaths = [];
+    const imageRows = [];
+
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+          throw new Error("Зөвхөн JPG, PNG, WEBP зураг оруулна уу.");
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+          throw new Error("Нэг зураг 5MB-аас хэтрэх ёсгүй.");
+        }
+
+        const originalName = file.name
+          .replace(/[^a-zA-Z0-9._-]/g, "_");
+
+        const uniqueName =
+          Date.now() + "_" + i + "_" + originalName;
+
+        const path = userId + "/" + adId + "/" + uniqueName;
+
+        const uploadResult = await db.storage
+          .from(bucket)
+          .upload(path, file, {
+            cacheControl: "3600",
+            upsert: false,
+            contentType: file.type
+          });
+
+        if (uploadResult.error) {
+          throw uploadResult.error;
+        }
+
+        uploadedPaths.push(path);
+
+        imageRows.push({
+          ad_id: adId,
+          owner_id: userId,
+          image_path: path,
+          display_order: i
+        });
+      }
+
+      if (imageRows.length > 0) {
+        const saveImages = await db
+          .from("ad_images")
+          .insert(imageRows);
+
+        if (saveImages.error) {
+          throw saveImages.error;
+        }
+      }
+
+      return uploadedPaths;
+
+    } catch (error) {
+      if (uploadedPaths.length > 0) {
+        await db.storage
+          .from(bucket)
+          .remove(uploadedPaths);
+      }
+
+      throw error;
+    }
+  }
+
   async function saveAd(event) {
     event.preventDefault();
 
@@ -2421,14 +2501,14 @@
     const submit = document.getElementById("nx-create-submit");
 
     if (!db) {
-      showMessage("Supabase холболт олдсонгүй. 4-р хэсгийг шалгана уу.", false);
+      showMessage("Supabase холболт олдсонгүй.", false);
       return;
     }
 
     const selection = getSelection();
 
     if (!selection) {
-      showMessage("Зарын ангилал олдсонгүй. Дахин сонгоно уу.", false);
+      showMessage("Зарын ангилал олдсонгүй.", false);
       return;
     }
 
@@ -2439,8 +2519,18 @@
     const phone = String(formData.get("phone") || "").trim();
     const priceText = String(formData.get("price") || "").trim();
 
+    const imageInput = document.getElementById("nx-ad-images");
+    const imageFiles = imageInput
+      ? Array.from(imageInput.files || [])
+      : [];
+
     if (!title || !description || !phone) {
       showMessage("Одтой талбаруудыг бүрэн бөглөнө үү.", false);
+      return;
+    }
+
+    if (imageFiles.length > 6) {
+      showMessage("Нэг зар дээр 6 хүртэл зураг оруулна уу.", false);
       return;
     }
 
@@ -2468,7 +2558,7 @@
       const user = sessionResult.data.session?.user;
 
       if (!user) {
-        throw new Error("Зар нийтлүүлэхийн тулд эхлээд нэвтэрнэ үү.");
+        throw new Error("Эхлээд нэвтэрнэ үү.");
       }
 
       const insertResult = await db
@@ -2490,32 +2580,59 @@
         throw insertResult.error;
       }
 
+      const adId = insertResult.data.id;
+      let imageWarning = "";
+      let uploadedCount = 0;
+
+      if (imageFiles.length > 0) {
+        try {
+          const paths = await uploadAdImages(
+            adId,
+            user.id,
+            imageFiles
+          );
+
+          uploadedCount = paths.length;
+
+        } catch (imageError) {
+          imageWarning =
+            "Зар хадгалагдсан боловч зураг оруулахад алдаа гарлаа: " +
+            imageError.message;
+        }
+      }
+
       content.innerHTML = `
         <div class="nx-create-screen">
+
           <div class="nx-create-title">
             ЗАР АМЖИЛТТАЙ ХАДГАЛАГДЛАА
           </div>
 
           <div class="nx-create-category">
-            Таны зар Supabase мэдээллийн санд хадгалагдлаа.
+            Таны зар мэдээллийн санд хадгалагдлаа.
             <br><br>
-            <strong>Төлөв:</strong> Төлбөр хүлээгдэж байна
+            <strong>Төлөв:</strong>
+            Төлбөр хүлээгдэж байна
             <br>
             <strong>Зарын дугаар:</strong>
-            ${escapeHTML(insertResult.data.id)}
+            ${escapeHTML(adId)}
+            <br>
+            <strong>Хадгалсан зураг:</strong>
+            ${uploadedCount}
           </div>
 
-          <div style="color:#aaa39a;line-height:1.7;font-size:13px;">
-            Зар одоогоор нийтэд харагдахгүй.
-            Төлбөр болон админы хяналтын ажиллагааг
-            дараагийн хэсгүүдэд холбоно.
-          </div>
+          ${
+            imageWarning
+              ? `<div class="nx-create-message">${escapeHTML(imageWarning)}</div>`
+              : ""
+          }
 
           <button type="button"
             class="nx-create-submit"
             data-nx-create-finish>
             ЗАРЫН ЖАГСААЛТ РУУ БУЦАХ
           </button>
+
         </div>
       `;
 
@@ -2530,6 +2647,7 @@
     }
   }
 
+      
   content.addEventListener("click", function (event) {
     if (event.target.closest("#nx-create-ad-open")) {
       showCreateForm();
@@ -2548,6 +2666,55 @@
         window.NEXORA_AD_RELOAD();
       }
     }
+  });
+
+  content.addEventListener("change", function (event) {
+    if (event.target.id !== "nx-ad-images") {
+      return;
+    }
+
+    const files = Array.from(event.target.files || []);
+    const preview = document.getElementById("nx-ad-image-preview");
+
+    if (!preview) return;
+
+    preview.innerHTML = "";
+
+    if (files.length > 6) {
+      showMessage("6 хүртэл зураг сонгоно уу.", false);
+      event.target.value = "";
+      return;
+    }
+
+    for (const file of files) {
+      if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+        showMessage("Зөвхөн JPG, PNG, WEBP зураг оруулна уу.", false);
+        event.target.value = "";
+        preview.innerHTML = "";
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        showMessage("Нэг зураг 5MB-аас хэтрэх ёсгүй.", false);
+        event.target.value = "";
+        preview.innerHTML = "";
+        return;
+      }
+    }
+
+    files.forEach(function (file) {
+      const image = document.createElement("img");
+
+      image.src = URL.createObjectURL(file);
+      image.alt = "Зарын зураг";
+
+      image.style.width = "100%";
+      image.style.aspectRatio = "1 / 1";
+      image.style.objectFit = "cover";
+      image.style.borderRadius = "10px";
+
+      preview.appendChild(image);
+    });
   });
 
   content.addEventListener("submit", function (event) {
