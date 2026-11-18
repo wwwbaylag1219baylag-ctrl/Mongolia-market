@@ -1484,6 +1484,12 @@
   let currentCategory = null;
   let currentSubcategory = null;
   let currentGroup = null;
+  let createMode = false;
+
+  function createToggleButton() {
+    return '<button type="button" class="nx-create-toggle" data-nx-create-toggle>' +
+      (createMode ? '⌄ ХУМИХ' : '+ ЗАР НИЙТЛЭХ') + '</button>';
+  }
 
   function backButton() {
     return `
@@ -1499,9 +1505,12 @@
 
     content.innerHTML = `
       <div class="nx-full-screen">
-        <div class="nx-screen-title">ЗАРЫН ПЛАТФОРМ</div>
+        <div class="nx-category-heading">
+          <div class="nx-screen-title">ЗАРЫН ПЛАТФОРМ</div>
+          ${createToggleButton()}
+        </div>
         <div class="nx-screen-subtitle">
-          Зар хайх эсвэл зар оруулах үндсэн ангиллаа сонгоно уу.
+          ${createMode ? 'Зар нийтлэх ангиллаа сонгоно уу.' : 'Зар хайх эсвэл зар оруулах үндсэн ангиллаа сонгоно уу.'}
         </div>
 
         <div class="nexora-ad-grid">
@@ -1531,7 +1540,10 @@
     content.innerHTML = `
       <div class="nx-full-screen">
         ${backButton()}
-        <div class="nx-screen-title">${category.icon} ${category.name}</div>
+        <div class="nx-category-heading">
+          <div class="nx-screen-title">${category.icon} ${category.name}</div>
+          ${createMode ? createToggleButton() : ''}
+        </div>
         <div class="nx-screen-subtitle">
           Дэд ангиллын таб дээр дарж дэлгэж, дахин дарж хумина уу.
         </div>
@@ -1573,7 +1585,10 @@
     content.innerHTML = `
       <div class="nx-full-screen">
         ${backButton()}
-        <div class="nx-screen-title">${group}</div>
+        <div class="nx-category-heading">
+          <div class="nx-screen-title">${group}</div>
+          ${createMode ? createToggleButton() : ''}
+        </div>
 
         <div class="nx-screen-subtitle">
           Доорх дэд ангиллаас сонгоно уу.
@@ -1603,6 +1618,15 @@
       subcategory: item
     };
 
+    if (createMode) {
+      if (typeof window.NEXORA_SHOW_CREATE_AD === "function") {
+        window.NEXORA_SHOW_CREATE_AD();
+      } else {
+        content.innerHTML = '<div class="nx-list-message">Зарын маягт ачаалж байна...</div>';
+      }
+      return;
+    }
+
     // Сонгосон дэд ангиллыг бодит зарын жагсаалттай холбоно.
     if (typeof window.NEXORA_AD_RELOAD === "function") {
       window.NEXORA_AD_RELOAD();
@@ -1618,6 +1642,17 @@
   }
 
   content.addEventListener("click", function (event) {
+    const createToggle = event.target.closest("[data-nx-create-toggle]");
+    if (createToggle) {
+      createMode = !createMode;
+      currentCategory = null;
+      currentGroup = null;
+      currentSubcategory = null;
+      if (!createMode) window.NEXORA_AD_SELECTION = null;
+      showCategoryList();
+      return;
+    }
+
     const back = event.target.closest("[data-nx-back]");
 
     if (back) {
@@ -2230,6 +2265,10 @@
 </script>
 
 <style>
+.nx-category-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.nx-category-heading .nx-screen-title{margin:5px 0 9px;min-width:0}
+.nx-create-toggle{flex:0 0 auto;padding:10px 13px;border:1px solid #d6ad55;border-radius:10px;background:#d6ad55;color:#101010;font-size:12px;font-weight:900;white-space:nowrap;cursor:pointer;box-shadow:0 3px 12px rgba(214,173,85,.2)}
+.nx-create-collapse{display:flex;justify-content:center;align-items:center;width:100%;padding:11px;margin:0 0 12px;border:1px solid #d6ad55;border-radius:10px;background:#191919;color:#d6ad55;font-weight:800;cursor:pointer}
 .nx-create-screen {
   min-height: calc(100vh - 80px);
   width: 100%;
@@ -2426,6 +2465,8 @@
     const data = values || pendingAd || {};
     content.innerHTML = `
       <div class="nx-create-screen">
+        <button class="nx-create-collapse" type="button"
+          data-nx-create-collapse>⌄ ХУМИХ</button>
         <button class="nx-create-back" type="button"
           data-nx-create-back>‹ Буцах</button>
 
@@ -2850,6 +2891,27 @@
 
   content.addEventListener("click", async function (event) {
     const target = event.target;
+
+    if (target.closest("[data-nx-create-collapse]")) {
+      const form = document.getElementById("nx-create-ad-form");
+      if (form) {
+        const values = new FormData(form);
+        pendingAd = {
+          title: String(values.get("title") || ""),
+          priceText: String(values.get("price") || ""),
+          description: String(values.get("description") || ""),
+          phone: String(values.get("phone") || ""),
+          files: Array.from(document.getElementById("nx-ad-images")?.files || [])
+        };
+      }
+      const toggle = document.querySelector("[data-nx-create-toggle]");
+      if (toggle) toggle.click();
+      else {
+        const adsContent = document.querySelector("#ads .page-content");
+        if (adsContent) adsContent.innerHTML = '<div class="nx-list-message">Маягтыг хумив.</div>';
+      }
+      return;
+    }
 
     if (target.closest("#nx-create-ad-open")) {
       pendingAd = null;
