@@ -2429,27 +2429,54 @@
   function loadLeaflet() {
     if (window.L) return Promise.resolve();
     if (mapLeafletPromise) return mapLeafletPromise;
-    mapLeafletPromise = new Promise((resolve, reject) => {
-      if (!document.querySelector('link[data-nx-leaflet]')) {
+
+    // Leaflet-ийн CSS-ийг хоёр CDN-ээс зэрэг ачаална.
+    [
+      "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css",
+      "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    ].forEach((href, index) => {
+      if (!document.querySelector('link[data-nx-leaflet-css="' + index + '"]')) {
         const link = document.createElement("link");
         link.rel = "stylesheet";
-        link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-        link.dataset.nxLeaflet = "1";
+        link.href = href;
+        link.dataset.nxLeafletCss = String(index);
         document.head.appendChild(link);
       }
-      let script = document.querySelector('script[data-nx-leaflet]');
-      if (script) {
-        script.addEventListener("load", resolve, { once: true });
-        script.addEventListener("error", reject, { once: true });
-      } else {
-        script = document.createElement("script");
-        script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
-        script.dataset.nxLeaflet = "1";
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
-      }
     });
+
+    mapLeafletPromise = new Promise((resolve, reject) => {
+      const sources = [
+        "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js",
+        "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      ];
+      let index = 0;
+
+      const tryNextSource = () => {
+        if (window.L) { resolve(); return; }
+        if (index >= sources.length) {
+          reject(new Error("Leaflet CDN sources unavailable"));
+          return;
+        }
+
+        const script = document.createElement("script");
+        script.src = sources[index++];
+        script.dataset.nxLeaflet = "1";
+        script.onload = () => window.L
+          ? resolve()
+          : tryNextSource();
+        script.onerror = () => {
+          script.remove();
+          tryNextSource();
+        };
+        document.head.appendChild(script);
+      };
+
+      tryNextSource();
+    }).catch(error => {
+      mapLeafletPromise = null;
+      throw error;
+    });
+
     return mapLeafletPromise;
   }
 
