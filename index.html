@@ -2589,7 +2589,10 @@
 
     try {
       await loadLeaflet();
-      const map = window.L.map(overlay.querySelector("#nx-full-map")).setView([lat, lng], hasValidCoordinates ? 15 : 12);
+      // Байршил сонгоогүй үед газрын зургийг Монгол Улсын төвд нээнэ.
+      const initialCenter = hasValidCoordinates ? [lat, lng] : [46.8625, 103.8467];
+      const initialZoom = hasValidCoordinates ? 15 : 5;
+      const map = window.L.map(overlay.querySelector("#nx-full-map")).setView(initialCenter, initialZoom);
       window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
