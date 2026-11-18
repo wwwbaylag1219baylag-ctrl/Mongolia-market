@@ -3600,7 +3600,25 @@
     }
     const {data:pending,error}=await db.from("nexora_store_payments").select("id,status,amount,created_at").eq("store_id",storeRes.data.id).eq("status","pending").order("created_at",{ascending:false}).limit(1).maybeSingle();
     if(error){host.innerHTML='<p>Төлбөрийн хүсэлт шалгахад алдаа: '+esc(error.message)+'</p>';return;}
-    if(pending){host.innerHTML='<button class="nx-market-btn secondary" id="nx-store-back">‹ Буцах</button><h2 class="nexora-ad-heading">'+esc(storeRes.data.store_name)+'</h2><p class="nx-market-muted">Төлбөрийн хүсэлт хяналтад байна.</p><p class="nx-market-price">'+money(pending.amount)+'</p><p class="nx-market-muted">Илгээсэн: '+esc(new Date(pending.created_at).toLocaleString("mn-MN"))+'</p>';document.getElementById("nx-store-back").onclick=loadProducts;return;}
+    if(pending){
+      host.innerHTML=`<button class="nx-market-btn secondary" id="nx-store-back">‹ Буцах</button>
+        <h2 class="nexora-ad-heading">ДЭЛГҮҮРИЙН МЭДЭЭЛЭЛ</h2>
+        <p class="nx-market-muted">Төлбөрийн хүсэлт хяналтад байна · ${money(pending.amount)} · ${esc(new Date(pending.created_at).toLocaleString("mn-MN"))}</p>
+        <form id="nx-store-edit-form">
+          <label>Дэлгүүрийн нэр *</label><input class="nx-market-input" name="store_name" required maxlength="100" value="${esc(storeRes.data.store_name)}">
+          <label>Эзэмшигчийн төрөл</label><select class="nx-market-select" name="owner_type"><option value="individual" ${storeRes.data.owner_type==="individual"?"selected":""}>Хувь хүн</option><option value="company" ${storeRes.data.owner_type==="company"?"selected":""}>Компани</option></select>
+          <label>Утас</label><input class="nx-market-input" name="phone" type="tel" value="${esc(storeRes.data.phone||"")}">
+          <button class="nx-market-btn" type="submit">Мэдээлэл хадгалах</button>
+        </form><p id="nx-store-edit-msg" class="nx-market-muted"></p>`;
+      document.getElementById("nx-store-back").onclick=loadProducts;
+      document.getElementById("nx-store-edit-form").onsubmit=async e=>{
+        e.preventDefault();const v=Object.fromEntries(new FormData(e.currentTarget).entries());
+        const {error}=await db.from("nexora_store_profiles").update({store_name:v.store_name.trim(),owner_type:v.owner_type,phone:v.phone.trim()}).eq("id",storeRes.data.id).eq("user_id",marketUser.id);
+        if(error){document.getElementById("nx-store-edit-msg").textContent="Хадгалахад алдаа: "+error.message;return;}
+        document.getElementById("nx-store-edit-msg").textContent="Дэлгүүрийн мэдээлэл амжилттай шинэчлэгдлээ.";
+      };
+      return;
+    }
     const [subRes,notificationsRes]=await Promise.all([
       db.from("nexora_subscriptions").select("id,status,starts_at,expires_at").eq("store_id",storeRes.data.id).eq("status","active").order("expires_at",{ascending:false}).limit(1).maybeSingle(),
       db.from("nexora_store_notifications").select("id,title,message,created_at,read_at,email_sent_at").eq("store_id",storeRes.data.id).order("created_at",{ascending:false}).limit(10)
