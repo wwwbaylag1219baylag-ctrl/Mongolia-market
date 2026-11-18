@@ -3662,8 +3662,20 @@
     document.getElementById("nx-supplier-form").onsubmit=async e=>{e.preventDefault();const v=Object.fromEntries(new FormData(e.currentTarget).entries());const {error}=await db.from("market_suppliers").insert({owner_id:user.id,name:v.name.trim(),type:v.type,register_no:v.register_no.trim(),phone:v.phone.trim(),email:v.email.trim(),address:v.address.trim(),status:"pending"});if(error){document.getElementById("nx-supplier-msg").textContent="Алдаа: "+error.message;return;}host.innerHTML='<h2 class="nexora-ad-heading">ХҮСЭЛТ ИЛГЭЭГДЛЭЭ</h2><p class="nx-market-muted">Нийлүүлэгчийн хүсэлт админы хяналтад орлоо.</p><button class="nx-market-btn" id="nx-supplier-back">Буцах</button>';document.getElementById("nx-supplier-back").onclick=loadProducts;};
   }
   async function showPublish(){
-    const {data}=await db.auth.getUser();marketUser=data.user;
-    if(!marketUser){host.innerHTML='<button class="nx-market-btn secondary" id="nx-market-back">‹ Буцах</button><h2>Нэвтэрч орно уу</h2><p class="nx-market-muted">Бараа нийтлэхийн тулд нэвтэрнэ.</p>';document.getElementById("nx-market-back").onclick=loadProducts;return;}
+    const {data:authData,error:authError}=await db.auth.getUser();marketUser=authData?.user;
+    if(authError||!marketUser){host.innerHTML='<button class="nx-market-btn secondary" id="nx-market-back">‹ Буцах</button><h2>Нэвтэрч орно уу</h2><p class="nx-market-muted">Бараа нийтлэхийн тулд нэвтэрнэ.</p>';document.getElementById("nx-market-back").onclick=loadProducts;return;}
+    const {data:store,error:storeError}=await db.from("nexora_store_profiles").select("id,store_name").eq("user_id",marketUser.id).maybeSingle();
+    if(storeError){host.innerHTML='<button class="nx-market-btn secondary" id="nx-market-back">‹ Буцах</button><p class="nx-market-muted">Дэлгүүрийн мэдээлэл шалгахад алдаа гарлаа: '+esc(storeError.message)+'</p>';document.getElementById("nx-market-back").onclick=loadProducts;return;}
+    if(!store){
+      host.innerHTML='<button class="nx-market-btn secondary" id="nx-market-back">‹ Буцах</button><h2 class="nexora-ad-heading">ДЭЛГҮҮР НЭЭХ ШААРДЛАГАТАЙ</h2><p class="nx-market-muted">Бараа нийтлэхийн тулд эхлээд өөрийн дэлгүүрийг нээж, эрхээ идэвхжүүлнэ үү.</p><button class="nx-market-btn" id="nx-market-open-store">Дэлгүүр нээх</button>';
+      document.getElementById("nx-market-back").onclick=loadProducts;document.getElementById("nx-market-open-store").onclick=showStore;return;
+    }
+    const {data:activeStore,error:subscriptionError}=await db.from("nexora_subscriptions").select("id").eq("store_id",store.id).eq("user_id",marketUser.id).eq("status","active").gt("expires_at",new Date().toISOString()).order("expires_at",{ascending:false}).limit(1).maybeSingle();
+    if(subscriptionError){host.innerHTML='<button class="nx-market-btn secondary" id="nx-market-back">‹ Буцах</button><p class="nx-market-muted">Дэлгүүрийн эрх шалгахад алдаа гарлаа: '+esc(subscriptionError.message)+'</p>';document.getElementById("nx-market-back").onclick=loadProducts;return;}
+    if(!activeStore){
+      host.innerHTML='<button class="nx-market-btn secondary" id="nx-market-back">‹ Буцах</button><h2 class="nexora-ad-heading">ДЭЛГҮҮРИЙН ЭРХ ИДЭВХГҮЙ</h2><p class="nx-market-muted">Бараа нийтлэхийн тулд дэлгүүрийн эрхээ нээлгэж, идэвхжүүлнэ үү.</p><button class="nx-market-btn" id="nx-market-open-store">Дэлгүүрийн эрх нээх</button>';
+      document.getElementById("nx-market-back").onclick=loadProducts;document.getElementById("nx-market-open-store").onclick=showStore;return;
+    }
     host.innerHTML=`<button class="nx-market-btn secondary" id="nx-market-back">‹ Буцах</button><h2 class="nexora-ad-heading">БАРАА НИЙТЛЭХ</h2>
       <form id="nx-market-form">
       <label>Барааны нэр *</label><input class="nx-market-input" name="title" required maxlength="120">
@@ -3693,9 +3705,11 @@
       const {error:uploadError}=await db.storage.from("classified-images").upload(path,file,{cacheControl:"3600",upsert:false,contentType:file.type});
       if(uploadError){msg.textContent="Зураг оруулахад алдаа: "+uploadError.message;btn.disabled=false;return;}
       const {data:publicData}=db.storage.from("classified-images").getPublicUrl(path);
-      const {error}=await db.from("market_products").insert({owner_id:marketUser.id,title:v.title.trim(),category:v.category.trim(),price:Number(v.price),description:v.description.trim(),phone:v.phone.trim(),location:v.location.trim(),image_url:publicData.publicUrl,status:"pending"});
+      const {data:stillActive,error:checkError}=await db.from("nexora_subscriptions").select("id").eq("store_id",store.id).eq("user_id",marketUser.id).eq("status","active").gt("expires_at",new Date().toISOString()).limit(1).maybeSingle();
+      if(checkError||!stillActive){await db.storage.from("classified-images").remove([path]);msg.textContent=checkError?"Дэлгүүрийн эрхийг шалгаж чадсангүй: "+checkError.message:"Дэлгүүрийн эрх идэвхгүй болсон байна. Эхлээд эрхээ сунгана уу.";btn.disabled=false;return;}
+      const {error}=await db.from("market_products").insert({owner_id:marketUser.id,title:v.title.trim(),category:v.category.trim(),price:Number(v.price),description:v.description.trim(),phone:v.phone.trim(),location:v.location.trim(),image_url:publicData.publicUrl,status:"active"});
       if(error){await db.storage.from("classified-images").remove([path]);msg.textContent="Алдаа: "+error.message;btn.disabled=false;return;}
-      host.innerHTML='<h2 class="nexora-ad-heading">ХҮСЭЛТ ИЛГЭЭГДЛЭЭ</h2><p class="nx-market-muted">Зурагтай барааны хүсэлт админы хяналтад орлоо. Батлагдсаны дараа нийтэд харагдана.</p><button class="nx-market-btn" id="nx-market-back">Бараа үзэх</button>';
+      host.innerHTML='<h2 class="nexora-ad-heading">БАРАА НИЙТЛЭГДЛЭЭ</h2><p class="nx-market-muted">Таны бараа дэлгүүрт шууд нийтлэгдлээ.</p><button class="nx-market-btn" id="nx-market-back">Бараа үзэх</button>';
       document.getElementById("nx-market-back").onclick=loadProducts;
     };
   }
