@@ -3595,18 +3595,7 @@
       card.addEventListener("click",e=>{if(e.target.closest("button")||e.target.closest("img"))return;const btn=card.querySelector("[data-product-detail]");if(btn)showProductDetail(btn.dataset.productDetail);});
     });
     host.querySelectorAll("[data-product-image]").forEach(img=>img.addEventListener("click",()=>{
-      const product=products.find(p=>String(p.id)===img.dataset.productImage);
-      if(!product||!product._displayImageUrl)return;
-      const overlay=document.createElement("div");
-      overlay.id="nx-product-image-viewer";
-      overlay.style.cssText="position:fixed;inset:0;z-index:2147483000;background:rgba(0,0,0,.96);display:flex;align-items:center;justify-content:center;padding:18px";
-      overlay.innerHTML='<button type="button" aria-label="Хаах" style="position:absolute;top:16px;right:16px;width:44px;height:44px;border:1px solid #d6ad55;border-radius:50%;background:#171717;color:#d6ad55;font-size:28px;z-index:2">×</button><img src="'+esc(product._displayImageUrl)+'" alt="'+esc(product.title)+'" style="max-width:100%;max-height:100%;object-fit:contain">';
-      const close=()=>{overlay.remove();document.removeEventListener("keydown",onKey);};
-      const onKey=e=>{if(e.key==="Escape")close();};
-      overlay.addEventListener("click",close);
-      overlay.querySelector("img").addEventListener("click",e=>e.stopPropagation());
-      document.addEventListener("keydown",onKey);
-      document.body.appendChild(overlay);
+      showProductDetail(img.dataset.productImage);
     }));
     document.getElementById("nx-market-search").addEventListener("input",e=>{searchText=e.target.value;const pos=e.target.selectionStart;render();const el=document.getElementById("nx-market-search");el.focus();el.setSelectionRange(pos,pos);});
     document.getElementById("nx-market-publish").onclick=showPublish;
