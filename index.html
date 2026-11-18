@@ -1936,10 +1936,6 @@
           <div class="nx-list-message">Заруудыг ачаалж байна...</div>
         </div>
 
-        <button type="button" class="nx-refresh-button"
-          id="nx-ad-refresh">
-          Дахин ачаалах
-        </button>
       </div>
     `;
 
@@ -2194,14 +2190,6 @@
       showListings();
       return;
     }
-
-    const refresh = event.target.closest("#nx-ad-refresh");
-
-    if (refresh) {
-      loadAds();
-      return;
-    }
-
     const card = event.target.closest("[data-nx-ad-index]");
 
     if (card) {
