@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>document.documentElement.classList.add("nx-theme-pending");window.setTimeout(()=>document.documentElement.classList.remove("nx-theme-pending"),4000);</script>
   <meta name="theme-color" content="#090909">
 
   <title>NEXORA | Mongolia Marketplace</title>
@@ -331,7 +332,8 @@
   .nx-help-group>summary:after{font-size:25px}
 }
 
-</style>
+html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:hidden}
+  </style>
 </head>
 
 <body>
@@ -4104,7 +4106,7 @@
 (function(){
   const url="https://grbpbmowhkbtuxostfny.supabase.co";
   const key="sb_publishable_wspX-C4VBPJMmvWuQgsMTw_h40w8O3x";
-  if(!window.supabase?.createClient)return;
+  if(!window.supabase?.createClient){document.documentElement.classList.remove("nx-theme-pending");return;}
   const db=window.supabase.createClient(url,key);
   function apply(config){
     const t={background:"#090909",panel:"#171717",text:"#f7f5ef",accent:"#d6ad55",button:"#d6ad55",button_text:"#090909",...(config||{})};
@@ -4167,7 +4169,8 @@
   }
   db.from("nexora_settings").select("admin_theme_config").eq("id",1).single()
     .then(({data,error})=>{if(!error&&data?.admin_theme_config)apply(data.admin_theme_config);})
-    .catch(err=>console.warn("NEXORA theme load:",err));
+    .catch(err=>console.warn("NEXORA theme load:",err))
+    .finally(()=>document.documentElement.classList.remove("nx-theme-pending"));
 })();
 </script>
 
