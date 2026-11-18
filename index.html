@@ -1311,36 +1311,13 @@
     },
 
     3: {
-      "Бүтэн цагийн ажил": [
-        "Борлуулалт",
-        "Үйлчилгээ",
-        "Оффисын ажил",
-        "Үйлдвэрлэл",
-        "Барилга",
-        "Тээвэр"
-      ],
-      "Цагийн ажил": [
-        "Өдрийн ажил",
-        "Оройн ажил",
-        "Амралтын өдрийн ажил"
-      ],
-      "Зайнаас ажиллах": [
-        "Онлайн ажил",
-        "Гэрээс ажиллах",
-        "Цахим үйлчилгээ"
-      ],
-      "Мэргэжлийн ажил": [
-        "Инженер",
-        "Нягтлан бодогч",
-        "Багш",
-        "Эмч",
-        "Мэдээллийн технологи"
-      ],
-      "Ажил хайж байна": [
-        "Бүтэн цагийн ажил хайж байна",
-        "Цагийн ажил хайж байна",
-        "Зайнаас ажил хайж байна"
-      ]
+      "Барилга,зам": [],
+      "Уул уурхай": [],
+      "Үйлдвэрлэл": [],
+      "Боловсрол,Шинжлэх ухаан": [],
+      "Хүнс,Хөдөө аж ахуй": [],
+      "Эрүүл мэнд": [],
+      "Аялал,жуучлал": []
     },
 
     4: {
@@ -1542,6 +1519,27 @@
 
     const groups = subcategories[category.number] || {};
 
+    if (category.number === 3) {
+      const jobFields = Object.keys(groups);
+      content.innerHTML = `
+        <div class="nx-full-screen">
+          ${backButton()}
+          <div class="nx-category-heading">
+            <div class="nx-screen-title">${category.icon} ${category.name}</div>
+          </div>
+          <div class="nx-screen-subtitle">Ажлын чиглэлээ сонгоно уу.</div>
+          <div class="nx-subcategory-list">
+            ${jobFields.map((field, index) => `
+              <button type="button" class="nx-subcategory-item" data-nx-job-field="${index}">
+                <span>${field}</span><span>›</span>
+              </button>
+            `).join("")}
+          </div>
+        </div>
+      `;
+      return;
+    }
+
     content.innerHTML = `
       <div class="nx-full-screen">
         ${backButton()}
@@ -1683,6 +1681,14 @@
       return;
     }
 
+    const jobFieldButton = event.target.closest("[data-nx-job-field]");
+    if (jobFieldButton && currentCategory?.number === 3) {
+      const fields = Object.keys(subcategories[3] || {});
+      const field = fields[Number(jobFieldButton.dataset.nxJobField)];
+      if (field) showListingPlaceholder(field);
+      return;
+    }
+
     const groupButton = event.target.closest("[data-nx-group]");
 
     if (groupButton) {
@@ -1731,7 +1737,8 @@
   window.NEXORA_AD_BACK = function () {
     if (currentSubcategory) {
       currentSubcategory = null;
-      showSubcategoryItems(currentGroup);
+      if (currentCategory?.number === 3 && !currentGroup) showSubcategories(currentCategory);
+      else showSubcategoryItems(currentGroup);
     } else if (currentGroup) {
       currentGroup = null;
       showSubcategories(currentCategory);
