@@ -2154,8 +2154,8 @@
 
           <div style="margin:18px 0;padding:12px;border:1px solid rgba(214,173,85,.35);border-radius:14px;background:#111;">
             <div style="font-weight:800;color:#d6ad55;margin-bottom:9px;">БАЙРШИЛ</div>
-            <button type="button" id="nx-ad-map-preview" style="display:block;width:100%;height:112px;border:1px solid #555;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,#252525,#111);color:#d6ad55;font-weight:700;">
-              ${ad.latitude && ad.longitude ? "⌖ Газрын зураг харах · ДАРЖ НЭЭХ" : "Байршил оруулаагүй"}
+            <button type="button" id="nx-ad-map-preview" style="position:relative;display:block;width:100%;height:112px;border:1px solid #555;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,#252525,#111);color:#d6ad55;font-weight:700;">
+              ${ad.latitude && ad.longitude ? `<iframe title="Зарын байршлын зураг" aria-hidden="true" tabindex="-1" style="position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none;opacity:.88;" src="https://www.openstreetmap.org/export/embed.html?bbox=${Number(ad.longitude)-0.006}%2C${Number(ad.latitude)-0.004}%2C${Number(ad.longitude)+0.006}%2C${Number(ad.latitude)+0.004}&layer=mapnik&marker=${Number(ad.latitude)}%2C${Number(ad.longitude)}"></iframe><span style="position:absolute;left:0;right:0;bottom:0;padding:9px;background:rgba(0,0,0,.72);color:#f2d38b;">⌖ Газрын зураг харах · ДАРЖ НЭЭХ</span>` : "Байршил оруулаагүй"}
             </button>
             ${ad.latitude && ad.longitude ? '<div style="font-size:11px;color:#888;margin-top:7px;">Газрын зургийг бүтэн дэлгэцээр нээхийн тулд дарна уу</div>' : ""}
           </div>
