@@ -3470,10 +3470,12 @@
 
 <style>
 #market-app,#nexora-admin-app{padding:16px 14px 32px;min-height:calc(100vh - 90px);color:#f7f5ef}
-.nx-market-toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0}
+.nx-market-toolbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:14px 0}
 .nx-market-input,.nx-market-select,.nx-market-textarea{width:100%;padding:13px;border:1px solid rgba(214,173,85,.4);border-radius:10px;background:#171717;color:#f7f5ef;margin:7px 0 13px}
-.nx-market-btn{padding:12px 15px;border:1px solid #d6ad55;border-radius:10px;background:#d6ad55;color:#090909;font-weight:700}
+.nx-market-btn{box-sizing:border-box;min-width:0;min-height:48px;padding:10px 12px;display:inline-flex;align-items:center;justify-content:center;text-align:center;white-space:normal;line-height:1.25;border:1px solid #d6ad55;border-radius:10px;background:#d6ad55;color:#090909;font-size:14px;font-weight:700}
+.nx-market-toolbar .nx-market-btn{width:100%;height:56px}
 .nx-market-btn.secondary{background:#191919;color:#d6ad55}
+@media(min-width:700px){.nx-market-toolbar{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .nx-market-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
 .nx-market-card,.nx-admin-card{padding:14px;border:1px solid rgba(214,173,85,.3);border-radius:13px;background:#171717;margin:10px 0;min-width:0}
 .nx-market-card h3,.nx-admin-card h3{font-size:15px;margin:7px 0;color:#f7f5ef;overflow-wrap:anywhere}
