@@ -1734,6 +1734,15 @@
     }
   };
 
+  window.NEXORA_COLLAPSE_CREATE = function () {
+    createMode = false;
+    currentCategory = null;
+    currentGroup = null;
+    currentSubcategory = null;
+    window.NEXORA_AD_SELECTION = null;
+    showCategoryList();
+  };
+
 })();
 </script>
 
@@ -2904,11 +2913,8 @@
           files: Array.from(document.getElementById("nx-ad-images")?.files || [])
         };
       }
-      const toggle = document.querySelector("[data-nx-create-toggle]");
-      if (toggle) toggle.click();
-      else {
-        const adsContent = document.querySelector("#ads .page-content");
-        if (adsContent) adsContent.innerHTML = '<div class="nx-list-message">Маягтыг хумив.</div>';
+      if (typeof window.NEXORA_COLLAPSE_CREATE === "function") {
+        window.NEXORA_COLLAPSE_CREATE();
       }
       return;
     }
