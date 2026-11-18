@@ -2149,5 +2149,428 @@
 })();
 </script>
 
+<style>
+.nx-create-screen {
+  min-height: calc(100vh - 80px);
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px;
+  background: #101010;
+  color: #f7f5ef;
+}
+
+.nx-create-title {
+  color: #d6ad55;
+  font-size: 23px;
+  font-weight: 800;
+  margin: 12px 0;
+}
+
+.nx-create-label {
+  display: block;
+  margin: 16px 0 7px;
+  color: #d6ad55;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.nx-create-input,
+.nx-create-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px;
+  border: 1px solid rgba(214,173,85,.4);
+  border-radius: 11px;
+  background: #191919;
+  color: #fff;
+  font-size: 15px;
+  outline: none;
+}
+
+.nx-create-input:focus,
+.nx-create-textarea:focus {
+  border-color: #d6ad55;
+}
+
+.nx-create-textarea {
+  min-height: 130px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.nx-create-category {
+  padding: 14px;
+  margin: 14px 0;
+  border: 1px solid rgba(214,173,85,.4);
+  border-radius: 11px;
+  background: #191919;
+  color: #aaa39a;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.nx-create-submit {
+  width: 100%;
+  padding: 16px;
+  margin-top: 22px;
+  border: 0;
+  border-radius: 12px;
+  background: #d6ad55;
+  color: #101010;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.nx-create-submit:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.nx-create-back {
+  border: 0;
+  background: transparent;
+  color: #d6ad55;
+  font-size: 17px;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.nx-create-message {
+  display: none;
+  margin-top: 15px;
+  padding: 13px;
+  border: 1px solid rgba(214,173,85,.4);
+  border-radius: 10px;
+  color: #f7f5ef;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.nx-create-open {
+  width: 100%;
+  padding: 15px;
+  margin: 0 0 15px;
+  border: 1px solid #d6ad55;
+  border-radius: 12px;
+  background: #211d14;
+  color: #d6ad55;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+}
+</style>
+
+<script>
+(function () {
+  const screen = document.getElementById("ads");
+  if (!screen) return;
+
+  const content = screen.querySelector(".page-content");
+  if (!content) return;
+
+  const db = window.NEXORA_SUPABASE;
+
+  function escapeHTML(value) {
+    return String(value == null ? "" : value).replace(/[&<>"']/g, function (c) {
+      return {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[c];
+    });
+  }
+
+  function getSelection() {
+    return window.NEXORA_AD_SELECTION || null;
+  }
+
+  function showMessage(message, success) {
+    const box = document.getElementById("nx-create-message");
+    if (!box) return;
+
+    box.style.display = "block";
+    box.style.color = success ? "#b9e9a5" : "#ff9999";
+    box.textContent = message;
+  }
+
+  function addCreateButton() {
+    const results = document.getElementById("nx-ad-results");
+    if (!results) return;
+
+    if (document.getElementById("nx-create-ad-open")) return;
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.id = "nx-create-ad-open";
+    button.className = "nx-create-open";
+    button.textContent = "+ Шинэ зар нийтлүүлэх";
+
+    results.parentNode.insertBefore(button, results);
+  }
+
+  function showCreateForm() {
+    const selection = getSelection();
+
+    if (!selection) {
+      alert("Эхлээд зарын ангилал сонгоно уу.");
+      return;
+    }
+
+    content.innerHTML = `
+      <div class="nx-create-screen">
+
+        <button type="button"
+          class="nx-create-back"
+          data-nx-create-back>
+          ‹ Буцах
+        </button>
+
+        <div class="nx-create-title">
+          ШИНЭ ЗАР НИЙТЛҮҮЛЭХ
+        </div>
+
+        <div class="nx-create-category">
+          <strong>Үндсэн ангилал:</strong>
+          ${escapeHTML(selection.category)}
+          <br>
+          <strong>Дэд ангилал:</strong>
+          ${escapeHTML(selection.subcategory)}
+        </div>
+
+        <form id="nx-create-ad-form">
+
+          <label class="nx-create-label" for="nx-ad-title">
+            Зарын гарчиг *
+          </label>
+
+          <input
+            class="nx-create-input"
+            id="nx-ad-title"
+            name="title"
+            type="text"
+            maxlength="150"
+            placeholder="Жишээ: 3 өрөө байр зарна"
+            required
+          >
+
+          <label class="nx-create-label" for="nx-ad-price">
+            Үнэ (₮)
+          </label>
+
+          <input
+            class="nx-create-input"
+            id="nx-ad-price"
+            name="price"
+            type="number"
+            min="0"
+            step="1"
+            placeholder="Үнийг оруулна уу"
+          >
+
+          <label class="nx-create-label" for="nx-ad-description">
+            Дэлгэрэнгүй тайлбар *
+          </label>
+
+          <textarea
+            class="nx-create-textarea"
+            id="nx-ad-description"
+            name="description"
+            maxlength="10000"
+            placeholder="Зарынхаа дэлгэрэнгүй мэдээллийг бичнэ үү"
+            required
+          ></textarea>
+
+          <label class="nx-create-label" for="nx-ad-phone">
+            Холбоо барих утас *
+          </label>
+
+          <input
+            class="nx-create-input"
+            id="nx-ad-phone"
+            name="phone"
+            type="tel"
+            maxlength="30"
+            placeholder="Утасны дугаар"
+            required
+          >
+
+          <div id="nx-create-message"
+            class="nx-create-message"
+            role="status">
+          </div>
+
+          <button
+            type="submit"
+            id="nx-create-submit"
+            class="nx-create-submit">
+            ЗАР НИЙТЛҮҮЛЭХ
+          </button>
+
+        </form>
+      </div>
+    `;
+  }
+
+  async function saveAd(event) {
+    event.preventDefault();
+
+    const form = event.target;
+    const submit = document.getElementById("nx-create-submit");
+
+    if (!db) {
+      showMessage("Supabase холболт олдсонгүй. 4-р хэсгийг шалгана уу.", false);
+      return;
+    }
+
+    const selection = getSelection();
+
+    if (!selection) {
+      showMessage("Зарын ангилал олдсонгүй. Дахин сонгоно уу.", false);
+      return;
+    }
+
+    const formData = new FormData(form);
+
+    const title = String(formData.get("title") || "").trim();
+    const description = String(formData.get("description") || "").trim();
+    const phone = String(formData.get("phone") || "").trim();
+    const priceText = String(formData.get("price") || "").trim();
+
+    if (!title || !description || !phone) {
+      showMessage("Одтой талбаруудыг бүрэн бөглөнө үү.", false);
+      return;
+    }
+
+    let price = null;
+
+    if (priceText !== "") {
+      price = Number(priceText);
+
+      if (!Number.isFinite(price) || price < 0) {
+        showMessage("Үнийг зөв оруулна уу.", false);
+        return;
+      }
+    }
+
+    submit.disabled = true;
+    submit.textContent = "ХАДГАЛЖ БАЙНА...";
+
+    try {
+      const sessionResult = await db.auth.getSession();
+
+      if (sessionResult.error) {
+        throw sessionResult.error;
+      }
+
+      const user = sessionResult.data.session?.user;
+
+      if (!user) {
+        throw new Error("Зар нийтлүүлэхийн тулд эхлээд нэвтэрнэ үү.");
+      }
+
+      const insertResult = await db
+        .from("classified_ads")
+        .insert({
+          owner_id: user.id,
+          title: title,
+          category: selection.category,
+          subcategory: selection.subcategory,
+          description: description,
+          price: price,
+          phone: phone,
+          status: "pending_payment"
+        })
+        .select("id")
+        .single();
+
+      if (insertResult.error) {
+        throw insertResult.error;
+      }
+
+      content.innerHTML = `
+        <div class="nx-create-screen">
+          <div class="nx-create-title">
+            ЗАР АМЖИЛТТАЙ ХАДГАЛАГДЛАА
+          </div>
+
+          <div class="nx-create-category">
+            Таны зар Supabase мэдээллийн санд хадгалагдлаа.
+            <br><br>
+            <strong>Төлөв:</strong> Төлбөр хүлээгдэж байна
+            <br>
+            <strong>Зарын дугаар:</strong>
+            ${escapeHTML(insertResult.data.id)}
+          </div>
+
+          <div style="color:#aaa39a;line-height:1.7;font-size:13px;">
+            Зар одоогоор нийтэд харагдахгүй.
+            Төлбөр болон админы хяналтын ажиллагааг
+            дараагийн хэсгүүдэд холбоно.
+          </div>
+
+          <button type="button"
+            class="nx-create-submit"
+            data-nx-create-finish>
+            ЗАРЫН ЖАГСААЛТ РУУ БУЦАХ
+          </button>
+        </div>
+      `;
+
+    } catch (error) {
+      showMessage(
+        "Зар хадгалахад алдаа гарлаа: " + error.message,
+        false
+      );
+
+      submit.disabled = false;
+      submit.textContent = "ЗАР НИЙТЛҮҮЛЭХ";
+    }
+  }
+
+  content.addEventListener("click", function (event) {
+    if (event.target.closest("#nx-create-ad-open")) {
+      showCreateForm();
+      return;
+    }
+
+    if (event.target.closest("[data-nx-create-back]")) {
+      if (typeof window.NEXORA_AD_RELOAD === "function") {
+        window.NEXORA_AD_RELOAD();
+      }
+      return;
+    }
+
+    if (event.target.closest("[data-nx-create-finish]")) {
+      if (typeof window.NEXORA_AD_RELOAD === "function") {
+        window.NEXORA_AD_RELOAD();
+      }
+    }
+  });
+
+  content.addEventListener("submit", function (event) {
+    if (event.target.id === "nx-create-ad-form") {
+      saveAd(event);
+    }
+  });
+
+  const observer = new MutationObserver(function () {
+    addCreateButton();
+  });
+
+  observer.observe(content, {
+    childList: true,
+    subtree: true
+  });
+
+  addCreateButton();
+
+  window.NEXORA_SHOW_CREATE_AD = showCreateForm;
+
+})();
+</script>
+
 </body>
 </html>
