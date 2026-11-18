@@ -1484,11 +1484,9 @@
   let currentCategory = null;
   let currentSubcategory = null;
   let currentGroup = null;
-  let createMode = false;
 
   function createToggleButton() {
-    return '<button type="button" class="nx-create-toggle" data-nx-create-toggle>' +
-      (createMode ? '⌄ ХУМИХ' : '+ ЗАР НИЙТЛЭХ') + '</button>';
+    return '<button type="button" class="nx-create-toggle" data-nx-create-toggle>+ ЗАР НИЙТЛЭХ</button>';
   }
 
   function backButton() {
@@ -1510,7 +1508,7 @@
           ${createToggleButton()}
         </div>
         <div class="nx-screen-subtitle">
-          ${createMode ? 'Зар нийтлэх ангиллаа сонгоно уу.' : 'Зар хайх эсвэл зар оруулах үндсэн ангиллаа сонгоно уу.'}
+          Зар хайх эсвэл зар оруулах үндсэн ангиллаа сонгоно уу.
         </div>
 
         <div class="nexora-ad-grid">
@@ -1542,7 +1540,6 @@
         ${backButton()}
         <div class="nx-category-heading">
           <div class="nx-screen-title">${category.icon} ${category.name}</div>
-          ${createMode ? createToggleButton() : ''}
         </div>
         <div class="nx-screen-subtitle">
           Дэд ангиллын таб дээр дарж дэлгэж, дахин дарж хумина уу.
@@ -1618,15 +1615,6 @@
       subcategory: item
     };
 
-    if (createMode) {
-      if (typeof window.NEXORA_SHOW_CREATE_AD === "function") {
-        window.NEXORA_SHOW_CREATE_AD();
-      } else {
-        content.innerHTML = '<div class="nx-list-message">Зарын маягт ачаалж байна...</div>';
-      }
-      return;
-    }
-
     // Сонгосон дэд ангиллыг бодит зарын жагсаалттай холбоно.
     if (typeof window.NEXORA_AD_RELOAD === "function") {
       window.NEXORA_AD_RELOAD();
@@ -1644,12 +1632,7 @@
   content.addEventListener("click", function (event) {
     const createToggle = event.target.closest("[data-nx-create-toggle]");
     if (createToggle) {
-      createMode = !createMode;
-      currentCategory = null;
-      currentGroup = null;
-      currentSubcategory = null;
-      if (!createMode) window.NEXORA_AD_SELECTION = null;
-      showCategoryList();
+      if (typeof window.NEXORA_SHOW_CREATE_AD === "function") window.NEXORA_SHOW_CREATE_AD();
       return;
     }
 
@@ -1735,7 +1718,6 @@
   };
 
   window.NEXORA_COLLAPSE_CREATE = function () {
-    createMode = false;
     currentCategory = null;
     currentGroup = null;
     currentSubcategory = null;
@@ -2465,60 +2447,53 @@
   }
 
   function showCreateForm(values) {
-    const selection = window.NEXORA_AD_SELECTION;
-    if (!selection) {
-      alert("Эхлээд зарын ангилал сонгоно уу.");
-      return;
-    }
-
     const data = values || pendingAd || {};
+    const categories = window.NEXORA_AD_CATEGORIES || [];
+    const initialNumber = Number(data.categoryNumber || window.NEXORA_AD_SELECTION?.categoryNumber || categories[0]?.number || 0);
+    const initialCategory = categories.find(item => item.number === initialNumber) || categories[0];
+    const groups = window.NEXORA_AD_SUBCATEGORIES || {};
+    const optionsFor = function (number) {
+      return Object.entries(groups[number] || {}).flatMap(([group, items]) =>
+        (items || []).map(item => ({ value: item, label: group + " — " + item }))
+      );
+    };
+    const initialOptions = initialCategory ? optionsFor(initialCategory.number) : [];
+    const initialSubcategory = data.subcategory || window.NEXORA_AD_SELECTION?.subcategory || initialOptions[0]?.value || "";
+
     content.innerHTML = `
       <div class="nx-create-screen">
-        <button class="nx-create-collapse" type="button"
-          data-nx-create-collapse>⌄ ХУМИХ</button>
-        <button class="nx-create-back" type="button"
-          data-nx-create-back>‹ Буцах</button>
-
+        <button class="nx-create-collapse" type="button" data-nx-create-collapse>⌄ ХУМИХ</button>
         <div class="nx-create-title">ШИНЭ ЗАР НИЙТЛҮҮЛЭХ</div>
 
-        <div class="nx-create-category">
-          <strong>Үндсэн ангилал:</strong> ${esc(selection.category)}
-          <br><strong>Дэд ангилал:</strong> ${esc(selection.subcategory)}
-        </div>
-
         <form id="nx-create-ad-form">
+          <label class="nx-create-label">Үндсэн ангилал *</label>
+          <select class="nx-create-input" name="categoryNumber" id="nx-create-category" required>
+            ${categories.map(category => `<option value="${category.number}" ${category.number === initialNumber ? "selected" : ""}>${esc(category.name)}</option>`).join("")}
+          </select>
+
+          <label class="nx-create-label">Дэд ангилал *</label>
+          <select class="nx-create-input" name="subcategory" id="nx-create-subcategory" required>
+            ${initialOptions.map(option => `<option value="${esc(option.value)}" ${option.value === initialSubcategory ? "selected" : ""}>${esc(option.label)}</option>`).join("")}
+          </select>
+
           <label class="nx-create-label">Зарын гарчиг *</label>
-          <input class="nx-create-input" name="title" required
-            maxlength="150" value="${esc(data.title || "")}"
-            placeholder="Жишээ: 3 өрөө байр зарна">
+          <input class="nx-create-input" name="title" required maxlength="150" value="${esc(data.title || "")}" placeholder="Жишээ: 3 өрөө байр зарна">
 
           <label class="nx-create-label">Үнэ (₮)</label>
-          <input class="nx-create-input" name="price" type="text"
-            value="${esc(data.priceText || "")}"
-            placeholder="Жишээ: 200 сая, 500 мянга, 200000000">
+          <input class="nx-create-input" name="price" type="text" value="${esc(data.priceText || "")}" placeholder="Жишээ: 200 сая, 500 мянга, 200000000">
 
           <label class="nx-create-label">Дэлгэрэнгүй тайлбар *</label>
-          <textarea class="nx-create-textarea" name="description"
-            required maxlength="10000">${esc(data.description || "")}</textarea>
+          <textarea class="nx-create-textarea" name="description" required maxlength="10000">${esc(data.description || "")}</textarea>
 
           <label class="nx-create-label">Холбоо барих утас *</label>
-          <input class="nx-create-input" name="phone" type="tel"
-            required maxlength="30" value="${esc(data.phone || "")}">
+          <input class="nx-create-input" name="phone" type="tel" required maxlength="30" value="${esc(data.phone || "")}">
 
           <label class="nx-create-label">Зарын зураг (6 хүртэл)</label>
-          <input id="nx-ad-images" type="file"
-            accept="image/jpeg,image/png,image/webp" multiple
-            style="width:100%;padding:14px 0;color:white;">
+          <input id="nx-ad-images" type="file" accept="image/jpeg,image/png,image/webp" multiple style="width:100%;padding:14px 0;color:white;">
 
-          <div id="nx-ad-image-preview"
-            style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0;">
-          </div>
-
+          <div id="nx-ad-image-preview" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0;"></div>
           <div id="nx-flow-message" class="nx-create-message"></div>
-
-          <button class="nx-create-submit" id="nx-create-submit" type="submit">
-            ҮРГЭЛЖЛҮҮЛЭХ
-          </button>
+          <button class="nx-create-submit" id="nx-create-submit" type="submit">ҮРГЭЛЖЛҮҮЛЭХ</button>
         </form>
       </div>
     `;
@@ -2823,10 +2798,17 @@
     const description = String(data.get("description") || "").trim();
     const phone = String(data.get("phone") || "").trim();
     const priceText = String(data.get("price") || "").trim();
+    const categoryNumber = Number(data.get("categoryNumber") || 0);
+    const selectedCategory = (window.NEXORA_AD_CATEGORIES || []).find(item => item.number === categoryNumber);
+    const subcategory = String(data.get("subcategory") || "").trim();
     const price = priceToNumber(priceText);
     const input = document.getElementById("nx-ad-images");
     const files = input ? Array.from(input.files || []) : [];
 
+    if (!selectedCategory || !subcategory) {
+      message("Үндсэн болон дэд ангиллаа сонгоно уу.", true);
+      return;
+    }
     if (!title || !description || !phone) {
       message("Одтой талбаруудыг бүрэн бөглөнө үү.", true);
       return;
@@ -2846,7 +2828,14 @@
       phone: phone,
       price: price,
       priceText: priceText,
+      categoryNumber: categoryNumber,
+      subcategory: subcategory,
       files: files
+    };
+    window.NEXORA_AD_SELECTION = {
+      category: selectedCategory.name,
+      categoryNumber: selectedCategory.number,
+      subcategory: subcategory
     };
 
     const session = await db.auth.getSession();
@@ -2910,6 +2899,8 @@
           priceText: String(values.get("price") || ""),
           description: String(values.get("description") || ""),
           phone: String(values.get("phone") || ""),
+          categoryNumber: Number(values.get("categoryNumber") || 0),
+          subcategory: String(values.get("subcategory") || ""),
           files: Array.from(document.getElementById("nx-ad-images")?.files || [])
         };
       }
@@ -2989,6 +2980,18 @@
 
   const observer = new MutationObserver(addCreateButton);
   observer.observe(content, { childList: true, subtree: true });
+
+  content.addEventListener("change", function (event) {
+    if (event.target.id !== "nx-create-category") return;
+    const number = Number(event.target.value);
+    const select = document.getElementById("nx-create-subcategory");
+    if (!select) return;
+    const options = Object.entries((window.NEXORA_AD_SUBCATEGORIES || {})[number] || {}).flatMap(([group, items]) =>
+      (items || []).map(item => ({ value: item, label: group + " — " + item }))
+    );
+    select.innerHTML = options.map(option => `<option value="${esc(option.value)}">${esc(option.label)}</option>`).join("");
+    if (!options.length) select.innerHTML = '<option value="">Дэд ангилал байхгүй</option>';
+  });
 
   window.NEXORA_SHOW_CREATE_AD = showCreateForm;
 })();
