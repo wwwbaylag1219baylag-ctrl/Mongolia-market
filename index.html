@@ -2031,7 +2031,7 @@
     }
   }
 
-  function showAdDetail(ad) {
+  async function showAdDetail(ad) {
     selectedAd = ad;
 
     content.innerHTML = `
@@ -2043,6 +2043,11 @@
         </div>
 
         <div class="nx-detail-block">
+          <div id="nx-ad-detail-images"
+            style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0 0 18px;">
+            <div class="nx-list-message">Зураг ачаалж байна...</div>
+          </div>
+
           <div class="nx-detail-value"
             style="font-size:21px;font-weight:800;">
             ${escapeHTML(ad.title || "Гарчиггүй зар")}
@@ -2081,6 +2086,55 @@
         </div>
       </div>
     `;
+
+    const gallery = document.getElementById("nx-ad-detail-images");
+    if (!gallery) return;
+
+    try {
+      const imageResult = await db
+        .from("ad_images")
+        .select("image_path,display_order")
+        .eq("ad_id", ad.id)
+        .order("display_order", { ascending: true });
+
+      if (imageResult.error) throw imageResult.error;
+
+      const imageRows = imageResult.data || [];
+      if (!imageRows.length) {
+        gallery.textContent = "Энэ зар зураггүй байна.";
+        return;
+      }
+
+      const signedImages = await Promise.all(imageRows.map(async function (item) {
+        const signed = await db.storage
+          .from("classified-images")
+          .createSignedUrl(item.image_path, 3600);
+
+        if (signed.error || !signed.data?.signedUrl) return null;
+        return signed.data.signedUrl;
+      }));
+
+      if (selectedAd?.id !== ad.id || !gallery.isConnected) return;
+
+      const validImages = signedImages.filter(Boolean);
+      if (!validImages.length) {
+        gallery.textContent = "Зургийг харуулах боломжгүй байна.";
+        return;
+      }
+
+      gallery.innerHTML = validImages.map(function (url) {
+        return `
+          <img src="${escapeHTML(url)}"
+            alt="${escapeHTML(ad.title || "Зарын зураг")}"
+            loading="lazy"
+            style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;background:#191919;">
+        `;
+      }).join("");
+    } catch (error) {
+      if (selectedAd?.id === ad.id && gallery.isConnected) {
+        gallery.textContent = "Зураг ачаалахад алдаа гарлаа.";
+      }
+    }
   }
 
   content.addEventListener("input", function (event) {
