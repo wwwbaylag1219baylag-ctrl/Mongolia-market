@@ -1,340 +1,183 @@
+{
+  "name": "nexora",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.57.0",
+    "lucide-react": "^0.468.0",
+    "next": "^15.5.6",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+  "@eslint/eslintrc": "^3.3.1",
+  "@types/node": "^22.15.30",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.7",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.34.0",
+    "eslint-config-next": "^15.5.6",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.9.2"
+  }
+}
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": ["node_modules"]
+}
+import type { NextConfig } from "next";
 
-<!DOCTYPE html>
-<html lang="mn">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#111329">
-  <title>NEXORA — Монголын нэгдсэн платформ</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+const nextConfig: NextConfig = {
+  reactStrictMode: true,
+  poweredByHeader: false,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.supabase.co"
+      }
+    ]
+  }
+};
 
-<!-- НЭГДСЭН НҮҮР -->
-<section id="homeScreen" class="screen home-screen">
-  <header class="home-header">
-    <a class="logo" href="#" onclick="showHome()">NEXORA<span>.</span></a>
-    <span class="home-caption">МОНГОЛЫН НЭГДСЭН ПЛАТФОРМ</span>
-    <button class="admin-link" onclick="openAdminLogin()">Админ</button>
-  </header>
+export default nextConfig;
+import type { Config } from "tailwindcss";
 
-  <main class="home-main">
-    <div class="welcome">
-      <span class="eyebrow">ТАВТАЙ МОРИЛ</span>
-      <h1>Худалдаа, зар<br><span>нэг дор.</span></h1>
-      <p>Өөрт хэрэгтэй бүхнээ хайж олох, худалдах, зарлах боломж.</p>
-    </div>
+const config: Config = {
+  content: [
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}"
+  ],
+  theme: {
+    extend: {
+      colors: {
+        nexora: {
+          black: "#090909",
+          dark: "#15120D",
+          brown: "#2B1B10",
+          gold: "#FFD447",
+          goldLight: "#FFE99A",
+          muted: "#A69A85"
+        }
+      },
+      boxShadow: {
+        neon: "0 0 18px rgba(255,212,71,0.28)",
+        neonStrong: "0 0 28px rgba(255,212,71,0.45)"
+      },
+      borderRadius: {
+        nexora: "18px"
+      }
+    }
+  },
+  plugins: []
+};
 
-    <div class="platform-grid">
-      <button class="platform-card ads-card" onclick="openPlatform('ads')">
-        <div class="platform-icon">📢</div>
-        <span class="platform-label">01 / ЗАР МЭДЭЭЛЭЛ</span>
-        <h2>Зарын платформ</h2>
-        <p>Бараа, үйлчилгээ, үл хөдлөх, автомашин болон бусад зар.</p>
-        <span class="platform-enter">Платформ руу орох →</span>
-      </button>
+export default config;
+const config = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {}
+  }
+};
 
-      <button class="platform-card shop-card" onclick="openPlatform('shop')">
-        <div class="platform-icon">🛍️</div>
-        <span class="platform-label">02 / ОНЛАЙН ХУДАЛДАА</span>
-        <h2>Худалдааны платформ</h2>
-        <p>Дэлгүүр нээж, бараагаа байршуулан худалдан авагчдаа олоорой.</p>
-        <span class="platform-enter">Платформ руу орох →</span>
-      </button>
-    </div>
-  </main>
+export default config;
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import { FlatCompat } from "@eslint/eslintrc";
 
-  <footer class="home-footer">
-    © 2026 NEXORA · Монголын нэгдсэн платформ
-  </footer>
-</section>
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-<!-- ЗАРЫН ПЛАТФОРМ -->
-<section id="adsScreen" class="screen platform-screen hidden">
-  <header class="platform-header">
-    <button class="back-btn" onclick="showHome()">← Нүүр</button>
-    <a class="logo" href="#" onclick="showHome()">NEXORA<span>.</span></a>
-    <div class="header-actions">
-      <button onclick="openPayment('ad')">Төлбөр</button>
-      <button class="primary-btn" onclick="openCreate('ad')">＋ Зар нэмэх</button>
-    </div>
-  </header>
+const compat = new FlatCompat({
+  baseDirectory: __dirname
+});
 
-  <div class="platform-banner ads-banner">
-    <span class="eyebrow">NEXORA CLASSIFIEDS</span>
-    <h1>Зарын платформ</h1>
-    <p>Хэрэгтэй зүйлээ хай. Өөрийн зараа байршуул.</p>
-  </div>
+const eslintConfig = [
+  ...compat.extends("next/core-web-vitals", "next/typescript")
+];
 
-  <main class="platform-content">
-    <div class="toolbar">
-      <input id="adsSearch" type="search" placeholder="Зар хайх...">
-      <select id="adsCategory">
-        <option value="">Бүх ангилал</option>
-        <option>Автомашин</option>
-        <option>Үл хөдлөх</option>
-        <option>Ажлын зар</option>
-        <option>Сургалт дамжаа</option>
-        <option>Аялал зуучлал</option>
-        <option>Үйлчилгээ</option>
-        <option>Бусад</option>
-      </select>
-    </div>
+export default eslintConfig;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-    <div class="section-title">
-      <h2>Байршуулсан зарууд</h2>
-      <span id="adsCount">0 зар</span>
-    </div>
-
-    <div id="adsGrid" class="item-grid"></div>
-    <p id="adsEmpty" class="empty-state hidden">Одоогоор зар байхгүй байна.</p>
-  </main>
-</section>
-
-<!-- ХУДАЛДААНЫ ПЛАТФОРМ -->
-<section id="shopScreen" class="screen platform-screen hidden">
-  <header class="platform-header">
-    <button class="back-btn" onclick="showHome()">← Нүүр</button>
-    <a class="logo" href="#" onclick="showHome()">NEXORA<span>.</span></a>
-    <div class="header-actions">
-      <button onclick="openPayment('shop')">Дэлгүүрийн төлбөр</button>
-      <button class="primary-btn" onclick="openCreate('product')">＋ Бараа нэмэх</button>
-    </div>
-  </header>
-
-  <div class="platform-banner shop-banner">
-    <span class="eyebrow">NEXORA MARKETPLACE</span>
-    <h1>Худалдааны платформ</h1>
-    <p>Өөрийн дэлгүүрээ нээж, бараагаа худалдаалаарай.</p>
-    <div class="no-commission">БОРЛУУЛАЛТААС ШИМТГЭЛГҮЙ</div>
-  </div>
-
-  <main class="platform-content">
-    <div class="toolbar">
-      <input id="shopSearch" type="search" placeholder="Бараа хайх...">
-      <select id="shopCategory">
-        <option value="">Бүх ангилал</option>
-        <option>Электрон бараа</option>
-        <option>Хувцас гутал</option>
-        <option>Гэр ахуй</option>
-        <option>Гоо сайхан</option>
-        <option>Хүнс</option>
-        <option>Бусад</option>
-      </select>
-    </div>
-
-    <div class="section-title">
-      <h2>Дэлгүүрийн бараанууд</h2>
-      <span id="shopCount">0 бараа</span>
-    </div>
-
-    <div id="shopGrid" class="item-grid"></div>
-    <p id="shopEmpty" class="empty-state hidden">Одоогоор бараа байхгүй байна.</p>
-  </main>
-</section>
-
-<!-- ЗАР / БАРАА НЭМЭХ -->
-<div class="modal hidden" id="createModal">
-  <div class="modal-box">
-    <div class="modal-heading">
-      <h2 id="createTitle">Мэдээлэл нэмэх</h2>
-      <button type="button" onclick="closeModal('createModal')">✕</button>
-    </div>
-
-    <form id="createForm">
-      <label>Нэр</label>
-      <input id="itemName" required maxlength="100" placeholder="Нэр оруулна уу">
-
-      <label>Үнэ (₮)</label>
-      <input id="itemPrice" type="number" min="1" step="1" required placeholder="Үнэ">
-
-      <label>Ангилал</label>
-      <select id="itemCategory" required></select>
-
-      <label>Тайлбар</label>
-      <textarea id="itemDescription" required maxlength="1000" placeholder="Дэлгэрэнгүй мэдээлэл"></textarea>
-
-      <label>Холбоо барих утас</label>
-      <input id="itemPhone" type="tel" required maxlength="20" placeholder="99112233">
-
-      <label>Зургийн холбоос (заавал биш)</label>
-      <input id="itemImage" type="url" placeholder="https://...">
-
-      <div id="storeNameField">
-        <label>Дэлгүүрийн нэр</label>
-        <input id="storeName" maxlength="80" placeholder="Дэлгүүрийн нэр">
-      </div>
-
-      <button class="primary-btn full-btn" type="submit">Нийтлэх</button>
-    </form>
-  </div>
-</div>
-
-<!-- ТӨЛБӨР -->
-<div class="modal hidden" id="paymentModal">
-  <div class="modal-box">
-    <div class="modal-heading">
-      <h2>Төлбөрийн мэдээлэл</h2>
-      <button type="button" onclick="closeModal('paymentModal')">✕</button>
-    </div>
-
-    <div id="paymentInfo"></div>
-
-    <form id="paymentForm">
-      <label>Шилжүүлсэн хүний нэр</label>
-      <input id="payerName" required maxlength="100">
-
-      <label>Шилжүүлгийн утга / гүйлгээний дугаар</label>
-      <input id="paymentReference" required maxlength="100">
-
-      <label>Төлбөрийн баримтын зурагны холбоос</label>
-      <input id="receiptUrl" type="url" placeholder="https://...">
-
-      <button class="primary-btn full-btn" type="submit">
-        Төлбөр шалгуулах хүсэлт илгээх
-      </button>
-    </form>
-  </div>
-</div>
-
-<!-- АДМИН НЭВТРЭХ -->
-<div class="modal hidden" id="adminLoginModal">
-  <div class="modal-box">
-    <div class="modal-heading">
-      <h2>Админ нэвтрэх</h2>
-      <button type="button" onclick="closeModal('adminLoginModal')">✕</button>
-    </div>
-
-    <form id="adminLoginForm">
-      <label>Админы нууц үг</label>
-      <input id="adminPassword" type="password" required placeholder="Нууц үг">
-      <button class="primary-btn full-btn" type="submit">Нэвтрэх</button>
-    </form>
-
-    <p class="help-text">Демо нууц үг: 092112</p>
-  </div>
-</div>
-
-<!-- АДМИН САМБАР -->
-<section id="adminScreen" class="screen admin-screen hidden">
-  <header class="admin-header">
-    <a class="logo" href="#" onclick="showHome()">NEXORA<span>.</span></a>
-    <button onclick="adminLogout()">Гарах</button>
-  </header>
-
-  <main class="admin-content">
-    <span class="eyebrow">УДИРДЛАГЫН ХЭСЭГ</span>
-    <h1>Админ самбар</h1>
-
-    <div class="stats-grid">
-      <div class="stat-card">
-        <span>Нийт зар</span>
-        <strong id="statAds">0</strong>
-      </div>
-      <div class="stat-card">
-        <span>Нийт бараа</span>
-        <strong id="statProducts">0</strong>
-      </div>
-      <div class="stat-card">
-        <span>Төлбөрийн хүсэлт</span>
-        <strong id="statPayments">0</strong>
-      </div>
-      <div class="stat-card">
-        <span>Баталгаажсан төлбөр</span>
-        <strong id="statApproved">0</strong>
-      </div>
-    </div>
-
-    <section class="admin-panel">
-      <h2>Төлбөрийн тохиргоо</h2>
-
-      <form id="settingsForm" class="settings-grid">
-        <div>
-          <label>Зар байршуулах төлбөр (₮)</label>
-          <input id="adFee" type="number" min="0" required>
-        </div>
-
-        <div>
-          <label>Дэлгүүр байршуулах төлбөр (₮)</label>
-          <input id="shopFee" type="number" min="0" required>
-        </div>
-
-        <div>
-          <label>Банкны нэр</label>
-          <input id="bankName" required maxlength="100">
-        </div>
-
-        <div>
-          <label>Данс эзэмшигч</label>
-          <input id="accountOwner" required maxlength="100">
-        </div>
-
-        <div>
-          <label>Дансны дугаар</label>
-          <input id="accountNumber" required maxlength="50">
-        </div>
-
-        <div>
-          <label>Төлбөрийн заавар</label>
-          <input id="paymentInstruction" maxlength="250">
-        </div>
-
-        <button class="primary-btn full-btn" type="submit">
-          Тохиргоо хадгалах
-        </button>
-      </form>
-
-      <p class="help-text">
-        Борлуулалтын шимтгэл: 0%. Худалдааны 5% шимтгэл авахгүй.
-      </p>
-    </section>
-
-    <section class="admin-panel">
-      <h2>Төлбөрийн хүсэлтүүд</h2>
-      <div id="paymentRequests"></div>
-    </section>
-
-    <section class="admin-panel">
-      <h2>Зар болон барааны удирдлага</h2>
-      <div id="adminItems"></div>
-    </section>
-  </main>
-</section>
-
-<div id="toast" class="toast" role="status" aria-live="polite"></div>
-
-<script src="script.js"></script>
-</body>
-</html>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-
-  <link rel="stylesheet" href="style.css">
 :root {
-  --bg: #f5f6fb;
-  --dark: #15152c;
-  --purple: #7558f5;
-  --purple-light: #eeeaff;
-  --muted: #85869b;
-  --border: #e7e8f0;
-  --white: #fff;
-  --green: #168b62;
-  --red: #d94a61;
+  color-scheme: dark;
+  --nexora-bg: #090909;
+  --nexora-panel: #15120d;
+  --nexora-brown: #2b1b10;
+  --nexora-gold: #ffd447;
+  --nexora-text: #f7f2e8;
+  --nexora-muted: #a69a85;
 }
 
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+}
+
+html {
+  min-height: 100%;
+  background: var(--nexora-bg);
+  scroll-behavior: smooth;
 }
 
 body {
-  font-family: Inter, Arial, sans-serif;
-  background: var(--bg);
-  color: var(--dark);
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(
+      ellipse at 50% -20%,
+      rgba(255, 212, 71, 0.09),
+      transparent 55%
+    ),
+    var(--nexora-bg);
+  color: var(--nexora-text);
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-button, input, select, textarea {
+button,
+input,
+textarea,
+select {
   font: inherit;
 }
 
@@ -342,1984 +185,935 @@ button {
   cursor: pointer;
 }
 
-.hidden {
-  display: none !important;
-}
-
-.screen {
-  min-height: 100vh;
-  width: 100%;
-}
-
-.logo {
+a {
+  color: inherit;
   text-decoration: none;
-  color: white;
-  font-size: 27px;
-  font-weight: 900;
-  letter-spacing: -1.5px;
 }
 
-.logo span {
-  color: #9d88ff;
+img {
+  max-width: 100%;
 }
 
-.primary-btn {
-  border: 0;
-  background: var(--purple);
-  color: white;
-  border-radius: 10px;
-  padding: 13px 19px;
-  font-weight: 700;
-  transition: .2s;
+::selection {
+  color: #090909;
+  background: var(--nexora-gold);
 }
 
-.primary-btn:hover {
-  background: #5f43e4;
-  transform: translateY(-2px);
+.nexora-container {
+  width: min(100% - 32px, 1200px);
+  margin-inline: auto;
 }
 
-.full-btn {
-  width: 100%;
-  margin-top: 20px;
+.nexora-panel {
+  border: 1px solid rgba(255, 212, 71, 0.16);
+  border-radius: 18px;
+  background: rgba(21, 18, 13, 0.88);
 }
 
-/* НҮҮР */
-
-.home-screen {
-  min-height: 100vh;
-  background:
-    radial-gradient(ellipse at 15% 20%, #3e3275 0, transparent 45%),
-    radial-gradient(ellipse at 85% 80%, #26345e 0, transparent 45%),
-    #101226;
-  color: white;
-  display: flex;
-  flex-direction: column;
+.nexora-glow {
+  box-shadow: 0 0 22px rgba(255, 212, 71, 0.2);
 }
 
-.home-header {
-  height: 85px;
-  padding: 0 7%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #ffffff15;
-}
-
-.home-caption {
-  color: #aaa9c5;
-  font-size: 10px;
-  letter-spacing: 2px;
-}
-
-.admin-link {
-  color: white;
-  border: 1px solid #ffffff30;
-  background: transparent;
-  border-radius: 9px;
-  padding: 10px 17px;
-}
-
-.home-main {
-  width: 100%;
-  max-width: 1450px;
-  margin: auto;
-  padding: 65px 7%;
-}
-
-.welcome {
-  text-align: center;
-  margin-bottom: 48px;
-}
-
-.eyebrow {
-  display: block;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  color: var(--purple);
-  margin-bottom: 14px;
-}
-
-.welcome .eyebrow {
-  color: #a999ff;
-}
-
-.welcome h1 {
-  font-size: clamp(42px, 6vw, 70px);
-  letter-spacing: -3px;
-  line-height: 1.1;
-}
-
-.welcome h1 span {
-  color: #a695ff;
-}
-
-.welcome p {
-  color: #b9b9d1;
-  margin-top: 18px;
-  line-height: 1.8;
-}
-
-.platform-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 25px;
-  max-width: 1050px;
-  margin: auto;
-}
-
-.platform-card {
-  text-align: left;
-  padding: 35px;
-  min-height: 330px;
-  border: 1px solid #ffffff20;
-  border-radius: 23px;
-  color: white;
-  transition: .25s;
-  position: relative;
-  overflow: hidden;
-}
-
-.platform-card:hover {
-  transform: translateY(-8px);
-  border-color: #a391ff;
-  box-shadow: 0 20px 60px #0003;
-}
-
-.ads-card {
-  background: linear-gradient(135deg, #27264d, #36316d);
-}
-
-.shop-card {
-  background: linear-gradient(135deg, #1c3c46, #245c62);
-}
-
-.platform-icon {
-  font-size: 46px;
-  margin-bottom: 35px;
-}
-
-.platform-label {
-  color: #c2b7ff;
-  font-size: 10px;
-  letter-spacing: 2px;
-  font-weight: 800;
-}
-
-.platform-card h2 {
-  font-size: 29px;
-  margin: 14px 0;
-}
-
-.platform-card p {
-  color: #d1d0e3;
-  font-size: 14px;
-  line-height: 1.8;
-  max-width: 390px;
-}
-
-.platform-enter {
-  display: block;
-  margin-top: 30px;
-  font-weight: 800;
-  font-size: 13px;
-  color: white;
-}
-
-.home-footer {
-  text-align: center;
-  padding: 25px;
-  border-top: 1px solid #ffffff15;
-  color: #9293aa;
-  font-size: 11px;
-}
-
-/* ПЛАТФОРМУУД */
-
-.platform-screen {
-  background: var(--bg);
-}
-
-.platform-header {
-  min-height: 75px;
-  padding: 12px 6%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-  background: #15152d;
-  color: white;
-}
-
-.back-btn {
-  background: transparent;
-  border: 1px solid #ffffff35;
-  color: white;
-  border-radius: 9px;
-  padding: 10px 14px;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.header-actions button:not(.primary-btn) {
-  background: transparent;
-  border: 1px solid #ffffff40;
-  color: white;
-  border-radius: 9px;
-  padding: 11px;
-}
-
-.platform-banner {
-  padding: 55px 8%;
-  color: white;
-}
-
-.ads-banner {
-  background: linear-gradient(110deg, #272451, #5140a3);
-}
-
-.shop-banner {
-  background: linear-gradient(110deg, #153d43, #27736f);
-}
-
-.platform-banner .eyebrow {
-  color: #c4b9ff;
-}
-
-.platform-banner h1 {
-  font-size: clamp(32px, 4vw, 48px);
-  margin-bottom: 12px;
-}
-
-.platform-banner p {
-  color: #e1e0f0;
-  line-height: 1.8;
-}
-
-.no-commission {
-  display: inline-block;
-  background: #ffffff1c;
-  border: 1px solid #ffffff40;
-  padding: 11px 15px;
-  border-radius: 9px;
-  font-size: 11px;
-  font-weight: 800;
-  margin-top: 22px;
-  letter-spacing: 1px;
-}
-
-.platform-content {
-  max-width: 1400px;
-  margin: auto;
-  padding: 35px 6% 80px;
-}
-
-.toolbar {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 30px;
-}
-
-.toolbar input,
-.toolbar select {
-  border: 1px solid var(--border);
-  background: white;
-  border-radius: 10px;
-  padding: 13px;
-  outline: none;
-  color: var(--dark);
-}
-
-.toolbar input {
-  flex: 1;
-  min-width: 0;
-}
-
-.toolbar select {
-  min-width: 175px;
-}
-
-.section-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.section-title h2 {
-  font-size: 23px;
-}
-
-.section-title span {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.item-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
-}
-
-.item-card {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 15px;
-  overflow: hidden;
-  transition: .2s;
-}
-
-.item-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px #2222;
-}
-
-.item-image {
-  height: 180px;
-  width: 100%;
-  object-fit: cover;
-  background: #e8e7f1;
-}
-
-.item-placeholder {
-  height: 180px;
-  display: grid;
-  place-items: center;
-  background: #eeecfa;
-  font-size: 45px;
-}
-
-.item-info {
-  padding: 15px;
-}
-
-.item-category {
-  color: var(--purple);
-  font-size: 10px;
-  font-weight: 800;
-}
-
-.item-info h3 {
-  font-size: 15px;
-  margin: 10px 0;
-  min-height: 38px;
-}
-
-.item-price {
-  color: var(--purple);
-  font-size: 19px;
-  font-weight: 900;
-}
-
-.item-description {
-  color: var(--muted);
-  font-size: 12px;
-  margin-top: 10px;
-  line-height: 1.6;
-  min-height: 38px;
-}
-
-.item-info small {
-  display: block;
-  margin-top: 8px;
-  color: var(--muted);
-}
-
-.item-footer {
-  display: flex;
-  gap: 8px;
-  margin-top: 15px;
-}
-
-.item-footer button {
-  flex: 1;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 5px;
-  font-size: 11px;
-  font-weight: 700;
-  background: var(--purple-light);
-  color: var(--purple);
-}
-
-.empty-state {
-  background: white;
-  border-radius: 13px;
-  padding: 55px 15px;
-  text-align: center;
-  color: var(--muted);
-}
-
-/* ЦОНХ */
-
-.modal {
-  position: fixed;
-  inset: 0;
-  background: #101020b8;
-  z-index: 100;
-  display: flex;
+.nexora-button {
+  display: inline-flex;
+  min-height: 46px;
   align-items: center;
   justify-content: center;
-  padding: 15px;
-}
-
-.modal-box {
-  width: 100%;
-  max-width: 490px;
-  max-height: 90vh;
-  overflow-y: auto;
-  background: white;
-  border-radius: 18px;
-  padding: 25px;
-}
-
-.modal-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.modal-heading h2 {
-  font-size: 21px;
-}
-
-.modal-heading button {
-  border: 0;
-  background: #f0f0f5;
-  width: 35px;
-  height: 35px;
-  border-radius: 9px;
-}
-
-.modal-box form label {
-  display: block;
-  font-size: 12px;
-  font-weight: 700;
-  margin: 14px 0 7px;
-}
-
-.modal-box input,
-.modal-box select,
-.modal-box textarea {
-  width: 100%;
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  padding: 12px;
-  outline: none;
-  background: #fafaff;
-  color: var(--dark);
-}
-
-.modal-box input:focus,
-.modal-box textarea:focus,
-.modal-box select:focus {
-  border-color: var(--purple);
-}
-
-.modal-box textarea {
-  min-height: 90px;
-  resize: vertical;
-}
-
-.payment-account {
-  background: #f0edff;
-  border: 1px solid #dcd4ff;
+  gap: 8px;
+  border: 1px solid rgba(255, 212, 71, 0.55);
   border-radius: 12px;
-  padding: 17px;
-  margin-bottom: 15px;
-  line-height: 1.9;
-  font-size: 13px;
+  padding: 11px 18px;
+  background: linear-gradient(135deg, #ffe99a, #ffd447);
+  color: #171109;
+  font-weight: 800;
+  transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
-.payment-account strong {
-  color: #573bc6;
+.nexora-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 20px rgba(255, 212, 71, 0.3);
 }
 
-.payment-account hr {
-  border: 0;
-  border-top: 1px solid #dcd4ff;
-  margin: 12px 0;
+.nexora-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  transform: none;
 }
 
-.help-text {
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1.7;
-  margin-top: 15px;
-}
-
-/* АДМИН */
-
-.admin-screen {
-  background: #f5f6fb;
-}
-
-.admin-header {
-  min-height: 75px;
-  background: #15152d;
-  padding: 12px 6%;
-  display: flex;
-  justify-content: space-between;
+.nexora-outline-button {
+  display: inline-flex;
+  min-height: 44px;
   align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 212, 71, 0.35);
+  border-radius: 12px;
+  padding: 10px 16px;
+  background: transparent;
+  color: var(--nexora-gold);
 }
 
-.admin-header button {
-  background: #ffffff20;
-  color: white;
-  border: 1px solid #ffffff30;
-  padding: 10px 18px;
-  border-radius: 9px;
-}
-
-.admin-content {
-  max-width: 1300px;
-  margin: auto;
-  padding: 40px 6%;
-}
-
-.admin-content > h1 {
-  font-size: 33px;
-  margin-bottom: 25px;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-  margin-bottom: 30px;
-}
-
-.stat-card {
-  padding: 22px;
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 13px;
-}
-
-.stat-card span {
-  display: block;
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.stat-card strong {
-  display: block;
-  margin-top: 12px;
-  font-size: 27px;
-  color: var(--purple);
-}
-
-.admin-panel {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 15px;
-  padding: 23px;
-  margin-bottom: 25px;
-  overflow-x: auto;
-}
-
-.admin-panel h2 {
-  font-size: 19px;
-  margin-bottom: 20px;
-}
-
-.settings-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-}
-
-.settings-grid label {
-  display: block;
-  font-size: 12px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.settings-grid input {
+.nexora-input {
   width: 100%;
-  padding: 12px;
-  border: 1px solid var(--border);
-  border-radius: 9px;
+  min-height: 46px;
+  border: 1px solid rgba(255, 212, 71, 0.22);
+  border-radius: 12px;
+  padding: 11px 13px;
+  outline: none;
+  background: #100e0b;
+  color: var(--nexora-text);
 }
 
-.settings-grid .full-btn {
-  grid-column: 1 / -1;
+.nexora-input:focus {
+  border-color: var(--nexora-gold);
+  box-shadow: 0 0 0 3px rgba(255, 212, 71, 0.1);
 }
 
-.admin-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 12px;
+.nexora-muted {
+  color: var(--nexora-muted);
 }
 
-.admin-row:last-child {
-  border-bottom: none;
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
-.admin-row strong {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.admin-row small {
-  color: var(--muted);
-  overflow-wrap: anywhere;
-}
-
-.admin-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-}
-
-.admin-actions button {
-  border: 0;
-  padding: 9px 11px;
-  border-radius: 7px;
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.approve-btn {
-  background: #e2f6ed;
-  color: var(--green);
-}
-
-.reject-btn,
-.delete-btn {
-  background: #ffebef;
-  color: var(--red);
-}
-
-.status {
-  display: inline-block;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 5px 8px;
-  border-radius: 20px;
-  margin-top: 5px;
-}
-
-.status.pending,
-.status.unpaid {
-  background: #fff4d9;
-  color: #a87510;
-}
-
-.status.approved,
-.status.active {
-  background: #e2f6ed;
-  color: var(--green);
-}
-
-.status.rejected {
-  background: #ffebef;
-  color: var(--red);
-}
-
-.status.review {
-  background: #eeeaff;
-  color: var(--purple);
-}
-
-.toast {
-  position: fixed;
-  z-index: 200;
-  bottom: 25px;
-  left: 50%;
-  transform: translate(-50%, 100px);
-  background: #17172e;
-  color: white;
-  border-radius: 10px;
-  padding: 14px 20px;
-  font-size: 12px;
-  opacity: 0;
-  transition: .3s;
-  max-width: 90%;
-  text-align: center;
-}
-
-.toast.show {
-  opacity: 1;
-  transform: translate(-50%, 0);
-}
-
-/* ГАР УТАС */
-
-@media(max-width: 950px) {
-  .item-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
+@media (max-width: 640px) {
+  .nexora-container {
+    width: min(100% - 24px, 1200px);
   }
 }
 
-@media(max-width: 650px) {
-  .home-header {
-    padding: 0 5%;
-  }
+import type { Metadata, Viewport } from "next";
+import "./globals.css";
 
-  .home-caption {
-    display: none;
-  }
-
-  .home-main {
-    padding: 45px 5%;
-  }
-
-  .welcome h1 {
-    font-size: 43px;
-  }
-
-  .platform-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .platform-card {
-    min-height: 280px;
-    padding: 27px;
-  }
-
-  .platform-header {
-    padding: 12px 3%;
-    gap: 7px;
-    flex-wrap: wrap;
-  }
-
-  .platform-header .logo {
-    font-size: 20px;
-  }
-
-  .back-btn {
-    padding: 9px;
-    font-size: 11px;
-  }
-
-  .header-actions {
-    gap: 5px;
-  }
-
-  .header-actions button {
-    font-size: 10px;
-    padding: 9px;
-  }
-
-  .platform-banner {
-    padding: 40px 6%;
-  }
-
-  .platform-content {
-    padding: 25px 4%;
-  }
-
-  .toolbar {
-    flex-direction: column;
-  }
-
-  .toolbar select {
-    width: 100%;
-  }
-
-  .item-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-  }
-
-  .item-image,
-  .item-placeholder {
-    height: 130px;
-  }
-
-  .item-info {
-    padding: 11px;
-  }
-
-  .item-info h3 {
-    font-size: 13px;
-  }
-
-  .item-price {
-    font-size: 16px;
-  }
-
-  .item-footer button {
-    font-size: 10px;
-  }
-
-  .admin-content {
-    padding: 25px 4%;
-  }
-
-  .admin-panel {
-    padding: 15px;
-  }
-
-  .settings-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .settings-grid .full-btn {
-    grid-column: auto;
-  }
-
-  .admin-row {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-}
-
-@media(max-width: 370px) {
-  .item-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ======================================
-   NEXORA — ҮНДСЭН JAVASCRIPT
-   1-Р ХЭСЭГ
-====================================== */
-
-const DB_KEY = "NEXORA_DATABASE_V1";
-
-const DEFAULT_DB = {
-  settings: {
-    adFee: 5000,
-    shopFee: 30000,
-    bankAccounts: [
-      {
-        bankName: "Хаан банк",
-        accountOwner: "У.Нямбаяр",
-        accountNumber: "5517307418"
-      },
-      {
-        bankName: "Хас банк",
-        accountOwner: "Б.Баярлхагва",
-        accountNumber: "5000619081"
-      }
-    ],
-    paymentInstruction: "Гүйлгээний утгад NEXORA гэж бичнэ үү."
+export const metadata: Metadata = {
+  title: {
+    default: "NEXORA — Бүх зүйл нэг дор",
+    template: "%s | NEXORA"
   },
-  ads: [],
-  products: [],
-  payments: []
+  description:
+    "NEXORA — зар болон онлайн худалдааны нэгдсэн платформ.",
+  applicationName: "NEXORA",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "NEXORA"
+  }
 };
 
-let db = loadDatabase();
-let currentType = null;
-let adminLoggedIn = false;
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#090909"
+};
 
-/* ======================================
-   DATABASE
-====================================== */
+export default function RootLayout({
+  children
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="mn">
+      <body>{children}</body>
+    </html>
+  );
+}
+import { createBrowserClient } from "@supabase/ssr";
 
-function loadDatabase() {
-  try {
-    const saved = localStorage.getItem(DB_KEY);
+let supabaseClient:
+  | ReturnType<typeof createBrowserClient>
+  | undefined;
 
-    if (!saved) {
-      return JSON.parse(JSON.stringify(DEFAULT_DB));
-    }
+export function createClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
-    const parsed = JSON.parse(saved);
+  if (!url || !key) {
+    throw new Error(
+      "Supabase тохиргоо дутуу байна. NEXT_PUBLIC_SUPABASE_URL болон NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY утгыг тохируулна уу."
+    );
+  }
 
-    return {
-      settings: {
-        ...DEFAULT_DB.settings,
-        ...(parsed.settings || {}),
-        bankAccounts: Array.isArray(parsed.settings?.bankAccounts)
-          ? parsed.settings.bankAccounts
-          : JSON.parse(JSON.stringify(DEFAULT_DB.settings.bankAccounts))
+  if (!supabaseClient) {
+    supabaseClient = createBrowserClient(url, key);
+  }
+
+  return supabaseClient;
+}
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+
+export async function createClient() {
+  const cookieStore = await cookies();
+
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+  if (!url || !key) {
+    throw new Error(
+      "Supabase серверийн тохиргоо дутуу байна."
+    );
+  }
+
+  return createServerClient(url, key, {
+    cookies: {
+      getAll() {
+        return cookieStore.getAll();
       },
-      ads: Array.isArray(parsed.ads) ? parsed.ads : [],
-      products: Array.isArray(parsed.products) ? parsed.products : [],
-      payments: Array.isArray(parsed.payments) ? parsed.payments : []
-    };
-  } catch (error) {
-    console.error("Өгөгдөл унших алдаа:", error);
-    return JSON.parse(JSON.stringify(DEFAULT_DB));
-  }
-}
-
-function saveDatabase() {
-  try {
-    localStorage.setItem(DB_KEY, JSON.stringify(db));
-    return true;
-  } catch (error) {
-    console.error(error);
-    showToast("Өгөгдөл хадгалахад алдаа гарлаа.");
-    return false;
-  }
-}
-
-/* ======================================
-   ТУСЛАХ ФУНКЦ
-====================================== */
-
-function generateID() {
-  return Date.now().toString(36) +
-    Math.random().toString(36).slice(2, 10);
-}
-
-function formatMoney(amount) {
-  return Number(amount || 0).toLocaleString("mn-MN") + " ₮";
-}
-
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[char]);
-}
-
-function showToast(message) {
-  const toast = document.getElementById("toast");
-  if (!toast) return;
-
-  toast.textContent = message;
-  toast.classList.add("show");
-
-  clearTimeout(showToast.timer);
-
-  showToast.timer = setTimeout(() => {
-    toast.classList.remove("show");
-  }, 3000);
-}
-
-function openModal(id) {
-  document.getElementById(id)?.classList.remove("hidden");
-}
-
-function closeModal(id) {
-  document.getElementById(id)?.classList.add("hidden");
-}
-
-function statusText(status) {
-  const labels = {
-    pending: "Хүлээгдэж байна",
-    review: "Баримт шалгаж байна",
-    approved: "Баталгаажсан",
-    rejected: "Татгалзсан",
-    active: "Идэвхтэй",
-    unpaid: "Төлбөр төлөөгүй"
-  };
-
-  return labels[status] || status;
-}
-
-/* ======================================
-   НҮҮР ХУУДАС
-====================================== */
-
-function hideAllScreens() {
-  document.querySelectorAll(".screen").forEach(screen => {
-    screen.classList.add("hidden");
+      setAll(cookiesToSet) {
+        try {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options);
+          });
+        } catch {
+          // Server Component дотроос cookie шинэчлэх боломжгүй үед
+          // middleware cookie шинэчлэлтийг хариуцна.
+        }
+      }
+    }
   });
 }
+import { createServerClient } from "@supabase/ssr";
+import { NextResponse, type NextRequest } from "next/server";
 
-function showHome() {
-  hideAllScreens();
+export async function updateSession(request: NextRequest) {
+  let response = NextResponse.next({
+    request
+  });
 
-  document.getElementById("homeScreen").classList.remove("hidden");
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
-  closeModal("createModal");
-  closeModal("paymentModal");
-  closeModal("adminLoginModal");
+  if (!url || !key) {
+    return response;
+  }
 
-  window.scrollTo(0, 0);
+  const supabase = createServerClient(url, key, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value }) => {
+          request.cookies.set(name, value);
+        });
+
+        response = NextResponse.next({
+          request
+        });
+
+        cookiesToSet.forEach(({ name, value, options }) => {
+          response.cookies.set(name, value, options);
+        });
+      }
+    }
+  });
+
+  await supabase.auth.getUser();
+
+  return response;
+}
+import type { NextRequest } from "next/server";
+import { updateSession } from "@/lib/supabase/middleware";
+
+export async function middleware(request: NextRequest) {
+  return await updateSession(request);
 }
 
-function openPlatform(type) {
-  if (!["ads", "shop"].includes(type)) return;
-
-  currentType = type;
-
-  hideAllScreens();
-
-  document.getElementById(
-    type === "ads" ? "adsScreen" : "shopScreen"
-  ).classList.remove("hidden");
-
-  renderPlatform(type);
-
-  window.scrollTo(0, 0);
-}
-
-/* ======================================
-   АНГИЛАЛ
-====================================== */
-
-const categoryOptions = {
-  ad: [
-    "Автомашин",
-    "Үл хөдлөх",
-    "Ажлын зар",
-    "Сургалт дамжаа",
-    "Аялал зуучлал",
-    "Үйлчилгээ",
-    "Электроник",
-    "Хувцас",
-    "Гэр ахуй",
-    "Бусад"
-  ],
-
-  product: [
-    "Электрон бараа",
-    "Хувцас гутал",
-    "Гэр ахуй",
-    "Гоо сайхан",
-    "Хүнс",
-    "Бусад"
+export const config = {
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"
   ]
 };
+    export type UserRole =
+  | "super_admin"
+  | "admin"
+  | "seller"
+  | "buyer"
+  | "user";
 
-function loadCategories(type) {
-  const select = document.getElementById("itemCategory");
+export type PlatformType = "classifieds" | "commerce";
 
-  select.innerHTML = categoryOptions[type]
-    .map(category => `
-      <option value="${escapeHTML(category)}">
-        ${escapeHTML(category)}
-      </option>
-    `).join("");
+export type PaymentStatus =
+  | "pending"
+  | "approved"
+  | "rejected"
+  | "cancelled";
+
+export type ListingStatus =
+  | "draft"
+  | "pending"
+  | "active"
+  | "paused"
+  | "expired"
+  | "rejected";
+
+export type StoreStatus =
+  | "pending"
+  | "active"
+  | "paused"
+  | "expired"
+  | "rejected";
+
+export interface UserProfile {
+  id: string;
+  full_name: string | null;
+  phone: string | null;
+  role: UserRole;
+  avatar_url: string | null;
+  created_at: string;
 }
 
-/* ======================================
-   ЗАР, БАРАА НЭМЭХ
-====================================== */
-
-function openCreate(type) {
-  if (!["ad", "product"].includes(type)) return;
-
-  currentType = type;
-
-  document.getElementById("createTitle").textContent =
-    type === "ad"
-      ? "Шинэ зар байршуулах"
-      : "Шинэ бараа нэмэх";
-
-  document.getElementById("createForm").reset();
-
-  document.getElementById("storeName").classList.toggle(
-    "hidden",
-    type !== "product"
-  );
-
-  loadCategories(type);
-
-  openModal("createModal");
+export interface ListingCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  icon: string | null;
+  sort_order: number;
+  is_active: boolean;
 }
 
-function createItem(event) {
-  event.preventDefault();
-
-  const type = currentType;
-
-  if (!["ad", "product"].includes(type)) return;
-
-  const name = document.getElementById("itemName").value.trim();
-  const price = Number(document.getElementById("itemPrice").value);
-  const category = document.getElementById("itemCategory").value;
-  const description = document.getElementById("itemDescription").value.trim();
-  const phone = document.getElementById("itemPhone").value.trim();
-  const image = document.getElementById("itemImage").value.trim();
-  const storeName = document.getElementById("storeName").value.trim();
-
-  if (!name || !description || !phone) {
-    showToast("Шаардлагатай мэдээллээ бөглөнө үү.");
-    return;
-  }
-
-  if (!Number.isSafeInteger(price) || price <= 0) {
-    showToast("Үнийг зөв оруулна уу.");
-    return;
-  }
-
-  if (image) {
-    try {
-      const parsed = new URL(image);
-
-      if (!["http:", "https:"].includes(parsed.protocol)) {
-        throw new Error();
-      }
-    } catch {
-      showToast("Зургийн холбоос буруу байна.");
-      return;
-    }
-  }
-
-  if (type === "product" && !storeName) {
-    showToast("Дэлгүүрийн нэрээ оруулна уу.");
-    return;
-  }
-
-  const item = {
-    id: generateID(),
-    name,
-    price,
-    category,
-    description,
-    phone,
-    image,
-    storeName: type === "product" ? storeName : "",
-    status: "pending",
-    createdAt: new Date().toISOString()
-  };
-
-  const fee = type === "ad"
-    ? Number(db.settings.adFee)
-    : Number(db.settings.shopFee);
-
-  const payment = {
-    id: generateID(),
-    itemId: item.id,
-    type,
-    title: type === "ad"
-      ? "Зар байршуулалт: " + name
-      : "Худалдааны байршуулалт: " + name,
-    amount: fee,
-    payerName: "",
-    reference: "",
-    receipt: "",
-    status: "unpaid",
-    createdAt: new Date().toISOString()
-  };
-
-  const collection = type === "ad" ? db.ads : db.products;
-
-  collection.push(item);
-  db.payments.push(payment);
-
-  if (!saveDatabase()) {
-    collection.pop();
-    db.payments.pop();
-    return;
-  }
-
-  closeModal("createModal");
-
-  showToast("Мэдээлэл бүртгэгдлээ. Төлбөрөө төлнө үү.");
-
-  openPayment(type, payment.id);
+export interface Listing {
+  id: string;
+  user_id: string;
+  category_id: string;
+  title: string;
+  description: string;
+  price: number | null;
+  location_name: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  status: ListingStatus;
+  created_at: string;
 }
 
-document.getElementById("createForm").addEventListener(
-  "submit",
-  createItem
-);
-
-/* ======================================
-   1-Р ХЭСГИЙН ТӨГСГӨЛ
-   2-Р ХЭСЭГТ ҮРГЭЛЖИЛНЭ
-====================================== */
-
-/* ======================================
-   2-Р ХЭСЭГ — ТӨЛБӨРИЙН АЖИЛЛАГААНЫ ЗАСВАР
-====================================== */
-
-function approvePayment(paymentID) {
-  if (!adminLoggedIn) return;
-
-  const payment = db.payments.find(
-    p => p.id === paymentID
-  );
-
-  if (!payment || payment.status !== "review") return;
-
-  const collection = payment.type === "ad"
-    ? db.ads
-    : db.products;
-
-  const item = collection.find(
-    x => x.id === payment.itemId
-  );
-
-  if (!item) {
-    showToast("Зар эсвэл бараа олдсонгүй.");
-    return;
-  }
-
-  if (!confirm("Төлбөрийг баталгаажуулах уу?")) return;
-
-  const oldPaymentStatus = payment.status;
-  const oldItemStatus = item.status;
-
-  payment.status = "approved";
-  payment.approvedAt = new Date().toISOString();
-  item.status = "active";
-
-  if (!saveDatabase()) {
-    payment.status = oldPaymentStatus;
-    item.status = oldItemStatus;
-    return;
-  }
-
-  showToast("Төлбөр баталгаажлаа.");
-
-  renderAdmin();
-  renderPlatform("ads");
-  renderPlatform("shop");
+export interface Store {
+  id: string;
+  owner_id: string;
+  name: string;
+  description: string | null;
+  logo_url: string | null;
+  status: StoreStatus;
+  subscription_started_at: string | null;
+  subscription_expires_at: string | null;
+  created_at: string;
 }
 
-/* ======================================
-   ТӨЛБӨР ТАТГАЛЗАХ
-====================================== */
-
-function rejectPayment(paymentID) {
-  if (!adminLoggedIn) return;
-
-  const payment = db.payments.find(
-    p => p.id === paymentID
-  );
-
-  if (!payment || payment.status !== "review") return;
-
-  if (!confirm("Төлбөрөөс татгалзах уу?")) return;
-
-  const oldStatus = payment.status;
-  payment.status = "rejected";
-
-  if (!saveDatabase()) {
-    payment.status = oldStatus;
-    return;
-  }
-
-  showToast("Төлбөрийн хүсэлт татгалзагдлаа.");
-
-  renderAdmin();
+export interface Product {
+  id: string;
+  store_id: string;
+  category_id: string | null;
+  name: string;
+  description: string | null;
+  price: number;
+  sale_price: number | null;
+  stock_quantity: number;
+  image_urls: string[];
+  is_active: boolean;
+  created_at: string;
 }
 
-/* ======================================
-   БАНКНЫ ДАНСНЫ ТОХИРГОО
-====================================== */
-
-function updateBankSettings() {
-  if (!adminLoggedIn) return;
-
-  const bankName =
-    document.getElementById("bankName").value.trim();
-
-  const accountOwner =
-    document.getElementById("accountOwner").value.trim();
-
-  const accountNumber =
-    document.getElementById("accountNumber").value.trim();
-
-  if (!bankName || !accountOwner || !accountNumber) {
-    showToast("Банкны мэдээллээ бүрэн оруулна уу.");
-    return false;
-  }
-
-  const oldAccounts = [
-    ...(db.settings.bankAccounts || [])
-  ];
-
-  db.settings.bankAccounts = [
-    {
-      bankName,
-      accountOwner,
-      accountNumber
-    },
-    ...oldAccounts.slice(1)
-  ];
-
-  if (!saveDatabase()) {
-    db.settings.bankAccounts = oldAccounts;
-    return false;
-  }
-
-  return true;
+export interface BankAccount {
+  id: string;
+  bank_name: string;
+  account_number: string;
+  account_holder: string;
+  is_active: boolean;
 }
 
-/* ======================================
-   ЗАР БАРАА УСТГАХ
-====================================== */
-
-function deletePlatformItem(id, type) {
-  if (!adminLoggedIn) return;
-
-  const collection = type === "ad"
-    ? db.ads
-    : db.products;
-
-  const index = collection.findIndex(
-    item => item.id === id
-  );
-
-  if (index === -1) return;
-
-  if (!confirm("Энэ мэдээллийг устгах уу?")) return;
-
-  const removed = collection.splice(index, 1)[0];
-
-  if (!saveDatabase()) {
-    collection.splice(index, 0, removed);
-    return;
-  }
-
-  renderAdmin();
-  renderPlatform("ads");
-  renderPlatform("shop");
-
-  showToast("Мэдээлэл устгагдлаа.");
+export interface AppTheme {
+  id: string;
+  name: string;
+  background_color: string;
+  panel_color: string;
+  accent_color: string;
+  secondary_color: string;
+  glow_intensity: number;
 }
+    
+  import Link from "next/link";
 
-/* ======================================
-   ХАЙЛТ ШИНЭЧЛЭХ
-====================================== */
-
-function refreshPlatforms() {
-  renderPlatform("ads");
-  renderPlatform("shop");
-}
-
-/* ======================================
-   АДМИНЫ ЭРХ ШАЛГАХ
-====================================== */
-
-function requireAdmin() {
-  if (!adminLoggedIn) {
-    showToast("Админ эрх шаардлагатай.");
-    return false;
-  }
-
-  return true;
-}
-
-console.log("NEXORA — 2-р хэсэг амжилттай ачааллаа.");
-     
-/* ======================================
-   NEXORA — 3-Р ХЭСЭГ
-   НЭМЭЛТ АЖИЛЛАГААНЫ ЗАСВАР
-====================================== */
-
-/* ӨГӨГДӨЛ ШАЛГАХ */
-
-function validateDatabase() {
-  if (!db || typeof db !== "object") {
-    throw new Error("Өгөгдлийн бүтэц буруу байна.");
-  }
-
-  db.ads = Array.isArray(db.ads) ? db.ads : [];
-  db.products = Array.isArray(db.products)
-    ? db.products : [];
-  db.payments = Array.isArray(db.payments)
-    ? db.payments : [];
-
-  db.settings = db.settings || {};
-  db.settings.bankAccounts =
-    Array.isArray(db.settings.bankAccounts)
-      ? db.settings.bankAccounts
-      : [];
-
-  return true;
-}
-
-/* БАНКНЫ ДАНС ХУУЛАХ */
-
-async function copyBankAccount(accountNumber) {
-  if (!accountNumber) {
-    showToast("Дансны дугаар олдсонгүй.");
-    return;
-  }
-
-  try {
-    await navigator.clipboard.writeText(
-      String(accountNumber)
-    );
-
-    showToast("Дансны дугаар хуулагдлаа.");
-  } catch (error) {
-    showToast("Дансны дугаар: " + accountNumber);
-  }
-}
-
-/* ЗАРЫН ЖАГСААЛТ ШИНЭЧЛЭХ */
-
-function refreshAds() {
-  if (document.getElementById("adsScreen")
-      ?.classList.contains("hidden") === false) {
-    renderPlatform("ads");
-  }
-}
-
-/* БАРААНЫ ЖАГСААЛТ ШИНЭЧЛЭХ */
-
-function refreshProducts() {
-  if (document.getElementById("shopScreen")
-      ?.classList.contains("hidden") === false) {
-    renderPlatform("shop");
-  }
-}
-
-/* ТӨЛБӨРИЙН ТӨЛӨВ ШАЛГАХ */
-
-function getPaymentStatus(paymentID) {
-  const payment = db.payments.find(
-    item => item.id === paymentID
-  );
-
-  if (!payment) return null;
-
-  return {
-    id: payment.id,
-    status: payment.status,
-    amount: payment.amount,
-    title: payment.title,
-    createdAt: payment.createdAt
-  };
-}
-
-/* ИДЭВХТЭЙ ЗАРЫН ТОО */
-
-function getActiveAdsCount() {
-  return db.ads.filter(
-    item => item.status === "active"
-  ).length;
-}
-
-/* ИДЭВХТЭЙ БАРААНЫ ТОО */
-
-function getActiveProductsCount() {
-  return db.products.filter(
-    item => item.status === "active"
-  ).length;
-}
-
-/* АДМИНЫ САМБАР ШИНЭЧЛЭХ */
-
-function refreshAdminDashboard() {
-  if (!adminLoggedIn) return;
-
-  renderAdmin();
-}
-
-/* ӨГӨГДӨЛ ХАДГАЛАЛТЫН ШАЛГАЛТ */
-
-function checkStorage() {
-  try {
-    const testKey = DB_KEY + "_TEST";
-
-    localStorage.setItem(testKey, "OK");
-
-    const result = localStorage.getItem(testKey);
-
-    localStorage.removeItem(testKey);
-
-    return result === "OK";
-  } catch (error) {
-    return false;
-  }
-}
-
-/* СИСТЕМИЙН ЭХЛЭЛИЙН ШАЛГАЛТ */
-
-function nexoraSystemCheck() {
-  try {
-    validateDatabase();
-
-    if (!checkStorage()) {
-      showToast("Өгөгдөл хадгалах боломжгүй байна.");
-      return false;
-    }
-
-    console.log("NEXORA SYSTEM: READY");
-    console.log("Идэвхтэй зар:", getActiveAdsCount());
-    console.log("Идэвхтэй бараа:", getActiveProductsCount());
-
-    return true;
-  } catch (error) {
-    console.error("NEXORA SYSTEM ERROR:", error);
-    showToast("Системийн шалгалтад алдаа гарлаа.");
-    return false;
-  }
-}
-
-/* ЭХЛЭЛ */
-
-nexoraSystemCheck();
-
-console.log("NEXORA — 3-р хэсэг ачаалагдлаа.");
-
-/* ======================================
-   NEXORA — 4-Р ХЭСЭГ
-   ДУТУУ ФУНКЦҮҮД
-====================================== */
-
-/* ЗАР, БАРАА ХАРУУЛАХ */
-
-function renderPlatform(type) {
-  const isAd = type === "ads";
-  const collection = isAd ? db.ads : db.products;
-
-  const grid = document.getElementById(
-    isAd ? "adsGrid" : "shopGrid"
-  );
-
-  const count = document.getElementById(
-    isAd ? "adsCount" : "shopCount"
-  );
-
-  const empty = document.getElementById(
-    isAd ? "adsEmpty" : "shopEmpty"
-  );
-
-  if (!grid) return;
-
-  const search = document.getElementById(
-    isAd ? "adsSearch" : "shopSearch"
-  )?.value.toLowerCase().trim() || "";
-
-  const category = document.getElementById(
-    isAd ? "adsCategory" : "shopCategory"
-  )?.value || "";
-
-  const filtered = collection.filter(item => {
-    return item.status === "active" &&
-      (!search ||
-        item.name.toLowerCase().includes(search) ||
-        item.description.toLowerCase().includes(search)) &&
-      (!category || item.category === category);
-  });
-
-  grid.innerHTML = filtered.map(item => `
-    <article class="item-card">
-      ${
-        item.image
-          ? `<img class="item-image"
-              src="${escapeHTML(item.image)}"
-              alt="${escapeHTML(item.name)}"
-              onerror="this.style.display='none'">`
-          : `<div class="item-placeholder">🛍️</div>`
-      }
-
-      <div class="item-info">
-        <span class="item-category">
-          ${escapeHTML(item.category)}
-        </span>
-
-        <h3>${escapeHTML(item.name)}</h3>
-
-        <div class="item-price">
-          ${formatMoney(item.price)}
+export default function HomePage() {
+  return (
+    <main className="min-h-screen px-4 py-10">
+      <div className="nexora-container flex min-h-[80vh] flex-col items-center justify-center text-center">
+        <div className="mb-4 rounded-full border border-yellow-400/30 px-4 py-2 text-sm text-yellow-300">
+          БҮХ ЗҮЙЛ НЭГ ДОР
         </div>
 
-        <p class="item-description">
-          ${escapeHTML(item.description)}
+        <h1 className="text-5xl font-black tracking-[0.15em] text-yellow-300 sm:text-7xl">
+          NEXORA
+        </h1>
+
+        <p className="mt-5 max-w-xl text-sm leading-7 text-stone-400 sm:text-base">
+          Зар болон онлайн худалдааны нэгдсэн платформ.
         </p>
 
-        ${
-          item.storeName
-            ? `<small>Дэлгүүр: ${escapeHTML(item.storeName)}</small>`
-            : ""
-        }
+        <div className="mt-10 grid w-full max-w-xl grid-cols-1 gap-4 sm:grid-cols-2">
+          <Link
+            href="/zar"
+            className="nexora-panel nexora-glow flex min-h-36 flex-col items-center justify-center gap-3 p-6 transition hover:border-yellow-300"
+          >
+            <span className="text-3xl">📢</span>
+            <span className="text-xl font-bold text-yellow-300">
+              ЗАР
+            </span>
+            <span className="text-sm text-stone-400">
+              Зар үзэх, нийтлэх
+            </span>
+          </Link>
 
-        <small>Утас: ${escapeHTML(item.phone)}</small>
+          <Link
+            href="/hudaldaa"
+            className="nexora-panel flex min-h-36 flex-col items-center justify-center gap-3 p-6 transition hover:border-yellow-300"
+          >
+            <span className="text-3xl">🛍️</span>
+            <span className="text-xl font-bold text-yellow-300">
+              ХУДАЛДАА
+            </span>
+            <span className="text-sm text-stone-400">
+              Бараа үзэх, захиалах
+            </span>
+          </Link>
+        </div>
 
-        <div class="item-footer">
-          <button type="button"
-            onclick="contactSeller('${escapeHTML(item.phone)}')">
-            Холбогдох
-          </button>
+        <p className="mt-10 text-xs text-stone-600">
+          NEXORA © {new Date().getFullYear()}
+        </p>
+      </div>
+    </main>
+  );
+}
+  NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT_ID.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=YOUR_SUPABASE_PUBLISHABLE_KEY
+ node_modules
+.next
+out
+build
+dist
+
+.env
+.env.local
+.env.*.local
+
+.vercel
+
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+coverage
+    "@eslint/eslintrc": "^3.3.1"
+    import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+
+export default async function SiteHeader() {
+  const supabase = await createClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  return (
+    <header className="sticky top-0 z-40 border-b border-yellow-400/10 bg-black/90 backdrop-blur-xl">
+      <div className="nexora-container flex min-h-16 items-center justify-between gap-3">
+        <Link href="/" className="text-xl font-black tracking-[0.12em] text-yellow-300">
+          NEXORA
+        </Link>
+
+        <nav className="hidden items-center gap-6 text-sm text-stone-300 sm:flex">
+          <Link href="/zar" className="hover:text-yellow-300">ЗАР</Link>
+          <Link href="/hudaldaa" className="hover:text-yellow-300">ХУДАЛДАА</Link>
+        </nav>
+
+        <div className="flex items-center gap-2">
+          {user ? (
+            <Link href="/account" className="nexora-outline-button text-sm">
+              Миний булан
+            </Link>
+          ) : (
+            <>
+              <Link href="/auth/login" className="hidden text-sm text-stone-300 hover:text-yellow-300 sm:block">
+                Нэвтрэх
+              </Link>
+              <Link href="/auth/register" className="nexora-button text-sm">
+                Бүртгүүлэх
+              </Link>
+            </>
+          )}
         </div>
       </div>
-    </article>
-  `).join("");
-
-  if (count) {
-    count.textContent = filtered.length +
-      (isAd ? " зар" : " бараа");
-  }
-
-  if (empty) {
-    empty.classList.toggle("hidden", filtered.length > 0);
-  }
-}
-
-/* ХУДАЛДАГЧТАЙ ХОЛБОГДОХ */
-
-function contactSeller(phone) {
-  const number = String(phone).replace(/[^\d+]/g, "");
-
-  if (!number) {
-    showToast("Утасны дугаар олдсонгүй.");
-    return;
-  }
-
-  window.location.href = "tel:" + number;
-}
-
-/* ТӨЛБӨРИЙН ЦОНХ */
-
-function openPayment(type, paymentID = null) {
-  const payment = paymentID
-    ? db.payments.find(p => p.id === paymentID)
-    : null;
-
-  const amount = payment
-    ? payment.amount
-    : type === "ad"
-      ? db.settings.adFee
-      : db.settings.shopFee;
-
-  const accounts = db.settings.bankAccounts || [];
-
-  const accountHTML = accounts.map(account => `
-    <div class="payment-account">
-      <strong>${escapeHTML(account.bankName)}</strong><br>
-      Данс эзэмшигч:
-      ${escapeHTML(account.accountOwner)}<br>
-      Данс:
-      <strong>${escapeHTML(account.accountNumber)}</strong>
-      <button type="button"
-        onclick="copyBankAccount('${escapeHTML(account.accountNumber)}')">
-        Данс хуулах
-      </button>
-    </div>
-  `).join("");
-
-  document.getElementById("paymentInfo").innerHTML = `
-    <div class="payment-account">
-      <strong>Төлөх дүн: ${formatMoney(amount)}</strong>
-      <hr>
-      ${escapeHTML(db.settings.paymentInstruction || "")}
-      ${accountHTML}
-    </div>
-  `;
-
-  const form = document.getElementById("paymentForm");
-  form.dataset.paymentId = payment?.id || "";
-
-  form.reset();
-
-  openModal("paymentModal");
-}
-
-/* ТӨЛБӨРИЙН ХҮСЭЛТ ИЛГЭЭХ */
-
-function submitPayment(event) {
-  event.preventDefault();
-
-  const paymentID =
-    document.getElementById("paymentForm").dataset.paymentId;
-
-  const payment = db.payments.find(
-    p => p.id === paymentID
+    </header>
   );
+}
+  "use client";
 
-  if (!payment) {
-    showToast("Төлбөрийн бүртгэл олдсонгүй.");
-    return;
-  }
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
-  if (!["unpaid", "rejected"].includes(payment.status)) {
-    showToast("Энэ төлбөрийн хүсэлт өмнө нь илгээгдсэн байна.");
-    return;
-  }
+type AuthFormProps = {
+  mode: "login" | "register";
+};
 
-  const payerName =
-    document.getElementById("payerName").value.trim();
+export default function AuthForm({ mode }: AuthFormProps) {
+  const router = useRouter();
 
-  const reference =
-    document.getElementById("paymentReference").value.trim();
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
-  const receipt =
-    document.getElementById("receiptUrl").value.trim();
+  const isRegister = mode === "register";
 
-  if (!payerName || !reference) {
-    showToast("Мэдээллээ бүрэн оруулна уу.");
-    return;
-  }
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setLoading(true);
+    setError("");
+    setMessage("");
 
-  if (receipt) {
     try {
-      const url = new URL(receipt);
-      if (!["http:", "https:"].includes(url.protocol)) {
-        throw new Error();
+      const supabase = createClient();
+
+      if (isRegister) {
+        if (password.length < 8) {
+          throw new Error("Нууц үг хамгийн багадаа 8 тэмдэгт байна.");
+        }
+
+        const { data, error: signUpError } = await supabase.auth.signUp({
+          email: email.trim(),
+          password,
+          options: {
+            data: {
+              full_name: fullName.trim(),
+              phone: phone.trim()
+            }
+          }
+        });
+
+        if (signUpError) throw signUpError;
+
+        if (data.session) {
+          router.push("/account");
+          router.refresh();
+        } else {
+          setMessage(
+            "Бүртгэл үүслээ. И-мэйл хаягтаа очсон баталгаажуулах холбоосыг нээнэ үү."
+          );
+        }
+      } else {
+        const { error: signInError } =
+          await supabase.auth.signInWithPassword({
+            email: email.trim(),
+            password
+          });
+
+        if (signInError) throw signInError;
+
+        router.push("/account");
+        router.refresh();
       }
-    } catch {
-      showToast("Баримтын холбоос буруу байна.");
-      return;
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Алдаа гарлаа. Дахин оролдоно уу."
+      );
+    } finally {
+      setLoading(false);
     }
   }
 
-  const oldPayment = { ...payment };
+  return (
+    <form onSubmit={handleSubmit} className="w-full space-y-4">
+      {isRegister && (
+        <>
+          <div>
+            <label className="mb-2 block text-sm text-stone-300">
+              Овог, нэр
+            </label>
+            <input
+              className="nexora-input"
+              value={fullName}
+              onChange={(event) => setFullName(event.target.value)}
+              placeholder="Нэрээ оруулна уу"
+              autoComplete="name"
+              required
+            />
+          </div>
 
-  payment.payerName = payerName;
-  payment.reference = reference;
-  payment.receipt = receipt;
-  payment.status = "review";
+          <div>
+            <label className="mb-2 block text-sm text-stone-300">
+              Утасны дугаар
+            </label>
+            <input
+              className="nexora-input"
+              type="tel"
+              value={phone}
+              onChange={(event) => setPhone(event.target.value)}
+              placeholder="Утасны дугаар"
+              autoComplete="tel"
+            />
+          </div>
+        </>
+      )}
 
-  if (!saveDatabase()) {
-    Object.assign(payment, oldPayment);
-    return;
-  }
-
-  closeModal("paymentModal");
-  showToast("Төлбөрийн хүсэлт илгээгдлээ.");
-
-  renderAdmin();
-}
-
-document.getElementById("paymentForm").addEventListener(
-  "submit",
-  submitPayment
-);
-
-/* АДМИН НЭВТРЭХ */
-
-function openAdminLogin() {
-  openModal("adminLoginModal");
-}
-
-document.getElementById("adminLoginForm").addEventListener(
-  "submit",
-  function(event) {
-    event.preventDefault();
-
-    const password =
-      document.getElementById("adminPassword").value;
-
-    if (password !== "092112") {
-      showToast("Нууц үг буруу байна.");
-      return;
-    }
-
-    adminLoggedIn = true;
-
-    closeModal("adminLoginModal");
-    hideAllScreens();
-
-    document.getElementById("adminScreen")
-      .classList.remove("hidden");
-
-    renderAdmin();
-
-    showToast("Админ самбарт нэвтэрлээ.");
-  }
-);
-
-/* АДМИН ГАРАХ */
-
-function adminLogout() {
-  adminLoggedIn = false;
-  showHome();
-  showToast("Системээс гарлаа.");
-}
-
-/* АДМИН САМБАР */
-
-function renderAdmin() {
-  if (!adminLoggedIn) return;
-
-  document.getElementById("statAds").textContent =
-    db.ads.length;
-
-  document.getElementById("statProducts").textContent =
-    db.products.length;
-
-  document.getElementById("statPayments").textContent =
-    db.payments.length;
-
-  document.getElementById("statApproved").textContent =
-    db.payments.filter(p => p.status === "approved").length;
-
-  document.getElementById("adFee").value =
-    db.settings.adFee;
-
-  document.getElementById("shopFee").value =
-    db.settings.shopFee;
-
-  const account = db.settings.bankAccounts[0] || {};
-
-  document.getElementById("bankName").value =
-    account.bankName || "";
-
-  document.getElementById("accountOwner").value =
-    account.accountOwner || "";
-
-  document.getElementById("accountNumber").value =
-    account.accountNumber || "";
-
-  document.getElementById("paymentInstruction").value =
-    db.settings.paymentInstruction || "";
-
-  renderPaymentRequests();
-  renderAdminItems();
-}
-
-/* ТӨЛБӨРИЙН ХҮСЭЛТИЙН ЖАГСААЛТ */
-
-function renderPaymentRequests() {
-  const container =
-    document.getElementById("paymentRequests");
-
-  if (!container) return;
-
-  container.innerHTML = db.payments.map(payment => `
-    <div class="admin-row">
       <div>
-        <strong>${escapeHTML(payment.title)}</strong>
-        <small>
-          ${formatMoney(payment.amount)} ·
-          ${escapeHTML(payment.payerName || "Төлөгч тодорхойгүй")}
-        </small>
-        <small>
-          Гүйлгээ: ${escapeHTML(payment.reference || "-")}
-        </small>
-        <span class="status ${escapeHTML(payment.status)}">
-          ${escapeHTML(statusText(payment.status))}
-        </span>
-        ${
-          payment.receipt
-            ? `<p><a href="${escapeHTML(payment.receipt)}"
-                 target="_blank" rel="noopener noreferrer">
-                 Баримт харах
-               </a></p>`
-            : ""
-        }
+        <label className="mb-2 block text-sm text-stone-300">
+          И-мэйл хаяг
+        </label>
+        <input
+          className="nexora-input"
+          type="email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          placeholder="name@example.com"
+          autoComplete="email"
+          required
+        />
       </div>
 
-      <div class="admin-actions">
-        ${
-          payment.status === "review"
-            ? `
-              <button class="approve-btn"
-                onclick="approvePayment('${payment.id}')">
-                Батлах
-              </button>
-              <button class="reject-btn"
-                onclick="rejectPayment('${payment.id}')">
-                Татгалзах
-              </button>
-            `
-            : ""
-        }
-      </div>
-    </div>
-  `).join("") || "<p>Төлбөрийн хүсэлт алга.</p>";
-}
-
-/* ЗАР БАРААНЫ АДМИН УДИРДЛАГА */
-
-function renderAdminItems() {
-  const container = document.getElementById("adminItems");
-
-  if (!container) return;
-
-  const allItems = [
-    ...db.ads.map(item => ({ ...item, type: "ad" })),
-    ...db.products.map(item => ({ ...item, type: "product" }))
-  ];
-
-  container.innerHTML = allItems.map(item => `
-    <div class="admin-row">
       <div>
-        <strong>${escapeHTML(item.name)}</strong>
-        <small>
-          ${item.type === "ad" ? "Зар" : "Бараа"} ·
-          ${formatMoney(item.price)}
-        </small>
-        <span class="status ${escapeHTML(item.status)}">
-          ${escapeHTML(statusText(item.status))}
-        </span>
+        <label className="mb-2 block text-sm text-stone-300">
+          Нууц үг
+        </label>
+        <input
+          className="nexora-input"
+          type="password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          placeholder={isRegister ? "8-аас дээш тэмдэгт" : "Нууц үг"}
+          autoComplete={isRegister ? "new-password" : "current-password"}
+          minLength={isRegister ? 8 : 1}
+          required
+        />
       </div>
 
-      <div class="admin-actions">
-        <button class="delete-btn"
-          onclick="deletePlatformItem('${item.id}', '${item.type}')">
-          Устгах
-        </button>
-      </div>
-    </div>
-  `).join("") || "<p>Бүртгэлтэй мэдээлэл алга.</p>";
+      {error && (
+        <p role="alert" className="rounded-xl border border-red-500/30 bg-red-950/30 p-3 text-sm text-red-300">
+          {error}
+        </p>
+      )}
+
+      {message && (
+        <p role="status" className="rounded-xl border border-green-500/30 bg-green-950/30 p-3 text-sm text-green-300">
+          {message}
+        </p>
+      )}
+
+      <button
+        type="submit"
+        disabled={loading}
+        className="nexora-button w-full"
+      >
+        {loading
+          ? "Түр хүлээнэ үү..."
+          : isRegister
+            ? "Бүртгэл үүсгэх"
+            : "Нэвтрэх"}
+      </button>
+
+      <p className="text-center text-sm text-stone-400">
+        {isRegister ? "Бүртгэлтэй юу?" : "Бүртгэлгүй юу?"}{" "}
+        <Link
+          href={isRegister ? "/auth/login" : "/auth/register"}
+          className="font-semibold text-yellow-300 hover:underline"
+        >
+          {isRegister ? "Нэвтрэх" : "Бүртгүүлэх"}
+        </Link>
+      </p>
+    </form>
+  );
 }
+          import type { Metadata } from "next";
+import Link from "next/link";
+import AuthForm from "@/components/auth-form";
 
-/* ТОХИРГОО ХАДГАЛАХ */
+export const metadata: Metadata = {
+  title: "Нэвтрэх"
+};
 
-document.getElementById("settingsForm").addEventListener(
-  "submit",
-  function(event) {
-    event.preventDefault();
+export default function LoginPage() {
+  return (
+    <main className="flex min-h-screen items-center justify-center px-4 py-10">
+      <section className="nexora-panel w-full max-w-md p-6 sm:p-8">
+        <Link href="/" className="text-sm text-stone-400 hover:text-yellow-300">
+          ← Нүүр хуудас
+        </Link>
 
-    if (!adminLoggedIn) return;
+        <div className="mb-7 mt-8 text-center">
+          <h1 className="text-3xl font-black tracking-widest text-yellow-300">
+            NEXORA
+          </h1>
+          <h2 className="mt-4 text-xl font-bold">Нэвтрэх</h2>
+          <p className="mt-2 text-sm text-stone-400">
+            Өөрийн бүртгэлээр нэвтэрнэ үү.
+          </p>
+        </div>
 
-    const adFee = Number(
-      document.getElementById("adFee").value
-    );
+        <AuthForm mode="login" />
+      </section>
+    </main>
+  );
+}
+  import type { Metadata } from "next";
+import Link from "next/link";
+import AuthForm from "@/components/auth-form";
 
-    const shopFee = Number(
-      document.getElementById("shopFee").value
-    );
+export const metadata: Metadata = {
+  title: "Бүртгүүлэх"
+};
 
-    if (
-      !Number.isSafeInteger(adFee) || adFee < 0 ||
-      !Number.isSafeInteger(shopFee) || shopFee < 0
-    ) {
-      showToast("Төлбөрийн дүн буруу байна.");
-      return;
-    }
+export default function RegisterPage() {
+  return (
+    <main className="flex min-h-screen items-center justify-center px-4 py-10">
+      <section className="nexora-panel w-full max-w-md p-6 sm:p-8">
+        <Link href="/" className="text-sm text-stone-400 hover:text-yellow-300">
+          ← Нүүр хуудас
+        </Link>
 
-    const oldSettings = JSON.parse(
-      JSON.stringify(db.settings)
-    );
+        <div className="mb-7 mt-8 text-center">
+          <h1 className="text-3xl font-black tracking-widest text-yellow-300">
+            NEXORA
+          </h1>
+          <h2 className="mt-4 text-xl font-bold">Шинэ бүртгэл</h2>
+          <p className="mt-2 text-sm text-stone-400">
+            Зар болон худалдааны үйлчилгээг ашиглахын тулд бүртгүүлнэ үү.
+          </p>
+        </div>
 
-    db.settings.adFee = adFee;
-    db.settings.shopFee = shopFee;
-    db.settings.paymentInstruction =
-      document.getElementById("paymentInstruction").value.trim();
+        <AuthForm mode="register" />
+      </section>
+    </main>
+  );
+}
+          
+        "use server";
 
-    if (!updateBankSettings()) {
-      db.settings = oldSettings;
-      return;
-    }
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
 
-    if (!saveDatabase()) {
-      db.settings = oldSettings;
-      return;
-    }
+export async function signOut() {
+  const supabase = await createClient();
 
-    showToast("Тохиргоо хадгалагдлаа.");
-    renderAdmin();
+  await supabase.auth.signOut();
+
+  redirect("/");
+}
+        import Link from "next/link";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { signOut } from "./actions";
+
+export default async function AccountPage() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+    error
+  } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    redirect("/auth/login");
   }
-);
 
-/* ХАЙЛТ */
+  const fullName =
+    user.user_metadata?.full_name ||
+    user.email ||
+    "NEXORA хэрэглэгч";
 
-document.getElementById("adsSearch").addEventListener(
-  "input", () => renderPlatform("ads")
-);
+  return (
+    <main className="min-h-screen px-4 py-8">
+      <div className="nexora-container">
+        <Link href="/" className="text-sm text-stone-400 hover:text-yellow-300">
+          ← Нүүр хуудас
+        </Link>
 
-document.getElementById("adsCategory").addEventListener(
-  "change", () => renderPlatform("ads")
-);
+        <section className="nexora-panel mt-6 p-6 sm:p-8">
+          <p className="text-sm text-yellow-300">МИНИЙ БУЛАН</p>
 
-document.getElementById("shopSearch").addEventListener(
-  "input", () => renderPlatform("shop")
-);
+          <h1 className="mt-3 text-2xl font-bold">
+            Сайн байна уу, {fullName}
+          </h1>
 
-document.getElementById("shopCategory").addEventListener(
-  "change", () => renderPlatform("shop")
-);
+          <div className="mt-6 space-y-3 text-sm">
+            <div className="rounded-xl bg-black/30 p-4">
+              <p className="text-stone-500">И-мэйл</p>
+              <p className="mt-1 break-all">{user.email}</p>
+            </div>
 
-/* ЭХЛЭЛИЙН ТОХИРГОО */
+            <div className="rounded-xl bg-black/30 p-4">
+              <p className="text-stone-500">Бүртгүүлсэн огноо</p>
+              <p className="mt-1">
+                {new Date(user.created_at).toLocaleDateString("mn-MN")}
+              </p>
+            </div>
+          </div>
 
-renderPlatform("ads");
-renderPlatform("shop");
+          <div className="mt-7 grid gap-3 sm:grid-cols-2">
+            <Link href="/zar" className="nexora-outline-button">
+              ЗАР хэсэг рүү
+            </Link>
 
-console.log("NEXORA — 4-р хэсэг ачаалагдлаа.");
+            <Link href="/hudaldaa" className="nexora-outline-button">
+              ХУДАЛДАА хэсэг рүү
+            </Link>
+          </div>
 
+          <form action={signOut} className="mt-6">
+            <button
+              type="submit"
+              className="w-full rounded-xl border border-red-500/40 px-4 py-3 text-sm text-red-300 hover:bg-red-950/30"
+            >
+              Бүртгэлээс гарах
+            </button>
+          </form>
+        </section>
+      </div>
+    </main>
+  );
+}
+       import Link from "next/link";
+import SiteHeader from "@/components/site-header";
+
+export default function HomePage() {
+  return (
+    <>
+      <SiteHeader />
+
+      <main className="min-h-screen">
+        <section className="nexora-container flex min-h-[78vh] flex-col items-center justify-center py-12 text-center">
+          <div className="mb-5 rounded-full border border-yellow-400/30 px-4 py-2 text-xs font-semibold tracking-widest text-yellow-300">
+            БҮХ ЗҮЙЛ НЭГ ДОР
+          </div>
+
+          <h1 className="text-5xl font-black tracking-[0.13em] text-yellow-300 sm:text-7xl">
+            NEXORA
+          </h1>
+
+          <p className="mt-5 max-w-xl text-sm leading-7 text-stone-400 sm:text-base">
+            Зар мэдээлэл болон онлайн худалдааг нэг дороос.
+            Хай, нийтэл, худалдаж ав, борлуул.
+          </p>
+
+          <div className="mt-10 grid w-full max-w-3xl grid-cols-1 gap-5 sm:grid-cols-2">
+            <Link
+              href="/zar"
+              className="nexora-panel nexora-glow group flex min-h-56 flex-col items-center justify-center p-7 transition hover:-translate-y-1 hover:border-yellow-300"
+            >
+              <span className="text-5xl">📢</span>
+              <span className="mt-5 text-2xl font-black tracking-widest text-yellow-300">
+                ЗАР
+              </span>
+              <span className="mt-2 text-sm text-stone-400">
+                Зар үзэх, зар нийтлэх
+              </span>
+              <span className="mt-5 text-sm text-yellow-300">
+                Нэвтрэх →
+              </span>
+            </Link>
+
+            <Link
+              href="/hudaldaa"
+              className="nexora-panel group flex min-h-56 flex-col items-center justify-center p-7 transition hover:-translate-y-1 hover:border-yellow-300"
+            >
+              <span className="text-5xl">🛍️</span>
+              <span className="mt-5 text-2xl font-black tracking-widest text-yellow-300">
+                ХУДАЛДАА
+              </span>
+              <span className="mt-2 text-sm text-stone-400">
+                Дэлгүүр, бараа үзэх
+              </span>
+              <span className="mt-5 text-sm text-yellow-300">
+                Нэвтрэх →
+              </span>
+            </Link>
+          </div>
+
+          <div className="mt-12 flex flex-wrap justify-center gap-5 text-sm text-stone-500">
+            <Link href="/auth/login" className="hover:text-yellow-300">
+              Нэвтрэх
+            </Link>
+            <Link href="/auth/register" className="hover:text-yellow-300">
+              Бүртгүүлэх
+            </Link>
+          </div>
+        </section>
+
+        <footer className="border-t border-yellow-400/10 py-6 text-center text-xs text-stone-600">
+          NEXORA © {new Date().getFullYear()} — Бүх эрх хуулиар хамгаалагдсан.
+        </footer>
+      </main>
+    </>
+  );
+}
+      import Link from "next/link";
+import SiteHeader from "@/components/site-header";
+
+export default function ZarPage() {
+  return (
+    <>
+      <SiteHeader />
+
+      <main className="nexora-container min-h-screen py-8">
+        <Link href="/" className="text-sm text-stone-400 hover:text-yellow-300">
+          ← Буцах
+        </Link>
+
+        <h1 className="mt-8 text-3xl font-black text-yellow-300">
+          ЗАР
+        </h1>
+
+        <p className="mt-3 text-stone-400">
+          NEXORA зарын платформ.
+        </p>
+
+        <div className="nexora-panel mt-8 p-6">
+          <p className="text-sm text-stone-300">
+            Зарын ангилал, хайлт, зар нийтлэх болон газрын зургийн
+            боломжууд 3-р хэсэгт нэмэгдэнэ.
+          </p>
+        </div>
+      </main>
+    </>
+  );
+}
+      import Link from "next/link";
+import SiteHeader from "@/components/site-header";
+
+export default function HudaldaaPage() {
+  return (
+    <>
+      <SiteHeader />
+
+      <main className="nexora-container min-h-screen py-8">
+        <Link href="/" className="text-sm text-stone-400 hover:text-yellow-300">
+          ← Буцах
+        </Link>
+
+        <h1 className="mt-8 text-3xl font-black text-yellow-300">
+          ХУДАЛДАА
+        </h1>
+
+        <p className="mt-3 text-stone-400">
+          NEXORA онлайн худалдааны платформ.
+        </p>
+
+        <div className="nexora-panel mt-8 p-6">
+          <p className="text-sm text-stone-300">
+            Дэлгүүр, барааны жагсаалт, сагс, захиалга болон
+            худалдан авалтын боломжууд 4-р хэсэгт нэмэгдэнэ.
+          </p>
+        </div>
+      </main>
+    </>
+  );
+}
+        
+          
+    
