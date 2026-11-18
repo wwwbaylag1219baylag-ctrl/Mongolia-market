@@ -168,7 +168,14 @@
      const {data:profiles,error:profileError}=await db.from("nexora_store_profiles").select("id,store_name,owner_type,phone").in("id",ids);
      if(profileError)throw profileError;
      const byId=new Map((profiles||[]).map(p=>[p.id,p]));
-     data.forEach(r=>Object.assign(r,byId.get(r.store_id)||{}));
+     data.forEach(r=>{
+      const profile=byId.get(r.store_id);
+      if(profile){
+       r.store_name=profile.store_name;
+       r.owner_type=profile.owner_type;
+       r.phone=r.phone||profile.phone;
+      }
+     });
     }
    }
    if(activeTab==="orders"){
