@@ -5,18 +5,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#090909">
-  <title>NEXORA — Бүх зүйл нэг дор</title>
+
+  <title>NEXORA | Mongolia Marketplace</title>
 
   <style>
     :root {
-      --bg: #090909;
-      --panel: #15120d;
-      --panel2: #20190f;
-      --gold: #ffd447;
-      --gold-light: #ffe99a;
-      --text: #f7f2e8;
-      --muted: #a69a85;
-      --border: rgba(255,212,71,.22);
+      --black: #090909;
+      --dark: #111111;
+      --panel: #191919;
+      --panel-light: #222222;
+      --gold: #d6ad55;
+      --gold-light: #f0d28a;
+      --white: #f7f5ef;
+      --muted: #aaa39a;
+      --border: rgba(214, 173, 85, 0.3);
     }
 
     * {
@@ -25,15 +27,23 @@
       padding: 0;
     }
 
+    html,
     body {
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--text);
+      width: 100%;
+      min-height: 100%;
+      background: var(--black);
+      color: var(--white);
       font-family: Arial, sans-serif;
-      padding-bottom: 75px;
     }
 
-    button, input {
+    body {
+      overflow-x: hidden;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
       font: inherit;
     }
 
@@ -41,22 +51,28 @@
       cursor: pointer;
     }
 
-    .header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      background: rgba(9,9,9,.96);
-      border-bottom: 1px solid var(--border);
-      padding: 14px;
+    .screen {
+      display: none;
+      min-height: 100vh;
+      width: 100%;
+      background: var(--black);
     }
 
-    .header-inner {
-      max-width: 1100px;
-      margin: auto;
+    .screen.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      min-height: 68px;
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
+      padding: 12px 18px;
+      background: var(--dark);
+      border-bottom: 1px solid var(--border);
     }
 
     .logo {
@@ -64,248 +80,185 @@
       font-size: 25px;
       font-weight: 900;
       letter-spacing: 3px;
-      text-shadow: 0 0 15px rgba(255,212,71,.3);
     }
 
-    .logo small {
-      display: block;
-      color: var(--muted);
-      font-size: 8px;
-      letter-spacing: 2px;
-      margin-top: 3px;
+    .profile-button {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--gold-light);
+      border-radius: 12px;
+      padding: 10px 13px;
+      font-size: 13px;
     }
 
-    .header-button {
+    .back-button {
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
+      border: 1px solid var(--border);
       background: var(--panel);
       color: var(--gold);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 13px;
+      border-radius: 11px;
+      font-size: 25px;
     }
 
-    .container {
-      width: min(100% - 28px, 1100px);
+    .page-heading {
+      flex: 1;
+      color: var(--gold);
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .header-space {
+      width: 42px;
+      flex-shrink: 0;
+    }
+
+    .home-content {
+      width: 100%;
+      max-width: 720px;
       margin: auto;
-    }
-
-    .view {
-      display: none;
-      min-height: 75vh;
-      padding-top: 25px;
-    }
-
-    .view.active {
-      display: block;
+      padding: 30px 20px;
     }
 
     .hero {
       text-align: center;
-      padding: 55px 15px 35px;
-      background:
-        radial-gradient(ellipse at 50% 0%,
-        rgba(255,212,71,.15), transparent 65%);
+      padding: 35px 10px 42px;
     }
 
-    .hero-label {
-      display: inline-block;
-      padding: 9px 15px;
-      border: 1px solid var(--border);
-      border-radius: 30px;
+    .hero-logo {
       color: var(--gold);
-      font-size: 11px;
-      letter-spacing: 2px;
-    }
-
-    .hero h1 {
-      color: var(--gold);
-      font-size: clamp(38px, 9vw, 70px);
-      letter-spacing: 7px;
-      margin-top: 22px;
+      font-size: clamp(38px, 10vw, 58px);
       font-weight: 900;
+      letter-spacing: 6px;
     }
 
-    .hero p {
-      max-width: 520px;
-      margin: 15px auto 0;
+    .hero-subtitle {
+      margin-top: 13px;
       color: var(--muted);
-      line-height: 1.8;
+      font-size: 12px;
+      letter-spacing: 2px;
+      line-height: 1.7;
+    }
+
+    .hero-description {
+      margin-top: 18px;
+      color: var(--white);
       font-size: 14px;
+      line-height: 1.7;
     }
 
-    .section-title {
-      color: var(--gold);
-      font-size: 19px;
-      margin: 25px 0 15px;
+    .platform-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      width: 100%;
     }
 
-    .main-cards {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-      margin: 25px auto;
-      max-width: 750px;
-    }
-
-    .main-card {
-      min-height: 190px;
-      padding: 22px 12px;
-      background: linear-gradient(145deg,var(--panel2),var(--panel));
+    .platform-card {
+      width: 100%;
+      min-height: 155px;
+      padding: 24px 22px;
       border: 1px solid var(--border);
-      border-radius: 17px;
-      color: var(--text);
-      text-align: center;
-      transition: .2s;
+      border-radius: 18px;
+      background: linear-gradient(
+        135deg,
+        #242424,
+        #121212
+      );
+      color: var(--white);
+      text-align: left;
+      transition: transform 0.2s, border-color 0.2s;
     }
 
-    .main-card:active {
-      transform: scale(.98);
+    .platform-card:active {
+      transform: scale(0.98);
       border-color: var(--gold);
     }
 
-    .main-card .emoji {
-      font-size: 42px;
-      display: block;
-      margin-bottom: 14px;
-    }
-
-    .main-card strong {
+    .platform-icon {
       display: block;
       color: var(--gold);
-      font-size: 20px;
-      letter-spacing: 2px;
+      font-size: 30px;
+      margin-bottom: 15px;
     }
 
-    .main-card small {
+    .platform-title {
+      display: block;
+      color: var(--gold-light);
+      font-size: 19px;
+      font-weight: 800;
+      line-height: 1.4;
+    }
+
+    .platform-description {
       display: block;
       color: var(--muted);
-      margin-top: 10px;
-      line-height: 1.5;
+      font-size: 13px;
+      line-height: 1.6;
+      margin-top: 9px;
     }
 
-    .panel {
-      background: var(--panel);
+    .footer {
+      margin-top: auto;
+      padding: 24px 15px;
+      text-align: center;
+      color: #77716a;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    .page-content {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 24px 18px;
+    }
+
+    .welcome-panel {
+      padding: 22px;
       border: 1px solid var(--border);
-      border-radius: 15px;
-      padding: 20px;
-      margin: 15px 0;
+      border-radius: 16px;
+      background: var(--panel);
     }
 
-    .panel h2 {
+    .welcome-panel h2 {
       color: var(--gold);
       font-size: 21px;
       margin-bottom: 12px;
     }
 
-    .muted {
+    .welcome-panel p {
       color: var(--muted);
-      line-height: 1.7;
       font-size: 14px;
+      line-height: 1.7;
     }
 
-    .gold-button {
-      display: block;
-      width: 100%;
-      padding: 14px;
-      border: 0;
-      border-radius: 11px;
-      background: linear-gradient(135deg,var(--gold-light),var(--gold));
-      color: #171109;
-      font-weight: bold;
-      margin-top: 13px;
-    }
-
-    .outline-button {
-      display: block;
-      width: 100%;
-      padding: 13px;
-      border: 1px solid var(--border);
-      border-radius: 11px;
-      background: transparent;
-      color: var(--gold);
-      margin-top: 10px;
-    }
-
-    .field {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: #100e0b;
-      color: var(--text);
-      margin: 8px 0 13px;
-      outline: none;
-    }
-
-    .field:focus {
-      border-color: var(--gold);
-    }
-
-    .bottom-nav {
-      position: fixed;
-      z-index: 30;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: space-around;
-      background: #100e0b;
-      border-top: 1px solid var(--border);
-      padding: 9px 4px calc(9px + env(safe-area-inset-bottom));
-    }
-
-    .bottom-nav button {
-      background: transparent;
-      border: 0;
-      color: var(--muted);
-      font-size: 11px;
-      min-width: 60px;
-      padding: 5px;
-    }
-
-    .bottom-nav button span {
-      display: block;
-      font-size: 19px;
-      margin-bottom: 4px;
-    }
-
-    .bottom-nav button.active {
-      color: var(--gold);
-    }
-
-    .back-button {
-      background: transparent;
-      border: 0;
-      color: var(--gold);
-      padding: 8px 0;
-      font-size: 15px;
-      margin-bottom: 15px;
-    }
-
-    footer {
-      text-align: center;
-      color: #716957;
-      font-size: 11px;
-      padding: 30px 10px;
-      border-top: 1px solid var(--border);
-      margin-top: 40px;
-    }
-
-    @media(max-width: 500px) {
-      .main-cards {
-        gap: 9px;
+    @media (min-width: 650px) {
+      .home-content {
+        padding-top: 45px;
+        padding-bottom: 45px;
       }
 
-      .main-card {
-        min-height: 160px;
-        padding: 18px 8px;
+      .platform-card {
+        min-height: 170px;
+        padding: 30px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .topbar {
+        padding-left: 12px;
+        padding-right: 12px;
       }
 
-      .main-card strong {
+      .logo {
+        font-size: 21px;
+      }
+
+      .platform-title {
         font-size: 17px;
-      }
-
-      .hero {
-        padding-top: 40px;
       }
     }
   </style>
@@ -313,647 +266,347 @@
 
 <body>
 
-<header class="header">
-  <div class="header-inner">
-    <div class="logo">
-      NEXORA
-      <small>NEXT GENERATION MARKETPLACE</small>
-    </div>
-    <button class="header-button" onclick="openView('account')">
-      👤 Миний булан
-    </button>
-  </div>
-</header>
-
-<main class="container">
-
-  <!-- НҮҮР ХУУДАС -->
-  <section id="home" class="view active">
-    <div class="hero">
-      <span class="hero-label">БҮХ ЗҮЙЛ НЭГ ДОР</span>
-      <h1>NEXORA</h1>
-      <p>
-        Монголын нэгдсэн цахим платформ.
-        Зар мэдээлэл, онлайн худалдаа болон
-        үйлчилгээг нэг дороос.
-      </p>
-    </div>
-
-    <h2 class="section-title">Үндсэн хэсгүүд</h2>
-
-    <div class="main-cards">
-      <button class="main-card" onclick="openView('zar')">
-        <span class="emoji">📢</span>
-        <strong>ЗАР</strong>
-        <small>Зар үзэх, нийтлэх</small>
-      </button>
-
-      <button class="main-card" onclick="openView('hudaldaa')">
-        <span class="emoji">🛍️</span>
-        <strong>ХУДАЛДАА</strong>
-        <small>Бараа үзэх, худалдаж авах</small>
-      </button>
-
-      <button class="main-card" onclick="openView('services')">
-        <span class="emoji">🛠️</span>
-        <strong>ҮЙЛЧИЛГЭЭ</strong>
-        <small>Үйлчилгээ хайх</small>
-      </button>
-
-      <button class="main-card" onclick="openView('account')">
-        <span class="emoji">👤</span>
-        <strong>МИНИЙ БУЛАН</strong>
-        <small>Хэрэглэгчийн мэдээлэл</small>
-      </button>
-    </div>
-
-    <div class="panel">
-      <h2>NEXORA-д тавтай морил</h2>
-      <p class="muted">
-        Нэг платформоос хайж, зарлаж, худалдан авч,
-        өөрийн үйлчилгээг бусдад хүргээрэй.
-      </p>
-    </div>
-  </section>
-
-  <!-- ЗАР -->
-  <section id="zar" class="view">
-    <button class="back-button" onclick="openView('home')">
-      ← Нүүр хуудас
-    </button>
-
-    <div class="panel">
-      <h2>📢 NEXORA ЗАР</h2>
-      <p class="muted">
-        Зар мэдээллийн хэсэг.
-        Ангилал, дэд ангилал, хайлт болон зар нийтлэх
-        системийг 3-р хэсэгт бүрэн хөгжүүлнэ.
-      </p>
-    </div>
-  </section>
-
-    <!-- ХУДАЛДАА -->
-  <section id="hudaldaa" class="view">
-    <button class="back-button" onclick="openView('home')">
-      ← Нүүр хуудас
-    </button>
-
-    <h2 class="section-title">🛍️ NEXORA ХУДАЛДАА</h2>
-
-    <div class="shop-tools">
-      <input
-        id="shopSearch"
-        class="shop-search"
-        placeholder="Барааны нэрээр хайх..."
-        oninput="renderProducts()"
-      >
-
-      <button class="header-button" onclick="openCart()">
-        🛒 Сагс (<span id="cartCount">0</span>)
-      </button>
-    </div>
-
-    <div class="shop-categories">
-      <button class="shop-category active"
-        onclick="selectCategory('Бүгд', this)">Бүгд</button>
-      <button class="shop-category"
-        onclick="selectCategory('Электрон', this)">Электрон</button>
-      <button class="shop-category"
-        onclick="selectCategory('Хувцас', this)">Хувцас</button>
-      <button class="shop-category"
-        onclick="selectCategory('Гэр ахуй', this)">Гэр ахуй</button>
-      <button class="shop-category"
-        onclick="selectCategory('Гоо сайхан', this)">Гоо сайхан</button>
-    </div>
-
-    <div id="productGrid" class="product-grid"></div>
-  </section>
-
-  <!-- БАРААНЫ ДЭЛГЭРЭНГҮЙ -->
-  <section id="productDetail" class="view">
-    <button class="back-button" onclick="openView('hudaldaa')">
-      ← Бараа руу буцах
-    </button>
-    <div id="productDetailContent"></div>
-  </section>
-
-  <!-- САГС -->
-  <section id="shoppingCart" class="view">
-    <button class="back-button" onclick="openView('hudaldaa')">
-      ← Худалдаа руу буцах
-    </button>
-
-    <h2 class="section-title">🛒 Миний сагс</h2>
-    <div class="panel">
-      <div id="cartItems"></div>
-      <div id="cartSummary"></div>
-    </div>
-
-    <div id="checkoutPanel" class="panel" style="display:none">
-      <h2>Захиалагчийн мэдээлэл</h2>
-
-      <label class="muted" for="buyerName">Нэр</label>
-      <input id="buyerName" class="field"
-        placeholder="Таны нэр">
-
-      <label class="muted" for="buyerPhone">Утас</label>
-      <input id="buyerPhone" class="field"
-        type="tel" placeholder="Утасны дугаар">
-
-      <label class="muted" for="buyerAddress">Хүргэлтийн хаяг</label>
-      <input id="buyerAddress" class="field"
-        placeholder="Дүүрэг, хороо, дэлгэрэнгүй хаяг">
-
-      <button class="gold-button" onclick="placeOrder()">
-        Захиалга илгээх
-      </button>
-    </div>
-  </section>
-
-  <!-- ЗАХИАЛГЫН БАТАЛГАА -->
-  <section id="orderResult" class="view">
-    <div class="panel">
-      <h2>✅ Захиалга бүртгэгдлээ</h2>
-      <p class="muted" id="orderMessage"></p>
-      <button class="gold-button" onclick="openView('hudaldaa')">
-        Худалдаа үргэлжлүүлэх
-      </button>
-      <button class="outline-button" onclick="openView('home')">
-        Нүүр хуудас
-      </button>
-    </div>
-  </section>
-
-  <!-- МИНИЙ БУЛАН -->
-  <section id="account" class="view">
-    <button class="back-button" onclick="openView('home')">
-      ← Нүүр хуудас
-    </button>
-
-    <div class="panel">
-      <h2>👤 Миний булан</h2>
-      <p class="muted" id="accountStatus">
-        Та одоогоор бүртгэлгүй байна.
-      </p>
-
-      <label for="userName" class="muted">Нэр</label>
-      <input id="userName" class="field" placeholder="Овог, нэр">
-
-      <label for="userEmail" class="muted">И-мэйл</label>
-      <input id="userEmail" class="field"
-        type="email" placeholder="И-мэйл хаяг">
-
-      <button class="gold-button" onclick="saveProfile()">
-        Мэдээлэл хадгалах
-      </button>
-
-      <button class="outline-button" onclick="logout()">
-        Мэдээлэл арилгах
-      </button>
-    </div>
-
-    <p class="muted">
-      Анхааруулга: Энэ эхний хувилбарын мэдээлэл
-      зөвхөн тухайн төхөөрөмжийн хөтөчид хадгалагдана.
-      Жинхэнэ хэрэглэгчийн бүртгэл биш.
-    </p>
-  </section>
-
-</main>
-
-<footer>
-  <div class="logo">NEXORA</div>
-  <p style="margin-top:10px">
-    NEXORA © <span id="year"></span>
-  </p>
-  <p>Бүх зүйл нэг дор.</p>
-</footer>
-
-<nav class="bottom-nav">
-  <button class="active" data-view="home"
-    onclick="openView('home')">
-    <span>⌂</span>Нүүр
-  </button>
-
-  <button data-view="zar"
-    onclick="openView('zar')">
-    <span>📢</span>Зар
-  </button>
-
-  <button data-view="hudaldaa"
-    onclick="openView('hudaldaa')">
-    <span>🛍️</span>Худалдаа
-  </button>
-
-  <button data-view="account"
-    onclick="openView('account')">
-    <span>👤</span>Булан
-  </button>
-</nav>
-
-<script>
-  // ХУУДАС СОЛИХ
-  function openView(viewId) {
-    document.querySelectorAll('.view').forEach(view => {
-      view.classList.remove('active');
-    });
-
-    const target = document.getElementById(viewId);
-
-    if (target) {
-      target.classList.add('active');
-    }
-
-    document.querySelectorAll('.bottom-nav button').forEach(button => {
-      button.classList.toggle(
-        'active',
-        button.dataset.view === viewId
-      );
-    });
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  // ПРОФАЙЛ МЭДЭЭЛЭЛ АЧААЛАХ
-  function loadProfile() {
-    const profile = JSON.parse(
-      localStorage.getItem('nexora_profile') || 'null'
-    );
-
-    if (!profile) return;
-
-    document.getElementById('userName').value =
-      profile.name || '';
-
-    document.getElementById('userEmail').value =
-      profile.email || '';
-
-    document.getElementById('accountStatus').textContent =
-      'Сайн байна уу, ' + (profile.name || 'Хэрэглэгч');
-  }
-
-  // ПРОФАЙЛ ХАДГАЛАХ
-  function saveProfile() {
-    const name = document.getElementById('userName').value.trim();
-    const email = document.getElementById('userEmail').value.trim();
-
-    if (!name || !email) {
-      alert('Нэр болон и-мэйлээ оруулна уу.');
-      return;
-    }
-
-    const profile = { name, email };
-
-    localStorage.setItem(
-      'nexora_profile',
-      JSON.stringify(profile)
-    );
-
-    document.getElementById('accountStatus').textContent =
-      'Сайн байна уу, ' + name;
-
-    alert('Мэдээлэл хадгалагдлаа.');
-  }
-
-  // ПРОФАЙЛ АРИЛГАХ
-  function logout() {
-    localStorage.removeItem('nexora_profile');
-
-    document.getElementById('userName').value = '';
-    document.getElementById('userEmail').value = '';
-
-    document.getElementById('accountStatus').textContent =
-      'Та одоогоор бүртгэлгүй байна.';
-
-    alert('Хадгалсан мэдээлэл ариллаа.');
-  }
-
-  document.getElementById('year').textContent =
-    new Date().getFullYear();
-
-  loadProfile();
-    // NEXORA БАРААНЫ ЖАГСААЛТ
-  const products = [
-    {
-      id: 1,
-      name: "Утасгүй чихэвч",
-      category: "Электрон",
-      price: 45000,
-      emoji: "🎧",
-      description: "Өдөр тутмын хэрэглээнд тохиромжтой утасгүй чихэвч."
-    },
-    {
-      id: 2,
-      name: "Ухаалаг цаг",
-      category: "Электрон",
-      price: 85000,
-      emoji: "⌚",
-      description: "Цаг, алхам тоолуур болон өдөр тутмын хэрэглээний цаг."
-    },
-    {
-      id: 3,
-      name: "Эрэгтэй цамц",
-      category: "Хувцас",
-      price: 55000,
-      emoji: "👕",
-      description: "Өдөр тутам өмсөх энгийн загварын цамц."
-    },
-    {
-      id: 4,
-      name: "Эмэгтэй цүнх",
-      category: "Хувцас",
-      price: 75000,
-      emoji: "👜",
-      description: "Өдөр тутмын хэрэглээний загварлаг цүнх."
-    },
-    {
-      id: 5,
-      name: "Ширээний гэрэл",
-      category: "Гэр ахуй",
-      price: 38000,
-      emoji: "💡",
-      description: "Ажил болон хичээл хийхэд зориулсан гэрэл."
-    },
-    {
-      id: 6,
-      name: "Гал тогооны хэрэгсэл",
-      category: "Гэр ахуй",
-      price: 25000,
-      emoji: "🍽️",
-      description: "Гэр ахуйн өдөр тутмын хэрэглээний хэрэгсэл."
-    },
-    {
-      id: 7,
-      name: "Арьс арчилгааны багц",
-      category: "Гоо сайхан",
-      price: 65000,
-      emoji: "🧴",
-      description: "Өдөр тутмын арьс арчилгааны багц."
-    },
-    {
-      id: 8,
-      name: "Үнэртэй ус",
-      category: "Гоо сайхан",
-      price: 95000,
-      emoji: "🌸",
-      description: "Өдөр тутмын хэрэглээний үнэртэй ус."
-    }
-  ];
-
-  let selectedCategory = "Бүгд";
-  let cart = JSON.parse(
-    localStorage.getItem("nexora_cart") || "[]"
-  );
-
-  let selectedProductId = null;
-
-  function formatPrice(price) {
-    return new Intl.NumberFormat("mn-MN").format(price) + " ₮";
-  }
-
-  function saveCart() {
-    localStorage.setItem(
-      "nexora_cart",
-      JSON.stringify(cart)
-    );
-    updateCartCount();
-  }
-
-  function updateCartCount() {
-    const count = cart.reduce(
-      (sum, item) => sum + item.quantity,
-      0
-    );
-
-    const element = document.getElementById("cartCount");
-    if (element) element.textContent = count;
-  }
-
-  function selectCategory(category, button) {
-    selectedCategory = category;
-
-    document.querySelectorAll(".shop-category").forEach(item => {
-      item.classList.remove("active");
-    });
-
-    button.classList.add("active");
-    renderProducts();
-  }
-
-  function renderProducts() {
-    const grid = document.getElementById("productGrid");
-    if (!grid) return;
-
-    const search = (
-      document.getElementById("shopSearch")?.value || ""
-    ).trim().toLowerCase();
-
-    const filtered = products.filter(product => {
-      const matchesCategory =
-        selectedCategory === "Бүгд" ||
-        product.category === selectedCategory;
-
-      const matchesSearch =
-        product.name.toLowerCase().includes(search) ||
-        product.category.toLowerCase().includes(search);
-
-      return matchesCategory && matchesSearch;
-    });
-
-    if (filtered.length === 0) {
-      grid.innerHTML =
-        '<div class="shop-empty">Хайсан бараа олдсонгүй.</div>';
-      return;
-    }
-
-    grid.innerHTML = filtered.map(product => `
-      <article class="product-card">
-        <div class="product-image">${product.emoji}</div>
-        <div class="product-info">
-          <div class="product-name">${product.name}</div>
-          <div class="product-price">
-            ${formatPrice(product.price)}
-          </div>
-          <button class="product-add"
-            onclick="showProduct(${product.id})">
-            Дэлгэрэнгүй
-          </button>
-          <button class="gold-button"
-            onclick="addToCart(${product.id})">
-            🛒 Сагсанд нэмэх
-          </button>
-        </div>
-      </article>
-    `).join("");
-  }
-
-  function showProduct(id) {
-    const product = products.find(item => item.id === id);
-    if (!product) return;
-
-    selectedProductId = id;
-
-    document.getElementById("productDetailContent").innerHTML = `
-      <div class="panel">
-        <div class="detail-emoji">${product.emoji}</div>
-        <h2 class="section-title">${product.name}</h2>
-        <p class="muted">Ангилал: ${product.category}</p>
-        <h2 class="product-price">
-          ${formatPrice(product.price)}
-        </h2>
-        <p class="muted">${product.description}</p>
-        <button class="gold-button"
-          onclick="addToCart(${product.id})">
-          🛒 Сагсанд нэмэх
+  <main id="app">
+
+    <!-- ҮНДСЭН НҮҮР -->
+    <section id="home" class="screen active">
+
+      <header class="topbar">
+        <div class="logo">NEXORA</div>
+
+        <button
+          class="profile-button"
+          type="button"
+          onclick="NEXORA.open('profile')">
+          ☰ Профайл
         </button>
-      </div>
-    `;
+      </header>
 
-    openView("productDetail");
-  }
+      <div class="home-content">
 
-  function addToCart(id) {
-    const product = products.find(item => item.id === id);
-    if (!product) return;
+        <div class="hero">
+          <div class="hero-logo">NEXORA</div>
 
-    const existing = cart.find(item => item.id === id);
-
-    if (existing) {
-      existing.quantity++;
-    } else {
-      cart.push({
-        id: product.id,
-        quantity: 1
-      });
-    }
-
-    saveCart();
-    alert("Бараа сагсанд нэмэгдлээ.");
-  }
-
-  function openCart() {
-    renderCart();
-    openView("shoppingCart");
-  }
-
-  function changeCartQuantity(id, amount) {
-    const item = cart.find(product => product.id === id);
-    if (!item) return;
-
-    item.quantity += amount;
-
-    if (item.quantity <= 0) {
-      cart = cart.filter(product => product.id !== id);
-    }
-
-    saveCart();
-    renderCart();
-  }
-
-  function renderCart() {
-    const itemsElement = document.getElementById("cartItems");
-    const summaryElement = document.getElementById("cartSummary");
-    const checkout = document.getElementById("checkoutPanel");
-
-    if (!itemsElement) return;
-
-    if (cart.length === 0) {
-      itemsElement.innerHTML =
-        '<p class="shop-empty">Таны сагс хоосон байна.</p>';
-
-      summaryElement.innerHTML = "";
-      checkout.style.display = "none";
-      return;
-    }
-
-    let total = 0;
-
-    itemsElement.innerHTML = cart.map(item => {
-      const product = products.find(p => p.id === item.id);
-      if (!product) return "";
-
-      const subtotal = product.price * item.quantity;
-      total += subtotal;
-
-      return `
-        <div class="cart-row">
-          <div>
-            <strong>${product.emoji} ${product.name}</strong>
-            <p class="muted">${formatPrice(product.price)}</p>
+          <div class="hero-subtitle">
+            MONGOLIA MARKETPLACE
           </div>
 
-          <div class="cart-controls">
-            <button onclick="changeCartQuantity(${item.id}, -1)">−</button>
-            <span>${item.quantity}</span>
-            <button onclick="changeCartQuantity(${item.id}, 1)">+</button>
-          </div>
+          <p class="hero-description">
+            Монголын зар болон худалдааны нэгдсэн платформ
+          </p>
         </div>
-      `;
-    }).join("");
 
-    summaryElement.innerHTML = `
-      <div class="cart-total">
-        <span>Нийт дүн</span>
-        <span>${formatPrice(total)}</span>
+        <div class="platform-list">
+
+          <button
+            class="platform-card"
+            type="button"
+            onclick="NEXORA.open('ads')">
+
+            <span class="platform-icon">▣</span>
+
+            <span class="platform-title">
+              ЗАРЫН ПЛАТФОРМ
+            </span>
+
+            <span class="platform-description">
+              Зар хайх, зар үзэх, өөрийн зараа нийтлэх
+              нэгдсэн орчин.
+            </span>
+
+          </button>
+
+          <button
+            class="platform-card"
+            type="button"
+            onclick="NEXORA.open('shop')">
+
+            <span class="platform-icon">◇</span>
+
+            <span class="platform-title">
+              ХУДАЛДААНЫ ПЛАТФОРМ
+            </span>
+
+            <span class="platform-description">
+              Бараа бүтээгдэхүүн үзэх, дэлгүүр сонгох,
+              худалдаа хийх нэгдсэн орчин.
+            </span>
+
+          </button>
+
+        </div>
+
       </div>
-    `;
 
-    checkout.style.display = "block";
-  }
+      <footer class="footer">
+        © NEXORA — MONGOLIA MARKETPLACE
+      </footer>
 
-  function placeOrder() {
-    const name = document.getElementById("buyerName").value.trim();
-    const phone = document.getElementById("buyerPhone").value.trim();
-    const address = document.getElementById("buyerAddress").value.trim();
+    </section>
 
-    if (!name || !phone || !address) {
-      alert("Нэр, утас, хаягаа бүрэн оруулна уу.");
-      return;
-    }
+<!-- 1-Р ХЭСЭГ ДУУСАВ. 2-Р ХЭСГИЙГ ЭНДЭЭС ҮРГЭЛЖЛҮҮЛНЭ. -->
 
-    if (cart.length === 0) {
-      alert("Таны сагс хоосон байна.");
-      return;
-    }
+    <!-- ЗАРЫН ПЛАТФОРМ -->
+    <section id="ads" class="screen">
 
-    const order = {
-      id: "NX-" + Date.now(),
-      name,
-      phone,
-      address,
-      items: cart.map(item => ({ ...item })),
-      createdAt: new Date().toISOString()
-    };
+      <header class="topbar">
+        <button class="back-button" type="button"
+          onclick="NEXORA.back()" aria-label="Буцах">‹</button>
 
-    const orders = JSON.parse(
-      localStorage.getItem("nexora_orders") || "[]"
-    );
+        <div class="page-heading">ЗАРЫН ПЛАТФОРМ</div>
 
-    orders.push(order);
+        <div class="header-space"></div>
+      </header>
 
-    localStorage.setItem(
-      "nexora_orders",
-      JSON.stringify(orders)
-    );
+      <main class="page-content">
 
-    document.getElementById("orderMessage").textContent =
-      "Захиалгын дугаар: " + order.id +
-      ". Таны захиалга энэ төхөөрөмжид хадгалагдлаа.";
+        <div class="welcome-panel">
+          <h2>Зарын платформ</h2>
+          <p>
+            Хэрэгтэй зараа хайж, өөрийн зараа нийтэлж,
+            Монгол даяар худалдан авагч болон худалдагчтай холбогдоорой.
+          </p>
+        </div>
 
-    cart = [];
-    saveCart();
+        <div style="height:22px"></div>
 
-    document.getElementById("buyerName").value = "";
-    document.getElementById("buyerPhone").value = "";
-    document.getElementById("buyerAddress").value = "";
+        <div class="welcome-panel">
+          <h2>Зарын ангилал</h2>
+          <p>
+            Дараагийн хэсэгт үндсэн ангилал,
+            дэд ангилал болон зарын жагсаалтыг холбоно.
+          </p>
+        </div>
 
-    openView("orderResult");
-  }
+        <div style="height:16px"></div>
 
-  // ХУДАЛДААНЫ СИСТЕМИЙГ ЭХЛҮҮЛЭХ
-  renderProducts();
-  updateCartCount();
-</script>
+        <div class="welcome-panel">
+          <h2>Зар оруулах</h2>
+          <p>
+            Зар нийтлэх дэлгэцийг дараагийн хэсэгт
+            бүтэн дэлгэцээр нэмж холбоно.
+          </p>
+        </div>
+
+      </main>
+
+      <footer class="footer">NEXORA</footer>
+
+    </section>
+
+
+    <!-- ХУДАЛДААНЫ ПЛАТФОРМ -->
+    <section id="shop" class="screen">
+
+      <header class="topbar">
+        <button class="back-button" type="button"
+          onclick="NEXORA.back()" aria-label="Буцах">‹</button>
+
+        <div class="page-heading">ХУДАЛДААНЫ ПЛАТФОРМ</div>
+
+        <div class="header-space"></div>
+      </header>
+
+      <main class="page-content">
+
+        <div class="welcome-panel">
+          <h2>Худалдааны платформ</h2>
+          <p>
+            Бараа бүтээгдэхүүн үзэх, дэлгүүр сонгох,
+            захиалга хийх нэгдсэн худалдааны орчин.
+          </p>
+        </div>
+
+        <div style="height:22px"></div>
+
+        <div class="welcome-panel">
+          <h2>Барааны ангилал</h2>
+          <p>
+            Дараагийн хэсэгт барааны ангилал,
+            бүтээгдэхүүний жагсаалт болон хайлтыг холбоно.
+          </p>
+        </div>
+
+        <div style="height:16px"></div>
+
+        <div class="welcome-panel">
+          <h2>Миний сагс</h2>
+          <p>
+            Худалдан авах бараа, сагс болон захиалгын
+            дэлгэцүүдийг дараагийн хэсэгт бүтэн дэлгэцээр нэмнэ.
+          </p>
+        </div>
+
+      </main>
+
+      <footer class="footer">NEXORA</footer>
+
+    </section>
+
+
+    <!-- ПРОФАЙЛ -->
+    <section id="profile" class="screen">
+
+      <header class="topbar">
+        <button class="back-button" type="button"
+          onclick="NEXORA.back()" aria-label="Буцах">‹</button>
+
+        <div class="page-heading">МИНИЙ ПРОФАЙЛ</div>
+
+        <div class="header-space"></div>
+      </header>
+
+      <main class="page-content">
+
+        <div class="welcome-panel">
+          <h2>Тавтай морил!</h2>
+          <p>
+            NEXORA хэрэглэгчийн хувийн хэсэг.
+            Эндээс таны бүртгэл, зар, захиалга болон
+            тохиргооны мэдээлэл харагдана.
+          </p>
+        </div>
+
+        <div style="height:16px"></div>
+
+        <div class="welcome-panel">
+          <h2>Хэрэглэгчийн бүртгэл</h2>
+          <p>
+            Бүртгүүлэх болон нэвтрэх үйлдлийг
+            дараагийн хэсэгт Supabase-тэй холбоно.
+          </p>
+        </div>
+
+        <div style="height:16px"></div>
+
+        <div class="welcome-panel">
+          <h2>Миний зарууд</h2>
+          <p>
+            Таны нийтэлсэн зарууд энд харагдана.
+          </p>
+        </div>
+
+        <div style="height:16px"></div>
+
+        <div class="welcome-panel">
+          <h2>Миний захиалгууд</h2>
+          <p>
+            Худалдааны платформоос хийсэн захиалгууд энд харагдана.
+          </p>
+        </div>
+
+        <!-- ADMIN ХЭСЭГ ДАРААГИЙН BACKEND-ЭЭР ЭРХ ШАЛГАЖ ХОЛБОГДОНО -->
+
+      </main>
+
+      <footer class="footer">NEXORA</footer>
+
+    </section>
+
+<!-- 2-Р ХЭСЭГ ДУУСАВ -->
+
+    <!-- ========== NEXORA NAVIGATION ========== -->
+
+    <script>
+      (function () {
+
+        const screenIds = [
+          "home",
+          "ads",
+          "shop",
+          "profile"
+        ];
+
+        let currentScreen = "home";
+        let screenHistory = ["home"];
+
+        function showScreen(screenName) {
+
+          if (!screenIds.includes(screenName)) {
+            return;
+          }
+
+          screenIds.forEach(function (id) {
+
+            const screen = document.getElementById(id);
+
+            if (screen) {
+              screen.classList.toggle(
+                "active",
+                id === screenName
+              );
+            }
+
+          });
+
+          currentScreen = screenName;
+
+          window.scrollTo({
+            top: 0,
+            behavior: "instant"
+          });
+
+        }
+
+        window.NEXORA = {
+
+          open: function (screenName) {
+
+            if (!screenIds.includes(screenName)) {
+              return;
+            }
+
+            if (screenName === currentScreen) {
+              return;
+            }
+
+            screenHistory.push(screenName);
+
+            showScreen(screenName);
+
+          },
+
+          back: function () {
+
+            if (screenHistory.length > 1) {
+
+              screenHistory.pop();
+
+              const previousScreen =
+                screenHistory[screenHistory.length - 1];
+
+              showScreen(previousScreen);
+
+            } else {
+
+              showScreen("home");
+
+            }
+
+          },
+
+          goHome: function () {
+
+            screenHistory = ["home"];
+
+            showScreen("home");
+
+          },
+
+          getCurrentScreen: function () {
+
+            return currentScreen;
+
+          }
+
+        };
+
+        showScreen("home");
+
+      })();
+    </script>
+
+  </main>
 
 </body>
 </html>
