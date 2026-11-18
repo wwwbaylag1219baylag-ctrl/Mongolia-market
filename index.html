@@ -1586,14 +1586,15 @@
       content.innerHTML = `
         <div class="nx-full-screen">
           ${backButton()}
+          <div class="nx-category-path"><span>ҮНДСЭН АНГИЛАЛ</span><b>›</b><strong>${category.name}</strong></div>
           <div class="nx-category-heading">
             <div class="nx-screen-title">${category.icon} ${category.name}</div>
           </div>
-          <div class="nx-screen-subtitle">Ажлын чиглэлээ сонгоно уу.</div>
-          <div class="nx-subcategory-list">
+          <div class="nx-screen-subtitle">Та одоо <strong>${category.name}</strong> ангилалд байна. Ажлын салбараа сонгоно уу.</div>
+          <div class="nx-subcategory-list nx-category-card-list">
             ${jobFields.map((field, index) => `
-              <button type="button" class="nx-subcategory-item" data-nx-job-field="${index}">
-                <span>${field}</span><span>›</span>
+              <button type="button" class="nx-subcategory-item nx-choice-card" data-nx-job-field="${index}">
+                <span class="nx-choice-index">${String(index+1).padStart(2,"0")}</span><span class="nx-choice-name">${field}</span><span class="nx-choice-arrow">›</span>
               </button>
             `).join("")}
           </div>
@@ -1605,21 +1606,23 @@
     content.innerHTML = `
       <div class="nx-full-screen">
         ${backButton()}
+        <div class="nx-category-path"><span>ҮНДСЭН АНГИЛАЛ</span><b>›</b><strong>${category.name}</strong></div>
         <div class="nx-category-heading">
           <div class="nx-screen-title">${category.icon} ${category.name}</div>
         </div>
         <div class="nx-screen-subtitle">
-          Дэд ангиллын таб дээр дарж дэлгэж, дахин дарж хумина уу.
+          Та одоо <strong>${category.name}</strong> ангилалд байна. Доорх дэд ангиллыг сонгоод дэлгэрүүлнэ үү.
         </div>
 
-        <div class="nx-subcategory-list nx-subcategory-accordion">
+        <div class="nx-subcategory-list nx-subcategory-accordion nx-category-card-list">
           ${Object.entries(groups).map(([group, items], index) => `
             <section class="nx-accordion-section">
               <button type="button"
-                class="nx-subcategory-item nx-accordion-tab"
+                class="nx-subcategory-item nx-accordion-tab nx-choice-card"
                 data-nx-group="${index}"
                 aria-expanded="false">
-                <span>${group}</span>
+                <span class="nx-choice-name">${group}</span>
+                <span class="nx-choice-count">${items.length} төрөл</span>
                 <span class="nx-accordion-arrow">⌄</span>
               </button>
               <div class="nx-accordion-panel" data-nx-group-panel="${index}" hidden>
@@ -1649,21 +1652,23 @@
     content.innerHTML = `
       <div class="nx-full-screen">
         ${backButton()}
+        <div class="nx-category-path"><span>${currentCategory.name}</span><b>›</b><strong>${group}</strong></div>
         <div class="nx-category-heading">
           <div class="nx-screen-title">${group}</div>
         </div>
 
         <div class="nx-screen-subtitle">
-          Доорх дэд ангиллаас сонгоно уу.
+          Та <strong>${group}</strong> чиглэлд байна. Мэргэжлээ сонгоно уу.
         </div>
 
-        <div class="nx-subcategory-list">
+        <div class="nx-subcategory-list nx-category-card-list">
           ${items.map((item, index) => `
             <button type="button"
-              class="nx-subcategory-item"
+              class="nx-subcategory-item nx-choice-card"
               data-nx-item="${index}">
-              <span>${item}</span>
-              <span>›</span>
+              <span class="nx-choice-index">${String(index+1).padStart(2,"0")}</span>
+              <span class="nx-choice-name">${item}</span>
+              <span class="nx-choice-arrow">›</span>
             </button>
           `).join("")}
         </div>
@@ -3350,6 +3355,26 @@
   .nx-category-title-wrap{display:flex;align-items:center;gap:10px;min-width:0}
   .nx-platform-back{width:38px;height:38px;flex:0 0 38px;display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.22);border-radius:12px;background:rgba(255,255,255,.06);color:inherit;font-size:30px;line-height:1;cursor:pointer}
 
+
+/* Ангиллын шатлал, сонголтын өнгөний ялгарал */
+.nx-category-path{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:2px 0 12px;padding:10px 12px;border:1px solid rgba(214,173,85,.28);border-radius:11px;background:linear-gradient(100deg,rgba(214,173,85,.13),rgba(214,173,85,.035));color:#aaa39a;font-size:11px;font-weight:700;letter-spacing:.04em}
+.nx-category-path strong{color:#f2cf7b;font-size:12px}
+.nx-category-path b{color:#d6ad55;font-size:16px}
+.nx-category-card-list{gap:11px}
+.nx-choice-card{position:relative;min-height:66px;padding:13px 15px;border:1px solid rgba(214,173,85,.34);border-left:4px solid rgba(214,173,85,.55);border-radius:14px;background:linear-gradient(110deg,#202019,#171717 70%);box-shadow:0 3px 12px rgba(0,0,0,.18);transition:background .2s ease,border-color .2s ease,box-shadow .2s ease,transform .2s ease}
+.nx-choice-card .nx-choice-index{display:grid;place-items:center;flex:0 0 34px;height:34px;border-radius:10px;background:rgba(214,173,85,.12);color:#e2bd68;font-size:11px;font-weight:800}
+.nx-choice-card .nx-choice-name{flex:1;color:#f7f5ef;font-size:14px;font-weight:700}
+.nx-choice-card .nx-choice-arrow{color:#d6ad55;font-size:23px;font-weight:500;transition:transform .2s ease,color .2s ease}
+.nx-choice-card .nx-choice-count{margin-left:auto;color:#b9a77e;font-size:11px;white-space:nowrap}
+.nx-choice-card:hover,.nx-choice-card:focus-visible{outline:none;border-color:#e7bd58;border-left-color:#ffd36e;background:linear-gradient(110deg,#3b301b,#211d15 75%);box-shadow:0 0 0 2px rgba(214,173,85,.13),0 5px 18px rgba(214,173,85,.12)}
+.nx-choice-card:active{transform:scale(.985);background:linear-gradient(110deg,#51401e,#292113)}
+.nx-accordion-tab[aria-expanded="true"]{border-color:#f0c45f;border-left-color:#ffd36e;background:linear-gradient(110deg,#493919,#282116);box-shadow:0 0 0 2px rgba(214,173,85,.15),0 0 18px rgba(214,173,85,.13)}
+.nx-accordion-tab[aria-expanded="true"] .nx-choice-name{color:#ffdc91}
+.nx-accordion-tab[aria-expanded="true"] .nx-accordion-arrow{color:#ffdc91;transform:rotate(180deg)}
+.nx-accordion-option{border-left:3px solid rgba(214,173,85,.3)}
+.nx-accordion-option:active{border-color:#e7bd58;background:#302719}
+.nx-screen-subtitle strong{color:#f0c76f}
+@media(hover:none){.nx-choice-card:hover{background:linear-gradient(110deg,#202019,#171717 70%);box-shadow:0 3px 12px rgba(0,0,0,.18)}}
 </style>
 <script>
 (function(){
