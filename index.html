@@ -1009,7 +1009,10 @@
 
   .nexora-ad-grid {
     display: grid;
-    /* Үндсэн 8 ангиллыг урт, хэвтээ карт хэлбэрээр нэг нэгээр нь харуулна. */
+    /* Үндсэн 8 ангиллыг бага зэрэг нарийсгасан хэвтээ карт хэлбэрээр харуулна. */
+    width: 94%;
+    margin-left: auto;
+    margin-right: auto;
     grid-template-columns: minmax(0, 1fr);
     gap: 10px;
   }
@@ -1080,6 +1083,7 @@
 
   @media (max-width: 360px) {
     .nexora-ad-grid {
+      width: 96%;
       grid-template-columns: minmax(0, 1fr);
       gap: 8px;
     }
