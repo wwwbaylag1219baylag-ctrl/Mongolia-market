@@ -2500,11 +2500,41 @@
       overlay.remove();
     };
     overlay.querySelector("[data-map-close]").onclick = close;
+
+    // Зарын дэлгэрэнгүй газрын зурагт Leaflet/CDN шаардахгүй,
+    // OpenStreetMap-ийн шууд embed ашиглана. Ингэснээр CDN ачаалахгүй
+    // байсан ч зарын байршлын зураг нээгдэнэ.
+    const lat = Number(latitude);
+    const lng = Number(longitude);
+    const hasValidCoordinates =
+      Number.isFinite(lat) && Number.isFinite(lng) &&
+      lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180 &&
+      !(lat === 0 && lng === 0);
+
+    if (!chooseLocation) {
+      const mapHost = overlay.querySelector("#nx-full-map");
+      if (!hasValidCoordinates) {
+        mapHost.innerHTML = '<div style="padding:22px;color:#f0d28a;line-height:1.7;">Энэ зарын байршлын координат бүртгэгдээгүй байна.</div>';
+        return;
+      }
+      const padLat = 0.006;
+      const padLng = 0.008;
+      const bbox = [
+        lng - padLng, lat - padLat, lng + padLng, lat + padLat
+      ].join("%2C");
+      const mapUrl = "https://www.openstreetmap.org/export/embed.html?bbox=" +
+        bbox + "&layer=mapnik&marker=" + lat + "%2C" + lng;
+      mapHost.innerHTML =
+        '<iframe title="Зарын байршлын газрын зураг" ' +
+        'src="' + mapUrl + '" ' +
+        'style="display:block;width:100%;height:100%;min-height:100%;border:0;background:#111;" ' +
+        'loading="eager" referrerpolicy="no-referrer"></iframe>';
+      return;
+    }
+
     try {
       await loadLeaflet();
-      const lat = Number(latitude) || 47.9184;
-      const lng = Number(longitude) || 106.9177;
-      const map = window.L.map(overlay.querySelector("#nx-full-map")).setView([lat, lng], latitude && longitude ? 15 : 12);
+      const map = window.L.map(overlay.querySelector("#nx-full-map")).setView([lat, lng], hasValidCoordinates ? 15 : 12);
       window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
