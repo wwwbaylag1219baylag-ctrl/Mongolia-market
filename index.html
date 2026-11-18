@@ -421,19 +421,6 @@
     </section>
 
 
-    <!-- АДМИН САМБАР -->
-    <section id="admin" class="screen">
-      <header class="topbar">
-        <button class="back-button" type="button" onclick="NEXORA.back()" aria-label="Буцах">‹</button>
-        <div class="page-heading">АДМИН УДИРДЛАГА</div>
-        <div class="header-space"></div>
-      </header>
-      <main class="page-content" id="nexora-admin-app">
-        <div class="welcome-panel">Админ самбар ачаалж байна…</div>
-      </main>
-      <footer class="footer">NEXORA ADMIN</footer>
-    </section>
-
     <section id="myads" class="screen">
       <header class="topbar"><button class="back-button" type="button" onclick="NEXORA.back()" aria-label="Буцах">‹</button><div class="page-heading">МИНИЙ ЗАРУУД</div><div class="header-space"></div></header>
       <main class="page-content" id="nexora-my-ads-app"><div class="welcome-panel">Зарууд ачаалж байна…</div></main>
@@ -516,7 +503,6 @@
           "ads",
           "shop",
           "profile",
-          "admin",
           "myads",
           "myorders"
         ];
@@ -795,7 +781,7 @@
 
     const adminOpen = document.getElementById("nexora-admin-open");
     if (adminOpen) adminOpen.addEventListener("click", function () {
-      if (window.NEXORA) window.NEXORA.open("admin");
+      window.location.href = "./admin.html";
     });
 
     const logoutButton = document.getElementById("nexora-logout");
