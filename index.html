@@ -2152,6 +2152,14 @@
             ${escapeHTML(ad.description || "Тайлбар оруулаагүй")}
           </div>
 
+          <div style="margin:18px 0;padding:12px;border:1px solid rgba(214,173,85,.35);border-radius:14px;background:#111;">
+            <div style="font-weight:800;color:#d6ad55;margin-bottom:9px;">БАЙРШИЛ</div>
+            <button type="button" id="nx-ad-map-preview" style="display:block;width:100%;height:112px;border:1px solid #555;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,#252525,#111);color:#d6ad55;font-weight:700;">
+              ${ad.latitude && ad.longitude ? "⌖ Газрын зураг харах · ДАРЖ НЭЭХ" : "Байршил оруулаагүй"}
+            </button>
+            ${ad.latitude && ad.longitude ? '<div style="font-size:11px;color:#888;margin-top:7px;">Газрын зургийг бүтэн дэлгэцээр нээхийн тулд дарна уу</div>' : ""}
+          </div>
+
           <div class="nx-detail-label">ХОЛБОО БАРИХ УТАС</div>
           <div class="nx-detail-value">
             ${escapeHTML(ad.phone || "Утас оруулаагүй")}
@@ -2166,6 +2174,11 @@
         </div>
       </div>
     `;
+
+    const mapPreview = document.getElementById("nx-ad-map-preview");
+    if (mapPreview && ad.latitude && ad.longitude) {
+      mapPreview.onclick = () => openMapScreen(ad.latitude, ad.longitude, false);
+    }
 
     const gallery = document.getElementById("nx-ad-detail-images");
     if (!gallery) return;
@@ -2409,6 +2422,92 @@
   let selectedPackage = null;
   let selectedBank = null;
   let createdAdId = null;
+  let mapPickerInstance = null;
+  let mapPickerMarker = null;
+  let mapLeafletPromise = null;
+
+  function loadLeaflet() {
+    if (window.L) return Promise.resolve();
+    if (mapLeafletPromise) return mapLeafletPromise;
+    mapLeafletPromise = new Promise((resolve, reject) => {
+      if (!document.querySelector('link[data-nx-leaflet]')) {
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+        link.dataset.nxLeaflet = "1";
+        document.head.appendChild(link);
+      }
+      let script = document.querySelector('script[data-nx-leaflet]');
+      if (script) {
+        script.addEventListener("load", resolve, { once: true });
+        script.addEventListener("error", reject, { once: true });
+      } else {
+        script = document.createElement("script");
+        script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+        script.dataset.nxLeaflet = "1";
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      }
+    });
+    return mapLeafletPromise;
+  }
+
+  async function openMapScreen(latitude, longitude, chooseLocation) {
+    const overlay = document.createElement("div");
+    overlay.id = "nx-map-fullscreen";
+    overlay.style.cssText = "position:fixed;inset:0;z-index:2147483000;background:#090909;display:flex;flex-direction:column;color:#fff;";
+    overlay.innerHTML = `
+      <div style="height:58px;flex:0 0 58px;display:flex;align-items:center;gap:12px;padding:0 14px;border-bottom:1px solid #333;">
+        <button type="button" data-map-close style="width:40px;height:40px;border:1px solid #555;border-radius:12px;background:#191919;color:white;font-size:26px;">‹</button>
+        <strong style="font-size:15px;">${chooseLocation ? "ЗАРЫН БАЙРШИЛ СОНГОХ" : "ЗАРЫН БАЙРШИЛ"}</strong>
+      </div>
+      <div id="nx-full-map" style="flex:1;min-height:0;width:100%;"></div>
+      <div style="padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:#111;border-top:1px solid #333;">
+        <div id="nx-map-coordinates" style="font-size:12px;color:#aaa;margin-bottom:10px;">${latitude && longitude ? Number(latitude).toFixed(5)+", "+Number(longitude).toFixed(5) : "Газрын зураг дээр дарж байршлаа сонгоно уу."}</div>
+        ${chooseLocation ? '<button type="button" data-map-save style="width:100%;padding:15px;border:0;border-radius:12px;background:#d6ad55;color:#111;font-weight:800;">ЭНЭ БАЙРШЛЫГ СОНГОХ</button>' : ""}
+      </div>`;
+    document.body.appendChild(overlay);
+    const close = () => {
+      if (mapPickerInstance) { mapPickerInstance.remove(); mapPickerInstance = null; mapPickerMarker = null; }
+      overlay.remove();
+    };
+    overlay.querySelector("[data-map-close]").onclick = close;
+    try {
+      await loadLeaflet();
+      const lat = Number(latitude) || 47.9184;
+      const lng = Number(longitude) || 106.9177;
+      const map = window.L.map(overlay.querySelector("#nx-full-map")).setView([lat, lng], latitude && longitude ? 15 : 12);
+      window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+      if (latitude && longitude) mapPickerMarker = window.L.marker([lat, lng]).addTo(map);
+      if (chooseLocation) {
+        mapPickerInstance = map;
+        map.on("click", event => {
+          const point = event.latlng;
+          if (mapPickerMarker) mapPickerMarker.setLatLng(point);
+          else mapPickerMarker = window.L.marker(point).addTo(map);
+          overlay.querySelector("#nx-map-coordinates").textContent = point.lat.toFixed(6) + ", " + point.lng.toFixed(6);
+        });
+        overlay.querySelector("[data-map-save]").onclick = () => {
+          if (!mapPickerMarker) { overlay.querySelector("#nx-map-coordinates").textContent = "Эхлээд газрын зураг дээр байршлаа дарж сонгоно уу."; return; }
+          const point = mapPickerMarker.getLatLng();
+          const form = document.getElementById("nx-create-ad-form");
+          if (form) {
+            form.elements.latitude.value = point.lat;
+            form.elements.longitude.value = point.lng;
+            const label = document.getElementById("nx-map-selected-label");
+            if (label) label.textContent = "Байршил сонгогдлоо ✓";
+          }
+          close();
+        };
+      }
+      setTimeout(() => map.invalidateSize(), 120);
+    } catch (error) {
+      overlay.querySelector("#nx-full-map").innerHTML = '<div style="padding:20px;color:#fff">Газрын зураг ачаалж чадсангүй. Интернэт холболтоо шалгана уу.</div>';
+    }
+  }
 
   const packages = [
     { type: "basic", name: "Энгийн", days: 7, amount: 0 },
@@ -2512,6 +2611,12 @@
           <label class="nx-create-label">Холбоо барих утас *</label>
           <input class="nx-create-input" name="phone" type="tel" required maxlength="30" value="${esc(data.phone || "")}">
 
+          <label class="nx-create-label">Байршил (газрын зураг дээр сонгоно)</label>
+          <input type="hidden" name="latitude" value="${esc(data.latitude || "")}">
+          <input type="hidden" name="longitude" value="${esc(data.longitude || "")}">
+          <button type="button" id="nx-open-map-picker" class="nx-create-input" style="text-align:left;cursor:pointer;">⌖ Газрын зураг нээж байршил сонгох</button>
+          <div id="nx-map-selected-label" style="font-size:12px;color:#d6ad55;margin:0 0 14px;">${data.latitude && data.longitude ? "Байршил сонгогдсон ✓" : "Байршил сонгоогүй байна"}</div>
+
           <label class="nx-create-label">Зарын зураг (6 хүртэл)</label>
           <input id="nx-ad-images" type="file" accept="image/jpeg,image/png,image/webp" multiple style="width:100%;padding:14px 0;color:white;">
 
@@ -2521,6 +2626,13 @@
         </form>
       </div>
     `;
+
+    const mapButton = document.getElementById("nx-open-map-picker");
+    if (mapButton) mapButton.onclick = () => openMapScreen(
+      document.querySelector('#nx-create-ad-form [name="latitude"]')?.value,
+      document.querySelector('#nx-create-ad-form [name="longitude"]')?.value,
+      true
+    );
 
     const preview = document.getElementById("nx-ad-image-preview");
     (data.files || []).forEach(function (file) {
@@ -2627,6 +2739,8 @@
       description: pendingAd.description,
       price: pendingAd.price,
       phone: pendingAd.phone,
+      latitude: pendingAd.latitude,
+      longitude: pendingAd.longitude,
       status: packageInfo.amount === 0 ? "active" : "pending_payment",
       package_type: packageInfo.type,
       package_days: packageInfo.days,
@@ -2854,6 +2968,8 @@
       priceText: priceText,
       categoryNumber: categoryNumber,
       subcategory: subcategory,
+      latitude: data.get("latitude") ? Number(data.get("latitude")) : null,
+      longitude: data.get("longitude") ? Number(data.get("longitude")) : null,
       files: files
     };
     window.NEXORA_AD_SELECTION = {
@@ -2925,6 +3041,8 @@
           phone: String(values.get("phone") || ""),
           categoryNumber: Number(values.get("categoryNumber") || 0),
           subcategory: String(values.get("subcategory") || ""),
+          latitude: values.get("latitude") ? Number(values.get("latitude")) : null,
+          longitude: values.get("longitude") ? Number(values.get("longitude")) : null,
           files: Array.from(document.getElementById("nx-ad-images")?.files || [])
         };
       }
