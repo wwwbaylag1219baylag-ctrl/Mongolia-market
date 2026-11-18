@@ -70,7 +70,7 @@
   return !!row;
  }
  function shell(body){
-   root.innerHTML='<div class="nx-admin-head"><div><div class="nexora-ad-heading">АДМИН УДИРДЛАГА</div><p class="nx-admin-subtitle">NEXORA платформын зар, худалдаа, төлбөр болон хүсэлтүүдийн нэгдсэн удирдлага.</p></div><div class="nx-admin-head-actions"><a class="nx-admin-home" href="./index.html">← Хэрэглэгчийн сайт</a><button class="nx-admin-logout" id="nx-admin-logout" type="button">Гарах</button></div></div>'+
+   root.innerHTML='<div class="nx-admin-head"><div><div class="nexora-ad-heading">АДМИН УДИРДЛАГА</div><p class="nx-admin-subtitle">NEXORA платформын зар, худалдаа, төлбөр болон хүсэлтүүдийн нэгдсэн удирдлага.</p></div><div class="nx-admin-head-actions"><a class="nx-admin-home" href="./index.html" aria-label="Хэрэглэгчийн сайт" title="Хэрэглэгчийн сайт">←</a><button class="nx-admin-logout" id="nx-admin-logout" type="button">Гарах</button></div></div>'+
     '<nav class="nx-admin-tabs" aria-label="Админ цэс">'+tabs.map(t=>'<button type="button" data-admin-tab="'+t[0]+'" class="'+(activeTab===t[0]?'active':'')+'">'+t[1]+'</button>').join("")+'</nav>'+
     '<div class="nx-admin-toolbar"><input id="nx-admin-search" class="nx-admin-search" type="search" placeholder="Энэ жагсаалтаас хайх…" aria-label="Админ жагсаалтаас хайх"><button class="nx-admin-refresh" id="nx-admin-refresh" type="button">↻ Шинэчлэх</button></div>'+
     '<div id="nx-admin-body">'+body+'</div>';
