@@ -3577,7 +3577,7 @@
       let objectPath=String(p.image_path||"").trim();
       let buckets=objectPath?["market-product-images","classified-images"]:[];
       if(!objectPath&&rawImageUrl){
-        const storageMatch=rawImageUrl.match(/\\/storage\\/v1\\/object\\/(?:public|sign)\\/([^/]+)\\/(.+?)(?:\\?.*)?$/);
+        const storageMatch=rawImageUrl.match(/\/storage\/v1\/object\/(?:public|sign)\/([^/]+)\/(.+?)(?:\?.*)?$/);
         if(storageMatch){
           buckets=[storageMatch[1]];
           objectPath=storageMatch[2];
