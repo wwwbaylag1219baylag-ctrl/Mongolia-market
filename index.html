@@ -2177,7 +2177,7 @@
 
     const mapPreview = document.getElementById("nx-ad-map-preview");
     if (mapPreview && ad.latitude && ad.longitude) {
-      mapPreview.onclick = () => openMapScreen(ad.latitude, ad.longitude, false);
+      mapPreview.onclick = () => window.NEXORA_OPEN_MAP_SCREEN(ad.latitude, ad.longitude, false);
     }
 
     const gallery = document.getElementById("nx-ad-detail-images");
@@ -2565,6 +2565,8 @@
       overlay.querySelector("#nx-full-map").innerHTML = '<div style="padding:20px;color:#fff">Газрын зураг ачаалж чадсангүй. Интернэт холболтоо шалгана уу.</div>';
     }
   }
+
+  window.NEXORA_OPEN_MAP_SCREEN = openMapScreen;
 
   const packages = [
     { type: "basic", name: "Энгийн", days: 7, amount: 0 },
