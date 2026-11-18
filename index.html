@@ -573,6 +573,10 @@
 
             screenHistory.push(screenName);
 
+            if (screenName === "ads" && typeof window.NEXORA_AD_HOME === "function") {
+              window.NEXORA_AD_HOME();
+            }
+
             showScreen(screenName);
 
           },
@@ -1717,6 +1721,13 @@
   });
 
   window.NEXORA_AD_SUBCATEGORIES = subcategories;
+  window.NEXORA_AD_HOME = function () {
+    currentCategory = null;
+    currentGroup = null;
+    currentSubcategory = null;
+    window.NEXORA_AD_SELECTION = null;
+    showCategoryList();
+  };
   window.NEXORA_AD_BACK = function () {
     if (currentSubcategory) {
       currentSubcategory = null;
@@ -3029,10 +3040,8 @@
 .nx-admin-actions button{padding:9px 12px;border:0;border-radius:8px;font-weight:700}
 .nx-admin-approve{background:#b9e9a5;color:#10200b}.nx-admin-reject{background:#542323;color:#ffdada}
 @media(max-width:360px){.nx-market-grid{grid-template-columns:1fr}}
-  <style>
-    .nx-category-title-wrap{display:flex;align-items:center;gap:10px;min-width:0}
-    .nx-platform-back{width:38px;height:38px;flex:0 0 38px;display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.22);border-radius:12px;background:rgba(255,255,255,.06);color:inherit;font-size:30px;line-height:1;cursor:pointer}
-  </style>
+  .nx-category-title-wrap{display:flex;align-items:center;gap:10px;min-width:0}
+  .nx-platform-back{width:38px;height:38px;flex:0 0 38px;display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.22);border-radius:12px;background:rgba(255,255,255,.06);color:inherit;font-size:30px;line-height:1;cursor:pointer}
 
 </style>
 <script>
