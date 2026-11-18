@@ -1504,7 +1504,10 @@
     content.innerHTML = `
       <div class="nx-full-screen">
         <div class="nx-category-heading">
-          <div class="nx-screen-title">ЗАРЫН ПЛАТФОРМ</div>
+          <div class="nx-category-title-wrap">
+            <button type="button" class="nx-platform-back" data-nx-platform-back aria-label="Нүүр хуудас руу буцах" title="Буцах">‹</button>
+            <div class="nx-screen-title">ЗАРЫН ПЛАТФОРМ</div>
+          </div>
           ${createToggleButton()}
         </div>
         <div class="nx-screen-subtitle">
@@ -1629,6 +1632,17 @@
   }
 
   content.addEventListener("click", function (event) {
+    const platformBack = event.target.closest("[data-nx-platform-back]");
+    if (platformBack) {
+      event.preventDefault();
+      if (window.NEXORA && typeof window.NEXORA.back === "function") {
+        window.NEXORA.back();
+      } else {
+        window.NEXORA?.open?.("home");
+      }
+      return;
+    }
+
     const createToggle = event.target.closest("[data-nx-create-toggle]");
     if (createToggle) {
       if (typeof window.NEXORA_SHOW_CREATE_AD === "function") window.NEXORA_SHOW_CREATE_AD();
@@ -3015,6 +3029,11 @@
 .nx-admin-actions button{padding:9px 12px;border:0;border-radius:8px;font-weight:700}
 .nx-admin-approve{background:#b9e9a5;color:#10200b}.nx-admin-reject{background:#542323;color:#ffdada}
 @media(max-width:360px){.nx-market-grid{grid-template-columns:1fr}}
+  <style>
+    .nx-category-title-wrap{display:flex;align-items:center;gap:10px;min-width:0}
+    .nx-platform-back{width:38px;height:38px;flex:0 0 38px;display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.22);border-radius:12px;background:rgba(255,255,255,.06);color:inherit;font-size:30px;line-height:1;cursor:pointer}
+  </style>
+
 </style>
 <script>
 (function(){
