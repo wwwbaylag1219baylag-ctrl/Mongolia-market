@@ -1815,6 +1815,42 @@
   background: #292317;
 }
 
+.nx-package-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  margin: 0 0 9px;
+  border-radius: 7px;
+  font-size: 10px;
+  line-height: 1.2;
+  font-weight: 900;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+}
+.nx-package-badge--featured {
+  color: #211405;
+  background: linear-gradient(135deg, #ffd27a, #e58a24);
+  border: 1px solid #ffda91;
+}
+.nx-package-badge--vip {
+  color: #fff;
+  background: linear-gradient(135deg, #8b5cf6, #5426a8);
+  border: 1px solid #b99aff;
+}
+.nx-package-badge--premium {
+  color: #241a05;
+  background: linear-gradient(135deg, #fff0a8, #d6ad55, #a97820);
+  border: 1px solid #ffe6a0;
+  box-shadow: 0 0 12px rgba(214,173,85,.2);
+}
+.nx-detail-package-badge {
+  margin-top: 10px;
+  margin-bottom: 2px;
+  font-size: 11px;
+  padding: 7px 12px;
+}
+
 .nx-ad-card-title {
   color: #f7f5ef;
   font-weight: 700;
@@ -1928,6 +1964,19 @@
     return number.toLocaleString("mn-MN") + " ₮";
   };
 
+  function packageBadge(packageType, extraClass) {
+    const badges = {
+      featured: { label: "★ ОНЦГОЙ", className: "featured" },
+      vip: { label: "✦ VIP", className: "vip" },
+      premium: { label: "✧ PREMIUM", className: "premium" }
+    };
+    const badge = badges[String(packageType || "").toLowerCase()];
+    if (!badge) return "";
+    return '<span class="nx-package-badge nx-package-badge--' +
+      badge.className + (extraClass ? " " + extraClass : "") + '">' +
+      badge.label + '</span>';
+  }
+
   let ads = [];
   let filteredAds = [];
   let searchText = "";
@@ -2032,6 +2081,7 @@
           tabindex="0"
           role="button">
 
+          ${packageBadge(ad.package_type)}
           <div class="nx-ad-card-title">
             ${escapeHTML(ad.title || "Гарчиггүй зар")}
           </div>
@@ -2132,6 +2182,7 @@
             style="font-size:21px;font-weight:800;">
             ${escapeHTML(ad.title || "Гарчиггүй зар")}
           </div>
+          ${packageBadge(ad.package_type, "nx-detail-package-badge")}
 
           <div class="nx-detail-price">
             ${formatPrice(ad.price)}
