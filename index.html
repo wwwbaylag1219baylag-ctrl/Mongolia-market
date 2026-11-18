@@ -380,6 +380,17 @@
       <footer class="footer">NEXORA ADMIN</footer>
     </section>
 
+    <section id="myads" class="screen">
+      <header class="topbar"><button class="back-button" type="button" onclick="NEXORA.back()" aria-label="Буцах">‹</button><div class="page-heading">МИНИЙ ЗАРУУД</div><div class="header-space"></div></header>
+      <main class="page-content" id="nexora-my-ads-app"><div class="welcome-panel">Зарууд ачаалж байна…</div></main>
+      <footer class="footer">NEXORA</footer>
+    </section>
+    <section id="myorders" class="screen">
+      <header class="topbar"><button class="back-button" type="button" onclick="NEXORA.back()" aria-label="Буцах">‹</button><div class="page-heading">МИНИЙ ЗАХИАЛГУУД</div><div class="header-space"></div></header>
+      <main class="page-content" id="nexora-my-orders-app"><div class="welcome-panel">Захиалгууд ачаалж байна…</div></main>
+      <footer class="footer">NEXORA</footer>
+    </section>
+
     <!-- ПРОФАЙЛ -->
     <section id="profile" class="screen">
 
@@ -451,7 +462,9 @@
           "ads",
           "shop",
           "profile",
-          "admin"
+          "admin",
+          "myads",
+          "myorders"
         ];
 
         let currentScreen = "home";
@@ -707,6 +720,17 @@
           ⚙ Админ удирдлагын самбар
         </button>
       ` : ""}
+
+      <button id="nexora-my-ads-open" type="button"
+        style="width:100%;padding:13px;margin:0 0 10px;border:1px solid #d6ad55;
+        border-radius:10px;background:#191919;color:#d6ad55;font-weight:700;">
+        Миний зарууд
+      </button>
+      <button id="nexora-my-orders-open" type="button"
+        style="width:100%;padding:13px;margin:0 0 12px;border:1px solid #d6ad55;
+        border-radius:10px;background:#191919;color:#d6ad55;font-weight:700;">
+        Миний захиалгууд
+      </button>
 
       <button id="nexora-logout" type="button"
         style="width:100%;padding:14px;border:1px solid #d6ad55;
@@ -2994,6 +3018,39 @@
  async function init(){if(!(await adminCheck())){root.innerHTML='<p style="color:#ff9999">Админ эрх шаардлагатай.</p>';return;}loadTab();}
  const oldOpen=window.NEXORA?.open;
  if(window.NEXORA&&oldOpen)window.NEXORA.open=function(name){oldOpen(name);if(name==="admin")init();};
+})();
+</script>
+
+
+<script>
+(function(){
+ const db=window.NEXORA_SUPABASE,adsHost=document.getElementById("nexora-my-ads-app"),ordersHost=document.getElementById("nexora-my-orders-app");
+ if(!db||!adsHost||!ordersHost)return;
+ const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ const money=v=>Number(v||0).toLocaleString("mn-MN")+" ₮";
+ const statusLabel={pending_review:"Админы хяналтад",pending_payment:"Төлбөр хүлээгдэж байна",active:"Идэвхтэй",rejected:"Татгалзсан",expired:"Хугацаа дууссан",deleted:"Устгасан"};
+ async function currentUser(){const {data,error}=await db.auth.getUser();if(error)throw error;if(!data.user)throw new Error("Эхлээд нэвтэрнэ үү.");return data.user;}
+ async function loadAds(){
+  adsHost.innerHTML='<p class="nx-market-muted">Таны заруудыг ачаалж байна…</p>';
+  try{const user=await currentUser();const {data,error}=await db.from("classified_ads").select("id,title,category,subcategory,description,price,phone,status,package_type,package_days,package_amount,created_at,expires_at").eq("owner_id",user.id).order("created_at",{ascending:false}).limit(100);
+   if(error)throw error;
+   adsHost.innerHTML='<div class="nexora-ad-heading">МИНИЙ ЗАРУУД</div><p class="nx-market-muted">Нийт '+(data||[]).length+' зар</p>'+((data||[]).map(a=>'<article class="nx-admin-card"><h3>'+esc(a.title)+'</h3><p class="nx-market-price">'+money(a.price)+'</p><p class="nx-market-muted">'+esc(a.category)+' · '+esc(a.subcategory||"")+'</p><p class="nx-market-muted">Төлөв: '+esc(statusLabel[a.status]||a.status)+' · Багц: '+esc(a.package_type||"—")+'</p><p class="nx-market-muted">Нийтэлсэн: '+esc(new Date(a.created_at).toLocaleString("mn-MN"))+'</p>'+(a.status==="pending_review"&&a.package_type==="basic"?'<button class="nx-market-btn secondary" data-ad-edit="'+esc(a.id)+'">Засах</button>':"")+'</article>').join("")||'<p class="nx-market-muted">Та одоогоор зар нийтлээгүй байна.</p>');
+   adsHost.querySelectorAll("[data-ad-edit]").forEach(b=>b.onclick=()=>editAd((data||[]).find(a=>a.id===b.dataset.adEdit)));
+  }catch(e){adsHost.innerHTML='<p style="color:#ff9999">'+esc(e.message)+'</p>';}
+ }
+ function editAd(a){
+  if(!a)return;
+  adsHost.innerHTML='<button class="nx-market-btn secondary" id="nx-ad-edit-back">‹ Буцах</button><h2 class="nexora-ad-heading">ЗАР ЗАСАХ</h2><form id="nx-ad-edit-form"><label>Гарчиг</label><input class="nx-market-input" name="title" required value="'+esc(a.title)+'"><label>Тайлбар</label><textarea class="nx-market-textarea" name="description" rows="4">'+esc(a.description||"")+'</textarea><label>Үнэ (₮)</label><input class="nx-market-input" name="price" type="number" min="0" value="'+esc(a.price??"")+'"><label>Утас</label><input class="nx-market-input" name="phone" value="'+esc(a.phone||"")+'"><button class="nx-market-btn" type="submit">Өөрчлөлт хадгалах</button></form><p id="nx-ad-edit-msg" class="nx-market-muted"></p>';
+  document.getElementById("nx-ad-edit-back").onclick=loadAds;
+  document.getElementById("nx-ad-edit-form").onsubmit=async e=>{e.preventDefault();const user=await currentUser();const v=Object.fromEntries(new FormData(e.currentTarget).entries());const {error}=await db.from("classified_ads").update({title:v.title.trim(),description:v.description.trim(),price:v.price===""?null:Number(v.price),phone:v.phone.trim()}).eq("id",a.id).eq("owner_id",user.id).eq("status","pending_review").eq("package_type","basic");if(error){document.getElementById("nx-ad-edit-msg").textContent="Алдаа: "+error.message;return;}alert("Зарын өөрчлөлт хадгалагдлаа.");loadAds();};
+ }
+ async function loadOrders(){
+  ordersHost.innerHTML='<p class="nx-market-muted">Захиалгуудыг ачаалж байна…</p>';
+  try{const user=await currentUser();const {data,error}=await db.from("market_orders").select("id,items,total_amount,status,payment_status,created_at").eq("buyer_id",user.id).order("created_at",{ascending:false}).limit(100);if(error)throw error;
+   ordersHost.innerHTML='<div class="nexora-ad-heading">МИНИЙ ЗАХИАЛГУУД</div>'+((data||[]).map(o=>'<article class="nx-admin-card"><h3>Захиалга '+esc(o.id)+'</h3><p class="nx-market-price">'+money(o.total_amount)+'</p><p class="nx-market-muted">Төлөв: '+esc(o.status)+' · Төлбөр: '+esc(o.payment_status)+'</p><p class="nx-market-muted">'+esc(new Date(o.created_at).toLocaleString("mn-MN"))+'</p><pre style="white-space:pre-wrap;color:#aaa39a;font-size:11px">'+esc(JSON.stringify(o.items,null,2))+'</pre></article>').join("")||'<p class="nx-market-muted">Одоогоор захиалга алга.</p>');
+  }catch(e){ordersHost.innerHTML='<p style="color:#ff9999">'+esc(e.message)+'</p>';}
+ }
+ document.addEventListener("click",e=>{if(e.target.closest("#nexora-my-ads-open"))loadAds();if(e.target.closest("#nexora-my-orders-open"))loadOrders();});
 })();
 </script>
 
