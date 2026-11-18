@@ -3599,7 +3599,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       let objectPath=String(p.image_path||"").trim(),buckets=objectPath?["market-product-images","classified-images"]:[];
       let displayUrl="";
       if(!objectPath&&rawImageUrl){
-        const m=rawImageUrl.match(/\\/storage\\/v1\\/object\\/(?:public|sign)\\/([^/]+)\\/(.+?)(?:\\?.*)?$/);
+        const m=rawImageUrl.match(/\/storage\/v1\/object\/(?:public|sign)\/([^/]+)\/(.+?)(?:\?.*)?$/);
         if(m){buckets=[m[1]];objectPath=m[2];}else displayUrl=rawImageUrl;
       }
       if(objectPath){try{objectPath=decodeURIComponent(objectPath);}catch(_){}}
