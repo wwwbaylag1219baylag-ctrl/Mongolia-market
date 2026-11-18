@@ -1171,6 +1171,13 @@
   cursor: pointer;
 }
 
+.nx-accordion-section{width:100%}
+.nx-accordion-tab{margin:0}
+.nx-accordion-arrow{transition:transform .2s ease}
+.nx-accordion-tab[aria-expanded="true"] .nx-accordion-arrow{transform:rotate(180deg)}
+.nx-accordion-panel{display:flex;flex-direction:column;gap:8px;padding:9px 4px 4px}
+.nx-accordion-panel[hidden]{display:none}
+.nx-accordion-option{min-height:48px;margin:0 0 0 12px;background:#111;border-color:rgba(214,173,85,.2)}
 .nx-subcategory-item:active {
   background: #302719;
   border-color: #d6ad55;
@@ -1521,29 +1528,41 @@
   function showSubcategories(category) {
     currentCategory = category;
     currentGroup = null;
+    currentSubcategory = null;
 
     const groups = subcategories[category.number] || {};
 
     content.innerHTML = `
       <div class="nx-full-screen">
         ${backButton()}
-
-        <div class="nx-screen-title">
-          ${category.icon} ${category.name}
-        </div>
-
+        <div class="nx-screen-title">${category.icon} ${category.name}</div>
         <div class="nx-screen-subtitle">
-          Дэд ангиллаа сонгоно уу.
+          Дэд ангиллын таб дээр дарж дэлгэж, дахин дарж хумина уу.
         </div>
 
-        <div class="nx-subcategory-list">
-          ${Object.keys(groups).map((group, index) => `
-            <button type="button"
-              class="nx-subcategory-item"
-              data-nx-group="${index}">
-              <span>${group}</span>
-              <span>›</span>
-            </button>
+        <div class="nx-subcategory-list nx-subcategory-accordion">
+          ${Object.entries(groups).map(([group, items], index) => `
+            <section class="nx-accordion-section">
+              <button type="button"
+                class="nx-subcategory-item nx-accordion-tab"
+                data-nx-group="${index}"
+                aria-expanded="false">
+                <span>${group}</span>
+                <span class="nx-accordion-arrow">⌄</span>
+              </button>
+              <div class="nx-accordion-panel" data-nx-group-panel="${index}" hidden>
+                ${items.length ? items.map((item, itemIndex) => `
+                  <button type="button"
+                    class="nx-subcategory-item nx-accordion-option"
+                    data-nx-item="${itemIndex}">
+                    <span>${item}</span>
+                    <span>›</span>
+                  </button>
+                `).join("") : `
+                  <div class="nx-empty-info">Одоогоор дэд ангилал байхгүй.</div>
+                `}
+              </div>
+            </section>
           `).join("")}
         </div>
       </div>
@@ -1638,17 +1657,34 @@
     const groupButton = event.target.closest("[data-nx-group]");
 
     if (groupButton) {
-      const groups = Object.keys(subcategories[currentCategory.number]);
-      const group = groups[Number(groupButton.dataset.nxGroup)];
+      const groupIndex = Number(groupButton.dataset.nxGroup);
+      const groups = Object.keys(subcategories[currentCategory.number] || {});
+      const group = groups[groupIndex];
+      const panel = content.querySelector(`[data-nx-group-panel="${groupIndex}"]`);
+      if (!group || !panel) return;
 
-      if (group) showSubcategoryItems(group);
+      const willOpen = panel.hidden;
+      content.querySelectorAll("[data-nx-group-panel]").forEach(node => {
+        node.hidden = true;
+      });
+      content.querySelectorAll("[data-nx-group][aria-expanded]").forEach(node => {
+        node.setAttribute("aria-expanded", "false");
+      });
+
+      if (willOpen) {
+        panel.hidden = false;
+        groupButton.setAttribute("aria-expanded", "true");
+        currentGroup = group;
+      } else {
+        currentGroup = null;
+      }
       return;
     }
 
     const itemButton = event.target.closest("[data-nx-item]");
 
     if (itemButton) {
-      const items = subcategories[currentCategory.number][currentGroup];
+      const items = subcategories[currentCategory.number][currentGroup] || [];
       const item = items[Number(itemButton.dataset.nxItem)];
 
       if (item) showListingPlaceholder(item);
