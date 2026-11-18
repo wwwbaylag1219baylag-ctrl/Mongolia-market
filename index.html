@@ -268,6 +268,7 @@
 #nexora-admin-app .nx-admin-head .nexora-ad-heading{margin:0 0 7px;font-size:24px;letter-spacing:.4px}
 #nexora-admin-app .nx-admin-subtitle{color:#aaa39a;font-size:13px;line-height:1.6}
 #nexora-admin-app .nx-admin-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 12px}
+#nexora-admin-app .nx-admin-search{flex:1;min-width:0;min-height:42px;padding:10px 13px;border:1px solid rgba(214,173,85,.25);border-radius:11px;background:#151515;color:#f7f5ef;font:inherit;font-size:13px;outline:none}#nexora-admin-app .nx-admin-search:focus{border-color:#d6ad55;box-shadow:0 0 0 3px rgba(214,173,85,.12)}#nexora-admin-app .nx-admin-card[hidden]{display:none}
 #nexora-admin-app .nx-admin-refresh{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:10px 14px;border:1px solid rgba(214,173,85,.45);border-radius:11px;background:#191919;color:#f0d28a;font-weight:700}
 #nexora-admin-app .nx-admin-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;overflow:visible;padding:0;margin:14px 0 4px}
 #nexora-admin-app .nx-admin-tabs button{min-width:0;min-height:48px;white-space:normal;padding:10px 8px;border:1px solid rgba(214,173,85,.28);border-radius:11px;background:#151515;color:#c9c1b5;font-size:12px;font-weight:700;line-height:1.35}
@@ -295,7 +296,7 @@
 #nexora-admin-app .nx-admin-error{margin-top:14px;padding:15px;border:1px solid #754040;border-radius:12px;background:#281919;color:#ffc1c1;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
 #nexora-admin-app .nx-admin-order-items{margin-top:12px;padding:12px;border-radius:10px;background:#101010;color:#aaa39a;font-size:11px;white-space:pre-wrap;overflow-wrap:anywhere}
 #nexora-admin-app .nx-admin-loading{padding:24px 12px;color:#aaa39a;text-align:center}
-@media(max-width:680px){#nexora-admin-app .nx-admin-stats{grid-template-columns:repeat(2,minmax(0,1fr))}#nexora-admin-app .nx-admin-list{grid-template-columns:1fr}}
+@media(max-width:680px){#nexora-admin-app .nx-admin-stats{grid-template-columns:repeat(2,minmax(0,1fr))}#nexora-admin-app .nx-admin-list{grid-template-columns:1fr}#nexora-admin-app .nx-admin-toolbar{align-items:stretch;flex-direction:column}#nexora-admin-app .nx-admin-refresh{width:100%}}
 @media(max-width:430px){#nexora-admin-app{padding:18px 12px 32px}#nexora-admin-app .nx-admin-head .nexora-ad-heading{font-size:21px}#nexora-admin-app .nx-admin-tabs{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#nexora-admin-app .nx-admin-tabs button{min-height:44px;font-size:12px}#nexora-admin-app .nx-admin-stat{padding:13px}#nexora-admin-app .nx-admin-stat-value{font-size:24px}}
 
 </style>
@@ -3189,10 +3190,12 @@
  function shell(body){
   root.innerHTML='<div class="nx-admin-head"><div><div class="nexora-ad-heading">АДМИН УДИРДЛАГА</div><p class="nx-admin-subtitle">NEXORA платформын зар, худалдаа, төлбөр болон хүсэлтүүдийн нэгдсэн удирдлага.</p></div></div>'+
    '<nav class="nx-admin-tabs" aria-label="Админ цэс">'+tabs.map(t=>'<button type="button" data-admin-tab="'+t[0]+'" class="'+(activeTab===t[0]?'active':'')+'">'+t[1]+'</button>').join("")+'</nav>'+
-   '<div class="nx-admin-toolbar"><span class="nx-market-muted">Сүүлийн 50 бүртгэл</span><button class="nx-admin-refresh" id="nx-admin-refresh" type="button">↻ Шинэчлэх</button></div>'+
+   '<div class="nx-admin-toolbar"><input id="nx-admin-search" class="nx-admin-search" type="search" placeholder="Энэ жагсаалтаас хайх…" aria-label="Админ жагсаалтаас хайх"><button class="nx-admin-refresh" id="nx-admin-refresh" type="button">↻ Шинэчлэх</button></div>'+
    '<div id="nx-admin-body">'+body+'</div>';
   root.querySelectorAll("[data-admin-tab]").forEach(b=>b.onclick=()=>{activeTab=b.dataset.adminTab;loadTab();});
   document.getElementById("nx-admin-refresh").onclick=loadTab;
+  const search=document.getElementById("nx-admin-search");
+  search.oninput=()=>{const term=search.value.trim().toLocaleLowerCase("mn");root.querySelectorAll("#nx-admin-body .nx-admin-card").forEach(card=>{card.hidden=!!term&&!card.textContent.toLocaleLowerCase("mn").includes(term);});};
  }
  async function query(table,columns,filters=[]){
   let q=db.from(table).select(columns).order("created_at",{ascending:false}).limit(50);
