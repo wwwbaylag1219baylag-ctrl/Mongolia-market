@@ -2604,7 +2604,7 @@
       description: pendingAd.description,
       price: pendingAd.price,
       phone: pendingAd.phone,
-      status: packageInfo.amount === 0 ? "pending_review" : "pending_payment",
+      status: packageInfo.amount === 0 ? "active" : "pending_payment",
       package_type: packageInfo.type,
       package_days: packageInfo.days,
       package_amount: packageInfo.amount,
@@ -2768,7 +2768,7 @@
     content.innerHTML = `
       <div class="nx-create-screen">
         <div class="nx-create-title">
-          ${paid ? "ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭЛЭЭ" : "ЗАРЫГ ХЯНАЛТАД ИЛГЭЭЛЭЭ"}
+          ${paid ? "ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭЛЭЭ" : "ТАНЫ ЗАР НИЙТЛЭГДЛЭЭ"}
         </div>
         <div class="nx-create-category">
           Таны зар системд хадгалагдлаа.
@@ -2777,11 +2777,11 @@
           <br><strong>Багц:</strong> ${esc(selectedPackage.name)}
           <br><strong>Хугацаа:</strong> ${selectedPackage.days} хоног
           <br><strong>Төлөв:</strong>
-          ${paid ? "Төлбөрийн баталгаажуулалт хүлээгдэж байна." : "Админы хяналт хүлээгдэж байна."}
+          ${paid ? "Төлбөрийн баталгаажуулалт хүлээгдэж байна." : "Идэвхтэй зарын жагсаалтад шууд харагдана."}
           <br><br>
           ${paid
             ? "Админ шилжүүлгийг шалгаж баталгаажуулсны дараа зар идэвхжинэ."
-            : "Админ зарын мэдээллийг шалгаж баталгаажуулсны дараа зар идэвхжинэ."}
+            : "Таны зар сонгосон үндсэн болон дэд ангиллын зарын жагсаалтад нийтлэгдлээ."}
         </div>
         <button class="nx-create-submit" type="button"
           data-nx-create-finish>ЗАРЫН ЖАГСААЛТ РУУ БУЦАХ</button>
