@@ -50,14 +50,16 @@
  const money=v=>Number(v||0).toLocaleString("mn-MN")+" ₮";
  const tabs=[
   ["overview","Тойм"],["ads","Үнэгүй зар"],["payments","Зарын төлбөр"],["products","Бараа"],
-  ["suppliers","Нийлүүлэгч"],["orders","Захиалга"],["pricing","Үнийн тохиргоо"],["theme","Платформын өнгө"]
+  ["suppliers","Нийлүүлэгч"],["orders","Жижиглэнгийн захиалга"],["wholesaleProducts","Бөөний бараа"],["wholesaleOrders","Бөөний захиалга"],["pricing","Үнийн тохиргоо"],["theme","Платформын өнгө"]
  ];
  const sections={
   ads:["Үнэгүй зарын хүсэлт","Шинээр ирсэн, хяналт хүлээж буй зарууд"],
   payments:["Зарын төлбөр","Төлбөрийн баримт болон багцын мэдээлэл"],
   products:["Бараа бүтээгдэхүүн","Нийтлэх зөвшөөрөл хүлээж буй бараа"],
   suppliers:["Нийлүүлэгч","Нийлүүлэгчийн бүртгэлийн хүсэлт"],
-  orders:["Захиалгууд","Худалдан авагчдын захиалгын мэдээлэл"],
+  orders:["Жижиглэнгийн захиалгууд","Онлайн дэлгүүрийн жижиглэнгийн захиалга"],
+  wholesaleProducts:["Бөөний бараа","Нийлүүлэгчдийн бөөний барааны хүсэлт — онлайн дэлгүүрээс тусдаа."],
+  wholesaleOrders:["Бөөний захиалга","Зөвхөн бөөний худалдааны захиалгууд."],
   pricing:["Үнийн тохиргоо","Зарын багц болон худалдааны платформын төлбөрийг удирдах"],
   theme:["Платформын өнгөний тохиргоо","Админ самбарын харагдах өнгийг өөрчлөх"]
  };
@@ -99,6 +101,11 @@
    const details=[];
    if(r.owner_type)details.push(["Эзэмшигч",r.owner_type==="company"?"Байгууллага":r.owner_type==="individual"?"Хувь хүн":r.owner_type]);
    if(r.phone)details.push(["Утас",r.phone]);
+   if(r.buyer_name)details.push(["Захиалагч",r.buyer_name]);
+   if(r.buyer_phone)details.push(["Захиалагчийн утас",r.buyer_phone]);
+   if(r.supplier_id)details.push(["Нийлүүлэгчийн ID",r.supplier_id]);
+   if(r.delivery_address)details.push(["Хүргэлтийн хаяг",r.delivery_address]);
+   if(Array.isArray(r.items))details.push(["Захиалгын мөр",r.items.length+" төрөл"]);
    if(r.email)details.push(["И-мэйл",r.email]);
    if(r.bank_name)details.push(["Банк",r.bank_name]);
    if(r.transfer_reference)details.push(["Гүйлгээний утга",r.transfer_reference]);
@@ -135,7 +142,9 @@
    ["Зарын төлбөр","payment_requests","status","pending_review","payments"],
    ["Бараа","market_products","status","pending","products"],
       ["Нийлүүлэгч","market_suppliers","status","pending","suppliers"],
-   ["Нийт захиалга","market_orders",null,null,"orders"]
+   ["Жижиглэнгийн захиалга","market_orders",null,null,"orders"],
+   ["Бөөний бараа","wholesale_products","status","pending","wholesaleProducts"],
+   ["Бөөний захиалга","wholesale_orders",null,null,"wholesaleOrders"]
   ];
   const results=await Promise.all(stats.map(async x=>{
    let q=db.from(x[1]).select("id",{count:"exact",head:true});
@@ -204,7 +213,9 @@
    const cfg={
     ads:["classified_ads","id,title,category,price,status,package_type,package_days,package_amount,created_at",[["status","pending_review"]],"free_ad"],
     payments:["payment_requests","id,ad_id,user_id,amount,package_days,transfer_reference,receipt_path,status,created_at",[["status","pending_review"]],"ad_payment"],
-    products:["market_products","id,title,category,price,owner_id,status,stock_quantity,min_order_quantity,wholesale_price_tiers,created_at",[["status","pending"]],"product"],
+    products:["market_products","id,title,category,price,owner_id,status,stock_quantity,min_order_quantity,created_at",[["status","pending"]],"product"],
+    wholesaleProducts:["wholesale_products","id,title,category,price,owner_id,status,stock_quantity,min_order_quantity,wholesale_price_tiers,created_at",[["status","pending"]],"wholesale_product"],
+    wholesaleOrders:["wholesale_orders","id,buyer_id,supplier_id,items,total_amount,status,buyer_name,buyer_phone,delivery_address,note,created_at",[],""],
     stores:["nexora_store_payments","id,store_id,user_id,amount,bank_name,transfer_reference,receipt_path,status,created_at",[["status","pending"]],"store_payment"],
     suppliers:["market_suppliers","id,name,type,owner_type,register_no,phone,email,address,status,created_at",[["status","pending"]],"supplier"],
     orders:["market_orders","id,buyer_id,items,total_amount,status,payment_status,created_at",[],""]
@@ -259,6 +270,7 @@
    }
    else if(type==="order_payment")result=await db.rpc("nexora_review_market_order_payment",{p_payment_id:id,p_approve:action==="approve",p_note:action==="approve"?null:"Админы шийдвэрээр татгалзсан"});
    else if(type==="product")result=await db.from("market_products").update({status:action==="approve"?"active":"rejected"}).eq("id",id);
+   else if(type==="wholesale_product")result=await db.from("wholesale_products").update({status:action==="approve"?"active":"rejected",updated_at:new Date().toISOString()}).eq("id",id);
    else if(type==="supplier")result=await db.from("market_suppliers").update({status:action==="approve"?"approved":"rejected"}).eq("id",id);
    if(result?.error)throw result.error;
    alert("Хүсэлтийг амжилттай шийдвэрлэлээ.");
