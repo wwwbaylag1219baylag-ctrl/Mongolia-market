@@ -3655,6 +3655,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     render();
   }
   function render(){
+    const scrollPositions=new Map([...host.querySelectorAll(".nx-market-category-section")].map(section=>[section.querySelector(".nx-market-category-head h2")?.textContent||"",section.querySelector(".nx-market-grid")?.scrollLeft||0]));
     const filtered=products.filter(p=>(p.title+" "+p.category+" "+(p.description||"")).toLowerCase().includes(searchText.toLowerCase()));
     host.innerHTML=`
       <div class="nexora-ad-heading">ХУДАЛДААНЫ ПЛАТФОРМ</div>
@@ -3689,6 +3690,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
           }).join("")}</div>
         </section>`).join(""):'<p class="nx-market-muted">Одоогоор идэвхтэй бараа алга.</p>';})()} 
 `;
+    host.querySelectorAll(".nx-market-category-section").forEach(section=>{const key=section.querySelector(".nx-market-category-head h2")?.textContent||"";const row=section.querySelector(".nx-market-grid");if(row)row.scrollLeft=scrollPositions.get(key)||0;});
     host.querySelectorAll("[data-product-toggle]").forEach(img=>img.addEventListener("click",()=>{const id=img.dataset.productToggle;productViewStates[id]=Number(productViewStates[id]||0)===1?0:1;render();}));
     host.querySelectorAll("[data-product-photo]").forEach(img=>img.addEventListener("click",()=>{const p=products.find(x=>x.id===img.dataset.productPhoto);window.NEXORA_OPEN_PHOTO_ALBUM?.(p?._galleryUrls||[],Number(img.dataset.photoIndex)||0);}));
     document.getElementById("nx-market-search").addEventListener("input",e=>{searchText=e.target.value;const pos=e.target.selectionStart;render();const el=document.getElementById("nx-market-search");el.focus();el.setSelectionRange(pos,pos);});
