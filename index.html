@@ -2954,7 +2954,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
           <div id="nx-map-selected-label" style="font-size:12px;color:#d6ad55;margin:0 0 14px;">${data.latitude && data.longitude ? "Байршил сонгогдсон ✓" : "Байршил сонгоогүй байна"}</div>
 
           <label class="nx-create-label">Зарын зураг (6 хүртэл)</label>
-          <input id="nx-ad-images" type="file" accept="image/jpeg,image/png,image/webp" multiple style="width:100%;padding:14px 0;color:white;">
+          <input id="nx-ad-images" type="file" accept="image/jpeg,image/png,image/webp" multiple required style="width:100%;padding:14px 0;color:white;">
 
           <div id="nx-ad-image-preview" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0;"></div>
           <div id="nx-flow-message" class="nx-create-message"></div>
@@ -3306,6 +3306,10 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     }
     if (priceText && (!Number.isFinite(price) || price < 0)) {
       message("Үнийг зөв бичнэ үү. Жишээ: 200 сая, 500 мянга.", true);
+      return;
+    }
+    if (files.length < 1) {
+      message("Хамгийн багадаа 1 зураг оруулна уу.", true);
       return;
     }
     if (files.length > 6) {
