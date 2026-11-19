@@ -98,7 +98,7 @@
  async function cards(rows,type){
   if(!rows||!rows.length)return empty("Одоогоор хүлээгдэж буй хүсэлт алга.");
   const html=await Promise.all(rows.map(async r=>{
-   const title=r.title||r.store_name||r.name||("Хүсэлт "+String(r.id||"").slice(0,8));
+   const title=r.title||r.store_name||r.name||(r.fee_type?(r.fee_type==="logo"?"Нийлүүлэгчийн логоны төлбөр":"Бөөний бараа байршуулалтын төлбөр"):("Хүсэлт "+String(r.id||"").slice(0,8)));
    const details=[];
    if(r.owner_type)details.push(["Эзэмшигч",r.owner_type==="company"?"Байгууллага":r.owner_type==="individual"?"Хувь хүн":r.owner_type]);
    if(r.phone)details.push(["Утас",r.phone]);
@@ -108,6 +108,9 @@
    if(r.delivery_address)details.push(["Хүргэлтийн хаяг",r.delivery_address]);
    if(Array.isArray(r.items))details.push(["Захиалгын мөр",r.items.length+" төрөл"]);
    if(r.email)details.push(["И-мэйл",r.email]);
+   if(r.user_id)details.push(["Төлбөр илгээсэн хэрэглэгч",String(r.user_id).slice(0,8)+"…"]);
+   if(r.product_id)details.push(["Барааны ID",String(r.product_id).slice(0,8)+"…"]);
+   if(r.store_id)details.push(["Дэлгүүрийн ID",String(r.store_id).slice(0,8)+"…"]);
    if(r.bank_name)details.push(["Банк",r.bank_name]);
    if(r.transfer_reference)details.push(["Гүйлгээний утга",r.transfer_reference]);
    if(r.category)details.push(["Ангилал",r.category]);
@@ -119,7 +122,6 @@
    if(r.location||r.address)details.push(["Байршил",r.location||r.address]);
    if(r.fee_type)details.push(["Төлбөрийн төрөл",r.fee_type==="logo"?"Нийлүүлэгчийн лого":"Бөөний бараа байршуулалт"]);
    if(r.account_number)details.push(["Хүлээн авагчийн данс",r.bank_name+" · "+r.account_number+" · "+(r.account_holder||"")]);
-   if(r.transfer_reference)details.push(["Гүйлгээний утга",r.transfer_reference]);
    if(r.register_no)details.push(["Регистр",r.register_no]);
    if(r.ad_id)details.push(["Зарын дугаар",String(r.ad_id).slice(0,12)]);
    if(r.order_id)details.push(["Захиалгын дугаар",String(r.order_id).slice(0,12)]);
