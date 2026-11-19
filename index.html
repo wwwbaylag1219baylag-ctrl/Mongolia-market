@@ -3572,10 +3572,10 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       .on("postgres_changes",{event:"INSERT",schema:"public",table:"wholesale_supplier_notifications",filter:"user_id=eq."+userId},payload=>{
         refreshWholesaleNotificationBadge(userId);
         const n=payload.new||{};
-        if(host.isConnected&&document.getElementById("nx-wholesale-notifications")){
+        if(host.isConnected){
           let toast=document.getElementById("nx-wholesale-notification-toast");
-          if(!toast){toast=document.createElement("div");toast.id="nx-wholesale-notification-toast";toast.className="nx-market-card";toast.style.borderColor="var(--gold,#d6ad55)";const toolbar=host.querySelector(".nx-market-toolbar");if(toolbar)toolbar.insertAdjacentElement("afterend",toast);}
-          if(toast){toast.textContent="🔔 "+(n.title||"Шинэ мэдэгдэл")+". Мэдэгдэл хэсгээс дэлгэрэнгүй үзнэ үү.";}
+          if(!toast){toast=document.createElement("div");toast.id="nx-wholesale-notification-toast";toast.className="nx-market-card";toast.style.borderColor="var(--gold,#d6ad55)";host.prepend(toast);}
+          if(toast){toast.textContent="🔔 "+(n.title||"Шинэ мэдэгдэл")+". Бөөний худалдааны Мэдэгдэл хэсгээс дэлгэрэнгүй үзнэ үү.";}
         }
       }).subscribe((status,err)=>{if(status==="CHANNEL_ERROR"||status==="TIMED_OUT")console.warn("NEXORA мэдэгдлийн realtime холболт:",status,err||"");});
   }
