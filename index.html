@@ -3679,6 +3679,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       <div class="nx-market-toolbar">
         <button class="nx-market-btn" id="nx-market-publish">+ Бараа нийтлэх</button>
         <button class="nx-market-btn secondary" id="nx-market-cart">🛒 Сагс (${cart.reduce((n,x)=>n+x.qty,0)})</button>
+        <button class="nx-market-btn secondary" id="nx-market-my-products">Миний бараа</button>
         <button class="nx-market-btn secondary" id="nx-market-store">Дэлгүүр нээх</button>
         <button class="nx-market-btn secondary" id="nx-market-supplier">Нийлүүлэгч болох</button>
         <button class="nx-market-btn secondary" id="nx-market-refresh">Шинэчлэх</button>
@@ -3715,10 +3716,46 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     document.getElementById("nx-market-search").addEventListener("input",e=>{searchText=e.target.value;const pos=e.target.selectionStart;render();const el=document.getElementById("nx-market-search");el.focus();el.setSelectionRange(pos,pos);});
     document.getElementById("nx-market-publish").onclick=showPublish;
     document.getElementById("nx-market-cart").onclick=showCart;
+    document.getElementById("nx-market-my-products").onclick=showMyProducts;
     document.getElementById("nx-market-refresh").onclick=loadProducts;
     document.getElementById("nx-market-store").onclick=showStore;
     document.getElementById("nx-market-supplier").onclick=showSupplier;
     host.querySelectorAll("[data-cart-add]").forEach(b=>b.onclick=()=>{const p=products.find(x=>x.id===b.dataset.cartAdd);if(!p)return;const old=cart.find(x=>x.id===p.id),nextQty=(old?.qty||0)+Math.max(1,Number(p.min_order_quantity||1));if(nextQty>Number(p.stock_quantity||0)){showCartToast("Үлдэгдэл хүрэлцэхгүй байна.");return;}if(old){old.qty=nextQty;old.price=priceForQuantity(p,old.qty);}else cart.push({id:p.id,title:p.title,price:priceForQuantity(p,Math.max(1,Number(p.min_order_quantity||1))),qty:Math.max(1,Number(p.min_order_quantity||1)),stock:Number(p.stock_quantity||0),minQty:Number(p.min_order_quantity||1)});render();showCartToast("✓ "+p.title+" сагсанд нэмэгдлээ");});
+  }
+
+  async function showMyProducts(){
+    const {data:authData,error:authError}=await db.auth.getUser();
+    if(authError||!authData?.user){host.innerHTML='<button class="nx-market-btn secondary" id="nx-my-products-back">‹ Буцах</button><h2 class="nexora-ad-heading">МИНИЙ БАРАА</h2><p class="nx-market-muted">Өөрийн барааг удирдахын тулд нэвтэрнэ үү.</p>';document.getElementById("nx-my-products-back").onclick=loadProducts;return;}
+    const user=authData.user;
+    host.innerHTML='<p class="nx-market-muted">Таны барааг ачаалж байна…</p>';
+    const {data:rows,error}=await db.from("market_products").select("id,title,category,price,status,stock_quantity,min_order_quantity,wholesale_price_tiers,description,phone,location,created_at").eq("owner_id",user.id).order("created_at",{ascending:false}).limit(100);
+    if(error){host.innerHTML='<button class="nx-market-btn secondary" id="nx-my-products-back">‹ Буцах</button><p class="nx-market-muted">Бараа ачаалахад алдаа: '+esc(error.message)+'</p>';document.getElementById("nx-my-products-back").onclick=loadProducts;return;}
+    const statusLabel={pending:"Хяналтад",active:"Идэвхтэй",rejected:"Буцаагдсан"};
+    host.innerHTML='<button class="nx-market-btn secondary" id="nx-my-products-back">‹ Буцах</button><h2 class="nexora-ad-heading">МИНИЙ БАРАА</h2><p class="nx-market-muted">Үнэ, үлдэгдэл, захиалгын доод хэмжээ болон бөөний үнийн шатлалаа эндээс шинэчилнэ.</p>'+
+      ((rows||[]).length?'<div class="nx-admin-list">'+rows.map(p=>'<article class="nx-admin-card"><h3>'+esc(p.title)+'</h3><p class="nx-market-price">'+money(p.price)+'</p><div class="nx-admin-meta"><div>Төлөв: '+esc(statusLabel[p.status]||p.status||"—")+'</div><div>Үлдэгдэл: '+Number(p.stock_quantity||0).toLocaleString("mn-MN")+' ширхэг</div><div>Доод захиалга: '+Number(p.min_order_quantity||1)+' ширхэг</div></div><button class="nx-market-btn" type="button" data-edit-my-product="'+esc(p.id)+'">Үнэ, үлдэгдэл засах</button></article>').join("")+'</div>':'<p class="nx-market-muted">Танд одоогоор бүртгэлтэй бараа алга.</p>');
+    document.getElementById("nx-my-products-back").onclick=loadProducts;
+    host.querySelectorAll("[data-edit-my-product]").forEach(button=>button.onclick=()=>showEditMyProduct((rows||[]).find(p=>String(p.id)===button.dataset.editMyProduct),user.id));
+  }
+  function showEditMyProduct(product,ownerId){
+    if(!product)return;
+    const tiers=Array.isArray(product.wholesale_price_tiers)?product.wholesale_price_tiers.slice().sort((a,b)=>Number(a.min_qty)-Number(b.min_qty)):[];
+    const t1=tiers[0]||{},t2=tiers[1]||{};
+    host.innerHTML='<button class="nx-market-btn secondary" id="nx-edit-product-back">‹ Миний бараа</button><h2 class="nexora-ad-heading">БАРААНЫ МЭДЭЭЛЭЛ ЗАСАХ</h2><p class="nx-market-muted">'+esc(product.title)+' · Нийтэлсэн төлөв өөрчлөгдөхгүй.</p><form id="nx-edit-product-form"><label>Барааны нэр *</label><input class="nx-market-input" name="title" required maxlength="120" value="'+esc(product.title)+'"><label>Ангилал *</label><input class="nx-market-input" name="category" required maxlength="80" value="'+esc(product.category)+'"><label>Жижиглэнгийн үнэ (₮) *</label><input class="nx-market-input" name="price" type="number" min="0" step="1" required value="'+Number(product.price||0)+'"><label>Үлдэгдэл (ширхэг) *</label><input class="nx-market-input" name="stock_quantity" type="number" min="0" step="1" required value="'+Number(product.stock_quantity||0)+'"><label>Захиалгын доод хэмжээ *</label><input class="nx-market-input" name="min_order_quantity" type="number" min="1" step="1" required value="'+Number(product.min_order_quantity||1)+'"><section class="nx-admin-card" style="margin:12px 0"><h3>БӨӨНИЙ ҮНИЙН ШАТЛАЛ</h3><label>1-р шатны доод тоо</label><input class="nx-market-input" name="tier1_qty" type="number" min="2" value="'+(t1.min_qty??"")+'"><label>1-р шатны нэгж үнэ (₮)</label><input class="nx-market-input" name="tier1_price" type="number" min="0" value="'+(t1.price??"")+'"><label>2-р шатны доод тоо</label><input class="nx-market-input" name="tier2_qty" type="number" min="2" value="'+(t2.min_qty??"")+'"><label>2-р шатны нэгж үнэ (₮)</label><input class="nx-market-input" name="tier2_price" type="number" min="0" value="'+(t2.price??"")+'"></section><label>Тайлбар</label><textarea class="nx-market-textarea" name="description" rows="4">'+esc(product.description||"")+'</textarea><label>Холбоо барих утас</label><input class="nx-market-input" name="phone" value="'+esc(product.phone||"")+'"><label>Байршил</label><input class="nx-market-input" name="location" value="'+esc(product.location||"")+'"><button class="nx-market-btn" type="submit">ӨӨРЧЛӨЛТ ХАДГАЛАХ</button></form><p id="nx-edit-product-msg" class="nx-market-muted"></p>';
+    document.getElementById("nx-edit-product-back").onclick=showMyProducts;
+    document.getElementById("nx-edit-product-form").onsubmit=async e=>{
+      e.preventDefault();
+      const form=e.currentTarget,button=form.querySelector('button[type="submit"]'),msg=document.getElementById("nx-edit-product-msg"),v=Object.fromEntries(new FormData(form).entries());
+      const stock=Number(v.stock_quantity),minQty=Number(v.min_order_quantity),price=Number(v.price);
+      if(!Number.isInteger(stock)||stock<0||!Number.isInteger(minQty)||minQty<1||!Number.isFinite(price)||price<0){msg.textContent="Үнэ, үлдэгдэл болон доод захиалгын хэмжээг зөв оруулна уу.";return;}
+      if(stock>0&&minQty>stock){msg.textContent="Доод захиалгын хэмжээ үлдэгдлээс их байж болохгүй.";return;}
+      const nextTiers=[];
+      [[v.tier1_qty,v.tier1_price],[v.tier2_qty,v.tier2_price]].forEach(([q,p])=>{if(String(q||"").trim()!==""&&String(p||"").trim()!=="")nextTiers.push({min_qty:Number(q),price:Number(p)});});
+      if(nextTiers.some(t=>!Number.isInteger(t.min_qty)||t.min_qty<2||t.min_qty>stock||!Number.isFinite(t.price)||t.price<0)||nextTiers[1]&&nextTiers[1].min_qty<=nextTiers[0].min_qty){msg.textContent="Бөөний үнийн шатлалын тоо хэмжээ, үнийг шалгана уу.";return;}
+      button.disabled=true;button.textContent="ХАДГАЛЖ БАЙНА…";
+      const {error}=await db.from("market_products").update({title:v.title.trim(),category:v.category.trim(),price,stock_quantity:stock,min_order_quantity:minQty,wholesale_price_tiers:nextTiers,description:v.description.trim(),phone:v.phone.trim(),location:v.location.trim()}).eq("id",product.id).eq("owner_id",ownerId);
+      if(error){msg.textContent="Алдаа: "+error.message;button.disabled=false;button.textContent="ӨӨРЧЛӨЛТ ХАДГАЛАХ";return;}
+      await showMyProducts();
+    };
   }
 
   function showProductDetail(productId){
