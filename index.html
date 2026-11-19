@@ -3832,7 +3832,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     if(existing){
       const {data:payment,error:paymentLookupError}=await db.from("market_supplier_registration_payments").select("amount,status,admin_note,created_at").eq("supplier_id",existing.id).order("created_at",{ascending:false}).limit(1).maybeSingle();
       if(paymentLookupError){host.innerHTML='<p>Төлбөрийн мэдээлэл уншихад алдаа: '+esc(paymentLookupError.message)+'</p>';return;}
-      if(existing.status!=="rejected"&&payment?.status!=="rejected"){
+      if(existing.status==="approved"||payment?.status==="pending"||payment?.status==="approved"){
         const labels={pending:"Төлбөрийн баримт админы хяналтад байна",approved:"Төлбөр баталгаажсан · Нийлүүлэгчийн эрх идэвхтэй"};
         host.innerHTML='<button class="nx-market-btn secondary" id="nx-supplier-back">‹ Бөөний бараа</button><h2 class="nexora-ad-heading">НИЙЛҮҮЛЭГЧИЙН БҮРТГЭЛ</h2><p><strong>'+esc(existing.name)+'</strong></p><p class="nx-market-muted">Төлөв: '+esc(existing.status)+'</p>'+(payment?'<section class="nx-admin-card"><h3>Бүртгэлийн төлбөр</h3><p class="nx-market-price">'+money(payment.amount)+'</p><p class="nx-market-muted">'+esc(labels[payment.status]||payment.status)+'</p>'+(payment.admin_note?'<p class="nx-market-muted">Админы тайлбар: '+esc(payment.admin_note)+'</p>':"")+'</section>':'<p class="nx-market-muted">Төлбөрийн хүсэлтийн мэдээлэл олдсонгүй.</p>');
         document.getElementById("nx-supplier-back").onclick=showWholesaleCatalog;return;
