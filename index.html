@@ -3553,6 +3553,9 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   if(!host)return;
   if(!db){host.innerHTML='<div class="nx-market-error">Худалдааны системтэй холбогдож чадсангүй. Интернэт холболтоо шалгаад хуудсыг дахин ачаална уу.</div>';console.error("NEXORA marketplace: Supabase client unavailable");return;}
   let products=[],cart=[],marketUser=null,searchText="",productViewStates={},productApprovalChannel=null,productApprovalPoll=null,wholesaleNotificationChannel=null,wholesaleNotificationUserId=null;
+  // This app runs in its own IIFE; keep its display helpers local.
+  const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const money=value=>Number(value||0).toLocaleString("mn-MN")+" ₮";
   function stopProductApprovalWatch(){if(productApprovalChannel){db.removeChannel(productApprovalChannel);productApprovalChannel=null;}if(productApprovalPoll){clearInterval(productApprovalPoll);productApprovalPoll=null;}}
 
   async function wholesaleUnreadCount(userId){
