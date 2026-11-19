@@ -3929,6 +3929,29 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       }catch(err){if(path)await db.storage.from("payment-receipts").remove([path]);msg.textContent="Алдаа: "+(err.message||err);btn.disabled=false;}
     };
   }
+  async function showWholesaleFeeHistory(backAction=showWholesaleCatalog){
+    const {data:auth,error:authError}=await db.auth.getUser();
+    if(authError||!auth.user){host.innerHTML='<p class="nx-market-muted">Төлбөрийн түүх харахын тулд нэвтэрнэ үү.</p><button class="nx-market-btn" id="nx-fee-history-back">Буцах</button>';document.getElementById("nx-fee-history-back").onclick=backAction;return;}
+    host.innerHTML='<button class="nx-market-btn secondary" id="nx-fee-history-back">‹ Буцах</button><h2 class="nexora-ad-heading">НИЙЛҮҮЛЭГЧИЙН ТӨЛБӨРИЙН ТҮҮХ</h2><p class="nx-market-muted">Лого болон бөөний бараа байршуулалтын төлбөрийн хүсэлт, админы шийдвэр энд харагдана.</p><p class="nx-market-muted">Ачаалж байна…</p>';
+    document.getElementById("nx-fee-history-back").onclick=backAction;
+    try{
+      const {data:rows,error}=await db.from("wholesale_supplier_fee_payments").select("id,fee_type,amount,transfer_reference,status,admin_note,created_at,reviewed_at").eq("user_id",auth.user.id).order("created_at",{ascending:false}).limit(100);
+      if(error)throw error;
+      const names={pending:"Хянагдаж байна",approved:"Зөвшөөрсөн",rejected:"Татгалзсан"};
+      const cards=(rows||[]).map(row=>{
+        const type=row.fee_type==="logo"?"Нийлүүлэгчийн лого байршуулах":"Бөөний бараа байршуулалт";
+        const status=names[row.status]||row.status||"Тодорхойгүй";
+        const date=row.created_at?new Date(row.created_at).toLocaleString("mn-MN"):"—";
+        const reviewed=row.reviewed_at?new Date(row.reviewed_at).toLocaleString("mn-MN"):"";
+        return '<article class="nx-admin-card" style="margin:12px 0"><div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap"><h3>'+esc(type)+'</h3><span class="nx-admin-status">'+esc(status)+'</span></div><p class="nx-market-price">'+money(row.amount)+'</p><div class="nx-admin-meta"><div><strong>Илгээсэн:</strong> '+esc(date)+'</div>'+(row.transfer_reference?'<div><strong>Гүйлгээний утга:</strong> '+esc(row.transfer_reference)+'</div>':'')+(reviewed?'<div><strong>Шийдвэрлэсэн:</strong> '+esc(reviewed)+'</div>':'')+(row.admin_note?'<div><strong>Админы тайлбар:</strong> '+esc(row.admin_note)+'</div>':'')+'</div>'+(row.status==="pending"?'<p class="nx-market-muted">Төлбөрийн баримтыг админ шалгаж байна. Шийдвэр гармагц төлөв энд шинэчлэгдэнэ.</p>':row.status==="rejected"?'<p class="nx-market-muted">Хүсэлт татгалзагдсан. Админы тайлбарыг шалгаад шаардлагатай бол дахин хүсэлт илгээнэ үү.</p>':'<p class="nx-market-muted">Төлбөр баталгаажсан.</p>')+'</article>';
+      }).join("");
+      host.innerHTML='<button class="nx-market-btn secondary" id="nx-fee-history-back">‹ Буцах</button><h2 class="nexora-ad-heading">НИЙЛҮҮЛЭГЧИЙН ТӨЛБӨРИЙН ТҮҮХ</h2><p class="nx-market-muted">Лого болон бөөний бараа байршуулалтын төлбөрийн хүсэлт, админы шийдвэр.</p>'+(cards||'<p class="nx-market-muted">Одоогоор илгээсэн төлбөрийн хүсэлт алга.</p>');
+      document.getElementById("nx-fee-history-back").onclick=backAction;
+    }catch(err){
+      host.innerHTML='<button class="nx-market-btn secondary" id="nx-fee-history-back">‹ Буцах</button><p class="nx-market-muted">Төлбөрийн түүх ачаалахад алдаа гарлаа: '+esc(err.message||err)+'</p>';
+      document.getElementById("nx-fee-history-back").onclick=backAction;
+    }
+  }
   async function showStore(){
     const {data,error:authError}=await db.auth.getUser();
     if(authError||!data.user){host.innerHTML='<button class="nx-market-btn secondary" id="nx-store-back">‹ Буцах</button><h2 class="nexora-ad-heading">ДЭЛГҮҮР НЭЭХ</h2><p class="nx-market-muted">Дэлгүүрээ бүртгүүлэхийн тулд эхлээд нэвтэрнэ үү.</p>';document.getElementById("nx-store-back").onclick=loadProducts;return;}
@@ -3952,8 +3975,9 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       '<label>Хаяг / байршил</label><input class="nx-market-input" name="address" maxlength="250" value="'+esc(store?.address||"")+'">'+
       '<label>Утас</label><input class="nx-market-input" name="phone" type="tel" value="'+esc(store?.phone||"")+'">'+
       '<button class="nx-market-btn" type="submit">'+(store?"Дэлгүүрийн мэдээлэл хадгалах":"Дэлгүүр нээх")+'</button></form><p id="nx-store-msg" class="nx-market-muted"></p>'+
-      '<section class="nx-admin-card" style="margin-top:16px"><h3>ЗАХИАЛГЫН ТӨЛБӨР ХҮЛЭЭН АВАХ ДАНС</h3><p class="nx-market-muted">Худалдан авагч таны барааг захиалахад энэ дансны мэдээлэл харагдана.</p><form id="nx-store-bank-form"><label>Банкны нэр *</label><input class="nx-market-input" name="bank_name" required value="'+esc(bank?.bank_name||"")+'"><label>Дансны дугаар *</label><input class="nx-market-input" name="account_number" required value="'+esc(bank?.account_number||"")+'"><label>Данс эзэмшигчийн нэр *</label><input class="nx-market-input" name="account_holder" required value="'+esc(bank?.account_holder||"")+'"><label>Утас *</label><input class="nx-market-input" name="bank_phone" type="tel" required value="'+esc(bank?.phone||"")+'"><button class="nx-market-btn" type="submit">Данс хадгалах</button></form><p id="nx-store-bank-msg" class="nx-market-muted"></p></section>';
+      '<div class="nx-market-toolbar" style="margin-top:14px"><button type="button" class="nx-market-btn secondary" id="nx-store-fee-history">Төлбөрийн түүх харах</button></div><section class="nx-admin-card" style="margin-top:16px"><h3>ЗАХИАЛГЫН ТӨЛБӨР ХҮЛЭЭН АВАХ ДАНС</h3><p class="nx-market-muted">Худалдан авагч таны барааг захиалахад энэ дансны мэдээлэл харагдана.</p><form id="nx-store-bank-form"><label>Банкны нэр *</label><input class="nx-market-input" name="bank_name" required value="'+esc(bank?.bank_name||"")+'"><label>Дансны дугаар *</label><input class="nx-market-input" name="account_number" required value="'+esc(bank?.account_number||"")+'"><label>Данс эзэмшигчийн нэр *</label><input class="nx-market-input" name="account_holder" required value="'+esc(bank?.account_holder||"")+'"><label>Утас *</label><input class="nx-market-input" name="bank_phone" type="tel" required value="'+esc(bank?.phone||"")+'"><button class="nx-market-btn" type="submit">Данс хадгалах</button></form><p id="nx-store-bank-msg" class="nx-market-muted"></p></section>';
     document.getElementById("nx-store-back").onclick=loadProducts;
+    document.getElementById("nx-store-fee-history").onclick=()=>showWholesaleFeeHistory(showStore);
     document.getElementById("nx-store-form").onsubmit=async e=>{
       e.preventDefault();const form=e.currentTarget,btn=form.querySelector('button[type="submit"]'),msg=document.getElementById("nx-store-msg");btn.disabled=true;
       try{
