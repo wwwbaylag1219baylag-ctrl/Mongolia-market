@@ -4175,8 +4175,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         }catch(imageError){console.warn("NEXORA зураг түр ачаалсангүй:",imageError);}
       }
       products=(rows||[]).map(p=>{const profile=profileMap.get(String(p.owner_id))||{},paths=imageMap.get(String(p.id))||[];return {...p,_storeName:profile.store_name||"Онлайн дэлгүүр",_storeLogo:profile.logo_path||"",_images:paths.map(path=>({path,url:urlMap.get(p.id+"|"+path)||""})).filter(x=>x.url)};});
-      stage="нэвтрэлтийн мэдээлэл";
-      const userRes=await wait(db.auth.getUser(),"Хэрэглэгчийн мэдээлэл");marketUser=userRes.data?.user||null;
+      // Каталогийн харагдац нэвтрэлтийн хүсэлтээс хамаарахгүй: барааг эхлээд шууд харуулна.
+      marketUser=null;
       const count=cart.reduce((n,x)=>n+x.qty,0);
       host.innerHTML='<div class="nx-market-toolbar" style="display:flex;flex-wrap:wrap;gap:8px"><button class="nx-market-btn secondary" id="nx-retail-wholesale">Бөөний худалдаа</button><button class="nx-market-btn secondary" id="nx-retail-store">Дэлгүүрийн профайл</button><button class="nx-market-btn secondary" id="nx-retail-my-products">Миний бараа</button><button class="nx-market-btn secondary" id="nx-retail-orders">Надад ирсэн захиалга</button><button class="nx-market-btn" id="nx-retail-publish">+ Бараа нийтлэх</button><button class="nx-market-btn secondary" id="nx-retail-cart">🛒 Сагс ('+count+')</button></div><h2 class="nexora-ad-heading">ОНЛАЙН ДЭЛГҮҮР</h2><input class="nx-market-input" id="nx-retail-search" placeholder="Бараа, ангилал, дэлгүүр хайх…" value="'+esc(searchText)+'"><div id="nx-retail-categories"></div>';
       document.getElementById("nx-retail-wholesale").onclick=showWholesaleCatalog;
@@ -4187,6 +4187,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       document.getElementById("nx-retail-cart").onclick=showCart;
       document.getElementById("nx-retail-search").oninput=e=>{searchText=e.target.value;renderRetailCategories();};
       renderRetailCategories();
+      db.auth.getUser().then(({data,error})=>{if(!error)marketUser=data?.user||null;}).catch(error=>console.warn("NEXORA нэвтрэлтийн мэдээлэл:",error));
       if(!products.length)document.getElementById("nx-retail-categories").innerHTML='<div class="nx-admin-empty">Одоогоор баталгаажсан жижиглэнгийн бараа алга байна.</div>';
     }catch(err){console.error("NEXORA жижиглэнгийн каталогийн алдаа ("+stage+"):",err);host.innerHTML='<h2 class="nexora-ad-heading">ОНЛАЙН ДЭЛГҮҮР</h2><p class="nx-market-muted">Бараа ачаалахад алдаа ('+esc(stage)+'): '+esc(err.message||err)+'</p><button class="nx-market-btn" id="nx-retail-retry">Дахин ачаалах</button>';document.getElementById("nx-retail-retry").onclick=loadProducts;}
   }
