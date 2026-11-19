@@ -1,0 +1,16 @@
+create index if not exists market_product_images_owner_id_idx
+on public.market_product_images(owner_id);
+create index if not exists wholesale_order_notifications_user_id_idx
+on public.wholesale_order_notifications(user_id);
+create index if not exists wholesale_order_status_history_actor_id_idx
+on public.wholesale_order_status_history(actor_id);
+create index if not exists wholesale_supplier_fee_payments_bank_account_id_idx
+on public.wholesale_supplier_fee_payments(bank_account_id);
+create index if not exists wholesale_supplier_fee_payments_reviewed_by_idx
+on public.wholesale_supplier_fee_payments(reviewed_by);
+create index if not exists wholesale_supplier_fee_payments_supplier_id_idx
+on public.wholesale_supplier_fee_payments(supplier_id);
+create index if not exists wholesale_supplier_fee_payments_user_id_idx
+on public.wholesale_supplier_fee_payments(user_id);
+create index if not exists wholesale_supplier_notifications_user_id_idx
+on public.wholesale_supplier_notifications(user_id);
