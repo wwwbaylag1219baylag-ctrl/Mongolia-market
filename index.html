@@ -631,6 +631,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
             // Дэд дэлгэцийн хуучин буцах callback-ийг шинэ нэвтрэлтэд дамжуулахгүй.
             if (screenName === "shop" && currentScreen !== "shop") {
               window.NEXORA_SHOP_BACK = null;
+              window.NEXORA_SHOP_PROFILE = null;
               if (typeof window.NEXORA_SHOP_HOME === "function") {
                 window.NEXORA_SHOP_HOME();
               }
@@ -689,23 +690,19 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
                 return;
               }
 
-              // Хуучин/бүртгэгдээгүй дэлгэцэд зориулсан хамгаалалтын fallback.
-              const marketHost = document.getElementById("market-app");
-              if (marketHost) {
-                const innerBack = Array.from(marketHost.querySelectorAll("button")).find(function (button) {
-                  if (button.disabled || !button.getClientRects().length) return false;
-                  const label = [
-                    button.getAttribute("aria-label") || "",
-                    button.getAttribute("title") || "",
-                    button.textContent || ""
-                  ].join(" ").trim();
-                  return /буцах/i.test(label) || /^‹$/.test(label);
-                });
-                if (innerBack) {
-                  innerBack.click();
-                  return;
-                }
+              // Дэд маягтын callback санамсаргүй алдагдсан ч үндсэн нэвтрэх
+              // профайл руу screenHistory-оор үсрэхийг хориглоно.
+              // Профайлын дэд дэлгэц бол эхлээд тухайн худалдааны профайлд,
+              // бусад тохиолдолд тухайн каталогийн эхлэлд буцна.
+              if (typeof window.NEXORA_SHOP_PROFILE === "function") {
+                window.NEXORA_SHOP_PROFILE();
+                return;
               }
+              if (typeof window.NEXORA_SHOP_HOME === "function") {
+                window.NEXORA_SHOP_HOME();
+                return;
+              }
+              return;
             }
 
             if (screenHistory.length > 1) {
@@ -3801,8 +3798,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     }catch(err){host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-retail-history-back" aria-label="Буцах" title="Буцах">‹</button><p class="nx-market-muted">Төлбөрийн түүх ачаалахад алдаа: '+esc(err.message||err)+'</p>';document.getElementById("nx-retail-history-back").onclick=backAction;}
   }
   async function openRetailProfile(){
-    // Онлайн дэлгүүрийн профайлын шууд эцэг дэлгэц нь жижиглэнгийн каталог.
-    // Дээд талын ганц буцах сум энэ callback-ийг ашиглана.
+    // Онлайн дэлгүүрийн профайл руу буцах хамгаалалтын чиглэл.
+    window.NEXORA_SHOP_PROFILE = openRetailProfile;
     window.NEXORA_SHOP_BACK = loadProducts;
     host.innerHTML='<div class="nx-market-loading" role="status" style="padding:28px 16px;text-align:center"><div style="font-size:30px;margin-bottom:10px">👤</div><strong>Онлайн дэлгүүрийн профайл нээгдэж байна…</strong></div>';
     try{
@@ -4163,7 +4160,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     };
   }
   async function showWholesaleCatalog(){
-    // Дээд талын системийн буцах сумыг эхлээд жижиглэнгийн каталог руу чиглүүлнэ.
+    // Бөөний каталог нь бөөний профайлын гаднах эхлэл.
+    window.NEXORA_SHOP_PROFILE = null;
     window.NEXORA_SHOP_BACK = loadProducts;
     stopProductApprovalWatch();
     startWholesaleNotificationWatch().catch(err=>console.warn("Мэдэгдлийн тохиргоо:",err));
@@ -4181,6 +4179,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       document.getElementById("nx-wholesale-back").onclick=loadProducts;
       const runWholesaleScreen=async(action,label)=>{try{const {data:authData,error:authError}=await db.auth.getUser();if(authError)throw authError;if(!authData?.user){host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-wholesale-login-back" aria-label="Буцах" title="Буцах">‹</button><h2 class="nexora-ad-heading">НЭВТРЭХ ШААРДЛАГАТАЙ</h2><p class="nx-market-muted">'+esc(label)+' хэсгийг ашиглахын тулд NEXORA бүртгэлдээ нэвтэрч эсвэл шинэ бүртгэл үүсгэнэ үү.</p><button class="nx-market-btn" id="nx-wholesale-login-open">НЭВТРЭХ / БҮРТГҮҮЛЭХ</button>';document.getElementById("nx-wholesale-login-back").onclick=showWholesaleCatalog;document.getElementById("nx-wholesale-login-open").onclick=()=>window.NEXORA?.open("profile");return;}host.innerHTML='<div class="nx-market-loading" role="status" style="padding:24px;text-align:center">' + label + ' нээгдэж байна…</div>';await action();}catch(err){console.error("NEXORA wholesale screen error:",err);host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-wholesale-action-back" aria-label="Буцах" title="Буцах">‹</button><div class="nx-market-error" role="alert" style="padding:16px;margin-top:12px">Хэсэг нээхэд алдаа гарлаа: '+esc(err?.message||String(err))+'</div>';document.getElementById("nx-wholesale-action-back").onclick=showWholesaleCatalog;}};
       const openWholesaleProfile=async()=>{
+        window.NEXORA_SHOP_PROFILE = openWholesaleProfile;
         window.NEXORA_SHOP_BACK = showWholesaleCatalog;
         // Дарахад шууд хариу үзүүлж, auth шалгалт хүлээж байх үед товч "гацсан" мэт харагдуулахгүй.
         host.innerHTML='<div class="nx-market-loading" role="status" style="padding:28px 16px;text-align:center"><div style="font-size:30px;margin-bottom:10px">👤</div><strong>Нийлүүлэгчийн профайл нээгдэж байна…</strong><p class="nx-market-muted">Нэвтрэх төлөвийг шалгаж байна.</p></div>';
@@ -4362,6 +4361,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   }
   async function loadProducts(){
     window.NEXORA_SHOP_BACK = null;
+    window.NEXORA_SHOP_PROFILE = null;
     let stage="барааны жагсаалт";
     const wait=(promise,label,ms=12000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(label+" хүсэлт 12 секундэд хариу өгсөнгүй. Холболт эсвэл өгөгдлийн сангийн эрхийг шалгана уу.")),ms))]);
     host.innerHTML='<h2 class="nexora-ad-heading">ОНЛАЙН ДЭЛГҮҮР</h2><p class="nx-market-muted">Жижиглэнгийн бараануудыг ачаалж байна…</p>';
