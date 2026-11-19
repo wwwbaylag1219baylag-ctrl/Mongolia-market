@@ -2380,6 +2380,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     }
   }
 
+  function bindAdAlbum(gallery){if(!gallery||gallery.dataset.albumBound==="true")return;gallery.dataset.albumBound="true";gallery.addEventListener("click",e=>{const img=e.target.closest("[data-ad-photo-index]");if(!img)return;window.NEXORA_OPEN_PHOTO_ALBUM?.(Array.from(gallery.querySelectorAll("[data-ad-photo-index]")).map(x=>x.src),Number(img.dataset.adPhotoIndex)||0);});}
   async function showAdDetail(ad) {
     selectedAd = ad;
 
@@ -2393,7 +2394,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 
         <div class="nx-detail-block">
           <div id="nx-ad-detail-images"
-            style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0 0 18px;">
+            style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 18px;">
             <div class="nx-list-message">Зураг ачаалж байна...</div>
           </div>
 
@@ -2490,20 +2491,10 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 
       if (selectedAd?.id !== ad.id || !gallery.isConnected) return;
 
-      const validImages = signedImages.filter(Boolean);
-      if (!validImages.length) {
-        gallery.textContent = "Зургийг харуулах боломжгүй байна.";
-        return;
-      }
-
-      gallery.innerHTML = validImages.map(function (url) {
-        return `
-          <img src="${escapeHTML(url)}"
-            alt="${escapeHTML(ad.title || "Зарын зураг")}"
-            loading="lazy"
-            style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;background:#191919;">
-        `;
-      }).join("");
+      const validImages=signedImages.filter(Boolean);
+      if(!validImages.length){if(cachedCover){gallery.innerHTML='<img src="'+escapeHTML(cachedCover)+'" alt="Зарын зураг" style="grid-column:1/-1;width:100%;max-height:430px;object-fit:contain;border-radius:15px;">';return;}gallery.textContent="Зургийг харуулах боломжгүй байна.";return;}
+      gallery.innerHTML=validImages.map((url,index)=>'<img src="'+escapeHTML(url)+'" alt="'+escapeHTML(ad.title||"Зарын зураг")+'" data-ad-photo-index="'+index+'" loading="'+(index<3?"eager":"lazy")+'" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;background:var(--panel,#191919);cursor:zoom-in;">').join("");
+      bindAdAlbum(gallery);
     } catch (error) {
       if (selectedAd?.id === ad.id && gallery.isConnected && !cachedCover) {
         gallery.innerHTML = '<div class="nx-list-message">Зураг ачаалахад алдаа гарлаа. Дахин оролдоно уу.</div>';
@@ -3630,6 +3621,9 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       if(objectPath){try{objectPath=decodeURIComponent(objectPath);}catch(_){}}
       return {...p,_displayImageUrl:displayUrl,_objectPath:objectPath,_buckets:[...new Set(buckets)]};
     });
+    const productIds=rows.map(p=>p.id).filter(Boolean);
+    if(productIds.length){const {data:imageRows,error:imageError}=await db.from("market_product_images").select("product_id,image_path,display_order").in("product_id",productIds).order("display_order",{ascending:true});if(!imageError){const byProduct={};(imageRows||[]).forEach(row=>(byProduct[row.product_id]||(byProduct[row.product_id]=[])).push(row.image_path));const all=Object.entries(byProduct).flatMap(([id,paths])=>paths.map(path=>({id,path})));if(all.length){const signed=await db.storage.from("market-product-images").createSignedUrls(all.map(x=>x.path),3600);if(!signed.error)(signed.data||[]).forEach((item,i)=>{if(item?.signedUrl&&!item.error){const p=rows.find(x=>x.id===all[i].id);if(p)(p._galleryUrls||(p._galleryUrls=[])).push(item.signedUrl);}});}}else console.warn("Барааны цомгийн зураг:",imageError);}
+    rows.forEach(p=>{if(!p._galleryUrls?.length&&p._displayImageUrl)p._galleryUrls=[p._displayImageUrl];});
     // Нэг нэгээр нь 100 хүсэлт явуулахын оронд зурагны URL-уудыг багцаар үүсгэнэ.
     const groups=new Map();
     rows.forEach((p,i)=>{if(!p._displayImageUrl&&p._objectPath&&p._buckets[0]){const b=p._buckets[0];if(!groups.has(b))groups.set(b,[]);groups.get(b).push({p,i});}});
@@ -3670,6 +3664,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
           ${p._displayImageUrl?`<img class="nx-market-product-image" src="${esc(p._displayImageUrl)}" alt="${esc(p.title)}" data-product-toggle="${esc(p.id)}" loading="${index<4?"eager":"lazy"}" fetchpriority="${index<2?"high":"auto"}" decoding="async">`:'<div class="nx-market-product-no-image">Зураг байхгүй</div>'}
           <div class="nx-market-price">${money(p.price)}</div>
           ${view===1?`<div class="nx-market-product-info">
+            ${p._galleryUrls?.length>1?`<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:8px 0 12px">${p._galleryUrls.map((url,photoIndex)=>`<img src="${esc(url)}" alt="${esc(p.title)}" data-product-photo="${esc(p.id)}" data-photo-index="${photoIndex}" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:9px;cursor:zoom-in">`).join("")}</div>`:""}
             <h3>${esc(p.title)}</h3>
             <div class="nx-market-muted">${esc(p.category)}</div>
             <p>${esc(p.description||"Тайлбар оруулаагүй")}</p>
@@ -3679,11 +3674,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
           <button class="nx-market-btn nx-market-add-cart" type="button" data-cart-add="${esc(p.id)}">🛒 Сагслах</button>
         </article>`;
       }).join("")||'<p class="nx-market-muted">Одоогоор идэвхтэй бараа алга.</p>'}</div>`;
-    host.querySelectorAll("[data-product-toggle]").forEach(img=>img.addEventListener("click",()=>{
-      const id=img.dataset.productToggle;
-      productViewStates[id]=(Number(productViewStates[id]||0)+1)%3;
-      render();
-    }));
+    host.querySelectorAll("[data-product-toggle]").forEach(img=>img.addEventListener("click",()=>{const id=img.dataset.productToggle;productViewStates[id]=Number(productViewStates[id]||0)===1?0:1;render();}));
+    host.querySelectorAll("[data-product-photo]").forEach(img=>img.addEventListener("click",()=>{const p=products.find(x=>x.id===img.dataset.productPhoto);window.NEXORA_OPEN_PHOTO_ALBUM?.(p?._galleryUrls||[],Number(img.dataset.photoIndex)||0);}));
     document.getElementById("nx-market-search").addEventListener("input",e=>{searchText=e.target.value;const pos=e.target.selectionStart;render();const el=document.getElementById("nx-market-search");el.focus();el.setSelectionRange(pos,pos);});
     document.getElementById("nx-market-publish").onclick=showPublish;
     document.getElementById("nx-market-cart").onclick=showCart;
@@ -3855,9 +3847,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       <label>Барааны нэр *</label><input class="nx-market-input" name="title" required maxlength="120">
       <label>Ангилал *</label><input class="nx-market-input" name="category" required maxlength="80" placeholder="Жишээ: Электрон бараа">
       <label>Үнэ (₮) *</label><input class="nx-market-input" name="price" type="number" min="0" step="1" required>
-      <label>Барааны зураг *</label><input class="nx-market-input" name="product_image" type="file" accept="image/jpeg,image/png,image/webp" required>
-      <p class="nx-market-muted">JPG, PNG эсвэл WEBP · 5MB хүртэл. Барааны тод, өөрийн зургийг оруулна уу.</p>
-      <img id="nx-market-image-preview" alt="Барааны зургийн урьдчилсан харагдац" style="display:none;width:100%;max-height:220px;object-fit:contain;border:1px solid rgba(214,173,85,.3);border-radius:10px;margin:4px 0 12px">
+      <label>Барааны зураг (1–6 зураг) *</label><input class="nx-market-input" name="product_image" type="file" accept="image/jpeg,image/png,image/webp" multiple required>
+      <p class="nx-market-muted">JPG, PNG эсвэл WEBP · 6 хүртэл зураг · нэг зураг 5MB хүртэл.</p><div id="nx-market-image-preview" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:4px 0 12px"></div>
       <label>Тайлбар</label><textarea class="nx-market-textarea" name="description" rows="4"></textarea>
       <label>Холбоо барих утас</label><input class="nx-market-input" name="phone" type="tel">
       <label>Байршил</label><input class="nx-market-input" name="location">
@@ -3865,28 +3856,25 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     document.getElementById("nx-market-back").onclick=loadProducts;
     const imageInput=document.querySelector('#nx-market-form [name="product_image"]');
     imageInput.addEventListener("change",()=>{
-      const file=imageInput.files[0],preview=document.getElementById("nx-market-image-preview");
-      if(!file){preview.removeAttribute("src");preview.style.display="none";return;}
-      preview.src=URL.createObjectURL(file);preview.style.display="block";
+      const files=Array.from(imageInput.files||[]),preview=document.getElementById("nx-market-image-preview");preview.innerHTML="";
+      if(files.length>6){imageInput.value="";document.getElementById("nx-market-msg").textContent="Хамгийн ихдээ 6 зураг сонгоно уу.";return;}
+      for(const file of files){if(!["image/jpeg","image/png","image/webp"].includes(file.type)||file.size>5*1024*1024){imageInput.value="";preview.innerHTML="";document.getElementById("nx-market-msg").textContent="JPG, PNG, WEBP зураг тус бүр 5MB-аас бага байх ёстой.";return;}}
+      files.forEach(file=>{const img=document.createElement("img");img.src=URL.createObjectURL(file);img.style.cssText="width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px";preview.appendChild(img);});
+      document.getElementById("nx-market-msg").textContent=files.length+" зураг сонгогдлоо.";
     });
     document.getElementById("nx-market-form").onsubmit=async e=>{
       e.preventDefault();const form=e.currentTarget,btn=form.querySelector("button[type=submit]"),msg=document.getElementById("nx-market-msg");btn.disabled=true;
-      const v=Object.fromEntries(new FormData(form).entries()),file=v.product_image;
-      if(!file||!["image/jpeg","image/png","image/webp"].includes(file.type)){msg.textContent="JPG, PNG эсвэл WEBP зураг сонгоно уу.";btn.disabled=false;return;}
-      if(file.size>5*1024*1024){msg.textContent="Зураг 5MB-аас бага байх ёстой.";btn.disabled=false;return;}
-      msg.textContent="Зургийг бэлдэж байна…";
-      const uploadFile=await compressMarketProductImage(file);
-      const ext=uploadFile.type==="image/webp"?"webp":uploadFile.type==="image/png"?"png":"jpg";
-      const path=marketUser.id+"/market-products/"+Date.now()+"."+ext;
-      msg.textContent=uploadFile===file?"Зургийг байршуулж байна…":"Зургийг шахлаа. Байршуулж байна…";
-      const {error:uploadError}=await db.storage.from("market-product-images").upload(path,uploadFile,{cacheControl:"31536000",upsert:false,contentType:uploadFile.type});
-      if(uploadError){msg.textContent="Зураг оруулахад алдаа: "+uploadError.message;btn.disabled=false;return;}
+      const v=Object.fromEntries(new FormData(form).entries()),files=Array.from(form.elements.product_image.files||[]);
+      if(!files.length||files.length>6){msg.textContent="1–6 зураг сонгоно уу.";btn.disabled=false;return;}
+      if(files.some(file=>!["image/jpeg","image/png","image/webp"].includes(file.type)||file.size>5*1024*1024)){msg.textContent="JPG, PNG, WEBP зураг тус бүр 5MB-аас бага байх ёстой.";btn.disabled=false;return;}
+      const uploadedPaths=[];
+      try{for(let i=0;i<files.length;i++){const uploadFile=await compressMarketProductImage(files[i]);const ext=uploadFile.type==="image/webp"?"webp":uploadFile.type==="image/png"?"png":"jpg";const path=marketUser.id+"/market-products/"+Date.now()+"_"+i+"."+ext;msg.textContent=(i+1)+"/"+files.length+" зураг байршуулж байна…";const {error:uploadError}=await db.storage.from("market-product-images").upload(path,uploadFile,{cacheControl:"31536000",upsert:false,contentType:uploadFile.type});if(uploadError)throw uploadError;uploadedPaths.push(path);}
       const {data:stillActive,error:checkError}=await db.from("nexora_subscriptions").select("id").eq("store_id",store.id).eq("user_id",marketUser.id).eq("status","active").gt("expires_at",new Date().toISOString()).limit(1).maybeSingle();
-      if(checkError||!stillActive){await db.storage.from("market-product-images").remove([path]);msg.textContent=checkError?"Дэлгүүрийн эрхийг шалгаж чадсангүй: "+checkError.message:"Дэлгүүрийн эрх идэвхгүй болсон байна. Эхлээд эрхээ сунгана уу.";btn.disabled=false;return;}
-      const {error}=await db.from("market_products").insert({owner_id:marketUser.id,title:v.title.trim(),category:v.category.trim(),price:Number(v.price),description:v.description.trim(),phone:v.phone.trim(),location:v.location.trim(),image_path:path,image_url:null,status:"active"});
-      if(error){await db.storage.from("market-product-images").remove([path]);msg.textContent="Алдаа: "+error.message;btn.disabled=false;return;}
-      host.innerHTML='<h2 class="nexora-ad-heading">БАРАА НИЙТЛЭГДЛЭЭ</h2><p class="nx-market-muted">Таны бараа дэлгүүрт шууд нийтлэгдлээ.</p><button class="nx-market-btn" id="nx-market-back">Бараа үзэх</button>';
-      document.getElementById("nx-market-back").onclick=loadProducts;
+      if(checkError||!stillActive)throw new Error(checkError?"Дэлгүүрийн эрхийг шалгаж чадсангүй: "+checkError.message:"Дэлгүүрийн эрх идэвхгүй болсон байна.");
+      const {data:product,error}=await db.from("market_products").insert({owner_id:marketUser.id,title:v.title.trim(),category:v.category.trim(),price:Number(v.price),description:v.description.trim(),phone:v.phone.trim(),location:v.location.trim(),image_path:uploadedPaths[0],image_url:null,status:"active"}).select("id").single();if(error)throw error;
+      const {error:imageError}=await db.from("market_product_images").insert(uploadedPaths.map((path,index)=>({product_id:product.id,owner_id:marketUser.id,image_path:path,display_order:index})));if(imageError)throw imageError;
+      host.innerHTML='<h2 class="nexora-ad-heading">БАРАА НИЙТЛЭГДЛЭЭ</h2><p class="nx-market-muted">Таны барааны '+uploadedPaths.length+' зураг цомог болж хадгалагдлаа.</p><button class="nx-market-btn" id="nx-market-back">Бараа үзэх</button>';document.getElementById("nx-market-back").onclick=loadProducts;
+      }catch(uploadError){if(uploadedPaths.length)await db.storage.from("market-product-images").remove(uploadedPaths);msg.textContent="Алдаа: "+uploadError.message;btn.disabled=false;}
     };
   }
   function showCart(){
@@ -4453,5 +4441,5 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 }
 @media(prefers-reduced-motion:reduce){#ads .page-content button,#nx-map-fullscreen button{transition:none!important}}
 </style>
-</body>
+<style id="NEXORA-PHOTO-ALBUM-2026">#nx-photo-album{position:fixed;inset:0;z-index:1000000;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.97);padding:58px 12px 70px;touch-action:pan-y}#nx-photo-album.is-open{display:flex}#nx-photo-album img{max-width:100%;max-height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}#nx-photo-album button{position:absolute;display:grid;place-items:center;width:44px;height:44px;border:1px solid #ffffff55;border-radius:50%;background:#222;color:white;font-size:26px}#nx-photo-album .nx-photo-close{top:12px;right:14px}#nx-photo-album .nx-photo-prev{left:10px;top:50%;transform:translateY(-50%)}#nx-photo-album .nx-photo-next{right:10px;top:50%;transform:translateY(-50%)}#nx-photo-album-count{position:absolute;bottom:20px;color:white;font-size:14px;font-weight:700}</style><div id="nx-photo-album" aria-hidden="true"><button type="button" class="nx-photo-close">×</button><button type="button" class="nx-photo-prev">‹</button><img id="nx-photo-album-image" alt="Томруулсан зураг"><button type="button" class="nx-photo-next">›</button><div id="nx-photo-album-count"></div></div><script>(function(){const box=document.getElementById("nx-photo-album"),img=document.getElementById("nx-photo-album-image"),count=document.getElementById("nx-photo-album-count");if(!box||!img||!count)return;let urls=[],at=0,sx=0,sy=0;function draw(){img.src=urls[at];count.textContent=(at+1)+" / "+urls.length;box.querySelector(".nx-photo-prev").style.display=urls.length>1?"grid":"none";box.querySelector(".nx-photo-next").style.display=urls.length>1?"grid":"none";}function move(d){at=(at+d+urls.length)%urls.length;draw();}function close(){box.classList.remove("is-open");box.setAttribute("aria-hidden","true");img.removeAttribute("src");}window.NEXORA_OPEN_PHOTO_ALBUM=function(list,start){urls=(list||[]).filter(Boolean);if(!urls.length)return;at=Math.max(0,Math.min(urls.length-1,Number(start)||0));draw();box.classList.add("is-open");box.setAttribute("aria-hidden","false");};box.querySelector(".nx-photo-close").onclick=close;box.querySelector(".nx-photo-prev").onclick=()=>move(-1);box.querySelector(".nx-photo-next").onclick=()=>move(1);box.onclick=e=>{if(e.target===box)close();};document.addEventListener("keydown",e=>{if(!box.classList.contains("is-open"))return;if(e.key==="Escape")close();if(e.key==="ArrowLeft")move(-1);if(e.key==="ArrowRight")move(1);});box.addEventListener("touchstart",e=>{sx=e.changedTouches[0].clientX;sy=e.changedTouches[0].clientY;},{passive:true});box.addEventListener("touchend",e=>{const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy))move(dx<0?1:-1);},{passive:true});})();</script></body>
 </html>
