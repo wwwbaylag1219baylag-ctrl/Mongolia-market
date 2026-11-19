@@ -3843,22 +3843,24 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     }catch(err){host.classList.add("nx-profile-fullscreen");host.innerHTML='<section class="nx-profile-accordion-root"><button class="nx-profile-back" id="nx-retail-profile-back" type="button" aria-label="Буцах">‹</button><p class="nx-market-muted">Профайл нээхэд алдаа гарлаа: '+esc(err.message||err)+'</p></section>';document.getElementById("nx-retail-profile-back").onclick=loadProducts;}
   }
   async function showStore(backAction=loadProducts){
-    // Дээд системийн буцах товчийг тухайн дэлгэцийн шууд эцэг дэлгэцтэй ижил чиглэлд барина.
+    // Дэлгүүрийн профайл засах маягт нь профайлын дэлгэцийн шууд хүүхэд.
     window.NEXORA_SHOP_BACK = backAction;
+    host.classList.add("nx-profile-fullscreen");
+    document.getElementById("shop")?.classList.add("nx-shop-profile-fullscreen");
     const {data,error:authError}=await db.auth.getUser();
-    if(authError||!data.user){host.innerHTML='<button class="nx-market-btn secondary" id="nx-store-back">‹ Буцах</button><h2 class="nexora-ad-heading">ДЭЛГҮҮР НЭЭХ</h2><p class="nx-market-muted">Дэлгүүрээ бүртгүүлэхийн тулд эхлээд нэвтэрнэ үү.</p>';document.getElementById("nx-store-back").onclick=backAction;return;}
+    if(authError||!data.user){host.innerHTML='<button type="button" class="nx-market-btn secondary nx-market-back-arrow" id="nx-store-back" aria-label="Буцах" title="Буцах">‹</button><h2 class="nexora-ad-heading">ДЭЛГҮҮР НЭЭХ</h2><p class="nx-market-muted">Дэлгүүрээ бүртгүүлэхийн тулд эхлээд нэвтэрнэ үү.</p>';document.getElementById("nx-store-back").onclick=backAction;return;}
     marketUser=data.user;
     const [profileRes,bankRes,feeRes]=await Promise.all([
       db.from("nexora_store_profiles").select("id,user_id,store_name,owner_type,phone,logo_path,description,address").eq("user_id",marketUser.id).maybeSingle(),
       db.from("store_bank_accounts").select("id,bank_name,account_number,account_holder,phone,store_name").eq("user_id",marketUser.id).maybeSingle(),
       db.from("nexora_settings").select("market_logo_fee").eq("id",1).single()
     ]);
-    if(profileRes.error){host.innerHTML='<p class="nx-market-muted">Дэлгүүрийн мэдээлэл уншихад алдаа: '+esc(profileRes.error.message)+'</p>';return;}
-    if(bankRes.error){host.innerHTML='<p class="nx-market-muted">Дансны мэдээлэл уншихад алдаа: '+esc(bankRes.error.message)+'</p>';return;}
-    if(feeRes.error){host.innerHTML='<p class="nx-market-muted">Төлбөрийн тохиргоо уншихад алдаа: '+esc(feeRes.error.message)+'</p>';return;}
+    if(profileRes.error){host.innerHTML='<button type="button" class="nx-market-btn secondary nx-market-back-arrow" id="nx-store-back" aria-label="Буцах" title="Буцах">‹</button><p class="nx-market-muted">Дэлгүүрийн мэдээлэл уншихад алдаа: '+esc(profileRes.error.message)+'</p>';document.getElementById("nx-store-back").onclick=backAction;return;}
+    if(bankRes.error){host.innerHTML='<button type="button" class="nx-market-btn secondary nx-market-back-arrow" id="nx-store-back" aria-label="Буцах" title="Буцах">‹</button><p class="nx-market-muted">Дансны мэдээлэл уншихад алдаа: '+esc(bankRes.error.message)+'</p>';document.getElementById("nx-store-back").onclick=backAction;return;}
+    if(feeRes.error){host.innerHTML='<button type="button" class="nx-market-btn secondary nx-market-back-arrow" id="nx-store-back" aria-label="Буцах" title="Буцах">‹</button><p class="nx-market-muted">Төлбөрийн тохиргоо уншихад алдаа: '+esc(feeRes.error.message)+'</p>';document.getElementById("nx-store-back").onclick=backAction;return;}
     const store=profileRes.data,bank=bankRes.data,logoFee=Number(feeRes.data?.market_logo_fee||0);
     const logoUrl=store?.logo_path?db.storage.from("market-store-logos").getPublicUrl(store.logo_path).data.publicUrl:"";
-    host.innerHTML='<button class="nx-market-btn secondary" id="nx-store-back">‹ Буцах</button><h2 class="nexora-ad-heading">ОНЛАЙН ДЭЛГҮҮР</h2><p class="nx-market-muted">Дэлгүүр нээх бүртгэл үнэгүй. Онлайн дэлгүүрийн логоны төлбөрийг админ удирдана. Одоогийн лого байршуулах үнэ: <strong>${money(logoFee)}</strong>. Захиалга авах, удирдах болон бусад үйлдэл үнэгүй.</p>'+
+    host.innerHTML='<button type="button" class="nx-market-btn secondary nx-market-back-arrow" id="nx-store-back" aria-label="Буцах" title="Буцах">‹</button><h2 class="nexora-ad-heading">ОНЛАЙН ДЭЛГҮҮР</h2><p class="nx-market-muted">Дэлгүүр нээх бүртгэл үнэгүй. Онлайн дэлгүүрийн логоны төлбөрийг админ удирдана. Одоогийн лого байршуулах үнэ: <strong>${money(logoFee)}</strong>. Захиалга авах, удирдах болон бусад үйлдэл үнэгүй.</p>'+
       (logoUrl?'<img src="'+esc(logoUrl)+'" alt="Дэлгүүрийн лого" style="width:92px;height:92px;border-radius:20px;object-fit:cover;border:1px solid var(--border);margin:8px 0 14px">':'')+
       '<form id="nx-store-form"><label>Онлайн дэлгүүрийн нэр *</label><input class="nx-market-input" name="store_name" required maxlength="100" value="'+esc(store?.store_name||"")+'">'+
       '<label>Дэлгүүрийн төрөл *</label><select class="nx-market-select" name="owner_type"><option value="individual" '+(store?.owner_type!=="company"?"selected":"")+'>Хувь хүн</option><option value="company" '+(store?.owner_type==="company"?"selected":"")+'>Компани</option></select>'+
