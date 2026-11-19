@@ -3798,32 +3798,23 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     }catch(err){host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-retail-history-back" aria-label="Буцах" title="Буцах">‹</button><p class="nx-market-muted">Төлбөрийн түүх ачаалахад алдаа: '+esc(err.message||err)+'</p>';document.getElementById("nx-retail-history-back").onclick=backAction;}
   }
   async function openRetailProfile(){
-    // Онлайн дэлгүүрийн профайл руу буцах хамгаалалтын чиглэл.
-    window.NEXORA_SHOP_PROFILE = openRetailProfile;
-    window.NEXORA_SHOP_BACK = loadProducts;
-    host.innerHTML='<div class="nx-market-loading" role="status" style="padding:28px 16px;text-align:center"><div style="font-size:30px;margin-bottom:10px">👤</div><strong>Онлайн дэлгүүрийн профайл нээгдэж байна…</strong></div>';
+    window.NEXORA_SHOP_PROFILE=openRetailProfile;window.NEXORA_SHOP_BACK=loadProducts;
+    host.innerHTML='<div class="nx-market-loading">Профайл нээгдэж байна…</div>';
     try{
-      const {data:authData,error:authError}=await db.auth.getUser();
-      if(authError)throw authError;
-      if(!authData?.user){
-        host.innerHTML='<button class="nx-market-btn secondary nx-profile-collapse" id="nx-retail-hub-back" type="button" aria-label="Профайлыг хумих" title="Профайлыг хумих">⌄ Профайлыг хумих</button><div class="nx-wholesale-account-card"><div class="nx-wholesale-account-icon">👤</div><h2 class="nexora-ad-heading">ОНЛАЙН ДЭЛГҮҮРИЙН ПРОФАЙЛ</h2><p class="nx-market-muted">Дэлгүүрээ нээх, бараа нийтлэх болон захиалгаа удирдахын тулд NEXORA бүртгэлдээ нэвтэрч эсвэл бүртгүүлнэ үү.</p><button class="nx-market-btn" id="nx-retail-hub-login">НЭВТРЭХ / БҮРТГҮҮЛЭХ</button></div>';
-        document.getElementById("nx-retail-hub-back").onclick=loadProducts;
-        document.getElementById("nx-retail-hub-login").onclick=()=>window.NEXORA?.open("profile");
-        return;
-      }
-      const {data:store,error:storeError}=await db.from("nexora_store_profiles").select("id,store_name,owner_type,logo_path").eq("user_id",authData.user.id).maybeSingle();
-      if(storeError)throw storeError;
-      const logo=store?.logo_path?db.storage.from("market-store-logos").getPublicUrl(store.logo_path).data.publicUrl:"";
-      host.innerHTML='<button class="nx-market-btn secondary nx-profile-collapse" id="nx-retail-hub-back" type="button" aria-label="Профайлыг хумих" title="Профайлыг хумих">⌄ Профайлыг хумих</button><div class="nx-wholesale-account-card">'+(logo?'<img src="'+esc(logo)+'" alt="Дэлгүүрийн лого" style="width:76px;height:76px;object-fit:cover;border-radius:18px;margin-bottom:10px">':'<div class="nx-wholesale-account-icon">👤</div>')+'<h2 class="nexora-ad-heading">МИНИЙ ОНЛАЙН ДЭЛГҮҮРИЙН ПРОФАЙЛ</h2><p class="nx-market-muted">'+esc(authData.user.email||"Нэвтэрсэн хэрэглэгч")+'</p>'+(store?'<p class="nx-wholesale-status">✓ '+esc(store.store_name)+' · '+(store.owner_type==="company"?"Компани":"Хувь хүн")+'</p>':'<p class="nx-market-muted">Онлайн дэлгүүрээ нээж профайлаа бүртгүүлээд жижиглэнгийн бараагаа нийтлээрэй.</p>')+'</div><div class="nx-wholesale-hub-actions"><button class="nx-market-btn" id="nx-retail-hub-store">'+(store?"Дэлгүүрийн профайл засах":"＋ Онлайн дэлгүүр нээх")+'</button><button class="nx-market-btn" id="nx-retail-hub-publish">＋ Жижиглэнгийн бараа нийтлэх</button><button class="nx-market-btn secondary" id="nx-retail-hub-products">Миний бараа</button><button class="nx-market-btn secondary" id="nx-retail-hub-orders">Надад ирсэн захиалга</button><button class="nx-market-btn secondary" id="nx-retail-hub-fees">Төлбөрийн түүх</button></div>';
-      document.getElementById("nx-retail-hub-back").onclick=loadProducts;
+      const {data:authData,error:authError}=await db.auth.getUser();if(authError)throw authError;
+      if(!authData?.user){host.classList.add("nx-profile-fullscreen");host.innerHTML='<section class="nx-profile-accordion-root"><button class="nx-profile-logo-trigger" id="nx-retail-profile-toggle" type="button"><span class="nx-profile-logo-fallback">NEXORA</span><span>ОНЛАЙН ДЭЛГҮҮРИЙН ПРОФАЙЛ</span></button><div class="nx-profile-accordion-content"><details class="nx-help-group" open><summary>Бүртгэл ба дэлгүүрийн мэдээлэл</summary><div class="nx-help-items"><p class="nx-market-muted">Дэлгүүрээ нээх, бараа нийтлэх болон захиалгаа удирдахын тулд нэвтэрч эсвэл бүртгүүлнэ үү.</p><button class="nx-market-btn" id="nx-retail-hub-login">НЭВТРЭХ / БҮРТГҮҮЛЭХ</button></div></details></div></section>';document.getElementById("nx-retail-profile-toggle").onclick=loadProducts;document.getElementById("nx-retail-hub-login").onclick=()=>window.NEXORA?.open("profile");return;}
+      const {data:store,error:storeError}=await db.from("nexora_store_profiles").select("id,store_name,owner_type,logo_path").eq("user_id",authData.user.id).maybeSingle();if(storeError)throw storeError;
+      const logo=store?.logo_path?db.storage.from("market-store-logos").getPublicUrl(store.logo_path).data.publicUrl:(authData.user.user_metadata?.avatar_url||"");
+      const name=store?.store_name||authData.user.user_metadata?.full_name||authData.user.email||"Миний онлайн дэлгүүр";
+      host.classList.add("nx-profile-fullscreen");
+      host.innerHTML='<section class="nx-profile-accordion-root"><button class="nx-profile-logo-trigger" id="nx-retail-profile-toggle" type="button" aria-label="Профайлыг хумих">'+(logo?'<img src="'+esc(logo)+'" alt="Дэлгүүрийн лого">':'<span class="nx-profile-logo-fallback">'+esc(String(name).trim().slice(0,2).toUpperCase())+'</span>')+'<span>'+esc(name)+'</span><span class="nx-profile-trigger-hint">Профайл</span></button><div class="nx-profile-accordion-content"><details class="nx-help-group"><summary>Дэлгүүрийн үндсэн мэдээлэл</summary><div class="nx-help-items"><p class="nx-market-muted">'+esc(authData.user.email||"Нэвтэрсэн хэрэглэгч")+'</p>'+(store?'<p class="nx-wholesale-status">'+esc(store.store_name)+' · '+(store.owner_type==="company"?"Компани":"Хувь хүн")+'</p>':'<p class="nx-market-muted">Онлайн дэлгүүрээ нээж үндсэн мэдээллээ бүртгүүлнэ үү.</p>')+'</div></details><details class="nx-help-group"><summary>Дэлгүүрийн бүртгэл ба тохиргоо</summary><div class="nx-help-items"><button class="nx-market-btn" id="nx-retail-hub-store">'+(store?"Дэлгүүрийн профайл засах":"＋ Онлайн дэлгүүр нээх")+'</button></div></details><details class="nx-help-group"><summary>Бараа ба захиалгын удирдлага</summary><div class="nx-help-items"><button class="nx-market-btn" id="nx-retail-hub-publish">＋ Жижиглэнгийн бараа нийтлэх</button><button class="nx-market-btn secondary" id="nx-retail-hub-products">Миний бараа</button><button class="nx-market-btn secondary" id="nx-retail-hub-orders">Надад ирсэн захиалга</button></div></details><details class="nx-help-group"><summary>Төлбөр ба бусад мэдээлэл</summary><div class="nx-help-items"><button class="nx-market-btn secondary" id="nx-retail-hub-fees">Төлбөрийн түүх</button></div></details></div></section>';
+      document.getElementById("nx-retail-profile-toggle").onclick=loadProducts;
       document.getElementById("nx-retail-hub-store").onclick=()=>showStore(openRetailProfile);
       document.getElementById("nx-retail-hub-publish").onclick=showRetailPublish;
       document.getElementById("nx-retail-hub-products").onclick=showMyRetailProducts;
       document.getElementById("nx-retail-hub-orders").onclick=showRetailSellerOrders;
       document.getElementById("nx-retail-hub-fees").onclick=()=>showRetailFeeHistory(openRetailProfile);
-    }catch(err){
-      host.innerHTML='<p class="nx-market-muted">Профайл нээхэд алдаа гарлаа: '+esc(err.message||err)+'</p>';
-    }
+    }catch(err){host.classList.add("nx-profile-fullscreen");host.innerHTML='<section class="nx-profile-accordion-root"><p class="nx-market-muted">Профайл нээхэд алдаа гарлаа: '+esc(err.message||err)+'</p></section>';}
   }
   async function showStore(backAction=loadProducts){
     // Дээд системийн буцах товчийг тухайн дэлгэцийн шууд эцэг дэлгэцтэй ижил чиглэлд барина.
@@ -4160,6 +4151,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     };
   }
   async function showWholesaleCatalog(){
+    host.classList.remove("nx-profile-fullscreen");
     // Бөөний каталог нь бөөний профайлын гаднах эхлэл.
     window.NEXORA_SHOP_PROFILE = null;
     window.NEXORA_SHOP_BACK = loadProducts;
@@ -4179,29 +4171,19 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       document.getElementById("nx-wholesale-back").onclick=loadProducts;
       const runWholesaleScreen=async(action,label)=>{try{const {data:authData,error:authError}=await db.auth.getUser();if(authError)throw authError;if(!authData?.user){host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-wholesale-login-back" aria-label="Буцах" title="Буцах">‹</button><h2 class="nexora-ad-heading">НЭВТРЭХ ШААРДЛАГАТАЙ</h2><p class="nx-market-muted">'+esc(label)+' хэсгийг ашиглахын тулд NEXORA бүртгэлдээ нэвтэрч эсвэл шинэ бүртгэл үүсгэнэ үү.</p><button class="nx-market-btn" id="nx-wholesale-login-open">НЭВТРЭХ / БҮРТГҮҮЛЭХ</button>';document.getElementById("nx-wholesale-login-back").onclick=showWholesaleCatalog;document.getElementById("nx-wholesale-login-open").onclick=()=>window.NEXORA?.open("profile");return;}host.innerHTML='<div class="nx-market-loading" role="status" style="padding:24px;text-align:center">' + label + ' нээгдэж байна…</div>';await action();}catch(err){console.error("NEXORA wholesale screen error:",err);host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-wholesale-action-back" aria-label="Буцах" title="Буцах">‹</button><div class="nx-market-error" role="alert" style="padding:16px;margin-top:12px">Хэсэг нээхэд алдаа гарлаа: '+esc(err?.message||String(err))+'</div>';document.getElementById("nx-wholesale-action-back").onclick=showWholesaleCatalog;}};
       const openWholesaleProfile=async()=>{
-        window.NEXORA_SHOP_PROFILE = openWholesaleProfile;
-        window.NEXORA_SHOP_BACK = showWholesaleCatalog;
-        // Дарахад шууд хариу үзүүлж, auth шалгалт хүлээж байх үед товч "гацсан" мэт харагдуулахгүй.
-        host.innerHTML='<div class="nx-market-loading" role="status" style="padding:28px 16px;text-align:center"><div style="font-size:30px;margin-bottom:10px">👤</div><strong>Нийлүүлэгчийн профайл нээгдэж байна…</strong><p class="nx-market-muted">Нэвтрэх төлөвийг шалгаж байна.</p></div>';
+        window.NEXORA_SHOP_PROFILE=openWholesaleProfile;window.NEXORA_SHOP_BACK=showWholesaleCatalog;
+        host.innerHTML='<div class="nx-market-loading">Нийлүүлэгчийн профайл нээгдэж байна…</div>';
         try{
-          const {data:authData,error:authError}=await db.auth.getUser();
-          if(authError)throw authError;
-          if(!authData?.user){
-            host.innerHTML='<button class="nx-market-btn secondary nx-profile-collapse" id="nx-wholesale-hub-back" type="button" aria-label="Профайлыг хумих" title="Профайлыг хумих">⌄ Профайлыг хумих</button><div class="nx-wholesale-account-card"><div class="nx-wholesale-account-icon">👤</div><h2 class="nexora-ad-heading">НИЙЛҮҮЛЭГЧИЙН ПРОФАЙЛ</h2><p class="nx-market-muted">Профайл болон бөөний худалдааны бүх үйлдлийг ашиглахын тулд нэвтэрч эсвэл бүртгүүлнэ үү.</p><button class="nx-market-btn" id="nx-wholesale-hub-login">НЭВТРЭХ / БҮРТГҮҮЛЭХ</button></div>';
-            document.getElementById("nx-wholesale-hub-back").onclick=showWholesaleCatalog;
-            document.getElementById("nx-wholesale-hub-login").onclick=()=>window.NEXORA?.open("profile");
-            return;
-          }
-          const [{data:supplier,error:supplierError},{data:wholesaleStore,error:wholesaleStoreError}]=await Promise.all([
-            db.from("market_suppliers").select("id,name,status,type").eq("owner_id",authData.user.id).maybeSingle(),
-            db.from("nexora_store_profiles").select("store_name,owner_type,wholesale_logo_path").eq("user_id",authData.user.id).maybeSingle()
-          ]);
-          if(supplierError)throw supplierError;
-          if(wholesaleStoreError)throw wholesaleStoreError;
+          const {data:authData,error:authError}=await db.auth.getUser();if(authError)throw authError;
+          if(!authData?.user){host.classList.add("nx-profile-fullscreen");host.innerHTML='<section class="nx-profile-accordion-root"><button class="nx-profile-logo-trigger" id="nx-wholesale-profile-toggle" type="button"><span class="nx-profile-logo-fallback">NEXORA</span><span>НИЙЛҮҮЛЭГЧИЙН ПРОФАЙЛ</span></button><div class="nx-profile-accordion-content"><details class="nx-help-group" open><summary>Бүртгэл ба нийлүүлэгчийн мэдээлэл</summary><div class="nx-help-items"><p class="nx-market-muted">Нийлүүлэгчийн профайл болон бөөний худалдааны үйлдлийг ашиглахын тулд нэвтэрч эсвэл бүртгүүлнэ үү.</p><button class="nx-market-btn" id="nx-wholesale-hub-login">НЭВТРЭХ / БҮРТГҮҮЛЭХ</button></div></details></div></section>';document.getElementById("nx-wholesale-profile-toggle").onclick=showWholesaleCatalog;document.getElementById("nx-wholesale-hub-login").onclick=()=>window.NEXORA?.open("profile");return;}
+          const [{data:supplier,error:supplierError},{data:store,error:storeError}]=await Promise.all([db.from("market_suppliers").select("id,name,status,type").eq("owner_id",authData.user.id).maybeSingle(),db.from("nexora_store_profiles").select("store_name,owner_type,wholesale_logo_path").eq("user_id",authData.user.id).maybeSingle()]);
+          if(supplierError)throw supplierError;if(storeError)throw storeError;
           const approved=supplier?.status==="approved",pending=supplier?.status==="pending";
-          const wholesaleLogo=wholesaleStore?.wholesale_logo_path?db.storage.from("market-store-logos").getPublicUrl(wholesaleStore.wholesale_logo_path).data.publicUrl:"";
-          host.innerHTML='<button class="nx-market-btn secondary nx-profile-collapse" id="nx-wholesale-hub-back" type="button" aria-label="Профайлыг хумих" title="Профайлыг хумих">⌄ Профайлыг хумих</button><div class="nx-wholesale-account-card">'+(wholesaleLogo?'<img src="'+esc(wholesaleLogo)+'" alt="Бөөний дэлгүүрийн лого" style="width:76px;height:76px;object-fit:cover;border-radius:18px;margin-bottom:10px">':'<div class="nx-wholesale-account-icon">👤</div>')+'<h2 class="nexora-ad-heading">МИНИЙ БӨӨНИЙ ПРОФАЙЛ</h2><p class="nx-market-muted">'+esc(authData.user.email||"Нэвтэрсэн хэрэглэгч")+'</p>'+(wholesaleStore?.store_name?'<p class="nx-wholesale-status">'+esc(wholesaleStore.store_name)+' · '+(wholesaleStore.owner_type==="company"?"Компани":"Хувь хүн")+'</p>':"")+(approved?'<p class="nx-wholesale-status">✓ Нийлүүлэгчийн эрх баталгаажсан</p>':pending?'<p class="nx-wholesale-status">⏳ Нийлүүлэгчийн хүсэлт админы хяналтад байна.</p>':supplier?.status==="rejected"?'<p class="nx-wholesale-status" style="color:#ff8b8b">✕ Нийлүүлэгчийн хүсэлт татгалзсан. Мэдээллээ засаж дахин илгээнэ үү.</p>':supplier?'<p class="nx-wholesale-status">Нийлүүлэгчийн хүсэлтийн төлөв: '+esc(supplier.status)+'</p>':'<p class="nx-market-muted">Нийлүүлэгчээр бүртгүүлж, админы баталгаажуулалт авснаар бараа нийтлэх болон нийлүүлэгчийн удирдлагыг ашиглана.</p>')+'</div><div class="nx-wholesale-hub-actions">'+(!supplier||supplier.status==="rejected"?'<button class="nx-market-btn" id="nx-hub-register">'+(supplier?'↻ Хүсэлтээ дахин илгээх':'＋ Нийлүүлэгчээр бүртгүүлэх')+'</button>':'')+(approved?'<button class="nx-market-btn" id="nx-hub-store">Нийлүүлэгчийн профайл засах</button><button class="nx-market-btn" id="nx-hub-publish">＋ Бөөний бараа нийтлэх</button><button class="nx-market-btn secondary" id="nx-hub-products">Миний бөөний бараа</button><button class="nx-market-btn secondary" id="nx-hub-incoming">Надад ирсэн захиалга</button>':'')+'<button class="nx-market-btn secondary" id="nx-hub-my-orders">Миний бөөний захиалга</button><button class="nx-market-btn secondary" id="nx-hub-fees">Төлбөрийн түүх</button><button class="nx-market-btn secondary" id="nx-hub-notifications">🔔 Мэдэгдэл</button></div>';
-          document.getElementById("nx-wholesale-hub-back").onclick=showWholesaleCatalog;
+          const logo=store?.wholesale_logo_path?db.storage.from("market-store-logos").getPublicUrl(store.wholesale_logo_path).data.publicUrl:(authData.user.user_metadata?.avatar_url||"");
+          const name=store?.store_name||supplier?.name||authData.user.user_metadata?.full_name||"Миний бөөний профайл";
+          host.classList.add("nx-profile-fullscreen");
+          host.innerHTML='<section class="nx-profile-accordion-root"><button class="nx-profile-logo-trigger" id="nx-wholesale-profile-toggle" type="button" aria-label="Профайлыг хумих">'+(logo?'<img src="'+esc(logo)+'" alt="Нийлүүлэгчийн лого">':'<span class="nx-profile-logo-fallback">'+esc(String(name).trim().slice(0,2).toUpperCase())+'</span>')+'<span>'+esc(name)+'</span><span class="nx-profile-trigger-hint">Профайл</span></button><div class="nx-profile-accordion-content"><details class="nx-help-group"><summary>Нийлүүлэгчийн үндсэн мэдээлэл</summary><div class="nx-help-items"><p class="nx-market-muted">'+esc(authData.user.email||"Нэвтэрсэн хэрэглэгч")+'</p>'+(store?.store_name?'<p class="nx-wholesale-status">'+esc(store.store_name)+' · '+(store.owner_type==="company"?"Компани":"Хувь хүн")+'</p>':"")+(approved?'<p class="nx-wholesale-status">✓ Нийлүүлэгчийн эрх баталгаажсан</p>':pending?'<p class="nx-wholesale-status">⏳ Нийлүүлэгчийн хүсэлт админы хяналтад байна.</p>':supplier?.status==="rejected"?'<p class="nx-wholesale-status">✕ Нийлүүлэгчийн хүсэлт татгалзсан.</p>':supplier?'<p class="nx-wholesale-status">Төлөв: '+esc(supplier.status)+'</p>':'<p class="nx-market-muted">Нийлүүлэгчээр бүртгүүлж, эрхээ баталгаажуулна уу.</p>')+'</div></details><details class="nx-help-group"><summary>Нийлүүлэгчийн бүртгэл ба тохиргоо</summary><div class="nx-help-items">'+(!supplier||supplier.status==="rejected"?'<button class="nx-market-btn" id="nx-hub-register">'+(supplier?'↻ Хүсэлтээ дахин илгээх':'＋ Нийлүүлэгчээр бүртгүүлэх')+'</button>':'')+(approved?'<button class="nx-market-btn" id="nx-hub-store">Нийлүүлэгчийн профайл засах</button>':'')+'</div></details><details class="nx-help-group"><summary>Бөөний бараа ба захиалга</summary><div class="nx-help-items">'+(approved?'<button class="nx-market-btn" id="nx-hub-publish">＋ Бөөний бараа нийтлэх</button><button class="nx-market-btn secondary" id="nx-hub-products">Миний бөөний бараа</button><button class="nx-market-btn secondary" id="nx-hub-incoming">Надад ирсэн захиалга</button>':'')+'<button class="nx-market-btn secondary" id="nx-hub-my-orders">Миний бөөний захиалга</button></div></details><details class="nx-help-group"><summary>Төлбөр ба мэдэгдэл</summary><div class="nx-help-items"><button class="nx-market-btn secondary" id="nx-hub-fees">Төлбөрийн түүх</button><button class="nx-market-btn secondary" id="nx-hub-notifications">🔔 Мэдэгдэл</button></div></details></div></section>';
+          document.getElementById("nx-wholesale-profile-toggle").onclick=showWholesaleCatalog;
           const bind=(id,action,label)=>{const el=document.getElementById(id);if(el)el.onclick=()=>runWholesaleScreen(action,label);};
           bind("nx-hub-register",()=>showSupplier(openWholesaleProfile),"Нийлүүлэгчээр бүртгүүлэх");
           bind("nx-hub-store",()=>showWholesaleStore(openWholesaleProfile),"Нийлүүлэгчийн профайл");
@@ -4212,10 +4194,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
           bind("nx-hub-fees",()=>showWholesaleFeeHistory(openWholesaleProfile),"Төлбөрийн түүх");
           bind("nx-hub-notifications",()=>showWholesaleNotifications(openWholesaleProfile),"Мэдэгдэл");
           if(wholesaleNotificationUserId)refreshWholesaleNotificationBadge(wholesaleNotificationUserId);
-        }catch(err){
-          host.innerHTML='<button class="nx-market-btn secondary nx-profile-collapse" id="nx-wholesale-hub-back" type="button" aria-label="Профайлыг хумих" title="Профайлыг хумих">⌄ Профайлыг хумих</button><p class="nx-market-muted">Профайл нээхэд алдаа гарлаа: '+esc(err.message||err)+'</p>';
-          document.getElementById("nx-wholesale-hub-back").onclick=showWholesaleCatalog;
-        }
+        }catch(err){host.classList.add("nx-profile-fullscreen");host.innerHTML='<section class="nx-profile-accordion-root"><p class="nx-market-muted">Профайл нээхэд алдаа гарлаа: '+esc(err.message||err)+'</p></section>';}
       };
       const wholesaleProfileButton=document.getElementById("nx-wholesale-profile-entry");
       if(wholesaleProfileButton){
@@ -4365,6 +4344,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     draw();
   }
   async function loadProducts(){
+    host.classList.remove("nx-profile-fullscreen");
     window.NEXORA_SHOP_BACK = null;
     window.NEXORA_SHOP_PROFILE = null;
     let stage="барааны жагсаалт";
@@ -4827,5 +4807,18 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 }
 </style>
 
+<style id="NEXORA-PROFILE-ACCORDION-FULLSCREEN">
+#market-app.nx-profile-fullscreen{position:fixed!important;inset:0!important;z-index:99999!important;width:100vw!important;height:100dvh!important;max-width:none!important;margin:0!important;padding:0!important;overflow-y:auto!important;overscroll-behavior:contain;background:#090909!important}
+#market-app .nx-profile-accordion-root{min-height:100dvh;box-sizing:border-box;padding:18px 14px 42px;background:#090909;color:#f7f5ef}
+#market-app .nx-profile-logo-trigger{width:100%;max-width:900px;min-height:104px;margin:0 auto 18px;padding:14px 18px;display:flex;align-items:center;gap:16px;text-align:left;border:1px solid rgba(214,173,85,.45);border-radius:19px;background:linear-gradient(120deg,#201f1a,#151515);color:#e7c36e;font-size:18px;font-weight:850;cursor:pointer}
+#market-app .nx-profile-logo-trigger img{width:76px;height:76px;flex:0 0 76px;object-fit:cover;border-radius:17px}
+#market-app .nx-profile-logo-fallback{width:76px;height:76px;flex:0 0 76px;display:grid;place-items:center;border-radius:17px;background:#302719;color:#e7c36e;font-size:22px;font-weight:900}
+#market-app .nx-profile-trigger-hint{margin-left:auto;color:#aaa39a;font-size:12px;font-weight:600}
+#market-app .nx-profile-accordion-content{width:100%;max-width:900px;margin:0 auto}
+#market-app .nx-profile-accordion-content .nx-help-group{border-radius:18px;margin-bottom:13px}
+#market-app .nx-profile-accordion-content .nx-help-items{padding:8px 16px 16px}
+#market-app .nx-profile-accordion-content .nx-market-btn{width:100%;margin:5px 0}
+@media(max-width:520px){#market-app .nx-profile-accordion-root{padding:12px 10px 30px}#market-app .nx-profile-logo-trigger{min-height:90px;padding:10px 13px;font-size:16px;gap:12px}#market-app .nx-profile-logo-trigger img,#market-app .nx-profile-logo-fallback{width:66px;height:66px;flex-basis:66px}}
+</style>
 </body>
 </html>
