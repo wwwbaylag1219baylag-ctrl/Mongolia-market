@@ -3582,9 +3582,10 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   const db=window.NEXORA_SUPABASE||(window.supabase?.createClient?window.supabase.createClient("https://grbpbmowhkbtuxostfny.supabase.co","sb_publishable_wspX-C4VBPJMmvWuQgsMTw_h40w8O3x"):null);
   if(db&&!window.NEXORA_SUPABASE)window.NEXORA_SUPABASE=db;
   if(!host)return;
-  // Онлайн дэлгүүрийн профайлын сумыг capture түвшинд барьж, жижиглэнгийн каталогт найдвартай буцаана.
-  host.addEventListener("click",event=>{
-    const retailBack=event.target.closest("#nx-retail-profile-back");
+  // Онлайн дэлгүүрийн профайлын сумыг document capture түвшинд барьж, бусад давхаргын event-ээс үл хамааран каталогт буцаана.
+  document.addEventListener("click",event=>{
+    const target=event.target instanceof Element?event.target:event.target?.parentElement;
+    const retailBack=target?.closest("#nx-retail-profile-back");
     if(!retailBack)return;
     event.preventDefault();
     event.stopPropagation();
@@ -5377,5 +5378,21 @@ button.nx-platform-back:focus-visible,
   border:0!important;
   box-shadow:none!important;
   background:transparent!important;
+}
+</style>
+
+<style id="NEXORA-RETAIL-PROFILE-BACK-ARROW-CLICK-FIX-2026">
+/* Онлайн дэлгүүрийн профайлын ганц буцах сумыг бусад давхаргын дээр гаргаж, товшилт/хүрэлтийг шууд авна. */
+#market-app #nx-retail-profile-back{
+  position:fixed!important;
+  top:14px!important;
+  left:12px!important;
+  z-index:100020!important;
+  display:flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+  cursor:pointer!important;
 }
 </style>
