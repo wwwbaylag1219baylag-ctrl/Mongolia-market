@@ -3566,12 +3566,13 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   function stopProductApprovalWatch(){if(productApprovalChannel){db.removeChannel(productApprovalChannel);productApprovalChannel=null;}if(productApprovalPoll){clearInterval(productApprovalPoll);productApprovalPoll=null;}}
 
   async function wholesaleUnreadCount(userId){
-    const [fee,orders]=await Promise.all([
+    const [fee,orders,registration]=await Promise.all([
       db.from("wholesale_supplier_notifications").select("id",{count:"exact",head:true}).eq("user_id",userId).is("read_at",null),
-      db.from("wholesale_order_notifications").select("id",{count:"exact",head:true}).eq("user_id",userId).is("read_at",null)
+      db.from("wholesale_order_notifications").select("id",{count:"exact",head:true}).eq("user_id",userId).is("read_at",null),
+      db.from("market_supplier_registration_notifications").select("id",{count:"exact",head:true}).eq("user_id",userId).is("read_at",null)
     ]);
-    if(fee.error)throw fee.error;if(orders.error)throw orders.error;
-    return (fee.count||0)+(orders.count||0);
+    if(fee.error)throw fee.error;if(orders.error)throw orders.error;if(registration.error)throw registration.error;
+    return (fee.count||0)+(orders.count||0)+(registration.count||0);
   }
   async function refreshWholesaleNotificationBadge(userId){
     const button=document.getElementById("nx-wholesale-notifications")||document.getElementById("nx-store-notifications")||document.getElementById("nx-fee-notification-open")||document.getElementById("nx-order-notification-open")||document.getElementById("nx-wholesale-orders-notifications");if(!button)return;
@@ -3597,6 +3598,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     wholesaleNotificationChannel=db.channel("nexora-user-notifications-"+userId)
       .on("postgres_changes",{event:"INSERT",schema:"public",table:"wholesale_supplier_notifications",filter:"user_id=eq."+userId},onNewNotification)
       .on("postgres_changes",{event:"INSERT",schema:"public",table:"wholesale_order_notifications",filter:"user_id=eq."+userId},onNewNotification)
+      .on("postgres_changes",{event:"INSERT",schema:"public",table:"market_supplier_registration_notifications",filter:"user_id=eq."+userId},onNewNotification)
       .subscribe((status,err)=>{if(status==="CHANNEL_ERROR"||status==="TIMED_OUT")console.warn("NEXORA мэдэгдлийн realtime холболт:",status,err||"");});
   }
   async function showWholesaleNotifications(backAction=showWholesaleCatalog){
@@ -3606,27 +3608,31 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     host.innerHTML='<button class="nx-market-btn secondary" id="nx-notification-back">‹ Буцах</button><h2 class="nexora-ad-heading">МЭДЭГДЭЛ</h2><p class="nx-market-muted">Төлбөр болон бөөний захиалгын шинэ мэдээ.</p><p class="nx-market-muted">Ачаалж байна…</p>';
     document.getElementById("nx-notification-back").onclick=backAction;
     try{
-      const [feeRes,orderRes]=await Promise.all([
+      const [feeRes,orderRes,registrationRes]=await Promise.all([
         db.from("wholesale_supplier_notifications").select("id,title,message,decision,created_at,read_at").eq("user_id",auth.user.id).order("created_at",{ascending:false}).limit(50),
-        db.from("wholesale_order_notifications").select("id,order_id,title,message,event_type,order_status,created_at,read_at").eq("user_id",auth.user.id).order("created_at",{ascending:false}).limit(50)
+        db.from("wholesale_order_notifications").select("id,order_id,title,message,event_type,order_status,created_at,read_at").eq("user_id",auth.user.id).order("created_at",{ascending:false}).limit(50),
+        db.from("market_supplier_registration_notifications").select("id,title,message,decision,created_at,read_at").eq("user_id",auth.user.id).order("created_at",{ascending:false}).limit(50)
       ]);
-      if(feeRes.error)throw feeRes.error;if(orderRes.error)throw orderRes.error;
+      if(feeRes.error)throw feeRes.error;if(orderRes.error)throw orderRes.error;if(registrationRes.error)throw registrationRes.error;
       const feeRows=(feeRes.data||[]).map(n=>({...n,_kind:"fee"}));
       const orderRows=(orderRes.data||[]).map(n=>({...n,_kind:"order"}));
-      const rows=[...feeRows,...orderRows].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).slice(0,80);
+      const registrationRows=(registrationRes.data||[]).map(n=>({...n,_kind:"registration"}));
+      const rows=[...feeRows,...orderRows,...registrationRows].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).slice(0,80);
       const feeUnread=feeRows.filter(x=>!x.read_at).map(x=>x.id);
       const orderUnread=orderRows.filter(x=>!x.read_at).map(x=>x.id);
+      const registrationUnread=registrationRows.filter(x=>!x.read_at).map(x=>x.id);
       const now=new Date().toISOString(),marks=[];
       if(feeUnread.length)marks.push(db.from("wholesale_supplier_notifications").update({read_at:now}).eq("user_id",auth.user.id).in("id",feeUnread));
       if(orderUnread.length)marks.push(db.from("wholesale_order_notifications").update({read_at:now}).eq("user_id",auth.user.id).in("id",orderUnread));
+      if(registrationUnread.length)marks.push(db.from("market_supplier_registration_notifications").update({read_at:now}).eq("user_id",auth.user.id).in("id",registrationUnread));
       const markResults=await Promise.all(marks);for(const result of markResults)if(result.error)throw result.error;
       const cards=rows.map(n=>{
         const date=n.created_at?new Date(n.created_at).toLocaleString("mn-MN"):"—";
-        const status=n._kind==="fee"?(n.decision==="approved"?"Баталгаажсан":"Татгалзсан"):({pending:"Хүлээгдэж байна",accepted:"Зөвшөөрсөн",rejected:"Татгалзсан",processing:"Бэлтгэж байна",completed:"Дууссан",cancelled:"Цуцалсан"})[n.order_status]||n.order_status;
-        const type=n._kind==="fee"?"Төлбөрийн мэдэгдэл":(n.event_type==="new_order"?"Шинэ захиалга":"Захиалгын төлөв");
+        const status=n._kind==="order"?({pending:"Хүлээгдэж байна",accepted:"Зөвшөөрсөн",rejected:"Татгалзсан",processing:"Бэлтгэж байна",completed:"Дууссан",cancelled:"Цуцалсан"})[n.order_status]||n.order_status:(n.decision==="approved"?"Зөвшөөрсөн":"Татгалзсан");
+        const type=n._kind==="registration"?"Нийлүүлэгчийн бүртгэлийн шийдвэр":n._kind==="fee"?"Төлбөрийн мэдэгдэл":(n.event_type==="new_order"?"Шинэ захиалга":"Захиалгын төлөв");
         return '<article class="nx-admin-card" style="margin:12px 0"><div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap"><div><div class="nx-market-muted">'+esc(type)+'</div><h3>'+esc(n.title)+'</h3></div><span class="nx-admin-status">'+esc(status)+'</span></div><p class="nx-market-muted">'+esc(n.message)+'</p><div class="nx-admin-meta"><div><strong>Огноо:</strong> '+esc(date)+'</div></div>'+(n._kind==="order"?'<button class="nx-market-btn secondary" data-notification-order="'+esc(n.order_id)+'">Захиалгыг нээх</button>':"")+"</article>";
       }).join("");
-      host.innerHTML='<button class="nx-market-btn secondary" id="nx-notification-back">‹ Буцах</button><h2 class="nexora-ad-heading">МЭДЭГДЭЛ</h2><p class="nx-market-muted">Төлбөр болон бөөний захиалгын мэдэгдэл.</p>'+(cards||'<p class="nx-market-muted">Одоогоор мэдэгдэл алга.</p>');
+      host.innerHTML='<button class="nx-market-btn secondary" id="nx-notification-back">‹ Буцах</button><h2 class="nexora-ad-heading">МЭДЭГДЭЛ</h2><p class="nx-market-muted">Нийлүүлэгчийн бүртгэл, төлбөр болон бөөний захиалгын мэдэгдэл.</p>'+(cards||'<p class="nx-market-muted">Одоогоор мэдэгдэл алга.</p>');
       document.getElementById("nx-notification-back").onclick=backAction;
       host.querySelectorAll("[data-notification-order]").forEach(btn=>btn.onclick=()=>showWholesaleOrderDetail(btn.dataset.notificationOrder,()=>showWholesaleNotifications(backAction)));
       await refreshWholesaleNotificationBadge(auth.user.id);
