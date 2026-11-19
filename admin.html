@@ -240,12 +240,19 @@
    const {data,error}=await query(table,cols,filters);
    if(error)throw error;
    if(activeTab==="orderPayments"&&data?.length){
-    const ids=[...new Set(data.map(r=>r.bank_account_id).filter(Boolean))];
-    if(ids.length){
-     const {data:banks,error:bankError}=await db.from("bank_accounts").select("id,bank_name,account_number,account_holder").in("id",ids);
+    const bankIds=[...new Set(data.map(r=>r.bank_account_id).filter(Boolean))];
+    if(bankIds.length){
+     const {data:banks,error:bankError}=await db.from("bank_accounts").select("id,bank_name,account_number,account_holder").in("id",bankIds);
      if(bankError)throw bankError;
      const byId=new Map((banks||[]).map(b=>[b.id,b]));
      data.forEach(r=>{const bank=byId.get(r.bank_account_id);if(bank){r.bank_name=bank.bank_name;r.account_number=bank.account_number;r.account_holder=bank.account_holder;}});
+    }
+    const orderIds=[...new Set(data.map(r=>r.order_id).filter(Boolean))];
+    if(orderIds.length){
+     const {data:orders,error:orderError}=await db.from("market_orders").select("id,recipient_name,delivery_phone,delivery_address").in("id",orderIds);
+     if(orderError)throw orderError;
+     const byOrder=new Map((orders||[]).map(o=>[o.id,o]));
+     data.forEach(r=>{const o=byOrder.get(r.order_id);if(o){r.buyer_name=o.recipient_name;r.buyer_phone=o.delivery_phone;r.delivery_address=o.delivery_address;}});
     }
    }
    if(activeTab==="stores"&&data?.length){
