@@ -5038,5 +5038,45 @@ html,body{min-height:100%;overscroll-behavior-y:none}
 }
 </style>
 
+
+<style id="NEXORA-FIX-ALL-MARKET-FORM-SCROLL-2026">
+/* Бөөний болон онлайн дэлгүүрийн fullscreen маягтуудыг утсаар дээш/доош гүйлгэх */
+#shop.nx-shop-profile-fullscreen #market-app,
+#market-app.nx-profile-fullscreen{
+  position:fixed!important;
+  top:0!important;right:0!important;bottom:0!important;left:0!important;
+  width:100%!important;height:100vh!important;height:100dvh!important;
+  max-height:100vh!important;max-height:100dvh!important;
+  min-height:0!important;
+  margin:0!important;
+  padding: max(14px,env(safe-area-inset-top)) 12px calc(32px + env(safe-area-inset-bottom))!important;
+  box-sizing:border-box!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+  overscroll-behavior-y:contain!important;
+  touch-action:pan-y!important;
+  scrollbar-width:thin!important;
+}
+#shop.nx-shop-profile-fullscreen #market-app form,
+#shop.nx-shop-profile-fullscreen #market-app .nx-market-card,
+#shop.nx-shop-profile-fullscreen #market-app .nx-profile-accordion-root,
+#market-app.nx-profile-fullscreen form,
+#market-app.nx-profile-fullscreen .nx-market-card,
+#market-app.nx-profile-fullscreen .nx-profile-accordion-root{
+  height:auto!important;min-height:0!important;max-height:none!important;
+  overflow:visible!important;
+  touch-action:pan-y!important;
+}
+#shop.nx-shop-profile-fullscreen #market-app input,
+#shop.nx-shop-profile-fullscreen #market-app select,
+#shop.nx-shop-profile-fullscreen #market-app textarea,
+#market-app.nx-profile-fullscreen input,
+#market-app.nx-profile-fullscreen select,
+#market-app.nx-profile-fullscreen textarea{
+  max-width:100%!important;min-width:0!important;
+}
+</style>
+
 </body>
 </html>
