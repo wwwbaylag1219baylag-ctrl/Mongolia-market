@@ -4426,7 +4426,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       marketUser=null;
       const count=cart.reduce((n,x)=>n+x.qty,0);
       host.innerHTML='<div class="nx-market-toolbar" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><button class="nx-market-btn secondary nx-market-back-arrow" id="nx-retail-platform-back" type="button" aria-label="Худалдааны платформын үндсэн таб руу буцах" title="Худалдааны платформын үндсэн таб руу буцах">‹</button><button class="nx-market-btn secondary" id="nx-retail-wholesale">Бөөний худалдаа орох →</button><button class="nx-market-btn secondary" id="nx-retail-profile" type="button"><span aria-hidden="true" style="font-size:22px;line-height:1">👤</span> Профайл ›</button><button class="nx-market-btn secondary" id="nx-retail-cart">🛒 Сагс ('+count+')</button></div><h2 class="nexora-ad-heading">ОНЛАЙН ДЭЛГҮҮР</h2><input class="nx-market-input" id="nx-retail-search" placeholder="Бараа, ангилал, дэлгүүр хайх…" value="'+esc(searchText)+'"><div id="nx-retail-categories"></div>';
-      document.getElementById("nx-retail-platform-back").onclick=()=>{if(window.NEXORA&&typeof window.NEXORA.back==="function"){window.NEXORA.back();}else if(window.NEXORA&&typeof window.NEXORA.open==="function"){window.NEXORA.open("home");}};
+      document.getElementById("nx-retail-platform-back").onclick=()=>{if(window.NEXORA&&typeof window.NEXORA.open==="function"){window.NEXORA.open("home");}else{window.location.href="./index.html";}};
       document.getElementById("nx-retail-wholesale").onclick=showWholesaleCatalog;
       document.getElementById("nx-retail-profile").onclick=openRetailProfile;
       db.auth.getUser().then(async({data,error})=>{if(error||!data?.user)return;const {data:profile}=await db.from("nexora_store_profiles").select("logo_path").eq("user_id",data.user.id).maybeSingle();if(!profile?.logo_path)return;const url=db.storage.from("market-store-logos").getPublicUrl(profile.logo_path).data.publicUrl;const button=document.getElementById("nx-retail-profile");if(button)button.innerHTML='<img src="'+esc(url)+'" alt="" style="width:28px;height:28px;object-fit:cover;border-radius:50%;vertical-align:middle"> Профайл ›';}).catch(err=>console.warn("Профайлын зураг:",err));
@@ -5056,5 +5056,17 @@ html,body{
 }
 </style>
 
+
+<style id="NEXORA-FINAL-BACK-ARROW-DEDUP-AND-RETAIL-EXIT-2026">
+/* Худалдааны дэлгэц дотор гаднах платформын back сумыг давхар харуулахгүй. */
+#shop.active>.topbar>.back-button{display:none!important}
+/* Бүх маягт/профайл дээр зөвхөн эхний буцах сум харагдана. */
+#market-app button.nx-back-duplicate-hidden{
+  display:none!important;visibility:hidden!important;opacity:0!important;
+  pointer-events:none!important;width:0!important;min-width:0!important;
+  height:0!important;min-height:0!important;margin:0!important;padding:0!important;
+  border:0!important;overflow:hidden!important;
+}
+</style>
 </body>
 </html>
