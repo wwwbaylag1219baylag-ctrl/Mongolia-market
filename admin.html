@@ -50,16 +50,15 @@
  const money=v=>Number(v||0).toLocaleString("mn-MN")+" ₮";
  const tabs=[
   ["overview","Тойм"],["ads","Үнэгүй зар"],["payments","Зарын төлбөр"],["products","Бараа"],
-  ["stores","Дэлгүүрийн төлбөр"],["suppliers","Нийлүүлэгч"],["orders","Захиалга"],["pricing","Зарын үнэ"],["theme","Платформын өнгө"]
+  ["suppliers","Нийлүүлэгч"],["orders","Захиалга"],["pricing","Үнийн тохиргоо"],["theme","Платформын өнгө"]
  ];
  const sections={
   ads:["Үнэгүй зарын хүсэлт","Шинээр ирсэн, хяналт хүлээж буй зарууд"],
   payments:["Зарын төлбөр","Төлбөрийн баримт болон багцын мэдээлэл"],
   products:["Бараа бүтээгдэхүүн","Нийтлэх зөвшөөрөл хүлээж буй бараа"],
-  stores:["Дэлгүүрийн төлбөр","Дэлгүүрийн эрх нээх, сунгах төлбөрийн хүсэлт"],
   suppliers:["Нийлүүлэгч","Нийлүүлэгчийн бүртгэлийн хүсэлт"],
   orders:["Захиалгууд","Худалдан авагчдын захиалгын мэдээлэл"],
-  pricing:["Зарын үнийн тохиргоо","Багцын үнэ, хугацаа болон үнэгүй зарын лимитийг удирдах"],
+  pricing:["Үнийн тохиргоо","Зарын багц болон худалдааны платформын төлбөрийг удирдах"],
   theme:["Платформын өнгөний тохиргоо","Админ самбарын харагдах өнгийг өөрчлөх"]
  };
  const statusNames={pending:"Хүлээгдэж байна",pending_review:"Хяналтад",approved:"Зөвшөөрсөн",active:"Идэвхтэй",rejected:"Татгалзсан",pending_payment:"Төлбөр хүлээгдэж байна",paid:"Төлөгдсөн",unpaid:"Төлөгдөөгүй",processing:"Боловсруулж байна",completed:"Дууссан",cancelled:"Цуцалсан"};
@@ -75,7 +74,7 @@
    document.body.classList.toggle("nx-admin-focus",focusMode);
    root.classList.toggle("nx-admin-focus-app",focusMode);
    root.innerHTML=focusMode
-    ? '<div class="nx-admin-focusbar"><button type="button" class="nx-admin-back" id="nx-admin-back">← АДМИН ЦЭС</button><strong>'+(activeTab==="pricing"?"ЗАРЫН ҮНЭ":"ПЛАТФОРМЫН ӨНГӨ")+'</strong><button class="nx-admin-logout" id="nx-admin-logout" type="button">Гарах</button></div><div id="nx-admin-body">'+body+'</div>'
+    ? '<div class="nx-admin-focusbar"><button type="button" class="nx-admin-back" id="nx-admin-back">← АДМИН ЦЭС</button><strong>'+(activeTab==="pricing"?"ҮНИЙН ТОХИРГОО":"ПЛАТФОРМЫН ӨНГӨ")+'</strong><button class="nx-admin-logout" id="nx-admin-logout" type="button">Гарах</button></div><div id="nx-admin-body">'+body+'</div>'
     : '<div class="nx-admin-head"><div><div class="nexora-ad-heading">АДМИН УДИРДЛАГА</div><p class="nx-admin-subtitle">NEXORA платформын зар, худалдаа, төлбөр болон хүсэлтүүдийн нэгдсэн удирдлага.</p></div><div class="nx-admin-head-actions"><a class="nx-admin-home" href="./index.html" aria-label="Хэрэглэгчийн сайт" title="Хэрэглэгчийн сайт">←</a><button class="nx-admin-logout" id="nx-admin-logout" type="button">Гарах</button></div></div>'+
     '<nav class="nx-admin-tabs" aria-label="Админ цэс">'+tabs.map(t=>'<button type="button" data-admin-tab="'+t[0]+'" class="'+(activeTab===t[0]?'active':'')+'">'+t[1]+'</button>').join("")+'</nav>'+
     '<div class="nx-admin-toolbar"><input id="nx-admin-search" class="nx-admin-search" type="search" placeholder="Энэ жагсаалтаас хайх…" aria-label="Админ жагсаалтаас хайх"><button class="nx-admin-refresh" id="nx-admin-refresh" type="button">↻ Шинэчлэх</button></div>'+
@@ -135,8 +134,7 @@
    ["Үнэгүй зар","classified_ads","status","pending_review","ads"],
    ["Зарын төлбөр","payment_requests","status","pending_review","payments"],
    ["Бараа","market_products","status","pending","products"],
-   ["Дэлгүүрийн төлбөр","nexora_store_payments","status","pending","stores"],
-   ["Нийлүүлэгч","market_suppliers","status","pending","suppliers"],
+      ["Нийлүүлэгч","market_suppliers","status","pending","suppliers"],
    ["Нийт захиалга","market_orders",null,null,"orders"]
   ];
   const results=await Promise.all(stats.map(async x=>{
