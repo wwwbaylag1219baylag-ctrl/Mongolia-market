@@ -3767,7 +3767,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         if(file&&file.size){
           const ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg",path=marketUser.id+"/retail-store-logos/"+Date.now()+"."+ext;
           const {error:uploadError}=await db.storage.from("market-store-logos").upload(path,file,{upsert:false,contentType:file.type,cacheControl:"31536000"});if(uploadError)throw uploadError;
-          if(logoFee>0){await showRetailFeePayment({feeType:"logo",amount:logoFee,storeId:saved.id,pendingLogoPath:path,backAction:showStore});return;}else{const {error:updateError}=await db.from("nexora_store_profiles").update({logo_path:path}).eq("id",saved.id).eq("user_id",marketUser.id);if(updateError)throw updateError;}
+          if(logoFee>0){await showRetailFeePayment({feeType:"logo",amount:logoFee,storeId:saved.id,pendingLogoPath:path,backAction:showStore});return;}else{const {error:updateError}=await db.rpc("nexora_update_free_store_logo",{p_store_id:saved.id,p_logo_path:path,p_market_type:"retail"});if(updateError)throw updateError;}
         }
         msg.textContent="✓ Дэлгүүрийн мэдээлэл хадгалагдлаа.";await showStore();
       }catch(err){msg.textContent="Алдаа: "+err.message;btn.disabled=false;}
@@ -3874,7 +3874,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
           const ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg",path=user.id+"/wholesale-store-logos/"+crypto.randomUUID()+"."+ext;
           const {error:uploadError}=await db.storage.from("market-store-logos").upload(path,file,{upsert:false,contentType:file.type,cacheControl:"31536000"});if(uploadError)throw uploadError;
           if(logoFee>0){await showWholesaleFeePayment({feeType:"logo",amount:logoFee,supplierId:supplierRes.data.id,storeId:saved.id,pendingLogoPath:path,backAction:showWholesaleStore});return;}
-          const {error:updateError}=await db.from("nexora_store_profiles").update({wholesale_logo_path:path}).eq("id",saved.id).eq("user_id",user.id);if(updateError)throw updateError;
+          const {error:updateError}=await db.rpc("nexora_update_free_store_logo",{p_store_id:saved.id,p_logo_path:path,p_market_type:"wholesale"});if(updateError)throw updateError;
         }
         msg.textContent="✓ Бөөний нийлүүлэгчийн профайл хадгалагдлаа.";await showWholesaleStore();
       }catch(err){msg.textContent="Алдаа: "+(err.message||err);button.disabled=false;}
