@@ -50,7 +50,7 @@
  const money=v=>Number(v||0).toLocaleString("mn-MN")+" ₮";
  const tabs=[
   ["overview","Тойм"],["ads","Үнэгүй зар"],["payments","Зарын төлбөр"],["products","Бараа"],["retailPayments","Жижиглэнгийн төлбөр"],
-  ["suppliers","Нийлүүлэгч"],["orders","Жижиглэнгийн захиалга"],["wholesaleProducts","Бөөний бараа"],["wholesaleOrders","Бөөний захиалга"],["wholesalePayments","Нийлүүлэгчийн төлбөр"],["pricing","Үнийн тохиргоо"],["theme","Платформын өнгө"]
+  ["suppliers","Нийлүүлэгч"],["orders","Жижиглэнгийн захиалга"],["orderPayments","Захиалгын төлбөр"],["wholesaleProducts","Бөөний бараа"],["wholesaleOrders","Бөөний захиалга"],["wholesalePayments","Нийлүүлэгчийн төлбөр"],["pricing","Үнийн тохиргоо"],["theme","Платформын өнгө"]
  ];
  const sections={
   ads:["Үнэгүй зарын хүсэлт","Шинээр ирсэн, хяналт хүлээж буй зарууд"],
@@ -59,6 +59,7 @@
   retailPayments:["Жижиглэнгийн төлбөр","Онлайн дэлгүүрийн лого болон жижиглэнгийн бараа байршуулалтын төлбөрийн хүсэлт."],
   suppliers:["Нийлүүлэгч","Нийлүүлэгчийн бүртгэлийн хүсэлт"],
   orders:["Жижиглэнгийн захиалгууд","Онлайн дэлгүүрийн жижиглэнгийн захиалга"],
+  orderPayments:["Захиалгын төлбөр","Худалдан авагчдын шилжүүлгийн баримтыг шалгаж, төлбөр баталгаажуулах."],
   wholesaleProducts:["Бөөний бараа","Нийлүүлэгчдийн бөөний барааны хүсэлт — онлайн дэлгүүрээс тусдаа."],
   wholesaleOrders:["Бөөний захиалга","Зөвхөн бөөний худалдааны захиалгууд."],
   wholesalePayments:["Нийлүүлэгчийн төлбөр","Лого болон бөөний бараа байршуулалтын төлбөрийн баримтыг шалгаж баталгаажуулна."],
@@ -149,6 +150,7 @@
    ["Зарын төлбөр","payment_requests","status","pending_review","payments"],
    ["Бараа","market_products","status","pending","products"],
    ["Жижиглэнгийн төлбөр","market_retail_fee_payments","status","pending","retailPayments"],
+   ["Захиалгын төлбөр","market_order_payment_requests","status","pending_review","orderPayments"],
       ["Нийлүүлэгч","market_suppliers","status","pending","suppliers"],
    ["Жижиглэнгийн захиалга","market_orders",null,null,"orders"],
    ["Бөөний бараа","wholesale_products","status","pending","wholesaleProducts"],
@@ -229,7 +231,8 @@
     wholesalePayments:["wholesale_supplier_fee_payments","id,user_id,supplier_id,store_id,fee_type,product_id,amount,bank_name,account_number,account_holder,transfer_reference,receipt_path,status,admin_note,created_at",[["status","pending"]],"wholesale_fee_payment"],
     stores:["nexora_store_payments","id,store_id,user_id,amount,bank_name,transfer_reference,receipt_path,status,created_at",[["status","pending"]],"store_payment"],
     suppliers:["market_suppliers","id,name,type,owner_type,register_no,phone,email,address,status,created_at",[["status","pending"]],"supplier"],
-    orders:["market_orders","id,buyer_id,items,total_amount,status,payment_status,created_at",[],""]
+    orders:["market_orders","id,buyer_id,items,total_amount,status,payment_status,created_at",[],""],
+    orderPayments:["market_order_payment_requests","id,order_id,buyer_id,bank_account_id,amount,transfer_reference,receipt_path,status,admin_note,created_at",[["status","pending_review"]],"order_payment"]
    }[activeTab];
    const [table,cols,filters,type]=cfg;
    body.innerHTML='<h2 class="nx-admin-section-title">'+sections[activeTab][0]+'</h2><p class="nx-admin-section-note">'+sections[activeTab][1]+'</p><div class="nx-admin-loading">Жагсаалт ачаалж байна…</div>';
