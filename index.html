@@ -4063,12 +4063,45 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     const cfg=row?.ad_package_config||{};
     const defaults={basic:{amount:5000,days:7,free_limit:1},featured:{amount:10000,days:7},vip:{amount:15000,days:14},premium:{amount:20000,days:14}};
     const names=[["basic","Энгийн зар"],["featured","Онцгой зар"],["vip","VIP зар"],["premium","Premium зар"]];
-    const cards=names.map(([key,label])=>{
+    body.innerHTML='<h2 class="nx-admin-section-title">Зарын үнийн тохиргоо</h2><p class="nx-admin-section-note">Багц бүрийн үнэ, хугацаа болон Энгийн зарын үнэгүй эрхийн тоог эндээс өөрчилнө.</p><form id="nx-ad-pricing-form" style="display:block!important;visibility:visible!important"><div id="nx-ad-pricing-fields" style="display:flex!important;flex-direction:column!important;gap:12px!important;width:100%!important;visibility:visible!important"></div><button class="nx-admin-refresh" type="submit" style="display:block;width:100%;min-height:54px;margin-top:18px">ҮНИЙН ТОХИРГОО ХАДГАЛАХ</button><p id="nx-ad-pricing-msg" class="nx-market-muted" role="status"></p></form>';
+    const fields=document.getElementById("nx-ad-pricing-fields");
+    const makeInput=(name,value,min,max,step)=>{
+      const input=document.createElement("input");
+      input.type="number";input.name=name;input.value=String(Number(value));input.min=String(min);
+      if(max!==null)input.max=String(max);
+      input.step=String(step);input.required=true;
+      input.style.cssText="display:block!important;visibility:visible!important;box-sizing:border-box!important;width:100%!important;min-height:54px!important;padding:12px!important;margin:8px 0 14px!important;border:2px solid #00d9e8!important;border-radius:10px!important;background:#05050b!important;color:#ffffff!important;font-size:20px!important;opacity:1!important";
+      return input;
+    };
+    names.forEach(([key,label])=>{
       const v={...defaults[key],...(cfg[key]||{})};
-      const fieldStyle="display:block!important;visibility:visible!important;position:static!important;box-sizing:border-box!important;width:100%!important;min-height:52px!important;padding:12px!important;margin:8px 0 14px!important;border:1px solid #00d9e8!important;border-radius:9px!important;background:#05050b!important;color:#fff!important;font-size:18px!important;opacity:1!important";
-      return '<div class="nx-ad-pricing-card" style="display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;min-width:0!important;padding:18px!important;margin:12px 0!important;border:1px solid #00d9e8!important;border-radius:14px!important;background:#101018!important;color:#fff!important"><h3 style="display:block!important;visibility:visible!important;color:#00d9e8!important;font-size:20px!important;margin:0 0 14px!important">'+label+'</h3><label style="display:block!important;visibility:visible!important;color:#fff!important;font-size:15px!important">Үнэ (₮)<input style="'+fieldStyle+'" type="number" min="0" step="100" name="'+key+'_amount" value="'+Number(v.amount)+'" required></label><label style="display:block!important;visibility:visible!important;color:#fff!important;font-size:15px!important">Хугацаа (хоног)<input style="'+fieldStyle+'" type="number" min="1" max="365" step="1" name="'+key+'_days" value="'+Number(v.days)+'" required></label>'+(key==="basic"?'<label style="display:block!important;visibility:visible!important;color:#fff!important;font-size:15px!important">Хэрэглэгч бүрийн үнэгүй зарын тоо<input style="'+fieldStyle+'" type="number" min="0" max="100" step="1" name="basic_free_limit" value="'+Number(v.free_limit??1)+'" required></label><small style="display:block!important;visibility:visible!important;color:#aaa!important">Эхний зар үнэгүй байлгах бол 1 гэж тохируулна.</small>':'')+'</div>';
-    }).join("");
-    body.innerHTML='<h2 class="nx-admin-section-title">Зарын үнийн тохиргоо</h2><p class="nx-admin-section-note">Багц бүрийн үнэ, хугацаа болон Энгийн зарын үнэгүй эрхийн тоог эндээс өөрчилнө.</p><form id="nx-ad-pricing-form" style="display:block!important;visibility:visible!important"><div style="display:block!important;visibility:visible!important">'+cards+'</div><button class="nx-admin-refresh" type="submit" style="display:block;width:100%;min-height:54px;margin-top:18px">ҮНИЙН ТОХИРГОО ХАДГАЛАХ</button><p id="nx-ad-pricing-msg" class="nx-market-muted" role="status"></p></form>';
+      const card=document.createElement("section");
+      card.style.cssText="display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;min-height:180px!important;box-sizing:border-box!important;padding:18px!important;margin:0!important;border:2px solid #00d9e8!important;border-radius:14px!important;background:#101018!important;color:#ffffff!important";
+      const heading=document.createElement("h3");
+      heading.textContent=label;
+      heading.style.cssText="display:block!important;color:#00d9e8!important;font-size:21px!important;margin:0 0 14px!important";
+      card.appendChild(heading);
+      const amountLabel=document.createElement("label");
+      amountLabel.textContent="Үнэ (₮)";
+      amountLabel.style.cssText="display:block!important;visibility:visible!important;color:#ffffff!important;font-size:16px!important";
+      amountLabel.appendChild(makeInput(key+"_amount",v.amount,0,null,100));
+      card.appendChild(amountLabel);
+      const daysLabel=document.createElement("label");
+      daysLabel.textContent="Хугацаа (хоног)";
+      daysLabel.style.cssText="display:block!important;visibility:visible!important;color:#ffffff!important;font-size:16px!important";
+      daysLabel.appendChild(makeInput(key+"_days",v.days,1,365,1));
+      card.appendChild(daysLabel);
+      if(key==="basic"){
+        const freeLabel=document.createElement("label");
+        freeLabel.textContent="Хэрэглэгч бүрийн үнэгүй зарын тоо";
+        freeLabel.style.cssText="display:block!important;visibility:visible!important;color:#ffffff!important;font-size:16px!important";
+        freeLabel.appendChild(makeInput("basic_free_limit",v.free_limit??1,0,100,1));
+        card.appendChild(freeLabel);
+        const hint=document.createElement("small");hint.textContent="Эхний зар үнэгүй байлгах бол 1 гэж тохируулна.";
+        hint.style.cssText="display:block!important;color:#aaaaaa!important";card.appendChild(hint);
+      }
+      fields.appendChild(card);
+    });
     const form=document.getElementById("nx-ad-pricing-form");
     form.onsubmit=async e=>{
       e.preventDefault();
