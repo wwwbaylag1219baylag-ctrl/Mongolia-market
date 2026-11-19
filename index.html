@@ -431,7 +431,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     <!-- ХУДАЛДААНЫ ПЛАТФОРМ: ЗАРЫН ДЭЛГЭЦЭЭС ТУСДАА -->
     <section id="shop" class="screen">
       <header class="topbar">
-        <button class="back-button" type="button" onclick="NEXORA.open('home')" aria-label="Үндсэн нүүр рүү буцах">‹</button>
+        <button class="back-button" type="button" onclick="NEXORA.back()" aria-label="Өмнөх дэлгэц рүү буцах">‹</button>
         <div class="page-heading">ХУДАЛДААНЫ ПЛАТФОРМ</div>
         <div class="header-space"></div>
       </header>
@@ -3502,6 +3502,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 .nx-market-toolbar .nx-market-btn{width:100%;height:56px}
 .nx-market-btn.secondary{background:#191919;color:#d6ad55}
 .nx-market-back-arrow{width:42px!important;min-width:42px!important;height:42px!important;min-height:42px!important;padding:0!important;margin:0 0 12px!important;border-radius:12px!important;font-size:28px!important;line-height:1!important;flex:0 0 42px!important}
+/* Худалдааны платформ дотор зөвхөн дээд header-ийн буцах сум харагдана. */
+#market-app .nx-market-back-arrow{display:none!important}
 @media(min-width:700px){.nx-market-toolbar{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .nx-market-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
 .nx-market-card,.nx-admin-card{padding:14px;border:1px solid rgba(214,173,85,.3);border-radius:13px;background:#171717;margin:10px 0;min-width:0}
@@ -4133,6 +4135,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       document.getElementById("nx-wholesale-back").onclick=loadProducts;
       const runWholesaleScreen=async(action,label)=>{try{const {data:authData,error:authError}=await db.auth.getUser();if(authError)throw authError;if(!authData?.user){host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-wholesale-login-back" aria-label="Буцах" title="Буцах">‹</button><h2 class="nexora-ad-heading">НЭВТРЭХ ШААРДЛАГАТАЙ</h2><p class="nx-market-muted">'+esc(label)+' хэсгийг ашиглахын тулд NEXORA бүртгэлдээ нэвтэрч эсвэл шинэ бүртгэл үүсгэнэ үү.</p><button class="nx-market-btn" id="nx-wholesale-login-open">НЭВТРЭХ / БҮРТГҮҮЛЭХ</button>';document.getElementById("nx-wholesale-login-back").onclick=showWholesaleCatalog;document.getElementById("nx-wholesale-login-open").onclick=()=>window.NEXORA?.open("profile");return;}host.innerHTML='<div class="nx-market-loading" role="status" style="padding:24px;text-align:center">' + label + ' нээгдэж байна…</div>';await action();}catch(err){console.error("NEXORA wholesale screen error:",err);host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-wholesale-action-back" aria-label="Буцах" title="Буцах">‹</button><div class="nx-market-error" role="alert" style="padding:16px;margin-top:12px">Хэсэг нээхэд алдаа гарлаа: '+esc(err?.message||String(err))+'</div>';document.getElementById("nx-wholesale-action-back").onclick=showWholesaleCatalog;}};
       const openWholesaleProfile=async()=>{
+        window.NEXORA_SHOP_BACK = showWholesaleCatalog;
         // Дарахад шууд хариу үзүүлж, auth шалгалт хүлээж байх үед товч "гацсан" мэт харагдуулахгүй.
         host.innerHTML='<div class="nx-market-loading" role="status" style="padding:28px 16px;text-align:center"><div style="font-size:30px;margin-bottom:10px">👤</div><strong>Нийлүүлэгчийн профайл нээгдэж байна…</strong><p class="nx-market-muted">Нэвтрэх төлөвийг шалгаж байна.</p></div>';
         try{
@@ -4152,7 +4155,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
           const bind=(id,action,label)=>{const el=document.getElementById(id);if(el)el.onclick=()=>runWholesaleScreen(action,label);};
           bind("nx-hub-register",showSupplier,"Нийлүүлэгчээр бүртгүүлэх");
           bind("nx-hub-store",showWholesaleStore,"Нийлүүлэгчийн профайл");
-          bind("nx-hub-online-store",showStore,"Онлайн дэлгүүр");
+          bind("nx-hub-online-store",()=>{window.NEXORA_SHOP_BACK=openWholesaleProfile;return showStore();},"Онлайн дэлгүүр");
           bind("nx-hub-publish",showPublish,"Бөөний бараа нийтлэх");
           bind("nx-hub-products",showMyWholesaleProducts,"Миний бөөний бараа");
           bind("nx-hub-incoming",showWholesaleOrders,"Надад ирсэн захиалга");
