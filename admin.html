@@ -124,7 +124,8 @@
    if(r.package_type)details.push(["Багц",r.package_type]);
    if(r.location||r.address)details.push(["Байршил",r.location||r.address]);
    if(r.fee_type)details.push(["Төлбөрийн төрөл",type==="retail_fee_payment"?(r.fee_type==="logo"?"Онлайн дэлгүүрийн лого":"Жижиглэнгийн бараа байршуулалт"):(r.fee_type==="logo"?"Нийлүүлэгчийн лого":"Бөөний бараа байршуулалт")]);
-   if(r.account_number)details.push(["Хүлээн авагчийн данс",r.bank_name+" · "+r.account_number+" · "+(r.account_holder||"")]);
+   if(r.account_number)details.push(["NEXORA төлбөр хүлээн авах данс",r.bank_name+" · "+r.account_number+" · "+(r.account_holder||"")]);
+   if(Array.isArray(r.seller_accounts)&&r.seller_accounts.length)details.push(["Худалдагчийн шилжүүлгийн данс",r.seller_accounts.map(x=>(x.store_name||"Дэлгүүр")+" — "+x.bank_name+" · "+x.account_number+" · "+(x.account_holder||"")+" · "+(x.phone||"")).join(" | ")]);
    if(r.register_no)details.push(["Регистр",r.register_no]);
    if(r.ad_id)details.push(["Зарын дугаар",String(r.ad_id).slice(0,12)]);
    if(r.order_id)details.push(["Захиалгын дугаар",String(r.order_id).slice(0,12)]);
@@ -249,10 +250,14 @@
     }
     const orderIds=[...new Set(data.map(r=>r.order_id).filter(Boolean))];
     if(orderIds.length){
-     const {data:orders,error:orderError}=await db.from("market_orders").select("id,recipient_name,delivery_phone,delivery_address").in("id",orderIds);
+     const {data:orders,error:orderError}=await db.from("market_orders").select("id,recipient_name,delivery_phone,delivery_address,items").in("id",orderIds);
      if(orderError)throw orderError;
      const byOrder=new Map((orders||[]).map(o=>[o.id,o]));
-     data.forEach(r=>{const o=byOrder.get(r.order_id);if(o){r.buyer_name=o.recipient_name;r.buyer_phone=o.delivery_phone;r.delivery_address=o.delivery_address;}});
+     const sellerIds=[...new Set((orders||[]).flatMap(o=>(o.items||[]).map(x=>x.seller_id).filter(Boolean)))];
+     const {data:sellerAccounts,error:sellerError}=sellerIds.length?await db.from("store_bank_accounts").select("user_id,store_name,bank_name,account_number,account_holder,phone").in("user_id",sellerIds):{data:[],error:null};
+     if(sellerError)throw sellerError;
+     const bySeller=new Map((sellerAccounts||[]).map(x=>[String(x.user_id),x]));
+     data.forEach(r=>{const o=byOrder.get(r.order_id);if(o){r.buyer_name=o.recipient_name;r.buyer_phone=o.delivery_phone;r.delivery_address=o.delivery_address;r.seller_accounts=[...new Set((o.items||[]).map(x=>String(x.seller_id)))].map(id=>bySeller.get(id)).filter(Boolean);}});
     }
    }
    if(activeTab==="stores"&&data?.length){
