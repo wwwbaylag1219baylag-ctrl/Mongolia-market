@@ -50,7 +50,7 @@
  const money=v=>Number(v||0).toLocaleString("mn-MN")+" ₮";
  const tabs=[
   ["overview","Тойм"],["ads","Үнэгүй зар"],["payments","Зарын төлбөр"],["products","Бараа"],
-  ["stores","Дэлгүүрийн төлбөр"],["suppliers","Нийлүүлэгч"],["orders","Захиалга"],["orderpayments","Захиалгын төлбөр"],["pricing","Зарын үнэ"],["theme","Платформын өнгө"]
+  ["stores","Дэлгүүрийн төлбөр"],["suppliers","Нийлүүлэгч"],["orders","Захиалга"],["pricing","Зарын үнэ"],["theme","Платформын өнгө"]
  ];
  const sections={
   ads:["Үнэгүй зарын хүсэлт","Шинээр ирсэн, хяналт хүлээж буй зарууд"],
@@ -59,7 +59,6 @@
   stores:["Дэлгүүрийн төлбөр","Дэлгүүрийн эрх нээх, сунгах төлбөрийн хүсэлт"],
   suppliers:["Нийлүүлэгч","Нийлүүлэгчийн бүртгэлийн хүсэлт"],
   orders:["Захиалгууд","Худалдан авагчдын захиалгын мэдээлэл"],
-  orderpayments:["Захиалгын төлбөр","Захиалгын төлбөрийн баримт шалгах хэсэг"],
   pricing:["Зарын үнийн тохиргоо","Багцын үнэ, хугацаа болон үнэгүй зарын лимитийг удирдах"],
   theme:["Платформын өнгөний тохиргоо","Админ самбарын харагдах өнгийг өөрчлөх"]
  };
@@ -128,7 +127,6 @@
    ["Бараа","market_products","status","pending","products"],
    ["Дэлгүүрийн төлбөр","nexora_store_payments","status","pending","stores"],
    ["Нийлүүлэгч","market_suppliers","status","pending","suppliers"],
-   ["Захиалгын төлбөр","market_order_payment_requests","status","pending_review","orderpayments"],
    ["Нийт захиалга","market_orders",null,null,"orders"]
   ];
   const results=await Promise.all(stats.map(async x=>{
@@ -194,8 +192,7 @@
     products:["market_products","id,title,category,price,owner_id,status,created_at",[["status","pending"]],"product"],
     stores:["nexora_store_payments","id,store_id,user_id,amount,bank_name,transfer_reference,receipt_path,status,created_at",[["status","pending"]],"store_payment"],
     suppliers:["market_suppliers","id,name,type,register_no,phone,email,address,status,created_at",[["status","pending"]],"supplier"],
-    orders:["market_orders","id,buyer_id,items,total_amount,status,payment_status,created_at",[],""],
-    orderpayments:["market_order_payment_requests","id,order_id,buyer_id,bank_account_id,amount,transfer_reference,receipt_path,status,created_at",[["status","pending_review"]],"order_payment"]
+    orders:["market_orders","id,buyer_id,items,total_amount,status,payment_status,created_at",[],""]
    }[activeTab];
    const [table,cols,filters,type]=cfg;
    body.innerHTML='<h2 class="nx-admin-section-title">'+sections[activeTab][0]+'</h2><p class="nx-admin-section-note">'+sections[activeTab][1]+'</p><div class="nx-admin-loading">Жагсаалт ачаалж байна…</div>';
