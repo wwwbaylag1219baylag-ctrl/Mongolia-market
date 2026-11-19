@@ -5267,3 +5267,59 @@ html,body{
  width:100%!important;
 }
 </style>
+
+
+<!-- NEXORA: borderless curved back arrows -->
+<style id="NEXORA-BORDERLESS-CURVED-BACK-ARROWS-2026">
+/* Буцах сумнууд: дөрвөлжин хүрээгүй, цэвэр нумарсан сум */
+.back-button,
+.nx-platform-back,
+.nx-market-back-arrow,
+.nx-profile-back,
+.nx-profile-child-back,
+.nx-universal-shop-back {
+  border:0!important;
+  outline:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  text-shadow:none!important;
+  color:var(--gold,#d6ad55)!important;
+}
+.back-button {
+  font-size:0!important;
+}
+.back-button::before {
+  content:"↶";
+  display:block;
+  font-family:Arial,sans-serif;
+  font-size:34px;
+  font-weight:400;
+  line-height:1;
+}
+.nx-platform-back,
+.nx-market-back-arrow,
+.nx-profile-back,
+.nx-profile-child-back,
+.nx-universal-shop-back {
+  font-size:0!important;
+}
+.nx-platform-back::before,
+.nx-market-back-arrow::before,
+.nx-profile-back::before,
+.nx-profile-child-back::before,
+.nx-universal-shop-back::before {
+  content:"↶";
+  display:block;
+  font-family:Arial,sans-serif;
+  font-size:32px;
+  font-weight:400;
+  line-height:1;
+}
+#ads .page-content .nx-platform-back {
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+</style>
