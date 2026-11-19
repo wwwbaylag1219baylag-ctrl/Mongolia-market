@@ -3549,8 +3549,63 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 (function(){
   const db=window.NEXORA_SUPABASE,host=document.getElementById("market-app");
   if(!db||!host)return;
-  let products=[],cart=[],marketUser=null,searchText="",productViewStates={},productApprovalChannel=null,productApprovalPoll=null;
+  let products=[],cart=[],marketUser=null,searchText="",productViewStates={},productApprovalChannel=null,productApprovalPoll=null,wholesaleNotificationChannel=null,wholesaleNotificationUserId=null;
   function stopProductApprovalWatch(){if(productApprovalChannel){db.removeChannel(productApprovalChannel);productApprovalChannel=null;}if(productApprovalPoll){clearInterval(productApprovalPoll);productApprovalPoll=null;}}
+
+  async function wholesaleUnreadCount(userId){
+    const {count,error}=await db.from("wholesale_supplier_notifications").select("id",{count:"exact",head:true}).eq("user_id",userId).is("read_at",null);
+    if(error)throw error;return count||0;
+  }
+  async function refreshWholesaleNotificationBadge(userId){
+    const button=document.getElementById("nx-wholesale-notifications");if(!button)return;
+    try{const count=await wholesaleUnreadCount(userId);button.textContent="🔔 Мэдэгдэл"+(count?" ("+count+")":"");}
+    catch(err){console.warn("Мэдэгдлийн тоо ачаалсангүй:",err);}
+  }
+  async function startWholesaleNotificationWatch(){
+    const {data,error}=await db.auth.getUser();if(error||!data.user)return;
+    const userId=data.user.id;
+    if(wholesaleNotificationChannel&&wholesaleNotificationUserId===userId){await refreshWholesaleNotificationBadge(userId);return;}
+    if(wholesaleNotificationChannel){db.removeChannel(wholesaleNotificationChannel);wholesaleNotificationChannel=null;}
+    wholesaleNotificationUserId=userId;
+    await refreshWholesaleNotificationBadge(userId);
+    wholesaleNotificationChannel=db.channel("nexora-wholesale-notifications-"+userId)
+      .on("postgres_changes",{event:"INSERT",schema:"public",table:"wholesale_supplier_notifications",filter:"user_id=eq."+userId},payload=>{
+        refreshWholesaleNotificationBadge(userId);
+        const n=payload.new||{};
+        if(host.isConnected&&document.getElementById("nx-wholesale-notifications")){
+          let toast=document.getElementById("nx-wholesale-notification-toast");
+          if(!toast){toast=document.createElement("div");toast.id="nx-wholesale-notification-toast";toast.className="nx-market-card";toast.style.borderColor="var(--gold,#d6ad55)";const toolbar=host.querySelector(".nx-market-toolbar");if(toolbar)toolbar.insertAdjacentElement("afterend",toast);}
+          if(toast){toast.textContent="🔔 "+(n.title||"Шинэ мэдэгдэл")+". Мэдэгдэл хэсгээс дэлгэрэнгүй үзнэ үү.";}
+        }
+      }).subscribe((status,err)=>{if(status==="CHANNEL_ERROR"||status==="TIMED_OUT")console.warn("NEXORA мэдэгдлийн realtime холболт:",status,err||"");});
+  }
+  async function showWholesaleNotifications(backAction=showWholesaleCatalog){
+    const {data:auth,error:authError}=await db.auth.getUser();
+    if(authError||!auth.user){host.innerHTML='<p class="nx-market-muted">Мэдэгдэл харахын тулд нэвтэрнэ үү.</p><button class="nx-market-btn" id="nx-notification-back">Буцах</button>';document.getElementById("nx-notification-back").onclick=backAction;return;}
+    host.innerHTML='<button class="nx-market-btn secondary" id="nx-notification-back">‹ Буцах</button><h2 class="nexora-ad-heading">НИЙЛҮҮЛЭГЧИЙН МЭДЭГДЭЛ</h2><p class="nx-market-muted">Төлбөрийн хүсэлтийн шийдвэр болон админы тайлбар.</p><p class="nx-market-muted">Ачаалж байна…</p>';
+    document.getElementById("nx-notification-back").onclick=backAction;
+    try{
+      const {data:rows,error}=await db.from("wholesale_supplier_notifications").select("id,title,message,decision,created_at,read_at").eq("user_id",auth.user.id).order("created_at",{ascending:false}).limit(50);
+      if(error)throw error;
+      const unread=(rows||[]).filter(x=>!x.read_at).map(x=>x.id);
+      if(unread.length){
+        const {error:markError}=await db.from("wholesale_supplier_notifications").update({read_at:new Date().toISOString()}).eq("user_id",auth.user.id).in("id",unread);
+        if(markError)throw markError;
+      }
+      const cards=(rows||[]).map(n=>{
+        const date=n.created_at?new Date(n.created_at).toLocaleString("mn-MN"):"—";
+        const status=n.decision==="approved"?"Баталгаажсан":"Татгалзсан";
+        return '<article class="nx-admin-card" style="margin:12px 0"><div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap"><h3>'+esc(n.title)+'</h3><span class="nx-admin-status">'+esc(status)+'</span></div><p class="nx-market-muted">'+esc(n.message)+'</p><div class="nx-admin-meta"><div><strong>Огноо:</strong> '+esc(date)+'</div></div></article>';
+      }).join("");
+      host.innerHTML='<button class="nx-market-btn secondary" id="nx-notification-back">‹ Буцах</button><h2 class="nexora-ad-heading">НИЙЛҮҮЛЭГЧИЙН МЭДЭГДЭЛ</h2><p class="nx-market-muted">Төлбөрийн хүсэлтийн шийдвэр болон админы тайлбар.</p>'+(cards||'<p class="nx-market-muted">Одоогоор мэдэгдэл алга.</p>');
+      document.getElementById("nx-notification-back").onclick=backAction;
+      await refreshWholesaleNotificationBadge(auth.user.id);
+    }catch(err){
+      host.innerHTML='<button class="nx-market-btn secondary" id="nx-notification-back">‹ Буцах</button><p class="nx-market-muted">Мэдэгдэл ачаалахад алдаа гарлаа: '+esc(err.message||err)+'</p>';
+      document.getElementById("nx-notification-back").onclick=backAction;
+    }
+  }
+
   const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const money=v=>Number(v||0).toLocaleString("mn-MN")+" ₮";
   const productTileStyle=document.createElement("style");
@@ -4072,6 +4127,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   }
   async function showWholesaleCatalog(){
     stopProductApprovalWatch();
+    startWholesaleNotificationWatch().catch(err=>console.warn("Мэдэгдлийн тохиргоо:",err));
     host.innerHTML='<button class="nx-market-btn secondary" id="nx-wholesale-back">‹ Онлайн дэлгүүр</button><p class="nx-market-muted">Бөөний бараануудыг ачаалж байна…</p>';
     document.getElementById("nx-wholesale-back").onclick=loadProducts;
     try{
@@ -4082,8 +4138,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       const allPaths=rows.flatMap(x=>(x.image_paths||[]).map(path=>({id:x.id,path}))),signed=allPaths.length?await db.storage.from("market-product-images").createSignedUrls(allPaths.map(x=>x.path),3600):{data:[]};
       const urls=new Map();(signed.data||[]).forEach((x,i)=>{if(x?.signedUrl&&!x.error)urls.set(allPaths[i].id+"|"+allPaths[i].path,x.signedUrl);});
       const grouped=new Map();rows.forEach(p=>{const key=p.category||"Бусад";if(!grouped.has(key))grouped.set(key,[]);grouped.get(key).push(p);});
-      host.innerHTML='<div class="nexora-ad-heading">БӨӨНИЙ ХУДАЛДАА</div><p class="nx-market-muted">Нийлүүлэгчдийн бөөний бараа · Онлайн дэлгүүрийн жижиглэнгийн бараанаас тусдаа.</p><div class="nx-market-toolbar"><button class="nx-market-btn secondary" id="nx-wholesale-retail">Онлайн дэлгүүр</button><button class="nx-market-btn" id="nx-wholesale-publish">+ Бөөний бараа нийтлэх</button><button class="nx-market-btn secondary" id="nx-wholesale-orders">Надад ирсэн захиалга</button><button class="nx-market-btn secondary" id="nx-wholesale-fee-history">Төлбөрийн түүх</button></div>';
-      document.getElementById("nx-wholesale-retail").onclick=loadProducts;document.getElementById("nx-wholesale-publish").onclick=showPublish;document.getElementById("nx-wholesale-orders").onclick=showWholesaleOrders;document.getElementById("nx-wholesale-fee-history").onclick=()=>showWholesaleFeeHistory(showWholesaleCatalog);
+      host.innerHTML='<div class="nexora-ad-heading">БӨӨНИЙ ХУДАЛДАА</div><p class="nx-market-muted">Нийлүүлэгчдийн бөөний бараа · Онлайн дэлгүүрийн жижиглэнгийн бараанаас тусдаа.</p><div class="nx-market-toolbar"><button class="nx-market-btn secondary" id="nx-wholesale-retail">Онлайн дэлгүүр</button><button class="nx-market-btn" id="nx-wholesale-publish">+ Бөөний бараа нийтлэх</button><button class="nx-market-btn secondary" id="nx-wholesale-orders">Надад ирсэн захиалга</button><button class="nx-market-btn secondary" id="nx-wholesale-fee-history">Төлбөрийн түүх</button><button class="nx-market-btn secondary" id="nx-wholesale-notifications">🔔 Мэдэгдэл</button></div>';
+      document.getElementById("nx-wholesale-retail").onclick=loadProducts;document.getElementById("nx-wholesale-publish").onclick=showPublish;document.getElementById("nx-wholesale-orders").onclick=showWholesaleOrders;document.getElementById("nx-wholesale-fee-history").onclick=()=>showWholesaleFeeHistory(showWholesaleCatalog);document.getElementById("nx-wholesale-notifications").onclick=()=>showWholesaleNotifications(showWholesaleCatalog);
       if(!rows.length){host.innerHTML+='<div class="nx-admin-empty">Одоогоор идэвхтэй бөөний бараа алга.</div>';return;}
       for(const [category,items] of grouped){
         const section=document.createElement("section");section.className="nx-market-category-section";section.innerHTML='<div class="nx-market-category-head"><h2>'+esc(category)+'</h2></div><div class="nx-market-grid" style="display:flex;overflow-x:auto;gap:12px;padding:8px 2px 16px;scroll-snap-type:x mandatory"></div>';
