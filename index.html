@@ -4960,5 +4960,59 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 }
 </style>
 
+
+<style id="NEXORA-MOBILE-FORM-SCROLL-FIX-2026">
+/* Утасны дэлгэц: худалдааны бүх бүтэн дэлгэцийн маягтыг дотроос нь гүйлгэдэг болгоно. */
+html,body{min-height:100%;overscroll-behavior-y:none}
+#shop.nx-shop-profile-fullscreen{
+  position:fixed!important;inset:0!important;
+  width:100vw!important;height:100vh!important;height:100dvh!important;
+  min-height:100vh!important;min-height:100dvh!important;
+  overflow:hidden!important;
+}
+#shop.nx-shop-profile-fullscreen>.page-content{
+  position:fixed!important;inset:0!important;
+  width:100vw!important;height:100vh!important;height:100dvh!important;
+  max-height:100vh!important;max-height:100dvh!important;
+  margin:0!important;padding:0!important;
+  overflow:visible!important;
+}
+#shop.nx-shop-profile-fullscreen>#market-app,
+#market-app.nx-profile-fullscreen{
+  position:fixed!important;inset:0!important;
+  width:100vw!important;height:100vh!important;height:100dvh!important;
+  min-height:100vh!important;max-height:100vh!important;max-height:100dvh!important;
+  margin:0!important;padding: max(12px, env(safe-area-inset-top)) 12px calc(28px + env(safe-area-inset-bottom))!important;
+  overflow-x:hidden!important;overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+  overscroll-behavior-y:contain!important;
+  touch-action:pan-y!important;
+  box-sizing:border-box!important;
+}
+#market-app.nx-profile-fullscreen .nx-profile-accordion-root{
+  min-height:0!important;height:auto!important;
+  padding:0 0 24px!important;
+  overflow:visible!important;
+}
+#market-app.nx-profile-fullscreen form,
+#market-app.nx-profile-fullscreen .nx-admin-list,
+#market-app.nx-profile-fullscreen .nx-market-grid{
+  max-height:none!important;overflow:visible!important;
+}
+#market-app.nx-profile-fullscreen button,
+#market-app.nx-profile-fullscreen input,
+#market-app.nx-profile-fullscreen select,
+#market-app.nx-profile-fullscreen textarea{
+  touch-action:manipulation;
+}
+@media(max-width:600px){
+  #market-app.nx-profile-fullscreen{padding-left:12px!important;padding-right:12px!important}
+  #market-app.nx-profile-fullscreen .nx-market-input,
+  #market-app.nx-profile-fullscreen input,
+  #market-app.nx-profile-fullscreen select,
+  #market-app.nx-profile-fullscreen textarea{max-width:100%;min-width:0}
+}
+</style>
+
 </body>
 </html>
