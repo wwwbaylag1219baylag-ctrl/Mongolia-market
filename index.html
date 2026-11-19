@@ -4427,11 +4427,11 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       // Каталогийн харагдац нэвтрэлтийн хүсэлтээс хамаарахгүй: барааг эхлээд шууд харуулна.
       marketUser=null;
       const count=cart.reduce((n,x)=>n+x.qty,0);
-      host.innerHTML='<div class="nx-market-toolbar" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><button class="nx-market-btn secondary nx-market-back-arrow" id="nx-retail-platform-back" type="button" aria-label="Худалдааны платформын үндсэн таб руу буцах" title="Худалдааны платформын үндсэн таб руу буцах">‹</button><button class="nx-market-btn secondary" id="nx-retail-wholesale">Бөөний худалдаа орох →</button><button class="nx-market-btn secondary" id="nx-retail-profile" type="button"><span aria-hidden="true" style="font-size:22px;line-height:1">👤</span> Профайл ›</button><button class="nx-market-btn secondary" id="nx-retail-cart">🛒 Сагс ('+count+')</button></div><h2 class="nexora-ad-heading">ОНЛАЙН ДЭЛГҮҮР</h2><input class="nx-market-input" id="nx-retail-search" placeholder="Бараа, ангилал, дэлгүүр хайх…" value="'+esc(searchText)+'"><div id="nx-retail-categories"></div>';
+      host.innerHTML='<div class="nx-market-toolbar nx-retail-top-toolbar"><button class="nx-market-btn secondary nx-market-back-arrow" id="nx-retail-platform-back" type="button" aria-label="Худалдааны платформын үндсэн таб руу буцах" title="Худалдааны платформын үндсэн таб руу буцах">‹</button><button class="nx-market-btn secondary nx-retail-pill" id="nx-retail-wholesale">Бөөний худалдаа орох →</button><span class="nx-retail-store-logo" id="nx-retail-store-logo" aria-label="Дэлгүүрийн лого" title="Дэлгүүрийн лого"><span aria-hidden="true">N</span></span><button class="nx-market-btn secondary nx-retail-profile-pill" id="nx-retail-profile" type="button">Профайл ›</button><button class="nx-market-btn secondary nx-retail-pill nx-retail-cart-pill" id="nx-retail-cart">🛒 Сагс ('+count+')</button></div><h2 class="nexora-ad-heading">ОНЛАЙН ДЭЛГҮҮР</h2><input class="nx-market-input" id="nx-retail-search" placeholder="Бараа, ангилал, дэлгүүр хайх…" value="'+esc(searchText)+'"><div id="nx-retail-categories"></div>';
       document.getElementById("nx-retail-platform-back").onclick=()=>{if(window.NEXORA&&typeof window.NEXORA.open==="function"){window.NEXORA.open("home");}else{window.location.href="./index.html";}};
       document.getElementById("nx-retail-wholesale").onclick=showWholesaleCatalog;
       document.getElementById("nx-retail-profile").onclick=openRetailProfile;
-      db.auth.getUser().then(async({data,error})=>{if(error||!data?.user)return;const {data:profile}=await db.from("nexora_store_profiles").select("logo_path").eq("user_id",data.user.id).maybeSingle();if(!profile?.logo_path)return;const url=db.storage.from("market-store-logos").getPublicUrl(profile.logo_path).data.publicUrl;const button=document.getElementById("nx-retail-profile");if(button)button.innerHTML='<img src="'+esc(url)+'" alt="" style="width:28px;height:28px;object-fit:cover;border-radius:50%;vertical-align:middle"> Профайл ›';}).catch(err=>console.warn("Профайлын зураг:",err));
+      db.auth.getUser().then(async({data,error})=>{if(error||!data?.user)return;const {data:profile}=await db.from("nexora_store_profiles").select("logo_path").eq("user_id",data.user.id).maybeSingle();if(!profile?.logo_path)return;const url=db.storage.from("market-store-logos").getPublicUrl(profile.logo_path).data.publicUrl;const logo=document.getElementById("nx-retail-store-logo");if(logo)logo.innerHTML='<img src="'+esc(url)+'" alt="Дэлгүүрийн лого">';}).catch(err=>console.warn("Профайлын зураг:",err));
       document.getElementById("nx-retail-cart").onclick=showCart;
       document.getElementById("nx-retail-search").oninput=e=>{searchText=e.target.value;renderRetailCategories();};
       renderRetailCategories();
@@ -5069,6 +5069,17 @@ html,body{
   height:0!important;min-height:0!important;margin:0!important;padding:0!important;
   border:0!important;overflow:hidden!important;
 }
+</style>
+
+<style id="NEXORA-RETAIL-HEADER-ROUND-LOGO-2026">
+/* Онлайн дэлгүүрийн толгой: том дугуй лого, түүнтэй зохицсон профайл болон pill товчнууд. */
+#market-app .nx-retail-top-toolbar{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:9px!important}
+#market-app .nx-retail-store-logo{display:inline-flex!important;flex:0 0 54px!important;width:54px!important;height:54px!important;min-width:54px!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;border-radius:50%!important;border:2px solid #00cfff!important;background:#050505!important;color:#35dcff!important;box-shadow:0 0 10px rgba(0,207,255,.28)!important;font-size:22px!important;font-weight:800!important}
+#market-app .nx-retail-store-logo img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;border-radius:50%!important}
+#market-app .nx-retail-top-toolbar .nx-retail-pill,#market-app .nx-retail-top-toolbar .nx-retail-profile-pill{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:48px!important;padding:10px 16px!important;border-radius:999px!important;white-space:nowrap!important}
+#market-app .nx-retail-top-toolbar .nx-retail-profile-pill{font-weight:800!important}
+#market-app .nx-retail-top-toolbar .nx-retail-cart-pill{margin-left:auto!important}
+@media(max-width:520px){#market-app .nx-retail-top-toolbar{gap:7px!important}#market-app .nx-retail-store-logo{flex-basis:50px!important;width:50px!important;height:50px!important;min-width:50px!important}#market-app .nx-retail-top-toolbar .nx-retail-pill,#market-app .nx-retail-top-toolbar .nx-retail-profile-pill{min-height:44px!important;padding:8px 11px!important;font-size:12px!important}#market-app .nx-retail-top-toolbar .nx-retail-cart-pill{margin-left:0!important}}
 </style>
 </body>
 </html>
