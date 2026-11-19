@@ -5074,17 +5074,23 @@ html,body{
 
 
 <style id="NEXORA-RETAIL-HEADER-LOGO-IN-PROFILE-2026">
-/* Нэг залгаа гурван товч: лого Профайл дотор, дараагийн товчнууд дугуй хонхортой. */
-#market-app .nx-retail-top-toolbar{display:flex!important;flex-wrap:nowrap!important;align-items:center!important;gap:8px!important;width:100%!important}
-#market-app .nx-retail-action-group{display:flex!important;flex:1 1 auto!important;min-width:0!important;align-items:stretch!important;gap:0!important;overflow:visible!important}
-#market-app .nx-retail-action-group>button{position:relative!important;flex:1 1 0!important;min-width:0!important;min-height:54px!important;margin:0!important;padding:8px 10px!important;border-radius:0!important;white-space:normal!important;line-height:1.15!important}
-#market-app .nx-retail-action-group>button:first-child{flex:1.12 1 0!important;border-radius:28px 0 0 28px!important;padding:4px 9px 4px 5px!important;gap:8px!important;justify-content:flex-start!important}
-#market-app .nx-retail-profile-logo{display:inline-flex!important;flex:0 0 48px!important;width:48px!important;height:48px!important;min-width:48px!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;border-radius:50%!important;border:2px solid #00cfff!important;background:#050505!important;color:#35dcff!important;box-shadow:0 0 9px rgba(0,207,255,.3)!important;font-size:20px!important;font-weight:800!important}
+/* Анхны урт хэвтээ 3 товчны байрлал; лого Профайлд сууж, уулзварууд дугуй хонхортой. */
+#market-app .nx-retail-top-toolbar{display:flex!important;flex-wrap:nowrap!important;align-items:center!important;gap:7px!important;width:100%!important}
+#market-app .nx-retail-action-group{display:flex!important;flex:1 1 auto!important;width:100%!important;min-width:0!important;align-items:stretch!important;gap:0!important;overflow:visible!important}
+#market-app .nx-retail-action-group>button{position:relative!important;display:flex!important;align-items:center!important;justify-content:center!important;flex:1 1 0!important;width:0!important;min-width:0!important;height:62px!important;min-height:62px!important;margin:0!important;padding:8px 7px!important;border-radius:0!important;white-space:nowrap!important;overflow:visible!important;font-size:clamp(10px,2.8vw,13px)!important;line-height:1.15!important}
+#market-app .nx-retail-action-group>button:first-child{flex:1.08 1 0!important;justify-content:flex-start!important;padding:5px 5px 5px 65px!important;border-radius:31px 0 0 31px!important}
+#market-app .nx-retail-profile-logo{position:absolute!important;left:3px!important;top:50%!important;transform:translateY(-50%)!important;display:inline-flex!important;flex:0 0 56px!important;width:56px!important;height:56px!important;min-width:56px!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;border-radius:50%!important;border:2px solid #00cfff!important;background:#050505!important;color:#35dcff!important;box-shadow:0 0 10px rgba(0,207,255,.38)!important;font-size:21px!important;font-weight:800!important;z-index:2!important}
 #market-app .nx-retail-profile-logo img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;border-radius:50%!important}
-#market-app .nx-retail-action-group>.nx-retail-notched{margin-left:-1px!important;padding-left:15px!important;mask-image:radial-gradient(circle 15px at 0 50%,transparent 97%,#000 103%)!important;-webkit-mask-image:radial-gradient(circle 15px at 0 50%,transparent 97%,#000 103%)!important;border-radius:0!important}
-#market-app .nx-retail-action-group>#nx-retail-cart{border-radius:0 28px 28px 0!important}
+#market-app .nx-retail-action-group>.nx-retail-notched{margin-left:-1px!important;padding-left:24px!important;mask-image:radial-gradient(circle 27px at 0 50%,transparent 97%,#000 103%)!important;-webkit-mask-image:radial-gradient(circle 27px at 0 50%,transparent 97%,#000 103%)!important;border-radius:0!important}
+#market-app .nx-retail-action-group>#nx-retail-cart{border-radius:0 31px 31px 0!important}
 #market-app .nx-retail-top-toolbar .nx-retail-cart-pill{margin-left:0!important}
-@media(max-width:520px){#market-app .nx-retail-top-toolbar{gap:6px!important}#market-app .nx-retail-action-group>button{font-size:11px!important;padding-left:7px!important;padding-right:7px!important}#market-app .nx-retail-profile-logo{flex-basis:44px!important;width:44px!important;height:44px!important;min-width:44px!important}#market-app .nx-retail-action-group>button:first-child{gap:5px!important;padding-left:4px!important}#market-app .nx-retail-action-group>.nx-retail-notched{mask-image:radial-gradient(circle 12px at 0 50%,transparent 97%,#000 103%)!important;-webkit-mask-image:radial-gradient(circle 12px at 0 50%,transparent 97%,#000 103%)!important;padding-left:10px!important}}
+@media(max-width:520px){
+#market-app .nx-retail-top-toolbar{gap:5px!important}
+#market-app .nx-retail-action-group>button{height:60px!important;min-height:60px!important;font-size:10px!important;padding-left:5px!important;padding-right:4px!important}
+#market-app .nx-retail-action-group>button:first-child{padding-left:59px!important;padding-right:3px!important}
+#market-app .nx-retail-profile-logo{left:2px!important;width:52px!important;height:52px!important;min-width:52px!important;flex-basis:52px!important}
+#market-app .nx-retail-action-group>.nx-retail-notched{padding-left:19px!important;mask-image:radial-gradient(circle 25px at 0 50%,transparent 97%,#000 103%)!important;-webkit-mask-image:radial-gradient(circle 25px at 0 50%,transparent 97%,#000 103%)!important}
+}
 </style>
 </body>
 </html>
