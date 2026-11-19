@@ -50,7 +50,7 @@
  const money=v=>Number(v||0).toLocaleString("mn-MN")+" ₮";
  const tabs=[
   ["overview","Тойм"],["ads","Үнэгүй зар"],["payments","Зарын төлбөр"],["products","Бараа"],
-  ["retailPayments","Жижиглэнгийн байршуулалт"],["suppliers","Нийлүүлэгч"],["wholesaleProducts","Бөөний бараа"],
+  ["retailPayments","Жижиглэнгийн байршуулалт"],["supplierRegistrationPayments","Нийлүүлэгчийн бүртгэлийн төлбөр"],["suppliers","Нийлүүлэгч"],["wholesaleProducts","Бөөний бараа"],
   ["wholesalePayments","Бөөний байршуулалт"],["pricing","Үнийн тохиргоо"],["theme","Платформын өнгө"]
  ];
  const sections={
@@ -58,7 +58,8 @@
   payments:["Зарын төлбөр","Төлбөрийн баримт болон багцын мэдээлэл"],
   products:["Бараа бүтээгдэхүүн","Нийтлэх зөвшөөрөл хүлээж буй бараа"],
   retailPayments:["Жижиглэнгийн байршуулалтын төлбөр","Дэлгүүрийн лого болон жижиглэнгийн бараа байршуулалтын суурь хураамжийн хүсэлт."],
-  suppliers:["Нийлүүлэгч","Нийлүүлэгчийн бүртгэлийн хүсэлт"],
+  suppliers:["Нийлүүлэгч","Бүртгэлтэй нийлүүлэгчдийн жагсаалт"],
+  supplierRegistrationPayments:["Нийлүүлэгчийн бүртгэлийн төлбөр","Хувь хүн 150,000₮ · Компани 350,000₮. Шилжүүлгийн утга, баримтыг шалгаад зөвшөөрөх эсвэл татгалзах."],
   wholesaleProducts:["Бөөний бараа","Нийлүүлэгчдийн бөөний барааны хүсэлт — онлайн дэлгүүрээс тусдаа."],
   wholesalePayments:["Бөөний байршуулалтын төлбөр","Нийлүүлэгчийн лого болон бөөний бараа байршуулалтын суурь хураамжийн хүсэлтийг шалгаж баталгаажуулна."],
   pricing:["Үнийн тохиргоо","Зарын багц болон лого, бараа байршуулалтын суурь хураамжийг удирдах"],
@@ -98,7 +99,7 @@
  async function cards(rows,type){
   if(!rows||!rows.length)return empty("Одоогоор хүлээгдэж буй хүсэлт алга.");
   const html=await Promise.all(rows.map(async r=>{
-   const title=r.title||r.store_name||r.name||(r.fee_type?(type==="retail_fee_payment"?(r.fee_type==="logo"?"Онлайн дэлгүүрийн логоны төлбөр":"Жижиглэнгийн бараа байршуулалтын төлбөр"):(r.fee_type==="logo"?"Нийлүүлэгчийн логоны төлбөр":"Бөөний бараа байршуулалтын төлбөр")):("Хүсэлт "+String(r.id||"").slice(0,8)));
+   const title=r.title||r.store_name||r.name||r.supplier_name||(r.fee_type?(type==="retail_fee_payment"?(r.fee_type==="logo"?"Онлайн дэлгүүрийн логоны төлбөр":"Жижиглэнгийн бараа байршуулалтын төлбөр"):(r.fee_type==="logo"?"Нийлүүлэгчийн логоны төлбөр":"Бөөний бараа байршуулалтын төлбөр")):("Хүсэлт "+String(r.id||"").slice(0,8)));
    const details=[];
    if(r.owner_type)details.push(["Эзэмшигч",r.owner_type==="company"?"Байгууллага":r.owner_type==="individual"?"Хувь хүн":r.owner_type]);
    if(r.phone)details.push(["Утас",r.phone]);
@@ -150,7 +151,7 @@
    ["Зарын төлбөр","payment_requests","status","pending_review","payments"],
    ["Жижиглэнгийн бараа","market_products","status","pending","products"],
    ["Жижиглэнгийн байршуулалт","market_retail_fee_payments","status","pending","retailPayments"],
-   ["Нийлүүлэгч","market_suppliers","status","pending","suppliers"],
+   ["Нийлүүлэгчийн бүртгэлийн төлбөр","market_supplier_registration_payments","status","pending","supplierRegistrationPayments"],
    ["Бөөний бараа","wholesale_products","status","pending","wholesaleProducts"],
    ["Бөөний байршуулалт","wholesale_supplier_fee_payments","status","pending","wholesalePayments"]
   ];
@@ -226,7 +227,8 @@
     wholesaleProducts:["wholesale_products","id,title,category,price,owner_id,status,stock_quantity,min_order_quantity,wholesale_price_tiers,created_at",[["status","pending"]],"wholesale_product"],
     wholesalePayments:["wholesale_supplier_fee_payments","id,user_id,supplier_id,store_id,fee_type,product_id,amount,bank_name,account_number,account_holder,transfer_reference,receipt_path,status,admin_note,created_at",[["status","pending"]],"wholesale_fee_payment"],
     stores:["nexora_store_payments","id,store_id,user_id,amount,bank_name,transfer_reference,receipt_path,status,created_at",[["status","pending"]],"store_payment"],
-    suppliers:["market_suppliers","id,name,type,owner_type,register_no,phone,email,address,status,created_at",[["status","pending"]],"supplier"],
+    suppliers:["market_suppliers","id,name,type,owner_type,register_no,phone,email,address,status,created_at",[],""],
+    supplierRegistrationPayments:["market_supplier_registration_payments","id,user_id,supplier_id,owner_type,supplier_name,supplier_type,register_no,phone,email,address,amount,bank_name,account_number,account_holder,transfer_reference,receipt_path,status,admin_note,created_at",[["status","pending"]],"supplier_registration_payment"],
    }[activeTab];
    const [table,cols,filters,type]=cfg;
    body.innerHTML='<h2 class="nx-admin-section-title">'+sections[activeTab][0]+'</h2><p class="nx-admin-section-note">'+sections[activeTab][1]+'</p><div class="nx-admin-loading">Жагсаалт ачаалж байна…</div>';
@@ -275,6 +277,7 @@
    else if(type==="retail_fee_payment")result=await db.rpc("nexora_review_market_retail_fee_payment",{p_payment_id:id,p_approve:action==="approve",p_note:action==="approve"?null:"Төлбөрийн баримт баталгаажаагүй"});
    else if(type==="wholesale_product")result=await db.rpc("nexora_review_wholesale_product",{p_product_id:id,p_approve:action==="approve"});
    else if(type==="wholesale_fee_payment")result=await db.rpc("nexora_review_wholesale_fee_payment",{p_payment_id:id,p_approve:action==="approve",p_note:action==="approve"?null:"Төлбөрийн баримт баталгаажаагүй"});
+   else if(type==="supplier_registration_payment")result=await db.rpc("nexora_review_supplier_registration_payment",{p_payment_id:id,p_approve:action==="approve",p_note:action==="approve"?null:"Төлбөрийн баримт баталгаажаагүй"});
    else if(type==="supplier")result=await db.from("market_suppliers").update({status:action==="approve"?"approved":"rejected"}).eq("id",id);
    if(result?.error)throw result.error;
    alert("Хүсэлтийг амжилттай шийдвэрлэлээ.");
