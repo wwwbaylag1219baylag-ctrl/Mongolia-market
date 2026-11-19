@@ -3889,7 +3889,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     window.__nxDeliveryPoint=null;
     document.getElementById("nx-delivery-map").onclick=()=>{
       if(typeof window.NEXORA_OPEN_MAP_SCREEN!=="function"){document.getElementById("nx-delivery-map-label").textContent="Газрын зураг ачаалагдаагүй байна. Дахин оролдоно уу.";return;}
-      window.NEXORA_OPEN_MAP_SCREEN(deliveryPoint?.latitude,deliveryPoint?.longitude,true,point=>{
+      window.NEXORA_OPEN_MAP_SCREEN(window.__nxDeliveryPoint?.latitude,window.__nxDeliveryPoint?.longitude,true,point=>{
         window.__nxDeliveryPoint=point;
         document.getElementById("nx-delivery-map-label").textContent="Байршил сонгогдлоо ✓  "+point.latitude.toFixed(6)+", "+point.longitude.toFixed(6);
         document.getElementById("nx-delivery-map").textContent="📍 Байршлыг өөрчлөх";
