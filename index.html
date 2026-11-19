@@ -3670,6 +3670,23 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     const eligible=tiers.filter(t=>Number(t.min_qty)>0&&Number(t.price)>=0&&quantity>=Number(t.min_qty)).sort((a,b)=>Number(b.min_qty)-Number(a.min_qty));
     return eligible.length?Number(eligible[0].price):Number(product?.price||0);
   }
+  function addProductToCart(product,requestedQty){
+    if(!product?.id)return false;
+    const minQty=Math.max(1,Number(product.min_order_quantity||1));
+    const stock=Number(product.stock_quantity||0);
+    const increment=Math.max(1,Number(requestedQty||minQty));
+    const old=cart.find(x=>String(x.id)===String(product.id));
+    const nextQty=(old?.qty||0)+increment;
+    if(nextQty>stock){showCartToast("Үлдэгдэл хүрэлцэхгүй байна.");return false;}
+    const snapshot={
+      basePrice:Number(product.price||0),
+      wholesale_price_tiers:Array.isArray(product.wholesale_price_tiers)?product.wholesale_price_tiers.map(t=>({min_qty:Number(t.min_qty),price:Number(t.price)})):[],
+      stock,minQty,owner_id:product.owner_id||old?.owner_id||null
+    };
+    if(old){Object.assign(old,snapshot);old.qty=nextQty;old.price=priceForQuantity({price:old.basePrice,wholesale_price_tiers:old.wholesale_price_tiers},nextQty);}
+    else cart.push({id:product.id,title:product.title,qty:increment,price:priceForQuantity(snapshot,increment),...snapshot});
+    return true;
+  }
   function render(){
     const scrollPositions=new Map([...host.querySelectorAll(".nx-market-category-section")].map(section=>[section.querySelector(".nx-market-category-head h2")?.textContent||"",section.querySelector(".nx-market-grid")?.scrollLeft||0]));
     const filtered=products.filter(p=>(p.title+" "+p.category+" "+(p.description||"")).toLowerCase().includes(searchText.toLowerCase()));
@@ -3721,7 +3738,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     document.getElementById("nx-market-refresh").onclick=loadProducts;
     document.getElementById("nx-market-store").onclick=showStore;
     document.getElementById("nx-market-supplier").onclick=showSupplier;
-    host.querySelectorAll("[data-cart-add]").forEach(b=>b.onclick=()=>{const p=products.find(x=>x.id===b.dataset.cartAdd);if(!p)return;const old=cart.find(x=>x.id===p.id),nextQty=(old?.qty||0)+Math.max(1,Number(p.min_order_quantity||1));if(nextQty>Number(p.stock_quantity||0)){showCartToast("Үлдэгдэл хүрэлцэхгүй байна.");return;}if(old){old.qty=nextQty;old.price=priceForQuantity(p,old.qty);}else cart.push({id:p.id,title:p.title,price:priceForQuantity(p,Math.max(1,Number(p.min_order_quantity||1))),qty:Math.max(1,Number(p.min_order_quantity||1)),stock:Number(p.stock_quantity||0),minQty:Number(p.min_order_quantity||1)});render();showCartToast("✓ "+p.title+" сагсанд нэмэгдлээ");});
+    host.querySelectorAll("[data-cart-add]").forEach(b=>b.onclick=()=>{const p=products.find(x=>String(x.id)===String(b.dataset.cartAdd));if(!p)return;if(addProductToCart(p)){render();showCartToast("✓ "+p.title+" сагсанд нэмэгдлээ");}});
   }
 
   async function showMyProducts(){
@@ -3774,7 +3791,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         <button class="nx-market-btn" id="nx-product-detail-cart" style="width:100%;margin-top:14px">Сагсанд нэмэх</button>
       </article>`;
     document.getElementById("nx-product-detail-back").onclick=loadProducts;
-    document.getElementById("nx-product-detail-cart").onclick=()=>{const old=cart.find(x=>x.id===p.id);if(old)old.qty++;else cart.push({id:p.id,title:p.title,price:Number(p.price),qty:1});showProductDetail(p.id);showCartToast("✓ "+p.title+" сагсанд нэмэгдлээ");};
+    document.getElementById("nx-product-detail-cart").onclick=()=>{if(addProductToCart(p,Math.max(1,Number(p.min_order_quantity||1)))){showProductDetail(p.id);showCartToast("✓ "+p.title+" сагсанд нэмэгдлээ");}};
     const photo=document.getElementById("nx-product-detail-image");
     if(photo)photo.onclick=()=>{const overlay=document.createElement("div");overlay.style.cssText="position:fixed;inset:0;z-index:2147483000;background:rgba(0,0,0,.97);display:flex;align-items:center;justify-content:center;padding:14px";overlay.innerHTML='<button type="button" aria-label="Хаах" style="position:absolute;top:14px;right:14px;width:46px;height:46px;border:1px solid #d6ad55;border-radius:50%;background:#171717;color:#d6ad55;font-size:28px">×</button><img src="'+esc(p._displayImageUrl)+'" alt="'+esc(p.title)+'" style="max-width:100%;max-height:100%;object-fit:contain">';overlay.onclick=()=>overlay.remove();overlay.querySelector("img").onclick=e=>e.stopPropagation();document.body.appendChild(overlay);};
   }
@@ -3831,11 +3848,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       document.getElementById("nx-public-store-back").onclick=back;
       host.querySelectorAll("[data-store-cart]").forEach(button=>button.onclick=()=>{
         const p=items.find(x=>String(x.id)===button.dataset.storeCart);if(!p)return;
-        const minQty=Math.max(1,Number(p.min_order_quantity||1)),stock=Number(p.stock_quantity||0);
-        const old=cart.find(x=>String(x.id)===String(p.id)),nextQty=(old?.qty||0)+minQty;
-        if(nextQty>stock){showCartToast("Үлдэгдэл хүрэлцэхгүй байна.");return;}
-        if(old){old.qty=nextQty;old.price=priceForQuantity(p,old.qty);}
-        else cart.push({id:p.id,title:p.title,price:priceForQuantity(p,minQty),qty:minQty,stock,minQty});
+        if(!addProductToCart(p))return;
         showCartToast("✓ "+p.title+" сагсанд нэмэгдлээ");
         button.textContent="✓ Сагсанд нэмэгдлээ";
       });
@@ -4005,8 +4018,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         document.getElementById("nx-delivery-map").textContent="📍 Байршлыг өөрчлөх";
       });
     };
-    host.querySelectorAll("[data-cart-minus]").forEach(b=>b.onclick=()=>{const x=cart.find(x=>x.id===b.dataset.cartMinus);if(x){if(x.qty<=Number(x.minQty||1))cart=cart.filter(y=>y!==x);else{x.qty--;const p=products.find(p=>p.id===x.id);if(p)x.price=priceForQuantity(p,x.qty);}}showCart();});
-    host.querySelectorAll("[data-cart-plus]").forEach(b=>b.onclick=()=>{const x=cart.find(x=>x.id===b.dataset.cartPlus),p=products.find(p=>p.id===b.dataset.cartPlus);if(x&&p){if(x.qty>=Number(p.stock_quantity||0)){showCartToast("Үлдэгдэл хүрэлцэхгүй байна.");return;}x.qty++;x.price=priceForQuantity(p,x.qty);}showCart();});
+    host.querySelectorAll("[data-cart-minus]").forEach(b=>b.onclick=()=>{const x=cart.find(x=>String(x.id)===String(b.dataset.cartMinus));if(x){if(x.qty<=Number(x.minQty||1))cart=cart.filter(y=>y!==x);else{x.qty--;x.price=priceForQuantity({price:x.basePrice??x.price,wholesale_price_tiers:x.wholesale_price_tiers},x.qty);}}showCart();});
+    host.querySelectorAll("[data-cart-plus]").forEach(b=>b.onclick=()=>{const x=cart.find(x=>String(x.id)===String(b.dataset.cartPlus));if(x){if(x.qty>=Number(x.stock??0)){showCartToast("Үлдэгдэл хүрэлцэхгүй байна.");return;}x.qty++;x.price=priceForQuantity({price:x.basePrice??x.price,wholesale_price_tiers:x.wholesale_price_tiers},x.qty);}showCart();});
     host.querySelectorAll("[data-cart-remove]").forEach(b=>b.onclick=()=>{cart=cart.filter(x=>x.id!==b.dataset.cartRemove);showCart();});
     document.getElementById("nx-cart-order").onclick=placeOrder;
   }
