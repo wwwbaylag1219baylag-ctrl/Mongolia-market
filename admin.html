@@ -260,7 +260,12 @@
  }
  async function review(type,id,action){
   if(!confirm(action==="approve"?"Энэ хүсэлтийг зөвшөөрөх үү?":"Энэ хүсэлтээс татгалзах уу?"))return;
-  let result;
+  let result, supplierRejectNote=null;
+  if(type==="supplier_registration_payment"&&action==="reject"){
+   const entered=window.prompt("Нийлүүлэгчийн бүртгэлээс татгалзсан шалтгааныг оруулна уу:","Бүртгэлийн мэдээлэл шаардлага хангаагүй.");
+   if(entered===null)return;
+   supplierRejectNote=entered.trim()||"Админы шийдвэрээр татгалзсан.";
+  }
   try{
    if(type==="ad_payment")result=await db.rpc(action==="approve"?"admin_approve_payment_request":"admin_reject_payment_request",{p_request_id:id});
    else if(type==="free_ad")result=await db.rpc("admin_review_free_ad",{p_ad_id:id,p_approve:action==="approve"});
@@ -277,7 +282,7 @@
    else if(type==="retail_fee_payment")result=await db.rpc("nexora_review_market_retail_fee_payment",{p_payment_id:id,p_approve:action==="approve",p_note:action==="approve"?null:"Төлбөрийн баримт баталгаажаагүй"});
    else if(type==="wholesale_product")result=await db.rpc("nexora_review_wholesale_product",{p_product_id:id,p_approve:action==="approve"});
    else if(type==="wholesale_fee_payment")result=await db.rpc("nexora_review_wholesale_fee_payment",{p_payment_id:id,p_approve:action==="approve",p_note:action==="approve"?null:"Төлбөрийн баримт баталгаажаагүй"});
-   else if(type==="supplier_registration_payment")result=await db.rpc("nexora_review_supplier_registration_payment",{p_payment_id:id,p_approve:action==="approve",p_note:action==="approve"?null:"Төлбөрийн баримт баталгаажаагүй"});
+   else if(type==="supplier_registration_payment")result=await db.rpc("nexora_review_supplier_registration_payment",{p_payment_id:id,p_approve:action==="approve",p_note:action==="approve"?null:supplierRejectNote});
    else if(type==="supplier")result=await db.from("market_suppliers").update({status:action==="approve"?"approved":"rejected"}).eq("id",id);
    if(result?.error)throw result.error;
    alert("Хүсэлтийг амжилттай шийдвэрлэлээ.");
