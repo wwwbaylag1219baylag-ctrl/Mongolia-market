@@ -3857,7 +3857,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         document.getElementById("nx-supplier-payment-back").onclick=showSupplier;
         document.getElementById("nx-supplier-payment-form").onsubmit=async ev=>{
           ev.preventDefault();
-          const payForm=ev.currentTarget,payButton=payForm.querySelector('button[type="submit"]'),msg=document.getElementById("nx-supplier-payment-msg"),reference=String(payForm.elements.transfer_reference.value||"").trim(),file=payForm.elements.receipt.files?.[0],bankId=payForm.querySelector('input[name="supplier_bank"]:checked')?.value,bank=banks.find(x=>x.id===bankId);
+          const payForm=ev.currentTarget,payButton=payForm.querySelector('button[type="submit"]'),msg=document.getElementById("nx-supplier-payment-msg"),reference=String(payForm.elements.transfer_reference.value||"").trim(),file=payForm.elements.receipt.files?.[0],bankId=host.querySelector('input[name="supplier_bank"]:checked')?.value,bank=banks.find(x=>x.id===bankId);
           if(!bank){msg.textContent="Админы данснаас сонгоно уу.";return;}
           if(!reference){msg.textContent="Гүйлгээний утгаа оруулна уу.";return;}
           if(!file||file.size>8*1024*1024||!["image/jpeg","image/png","image/webp","application/pdf"].includes(file.type)){msg.textContent="8MB хүртэлх JPG, PNG, WEBP эсвэл PDF баримт сонгоно уу.";return;}
