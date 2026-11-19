@@ -105,6 +105,7 @@
    if(r.owner_type)details.push(["Эзэмшигч",r.owner_type==="company"?"Байгууллага":r.owner_type==="individual"?"Хувь хүн":r.owner_type]);
    if(r.phone)details.push(["Утас",r.phone]);
    if(r.buyer_name)details.push(["Захиалагч",r.buyer_name]);
+   if(r.buyer_id)details.push(["Худалдан авагчийн ID",String(r.buyer_id).slice(0,8)+"…"]);
    if(r.buyer_phone)details.push(["Захиалагчийн утас",r.buyer_phone]);
    if(r.supplier_id)details.push(["Нийлүүлэгчийн ID",r.supplier_id]);
    if(r.delivery_address)details.push(["Хүргэлтийн хаяг",r.delivery_address]);
@@ -238,6 +239,15 @@
    body.innerHTML='<h2 class="nx-admin-section-title">'+sections[activeTab][0]+'</h2><p class="nx-admin-section-note">'+sections[activeTab][1]+'</p><div class="nx-admin-loading">Жагсаалт ачаалж байна…</div>';
    const {data,error}=await query(table,cols,filters);
    if(error)throw error;
+   if(activeTab==="orderPayments"&&data?.length){
+    const ids=[...new Set(data.map(r=>r.bank_account_id).filter(Boolean))];
+    if(ids.length){
+     const {data:banks,error:bankError}=await db.from("bank_accounts").select("id,bank_name,account_number,account_holder").in("id",ids);
+     if(bankError)throw bankError;
+     const byId=new Map((banks||[]).map(b=>[b.id,b]));
+     data.forEach(r=>{const bank=byId.get(r.bank_account_id);if(bank){r.bank_name=bank.bank_name;r.account_number=bank.account_number;r.account_holder=bank.account_holder;}});
+    }
+   }
    if(activeTab==="stores"&&data?.length){
     const ids=[...new Set(data.map(r=>r.store_id).filter(Boolean))];
     if(ids.length){
