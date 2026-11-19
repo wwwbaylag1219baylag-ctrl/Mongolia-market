@@ -2453,6 +2453,17 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     const gallery = document.getElementById("nx-ad-detail-images");
     if (!gallery) return;
 
+    // Жагсаалтын картанд аль хэдийн ачаалсан үндсэн зургийг дэлгэрэнгүйд шууд харуулна.
+    const cachedCover = adCoverUrls[ad.id];
+    if (cachedCover) {
+      gallery.innerHTML = `
+        <img src="${escapeHTML(cachedCover)}"
+          alt="${escapeHTML(ad.title || "Зарын зураг")}"
+          loading="eager"
+          style="grid-column:1/-1;width:100%;max-height:430px;aspect-ratio:4/3;object-fit:contain;border-radius:15px;background:var(--black,#090909);">
+      `;
+    }
+
     try {
       const imageResult = await db
         .from("ad_images")
@@ -2464,7 +2475,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 
       const imageRows = imageResult.data || [];
       if (!imageRows.length) {
-        gallery.textContent = "Энэ зар зураггүй байна.";
+        if (!cachedCover) gallery.textContent = "Энэ зар зураггүй байна.";
         return;
       }
 
@@ -2494,9 +2505,10 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         `;
       }).join("");
     } catch (error) {
-      if (selectedAd?.id === ad.id && gallery.isConnected) {
-        gallery.textContent = "Зураг ачаалахад алдаа гарлаа.";
+      if (selectedAd?.id === ad.id && gallery.isConnected && !cachedCover) {
+        gallery.innerHTML = '<div class="nx-list-message">Зураг ачаалахад алдаа гарлаа. Дахин оролдоно уу.</div>';
       }
+      console.warn("NEXORA detail gallery load:", error);
     }
   }
 
