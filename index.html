@@ -3547,8 +3547,11 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 </style>
 <script>
 (function(){
-  const db=window.NEXORA_SUPABASE,host=document.getElementById("market-app");
-  if(!db||!host)return;
+  const host=document.getElementById("market-app");
+  const db=window.NEXORA_SUPABASE||(window.supabase?.createClient?window.supabase.createClient("https://grbpbmowhkbtuxostfny.supabase.co","sb_publishable_wspX-C4VBPJMmvWuQgsMTw_h40w8O3x"):null);
+  if(db&&!window.NEXORA_SUPABASE)window.NEXORA_SUPABASE=db;
+  if(!host)return;
+  if(!db){host.innerHTML='<div class="nx-market-error">Худалдааны системтэй холбогдож чадсангүй. Интернэт холболтоо шалгаад хуудсыг дахин ачаална уу.</div>';console.error("NEXORA marketplace: Supabase client unavailable");return;}
   let products=[],cart=[],marketUser=null,searchText="",productViewStates={},productApprovalChannel=null,productApprovalPoll=null,wholesaleNotificationChannel=null,wholesaleNotificationUserId=null;
   function stopProductApprovalWatch(){if(productApprovalChannel){db.removeChannel(productApprovalChannel);productApprovalChannel=null;}if(productApprovalPoll){clearInterval(productApprovalPoll);productApprovalPoll=null;}}
 
