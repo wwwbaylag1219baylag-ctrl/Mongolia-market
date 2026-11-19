@@ -4820,5 +4820,13 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 #market-app .nx-profile-accordion-content .nx-market-btn{width:100%;margin:5px 0}
 @media(max-width:520px){#market-app .nx-profile-accordion-root{padding:12px 10px 30px}#market-app .nx-profile-logo-trigger{min-height:90px;padding:10px 13px;font-size:16px;gap:12px}#market-app .nx-profile-logo-trigger img,#market-app .nx-profile-logo-fallback{width:66px;height:66px;flex-basis:66px}}
 </style>
+<style id="NEXORA-PROFILE-HIDE-OUTER-CHROME">
+/* Профайл нээгдэхэд худалдааны платформын гаднах сум, толгой, хөл хэсгийг нууж дан профайлыг үлдээнэ. */
+#shop:has(#market-app.nx-profile-fullscreen)>.topbar,
+#shop:has(#market-app.nx-profile-fullscreen)>.footer{display:none!important}
+#shop:has(#market-app.nx-profile-fullscreen){position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;min-height:100dvh!important;z-index:99998!important;overflow:hidden!important;background:#090909!important}
+#shop:has(#market-app.nx-profile-fullscreen)>.page-content{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;max-height:100dvh!important;margin:0!important;padding:0!important;overflow:hidden!important}
+#market-app.nx-profile-fullscreen{z-index:99999!important}
+</style>
 </body>
 </html>
