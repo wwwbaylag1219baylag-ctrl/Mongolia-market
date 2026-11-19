@@ -4427,7 +4427,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       // Каталогийн харагдац нэвтрэлтийн хүсэлтээс хамаарахгүй: барааг эхлээд шууд харуулна.
       marketUser=null;
       const count=cart.reduce((n,x)=>n+x.qty,0);
-      host.innerHTML='<div class="nx-market-toolbar nx-retail-top-toolbar"><button class="nx-market-btn secondary nx-market-back-arrow" id="nx-retail-platform-back" type="button" aria-label="Худалдааны платформын үндсэн таб руу буцах" title="Худалдааны платформын үндсэн таб руу буцах">‹</button><div class="nx-retail-action-group"><button class="nx-market-btn secondary nx-retail-profile-pill" id="nx-retail-profile" type="button"><span class="nx-retail-profile-logo" id="nx-retail-store-logo" aria-label="Дэлгүүрийн лого" title="Дэлгүүрийн лого"><span aria-hidden="true">N</span></span><span>Профайл ›</span></button><button class="nx-market-btn secondary nx-retail-pill nx-retail-notched" id="nx-retail-wholesale">Бөөний худалдаа орох →</button><button class="nx-market-btn secondary nx-retail-pill nx-retail-cart-pill nx-retail-notched" id="nx-retail-cart">🛒 Сагс ('+count+')</button></div></div><h2 class="nexora-ad-heading nx-retail-section-heading">ОНЛАЙН ДЭЛГҮҮРИЙН<span>хэсэг</span></h2><input class="nx-market-input" id="nx-retail-search" placeholder="Бараа, ангилал, дэлгүүр хайх…" value="'+esc(searchText)+'"><div id="nx-retail-categories"></div>';
+      host.innerHTML='<div class="nx-market-toolbar nx-retail-top-toolbar"><button class="nx-market-btn secondary nx-market-back-arrow" id="nx-retail-platform-back" type="button" aria-label="Худалдааны платформын үндсэн таб руу буцах" title="Худалдааны платформын үндсэн таб руу буцах">‹</button><div class="nx-retail-action-group"><button class="nx-market-btn secondary nx-retail-profile-pill" id="nx-retail-profile" type="button"><span class="nx-retail-profile-logo" id="nx-retail-store-logo" aria-label="Дэлгүүрийн лого" title="Дэлгүүрийн лого"><span aria-hidden="true">N</span></span><span>Профайл ›</span></button><h2 class="nexora-ad-heading nx-retail-section-heading">ОНЛАЙН ДЭЛГҮҮРИЙН<span>хэсэг</span></h2><button class="nx-market-btn secondary nx-retail-pill nx-retail-notched" id="nx-retail-wholesale">Бөөний худалдаа орох →</button><button class="nx-market-btn secondary nx-retail-pill nx-retail-cart-pill nx-retail-notched" id="nx-retail-cart">🛒 Сагс ('+count+')</button></div></div><input class="nx-market-input" id="nx-retail-search" placeholder="Бараа, ангилал, дэлгүүр хайх…" value="'+esc(searchText)+'"><div id="nx-retail-categories"></div>';
       document.getElementById("nx-retail-platform-back").onclick=()=>{if(window.NEXORA&&typeof window.NEXORA.open==="function"){window.NEXORA.open("home");}else{window.location.href="./index.html";}};
       document.getElementById("nx-retail-wholesale").onclick=showWholesaleCatalog;
       document.getElementById("nx-retail-profile").onclick=openRetailProfile;
@@ -5203,6 +5203,17 @@ html,body{
  border-radius:10px!important;
 }
 #market-app .nx-retail-action-group>#nx-retail-cart{border-radius:10px!important}
+#market-app .nx-retail-action-group>.nx-retail-section-heading{
+ display:flex!important;flex-direction:column!important;align-items:flex-end!important;
+ justify-content:center!important;width:100%!important;box-sizing:border-box!important;
+ margin:0!important;padding:2px 8px 2px 0!important;text-align:right!important;
+ color:#d6ad55!important;font-size:clamp(17px,4.6vw,22px)!important;
+ font-weight:800!important;line-height:1.12!important;letter-spacing:.35px!important;
+}
+#market-app .nx-retail-action-group>.nx-retail-section-heading span{
+ display:block!important;align-self:center!important;width:100%!important;
+ text-align:center!important;font-size:.82em!important;line-height:1.15!important;font-weight:700!important;
+}
 @media(max-width:520px){
  #market-app .nx-retail-action-group{gap:7px!important}
  #market-app .nx-retail-action-group>button{height:46px!important;min-height:46px!important;flex-basis:46px!important;font-size:12px!important}
