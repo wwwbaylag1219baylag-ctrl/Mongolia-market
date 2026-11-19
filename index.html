@@ -4270,33 +4270,30 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 
 
 <style id="NEXORA-SHOP-PREMIUM-2026">
-/* NEXORA худалдааны платформ — premium дэлгүүрийн интерфэйс */
-#shop{background:radial-gradient(ellipse at 50% -12%,rgba(214,173,85,.10),transparent 48%),#090909}
-#shop>.topbar{position:sticky;top:0;z-index:30;background:rgba(9,9,9,.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(214,173,85,.18)}
+/* Худалдааны платформын premium layout — бүх өнгө админы theme хувьсагчаас авна */
+#shop{background:var(--black,#090909)!important;color:var(--white,#f7f5ef)!important}
+#shop>.topbar{position:sticky;top:0;z-index:30;backdrop-filter:blur(16px);border-bottom:1px solid var(--border,rgba(214,173,85,.25))}
 #shop .page-heading{font-weight:850;letter-spacing:.055em}
 #market-app{max-width:1180px;margin:0 auto;padding:20px 16px 42px}
-#market-app .nexora-ad-heading{font-size:clamp(21px,3vw,30px);font-weight:900;letter-spacing:.035em;line-height:1.25;margin:4px 0 9px;color:#f7f5ef}
-#market-app>.nx-market-muted{font-size:13px;line-height:1.65;margin:0 0 16px;color:#aaa39a}
+#market-app .nexora-ad-heading{font-size:clamp(21px,3vw,30px);font-weight:900;letter-spacing:.035em;line-height:1.25;margin:4px 0 9px;color:var(--gold,#d6ad55)}
+#market-app>.nx-market-muted{font-size:13px;line-height:1.65;margin:0 0 16px;color:var(--white,#f7f5ef);opacity:.72}
 #market-app .nx-market-toolbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:17px 0}
-#market-app .nx-market-btn{min-height:48px;border-radius:14px;border:1px solid rgba(214,173,85,.62);background:linear-gradient(135deg,#f0d28a,#c99b42);color:#17130b;font-weight:800;box-shadow:0 5px 16px rgba(214,173,85,.10);transition:transform .18s ease,filter .18s ease,box-shadow .18s ease}
+#market-app .nx-market-btn{min-height:48px;border-radius:14px;font-weight:800;transition:transform .18s ease,filter .18s ease,box-shadow .18s ease}
 #market-app .nx-market-btn:active{transform:scale(.975);filter:brightness(1.08)}
-#market-app .nx-market-btn.secondary{background:linear-gradient(145deg,#1c1b18,#111);color:#e8c875;border-color:rgba(214,173,85,.34);box-shadow:none}
-#market-app .nx-market-input,#market-app .nx-market-select,#market-app .nx-market-textarea{min-height:49px;padding:14px 15px;border-radius:14px;border:1px solid rgba(214,173,85,.26);background:#141414;color:#f7f5ef;box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}
-#market-app .nx-market-input:focus,#market-app .nx-market-select:focus,#market-app .nx-market-textarea:focus{outline:none;border-color:#d6ad55;box-shadow:0 0 0 3px rgba(214,173,85,.12)}
+#market-app .nx-market-input,#market-app .nx-market-select,#market-app .nx-market-textarea{min-height:49px;padding:14px 15px;border-radius:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}
+#market-app .nx-market-input:focus,#market-app .nx-market-select:focus,#market-app .nx-market-textarea:focus{outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--gold,#d6ad55) 16%,transparent)}
 #market-app .nx-market-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-top:14px}
-#shop .nx-market-product-tile{padding:10px!important;border:1px solid rgba(214,173,85,.20)!important;border-radius:18px!important;background:linear-gradient(155deg,#1b1a17,#101010 72%)!important;box-shadow:0 8px 24px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.035)!important}
-#shop .nx-market-product-image,#shop .nx-market-product-no-image{height:clamp(132px,31vw,220px)!important;border-radius:12px!important;background:#090909!important}
-#shop .nx-market-product-tile .nx-market-price{font-size:17px!important;font-weight:900!important;color:#f0cf7b!important;margin:10px 2px 3px!important}
+#shop .nx-market-product-tile{padding:10px!important;border-radius:18px!important;box-shadow:0 8px 24px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.035)!important}
+#shop .nx-market-product-image,#shop .nx-market-product-no-image{height:clamp(132px,31vw,220px)!important;border-radius:12px!important}
+#shop .nx-market-product-tile .nx-market-price{font-size:17px!important;font-weight:900!important;margin:10px 2px 3px!important}
 #shop .nx-market-product-info h3{font-size:15px!important;line-height:1.4!important;font-weight:800!important}
-#shop .nx-market-product-info p{color:#c9c3b8!important}
+#shop .nx-market-product-info p{line-height:1.55!important}
 #shop .nx-market-add-cart{border-radius:12px!important}
-#shop .nx-choice-card{min-height:76px;padding:15px 16px;border-radius:17px;border:1px solid rgba(214,173,85,.24);border-left:4px solid rgba(214,173,85,.72);background:linear-gradient(115deg,#1d1b16,#111 78%);box-shadow:0 7px 20px rgba(0,0,0,.20)}
-#shop .nx-choice-card .nx-choice-index{border-radius:12px;background:rgba(214,173,85,.13);color:#f0cf7b}
+#shop .nx-choice-card{min-height:76px;padding:15px 16px;border-radius:17px;box-shadow:0 7px 20px rgba(0,0,0,.20)}
 #shop .nx-choice-card .nx-choice-name{font-size:15px;line-height:1.4;font-weight:800}
-#shop .nx-choice-card .nx-choice-arrow{color:#e5bd68}
-#shop .nx-choice-card:hover,#shop .nx-choice-card:focus-visible{border-color:rgba(240,210,138,.75);background:linear-gradient(115deg,#302719,#17130d);box-shadow:0 0 0 2px rgba(214,173,85,.10),0 9px 24px rgba(0,0,0,.3)}
-#shop .nx-category-path{border-radius:14px;padding:12px 14px;background:linear-gradient(100deg,rgba(214,173,85,.13),rgba(214,173,85,.025))}
-#shop .nx-market-card,#shop .nx-admin-card{border-radius:17px;border-color:rgba(214,173,85,.22);background:linear-gradient(150deg,#1a1916,#111)}
+#shop .nx-choice-card:hover,#shop .nx-choice-card:focus-visible{box-shadow:0 0 0 2px color-mix(in srgb,var(--gold,#d6ad55) 14%,transparent),0 9px 24px rgba(0,0,0,.3)}
+#shop .nx-category-path{border-radius:14px;padding:12px 14px}
+#shop .nx-market-card,#shop .nx-admin-card{border-radius:17px}
 @media(min-width:700px){#market-app .nx-market-toolbar{grid-template-columns:repeat(3,minmax(0,1fr))}#market-app .nx-market-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}}
 @media(min-width:1050px){#market-app .nx-market-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:390px){#market-app{padding:16px 12px 32px}#market-app .nx-market-grid{gap:9px}#shop .nx-market-product-tile{padding:8px!important;border-radius:15px!important}#shop .nx-market-product-info h3{font-size:14px!important}}
