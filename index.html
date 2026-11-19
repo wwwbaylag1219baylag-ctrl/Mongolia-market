@@ -668,16 +668,22 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 
           back: function () {
 
-            // Худалдааны платформ дотор байгаа үед эхлээд тухайн
-            // дэд дэлгэцийн өөрийн буцах товчийг ажиллуулна.
-            // Ингэснээр Нийлүүлэгчийн маягт -> Бөөний профайл ->
-            // Бөөний каталог гэсэн дараалал алгасахгүй.
+            // Худалдааны платформын дэд дэлгэц бүр шууд эцэг дэлгэцээ
+            // NEXORA_SHOP_BACK callback-д бүртгэнэ. Эхлээд энэ callback-ийг
+            // ажиллуулснаар маягт -> Миний бөөний профайл -> каталог гэсэн
+            // дараалал DOM доторх өөр товчоор дарагдаж алгасахгүй.
             if (currentScreen === "shop") {
+              if (typeof window.NEXORA_SHOP_BACK === "function") {
+                const shopBack = window.NEXORA_SHOP_BACK;
+                window.NEXORA_SHOP_BACK = null;
+                shopBack();
+                return;
+              }
+
+              // Хуучин/бүртгэгдээгүй дэлгэцэд зориулсан хамгаалалтын fallback.
               const marketHost = document.getElementById("market-app");
               if (marketHost) {
-                const innerBack = Array.from(
-                  marketHost.querySelectorAll("button")
-                ).find(function (button) {
+                const innerBack = Array.from(marketHost.querySelectorAll("button")).find(function (button) {
                   if (button.disabled || !button.getClientRects().length) return false;
                   const label = [
                     button.getAttribute("aria-label") || "",
@@ -686,20 +692,10 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
                   ].join(" ").trim();
                   return /буцах/i.test(label) || /^‹$/.test(label);
                 });
-
                 if (innerBack) {
                   innerBack.click();
                   return;
                 }
-              }
-
-              // Дэд дэлгэц өөрийн буцах товчгүй үед л платформын
-              // бүртгэсэн өмнөх дэлгэц рүү буцна.
-              if (typeof window.NEXORA_SHOP_BACK === "function") {
-                const shopBack = window.NEXORA_SHOP_BACK;
-                window.NEXORA_SHOP_BACK = null;
-                shopBack();
-                return;
               }
             }
 
