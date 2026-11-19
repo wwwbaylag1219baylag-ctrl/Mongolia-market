@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script>document.documentElement.classList.add("nx-theme-pending");window.setTimeout(()=>document.documentElement.classList.remove("nx-theme-pending"),4000);</script>
+  <script>document.documentElement.classList.add("nx-theme-pending");</script>
   <meta name="theme-color" content="#090909">
 
   <title>NEXORA | Mongolia Marketplace</title>
@@ -4309,6 +4309,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     let el=document.getElementById("nx-public-theme");
     if(!el){el=document.createElement("style");el.id="nx-public-theme";document.head.appendChild(el);}
     el.textContent=css;
+    const themeMeta=document.querySelector('meta[name="theme-color"]');
+    if(themeMeta)themeMeta.setAttribute("content",t.background);
   }
   db.from("nexora_settings").select("admin_theme_config").eq("id",1).single()
     .then(({data,error})=>{if(!error&&data?.admin_theme_config)apply(data.admin_theme_config);})
