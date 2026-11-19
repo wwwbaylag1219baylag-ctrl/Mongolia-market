@@ -3868,7 +3868,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
             const {error:uploadError}=await db.storage.from("payment-receipts").upload(path,file,{upsert:false,contentType:file.type,cacheControl:"31536000"});if(uploadError)throw uploadError;uploaded=true;
             let supplier;
             if(retrySupplierId){
-              const {data:updatedSupplier,error:supplierError}=await db.from("market_suppliers").update({name:draft.name,owner_type:draft.owner_type,type:draft.type,register_no:draft.register_no,phone:draft.phone,email:draft.email,address:draft.address}).eq("id",retrySupplierId).eq("owner_id",user.id).select("id").single();
+              const {data:updatedSupplier,error:supplierError}=await db.from("market_suppliers").update({name:draft.name,owner_type:draft.owner_type,type:draft.type,register_no:draft.register_no,phone:draft.phone,email:draft.email,address:draft.address,status:"pending"}).eq("id",retrySupplierId).eq("owner_id",user.id).select("id").single();
               if(supplierError)throw supplierError;supplier=updatedSupplier;
             }else{
               const {data:newSupplier,error:supplierError}=await db.from("market_suppliers").insert({owner_id:user.id,name:draft.name,owner_type:draft.owner_type,type:draft.type,register_no:draft.register_no,phone:draft.phone,email:draft.email,address:draft.address,status:"pending"}).select("id").single();
@@ -3877,7 +3877,6 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
             supplierId=supplier.id;
             const {error:paymentError}=await db.from("market_supplier_registration_payments").insert({id:paymentId,user_id:user.id,supplier_id:supplier.id,owner_type:ownerType,supplier_name:draft.name,supplier_type:draft.type,register_no:draft.register_no,phone:draft.phone,email:draft.email,address:draft.address,amount,bank_account_id:bank.id,bank_name:bank.bank_name,account_number:bank.account_number,account_holder:bank.account_holder,transfer_reference:reference,receipt_path:path,status:"pending"});
             if(paymentError)throw paymentError;
-            if(retrySupplierId){const {error:statusError}=await db.from("market_suppliers").update({status:"pending"}).eq("id",retrySupplierId).eq("owner_id",user.id);if(statusError)throw statusError;}
             host.innerHTML='<h2 class="nexora-ad-heading">ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭЛЭЭ</h2><p class="nx-market-price">'+money(amount)+'</p><p class="nx-market-muted">Нийлүүлэгчийн бүртгэлийн төлбөрийн баримт админы хяналтад орлоо. Баталгаажсаны дараа таны нийлүүлэгчийн эрх идэвхжинэ.</p><button class="nx-market-btn" id="nx-supplier-payment-done">Бөөний худалдаа руу буцах</button>';
             document.getElementById("nx-supplier-payment-done").onclick=showWholesaleCatalog;
           }catch(err){
