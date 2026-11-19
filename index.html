@@ -3654,6 +3654,18 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     products=rows.map(p=>{const {_objectPath,_buckets,...clean}=p;return clean;});
     render();
   }
+  let cartToastTimer=null;
+  function showCartToast(message){
+    document.getElementById("nx-market-cart-toast")?.remove();
+    const toast=document.createElement("div");
+    toast.id="nx-market-cart-toast";
+    toast.textContent=message;
+    toast.style.cssText="position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:2147483000;width:max-content;max-width:calc(100vw - 32px);padding:13px 18px;border:1px solid #d6ad55;border-radius:13px;background:#171717;color:#f7f5ef;font-size:14px;font-weight:800;text-align:center;box-shadow:0 8px 28px rgba(0,0,0,.48);pointer-events:none;opacity:0;transition:opacity .18s ease";
+    document.body.appendChild(toast);
+    requestAnimationFrame(()=>{toast.style.opacity="1";});
+    clearTimeout(cartToastTimer);
+    cartToastTimer=setTimeout(()=>{toast.style.opacity="0";setTimeout(()=>toast.remove(),220);},1900);
+  }
   function render(){
     const scrollPositions=new Map([...host.querySelectorAll(".nx-market-category-section")].map(section=>[section.querySelector(".nx-market-category-head h2")?.textContent||"",section.querySelector(".nx-market-grid")?.scrollLeft||0]));
     const filtered=products.filter(p=>(p.title+" "+p.category+" "+(p.description||"")).toLowerCase().includes(searchText.toLowerCase()));
@@ -3699,7 +3711,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     document.getElementById("nx-market-refresh").onclick=loadProducts;
     document.getElementById("nx-market-store").onclick=showStore;
     document.getElementById("nx-market-supplier").onclick=showSupplier;
-    host.querySelectorAll("[data-cart-add]").forEach(b=>b.onclick=()=>{const p=products.find(x=>x.id===b.dataset.cartAdd);if(!p)return;const old=cart.find(x=>x.id===p.id);if(old)old.qty++;else cart.push({id:p.id,title:p.title,price:Number(p.price),qty:1});render();});
+    host.querySelectorAll("[data-cart-add]").forEach(b=>b.onclick=()=>{const p=products.find(x=>x.id===b.dataset.cartAdd);if(!p)return;const old=cart.find(x=>x.id===p.id);if(old)old.qty++;else cart.push({id:p.id,title:p.title,price:Number(p.price),qty:1});render();showCartToast("✓ "+p.title+" сагсанд нэмэгдлээ");});
   }
 
   function showProductDetail(productId){
@@ -3717,7 +3729,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         <button class="nx-market-btn" id="nx-product-detail-cart" style="width:100%;margin-top:14px">Сагсанд нэмэх</button>
       </article>`;
     document.getElementById("nx-product-detail-back").onclick=loadProducts;
-    document.getElementById("nx-product-detail-cart").onclick=()=>{const old=cart.find(x=>x.id===p.id);if(old)old.qty++;else cart.push({id:p.id,title:p.title,price:Number(p.price),qty:1});showProductDetail(p.id);};
+    document.getElementById("nx-product-detail-cart").onclick=()=>{const old=cart.find(x=>x.id===p.id);if(old)old.qty++;else cart.push({id:p.id,title:p.title,price:Number(p.price),qty:1});showProductDetail(p.id);showCartToast("✓ "+p.title+" сагсанд нэмэгдлээ");};
     const photo=document.getElementById("nx-product-detail-image");
     if(photo)photo.onclick=()=>{const overlay=document.createElement("div");overlay.style.cssText="position:fixed;inset:0;z-index:2147483000;background:rgba(0,0,0,.97);display:flex;align-items:center;justify-content:center;padding:14px";overlay.innerHTML='<button type="button" aria-label="Хаах" style="position:absolute;top:14px;right:14px;width:46px;height:46px;border:1px solid #d6ad55;border-radius:50%;background:#171717;color:#d6ad55;font-size:28px">×</button><img src="'+esc(p._displayImageUrl)+'" alt="'+esc(p.title)+'" style="max-width:100%;max-height:100%;object-fit:contain">';overlay.onclick=()=>overlay.remove();overlay.querySelector("img").onclick=e=>e.stopPropagation();document.body.appendChild(overlay);};
   }
