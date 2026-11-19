@@ -5111,3 +5111,64 @@ html,body{
 #market-app .nx-retail-action-group>#nx-retail-cart{border-radius:0 29px 29px 0!important}
 @media(max-width:520px){#market-app .nx-retail-top-toolbar{gap:5px!important}#market-app .nx-retail-action-group>button{height:56px!important;min-height:56px!important;font-size:9px!important;padding-left:4px!important;padding-right:3px!important}#market-app .nx-retail-action-group>button:first-child{flex:0 0 29%!important;width:29%!important;padding-left:55px!important;padding-right:2px!important}#market-app .nx-retail-profile-logo{left:1px!important;width:52px!important;height:52px!important;min-width:52px!important;flex-basis:52px!important}#market-app .nx-retail-action-group>button:nth-child(2),#market-app .nx-retail-action-group>button:nth-child(3){padding-left:19px!important;-webkit-mask-image:radial-gradient(circle 24px at 0 50%,transparent 97%,#000 103%)!important;mask-image:radial-gradient(circle 24px at 0 50%,transparent 97%,#000 103%)!important}}
 </style>
+
+
+<style id="NEXORA-RETAIL-THREE-SEPARATE-SLIM-PILLS-2026">
+/* Гурван товч тус тусдаа урт хэвтээ pill; лого профайлын зүүн талд, дараагийн хоёр товчинд дугуй хонхор гаргана. */
+#market-app .nx-retail-top-toolbar{
+  display:flex!important;flex-wrap:nowrap!important;align-items:center!important;
+  gap:6px!important;width:100%!important;
+}
+#market-app .nx-retail-action-group{
+  display:flex!important;flex:1 1 auto!important;width:100%!important;min-width:0!important;
+  align-items:center!important;gap:6px!important;overflow:visible!important;
+}
+#market-app .nx-retail-action-group>button{
+  box-sizing:border-box!important;position:relative!important;display:flex!important;
+  flex:1 1 0!important;width:0!important;min-width:0!important;
+  height:48px!important;min-height:48px!important;margin:0!important;
+  padding:6px 5px!important;border:1px solid #d6ad55!important;
+  border-radius:25px!important;white-space:nowrap!important;overflow:visible!important;
+  align-items:center!important;justify-content:center!important;
+  font-size:clamp(8px,2.55vw,11px)!important;line-height:1.1!important;
+}
+#market-app .nx-retail-action-group>button:first-child{
+  flex:1 1 0!important;width:0!important;min-width:0!important;
+  justify-content:flex-start!important;padding:5px 3px 5px 57px!important;
+  border-radius:25px!important;
+}
+#market-app .nx-retail-profile-logo{
+  position:absolute!important;left:0!important;top:50%!important;transform:translateY(-50%)!important;
+  display:inline-flex!important;flex:0 0 54px!important;width:54px!important;height:54px!important;
+  min-width:54px!important;align-items:center!important;justify-content:center!important;
+  overflow:hidden!important;border-radius:50%!important;border:2px solid #00cfff!important;
+  background:#050505!important;color:#35dcff!important;
+  box-shadow:0 0 10px rgba(0,207,255,.38)!important;
+  font-size:21px!important;font-weight:800!important;z-index:5!important;
+}
+#market-app .nx-retail-profile-logo img{
+  display:block!important;width:100%!important;height:100%!important;
+  object-fit:cover!important;border-radius:50%!important;
+}
+/* Логоны дугуй хүрээтэй таарах хонхорыг бөөний худалдаа болон сагсны зүүн талд тус тус гаргана. */
+#market-app .nx-retail-action-group>button:nth-child(2),
+#market-app .nx-retail-action-group>button:nth-child(3){
+  padding-left:20px!important;padding-right:5px!important;
+  -webkit-mask-image:radial-gradient(circle 26px at 0 50%,transparent 97%,#000 103%)!important;
+  mask-image:radial-gradient(circle 26px at 0 50%,transparent 97%,#000 103%)!important;
+}
+#market-app .nx-retail-action-group>#nx-retail-cart{border-radius:25px!important}
+@media(max-width:520px){
+  #market-app .nx-retail-top-toolbar{gap:4px!important}
+  #market-app .nx-retail-action-group{gap:4px!important}
+  #market-app .nx-retail-action-group>button{height:46px!important;min-height:46px!important;font-size:8.5px!important;padding-left:3px!important;padding-right:3px!important}
+  #market-app .nx-retail-action-group>button:first-child{padding-left:54px!important}
+  #market-app .nx-retail-profile-logo{width:52px!important;height:52px!important;min-width:52px!important;flex-basis:52px!important}
+  #market-app .nx-retail-action-group>button:nth-child(2),
+  #market-app .nx-retail-action-group>button:nth-child(3){
+    padding-left:17px!important;
+    -webkit-mask-image:radial-gradient(circle 25px at 0 50%,transparent 97%,#000 103%)!important;
+    mask-image:radial-gradient(circle 25px at 0 50%,transparent 97%,#000 103%)!important;
+  }
+}
+</style>
