@@ -3623,6 +3623,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       .subscribe((status,err)=>{if(status==="CHANNEL_ERROR"||status==="TIMED_OUT")console.warn("NEXORA мэдэгдлийн realtime холболт:",status,err||"");});
   }
   async function showWholesaleNotifications(backAction=showWholesaleCatalog){
+    // Дээд системийн буцах товчийг тухайн дэлгэцийн шууд эцэг дэлгэцтэй ижил чиглэлд барина.
+    window.NEXORA_SHOP_BACK = backAction;
     const {data:auth,error:authError}=await db.auth.getUser();
     if(authError||!auth.user){host.innerHTML='<p class="nx-market-muted">Мэдэгдэл харахын тулд нэвтэрнэ үү.</p><button class="nx-market-btn" id="nx-notification-back">Буцах</button>';document.getElementById("nx-notification-back").onclick=backAction;return;}
     startWholesaleNotificationWatch().catch(err=>console.warn("Мэдэгдлийн холболт:",err));
@@ -3664,6 +3666,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   }
 
   async function showWholesaleFeeHistory(backAction=showWholesaleCatalog){
+    // Дээд системийн буцах товчийг тухайн дэлгэцийн шууд эцэг дэлгэцтэй ижил чиглэлд барина.
+    window.NEXORA_SHOP_BACK = backAction;
     startWholesaleNotificationWatch().catch(err=>console.warn("Мэдэгдлийн тохиргоо:",err));
     const {data:auth,error:authError}=await db.auth.getUser();
     if(authError||!auth.user){host.innerHTML='<p class="nx-market-muted">Төлбөрийн түүх харахын тулд нэвтэрнэ үү.</p><button class="nx-market-btn" id="nx-fee-history-back">Буцах</button>';document.getElementById("nx-fee-history-back").onclick=backAction;return;}
@@ -3688,6 +3692,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     }
   }
   async function showWholesaleFeePayment({feeType,amount,supplierId,storeId=null,productId=null,pendingLogoPath=null,backAction=showWholesaleCatalog}){
+    // Дээд системийн буцах товчийг тухайн дэлгэцийн шууд эцэг дэлгэцтэй ижил чиглэлд барина.
+    window.NEXORA_SHOP_BACK = backAction;
     const {data:auth,error:authError}=await db.auth.getUser();
     if(authError||!auth?.user)throw new Error("Төлбөр илгээхийн тулд нэвтэрнэ үү.");
     if(!["logo","product"].includes(feeType))throw new Error("Төлбөрийн төрөл буруу байна.");
@@ -3728,6 +3734,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     };
   }
   async function showRetailFeePayment({feeType,amount,storeId=null,productId=null,pendingLogoPath=null,backAction=loadProducts}){
+    // Дээд системийн буцах товчийг тухайн дэлгэцийн шууд эцэг дэлгэцтэй ижил чиглэлд барина.
+    window.NEXORA_SHOP_BACK = backAction;
     const {data:auth,error:authError}=await db.auth.getUser();
     if(authError||!auth?.user){host.innerHTML='<p class="nx-market-muted">Төлбөр илгээхийн тулд нэвтэрнэ үү.</p><button class="nx-market-btn nx-market-back-arrow" id="nx-retail-fee-back" aria-label="Буцах" title="Буцах">‹</button>';document.getElementById("nx-retail-fee-back").onclick=backAction;return;}
     const {data:banks,error:bankError}=await db.from("bank_accounts").select("id,bank_name,account_number,account_holder").eq("is_active",true).order("display_order",{ascending:true});
@@ -3754,6 +3762,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     };
   }
   async function showRetailFeeHistory(backAction=showStore){
+    // Дээд системийн буцах товчийг тухайн дэлгэцийн шууд эцэг дэлгэцтэй ижил чиглэлд барина.
+    window.NEXORA_SHOP_BACK = backAction;
     const {data:auth,error:authError}=await db.auth.getUser();
     if(authError||!auth?.user){host.innerHTML='<p class="nx-market-muted">Төлбөрийн түүх харахын тулд нэвтэрнэ үү.</p><button class="nx-market-btn nx-market-back-arrow" id="nx-retail-history-back" aria-label="Буцах" title="Буцах">‹</button>';document.getElementById("nx-retail-history-back").onclick=backAction;return;}
     host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-retail-history-back" aria-label="Буцах" title="Буцах">‹</button><h2 class="nexora-ad-heading">ЖИЖИГЛЭНГИЙН ТӨЛБӨРИЙН ТҮҮХ</h2><p class="nx-market-muted">Онлайн дэлгүүрийн лого болон жижиглэнгийн барааны төлбөр.</p><p class="nx-market-muted">Ачаалж байна…</p>';
@@ -3793,6 +3803,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     }
   }
   async function showStore(backAction=loadProducts){
+    // Дээд системийн буцах товчийг тухайн дэлгэцийн шууд эцэг дэлгэцтэй ижил чиглэлд барина.
+    window.NEXORA_SHOP_BACK = backAction;
     const {data,error:authError}=await db.auth.getUser();
     if(authError||!data.user){host.innerHTML='<button class="nx-market-btn secondary" id="nx-store-back">‹ Буцах</button><h2 class="nexora-ad-heading">ДЭЛГҮҮР НЭЭХ</h2><p class="nx-market-muted">Дэлгүүрээ бүртгүүлэхийн тулд эхлээд нэвтэрнэ үү.</p>';document.getElementById("nx-store-back").onclick=backAction;return;}
     marketUser=data.user;
@@ -3844,6 +3856,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   }
   // 2026-11-19: submit registration receipts through the authenticated, validated RPC.
   async function showSupplier(backAction=showWholesaleCatalog){
+    // Дээд системийн буцах товчийг тухайн дэлгэцийн шууд эцэг дэлгэцтэй ижил чиглэлд барина.
+    window.NEXORA_SHOP_BACK = backAction;
     const {data,error:authError}=await db.auth.getUser();
     if(authError||!data?.user){host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-supplier-back" aria-label="Буцах" title="Буцах">‹</button><p>Нийлүүлэгчийн бүртгэлд нэвтрэх шаардлагатай.</p>';document.getElementById("nx-supplier-back").onclick=backAction;return;}
     const user=data.user;
@@ -3914,6 +3928,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     };
   }
   async function showPublish(backAction=showWholesaleCatalog){
+    // Дээд системийн буцах товчийг тухайн дэлгэцийн шууд эцэг дэлгэцтэй ижил чиглэлд барина.
+    window.NEXORA_SHOP_BACK = backAction;
     const {data:authData,error:authError}=await db.auth.getUser();marketUser=authData?.user;
     if(authError||!marketUser){host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-market-back" aria-label="Буцах" title="Буцах">‹</button><h2>Нэвтэрч орно уу</h2><p class="nx-market-muted">Бөөний бараа нийтлэхийн тулд нэвтэрнэ.</p>';document.getElementById("nx-market-back").onclick=backAction;return;}
     const supplierRes=await db.from("market_suppliers").select("id,status,name").eq("owner_id",marketUser.id).maybeSingle();
@@ -4220,6 +4236,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     }catch(err){host.innerHTML='<button class="nx-market-btn secondary" id="nx-my-orders-back">Буцах</button><p class="nx-market-muted">Захиалгын түүх ачаалсангүй: '+esc(err.message||err)+'</p>';document.getElementById("nx-my-orders-back").onclick=showWholesaleCatalog;}
   }
   async function showWholesaleOrderDetail(orderId,backAction=showMyWholesaleOrders){
+    // Дээд системийн буцах товчийг тухайн дэлгэцийн шууд эцэг дэлгэцтэй ижил чиглэлд барина.
+    window.NEXORA_SHOP_BACK = backAction;
     const {data:auth,error:authError}=await db.auth.getUser();
     if(authError||!auth?.user){host.innerHTML='<p class="nx-market-muted">Нэвтэрнэ үү.</p>';return;}
     host.innerHTML='<button class="nx-market-btn secondary" id="nx-order-detail-back">‹ Буцах</button><h2 class="nexora-ad-heading">ЗАХИАЛГЫН ДЭЛГЭРЭНГҮЙ</h2><p class="nx-market-muted">Ачаалж байна…</p>';
