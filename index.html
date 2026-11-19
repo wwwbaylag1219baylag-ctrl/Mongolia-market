@@ -3875,7 +3875,11 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
               if(supplierError)throw supplierError;supplier=newSupplier;createdSupplier=true;
             }
             supplierId=supplier.id;
-            const {error:paymentError}=await db.from("market_supplier_registration_payments").insert({id:paymentId,user_id:user.id,supplier_id:supplier.id,owner_type:ownerType,supplier_name:draft.name,supplier_type:draft.type,register_no:draft.register_no,phone:draft.phone,email:draft.email,address:draft.address,amount,bank_account_id:bank.id,bank_name:bank.bank_name,account_number:bank.account_number,account_holder:bank.account_holder,transfer_reference:reference,receipt_path:path,status:"pending"});
+            const {error:paymentError}=await db.rpc("nexora_submit_supplier_registration_payment",{
+              p_supplier_id:supplier.id,p_owner_type:ownerType,p_supplier_name:draft.name,p_supplier_type:draft.type,
+              p_register_no:draft.register_no,p_phone:draft.phone,p_email:draft.email,p_address:draft.address,
+              p_amount:amount,p_bank_account_id:bank.id,p_transfer_reference:reference,p_receipt_path:path
+            });
             if(paymentError)throw paymentError;
             host.innerHTML='<h2 class="nexora-ad-heading">ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭЛЭЭ</h2><p class="nx-market-price">'+money(amount)+'</p><p class="nx-market-muted">Нийлүүлэгчийн бүртгэлийн төлбөрийн баримт админы хяналтад орлоо. Баталгаажсаны дараа таны нийлүүлэгчийн эрх идэвхжинэ.</p><button class="nx-market-btn" id="nx-supplier-payment-done">Бөөний худалдаа руу буцах</button>';
             document.getElementById("nx-supplier-payment-done").onclick=showWholesaleCatalog;
