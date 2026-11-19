@@ -4147,14 +4147,17 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     draw();
   }
   async function loadProducts(){
+    let stage="барааны жагсаалт";
+    const wait=(promise,label,ms=12000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(label+" хүсэлт 12 секундэд хариу өгсөнгүй. Холболт эсвэл өгөгдлийн сангийн эрхийг шалгана уу.")),ms))]);
     host.innerHTML='<h2 class="nexora-ad-heading">ОНЛАЙН ДЭЛГҮҮР</h2><p class="nx-market-muted">Жижиглэнгийн бараануудыг ачаалж байна…</p>';
     try{
-      const {data:rows,error}=await db.from("market_products").select("id,owner_id,title,category,price,description,phone,location,image_path,stock_quantity,min_order_quantity,created_at").eq("status","active").order("created_at",{ascending:false}).limit(200);
-      if(error)throw error;
+      const result=await wait(db.from("market_products").select("id,owner_id,title,category,price,description,phone,location,image_path,stock_quantity,min_order_quantity,created_at").eq("status","active").order("created_at",{ascending:false}).limit(200), "Жижиглэнгийн бараа");
+      const {data:rows,error}=result;if(error)throw error;
       const owners=[...new Set((rows||[]).map(x=>x.owner_id).filter(Boolean))];
+      stage="дэлгүүр болон зургийн мэдээлэл";
       const [profileRes,imageRes]=await Promise.all([
-        owners.length?db.from("nexora_store_profiles").select("user_id,store_name,logo_path").in("user_id",owners):Promise.resolve({data:[],error:null}),
-        rows?.length?db.from("market_product_images").select("product_id,image_path,display_order").in("product_id",rows.map(x=>x.id)).order("display_order",{ascending:true}):Promise.resolve({data:[],error:null})
+        owners.length?wait(db.from("nexora_store_profiles").select("user_id,store_name,logo_path").in("user_id",owners),"Дэлгүүрийн профайл"):Promise.resolve({data:[],error:null}),
+        rows?.length?wait(db.from("market_product_images").select("product_id,image_path,display_order").in("product_id",rows.map(x=>x.id)).order("display_order",{ascending:true}),"Барааны зураг"):Promise.resolve({data:[],error:null})
       ]);
       if(profileRes.error)throw profileRes.error;if(imageRes.error)throw imageRes.error;
       const profileMap=new Map((profileRes.data||[]).map(x=>[String(x.user_id),x]));
@@ -4162,11 +4165,18 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       (imageRes.data||[]).forEach(x=>{if(!imageMap.has(String(x.product_id)))imageMap.set(String(x.product_id),[]);imageMap.get(String(x.product_id)).push(x.image_path);});
       (rows||[]).forEach(p=>{if(!imageMap.has(String(p.id))&&p.image_path)imageMap.set(String(p.id),[p.image_path]);});
       const allPaths=[...imageMap.entries()].flatMap(([id,paths])=>paths.map(path=>({id,path})));
-      const signed=allPaths.length?await db.storage.from("market-product-images").createSignedUrls(allPaths.map(x=>x.path),3600):{data:[],error:null};
-      if(signed.error)throw signed.error;
-      const urlMap=new Map();(signed.data||[]).forEach((x,i)=>{if(x?.signedUrl&&!x.error)urlMap.set(allPaths[i].id+"|"+allPaths[i].path,x.signedUrl);});
+      const urlMap=new Map();
+      if(allPaths.length){
+        stage="барааны зураг";
+        try{
+          const signed=await wait(db.storage.from("market-product-images").createSignedUrls(allPaths.map(x=>x.path),3600),"Зургийн холбоос",8000);
+          (signed.data||[]).forEach((x,i)=>{if(x?.signedUrl&&!x.error)urlMap.set(allPaths[i].id+"|"+allPaths[i].path,x.signedUrl);});
+          if(signed.error)console.warn("NEXORA зураг түр ачаалсангүй:",signed.error);
+        }catch(imageError){console.warn("NEXORA зураг түр ачаалсангүй:",imageError);}
+      }
       products=(rows||[]).map(p=>{const profile=profileMap.get(String(p.owner_id))||{},paths=imageMap.get(String(p.id))||[];return {...p,_storeName:profile.store_name||"Онлайн дэлгүүр",_storeLogo:profile.logo_path||"",_images:paths.map(path=>({path,url:urlMap.get(p.id+"|"+path)||""})).filter(x=>x.url)};});
-      const userRes=await db.auth.getUser();marketUser=userRes.data?.user||null;
+      stage="нэвтрэлтийн мэдээлэл";
+      const userRes=await wait(db.auth.getUser(),"Хэрэглэгчийн мэдээлэл");marketUser=userRes.data?.user||null;
       const count=cart.reduce((n,x)=>n+x.qty,0);
       host.innerHTML='<div class="nx-market-toolbar" style="display:flex;flex-wrap:wrap;gap:8px"><button class="nx-market-btn secondary" id="nx-retail-wholesale">Бөөний худалдаа</button><button class="nx-market-btn secondary" id="nx-retail-store">Дэлгүүрийн профайл</button><button class="nx-market-btn secondary" id="nx-retail-my-products">Миний бараа</button><button class="nx-market-btn secondary" id="nx-retail-orders">Надад ирсэн захиалга</button><button class="nx-market-btn" id="nx-retail-publish">+ Бараа нийтлэх</button><button class="nx-market-btn secondary" id="nx-retail-cart">🛒 Сагс ('+count+')</button></div><h2 class="nexora-ad-heading">ОНЛАЙН ДЭЛГҮҮР</h2><input class="nx-market-input" id="nx-retail-search" placeholder="Бараа, ангилал, дэлгүүр хайх…" value="'+esc(searchText)+'"><div id="nx-retail-categories"></div>';
       document.getElementById("nx-retail-wholesale").onclick=showWholesaleCatalog;
@@ -4178,7 +4188,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       document.getElementById("nx-retail-search").oninput=e=>{searchText=e.target.value;renderRetailCategories();};
       renderRetailCategories();
       if(!products.length)document.getElementById("nx-retail-categories").innerHTML='<div class="nx-admin-empty">Одоогоор баталгаажсан жижиглэнгийн бараа алга байна.</div>';
-    }catch(err){host.innerHTML='<h2 class="nexora-ad-heading">ОНЛАЙН ДЭЛГҮҮР</h2><p class="nx-market-muted">Бараа ачаалахад алдаа: '+esc(err.message||err)+'</p><button class="nx-market-btn" id="nx-retail-retry">Дахин ачаалах</button>';document.getElementById("nx-retail-retry").onclick=loadProducts;}
+    }catch(err){console.error("NEXORA жижиглэнгийн каталогийн алдаа ("+stage+"):",err);host.innerHTML='<h2 class="nexora-ad-heading">ОНЛАЙН ДЭЛГҮҮР</h2><p class="nx-market-muted">Бараа ачаалахад алдаа ('+esc(stage)+'): '+esc(err.message||err)+'</p><button class="nx-market-btn" id="nx-retail-retry">Дахин ачаалах</button>';document.getElementById("nx-retail-retry").onclick=loadProducts;}
   }
   function renderRetailCategories(){
     const target=document.getElementById("nx-retail-categories");if(!target)return;
