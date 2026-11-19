@@ -3874,8 +3874,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         document.getElementById("nx-delivery-map").textContent="📍 Байршлыг өөрчлөх";
       });
     };
-    host.querySelectorAll("[data-cart-minus]").forEach(b=>b.onclick=()=>{const x=cart.find(x=>x.id===b.dataset.cartMinus);if(x){x.qty--;if(x.qty<=0)cart=cart.filter(y=>y!==x);}showCart();});
-    host.querySelectorAll("[data-cart-plus]").forEach(b=>b.onclick=()=>{const x=cart.find(x=>x.id===b.dataset.cartPlus);if(x)x.qty++;showCart();});
+    host.querySelectorAll("[data-cart-minus]").forEach(b=>b.onclick=()=>{const x=cart.find(x=>x.id===b.dataset.cartMinus);if(x){if(x.qty<=Number(x.minQty||1))cart=cart.filter(y=>y!==x);else{x.qty--;const p=products.find(p=>p.id===x.id);if(p)x.price=priceForQuantity(p,x.qty);}}showCart();});
+    host.querySelectorAll("[data-cart-plus]").forEach(b=>b.onclick=()=>{const x=cart.find(x=>x.id===b.dataset.cartPlus),p=products.find(p=>p.id===b.dataset.cartPlus);if(x&&p){if(x.qty>=Number(p.stock_quantity||0)){showCartToast("Үлдэгдэл хүрэлцэхгүй байна.");return;}x.qty++;x.price=priceForQuantity(p,x.qty);}showCart();});
     host.querySelectorAll("[data-cart-remove]").forEach(b=>b.onclick=()=>{cart=cart.filter(x=>x.id!==b.dataset.cartRemove);showCart();});
     document.getElementById("nx-cart-order").onclick=placeOrder;
   }
@@ -3904,10 +3904,10 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     if(!window.__nxDeliveryPoint){document.getElementById("nx-market-msg").textContent="Газрын зураг дээр хүргүүлэх байршлаа pin тавьж сонгоно уу.";return;}
     const deliveryPoint=window.__nxDeliveryPoint;
     const productIds=cart.map(x=>x.id);
-    const {data:productRows,error:productError}=await db.from("market_products").select("id,owner_id").in("id",productIds).eq("status","active");
+    const {data:productRows,error:productError}=await db.from("market_products").select("id,owner_id,stock_quantity,min_order_quantity").in("id",productIds).eq("status","active");
     if(productError){document.getElementById("nx-market-msg").textContent="Барааны эзнийг шалгахад алдаа: "+productError.message;return;}
     const productById=new Map((productRows||[]).map(p=>[String(p.id),p]));
-    if(cart.some(x=>!productById.get(String(x.id))?.owner_id)){document.getElementById("nx-market-msg").textContent="Сагсанд байгаа барааны мэдээлэл өөрчлөгдсөн байна. Сагсаа шинэчлээд дахин оролдоно уу.";return;}
+    if(cart.some(x=>!productById.get(String(x.id))?.owner_id)){document.getElementById("nx-market-msg").textContent="Сагсанд байгаа барааны мэдээлэл өөрчлөгдсөн байна. Сагсаа шинэчлээд дахин оролдоно уу.";return;}\n    const unavailable=cart.find(x=>x.qty>Number(productById.get(String(x.id)).stock_quantity||0)||x.qty<Number(productById.get(String(x.id)).min_order_quantity||1));if(unavailable){document.getElementById("nx-market-msg").textContent=unavailable.title+" барааны үлдэгдэл эсвэл доод захиалгын хэмжээ өөрчлөгдсөн байна. Сагсаа шинэчилнэ үү.";return;}
     const ownerIds=[...new Set(cart.map(x=>productById.get(String(x.id)).owner_id))];
     const {data:bankRows,error:bankError}=await db.from("store_bank_accounts").select("user_id,store_name,bank_name,account_number,account_holder,phone").in("user_id",ownerIds);
     if(bankError){document.getElementById("nx-market-msg").textContent="Дэлгүүрийн дансны мэдээлэл татахад алдаа: "+bankError.message;return;}
