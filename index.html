@@ -3964,6 +3964,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   }
 
   async function showWholesaleFeePayment({feeType,amount,supplierId,storeId=null,productId=null,pendingLogoPath=null,backAction=showWholesaleCatalog}){
+    startWholesaleNotificationWatch().catch(err=>console.warn("Мэдэгдлийн тохиргоо:",err));
     const {data:bankRows,error}=await db.from("bank_accounts").select("id,bank_name,account_number,account_holder").eq("is_active",true).order("display_order",{ascending:true});
     if(error){host.innerHTML='<p class="nx-market-muted">Төлбөрийн данс ачаалахад алдаа: '+esc(error.message)+'</p>';return;}
     if(!bankRows?.length){host.innerHTML='<p class="nx-market-muted">Платформын төлбөр хүлээн авах данс одоогоор тохируулагдаагүй байна. Админтай холбогдоно уу.</p><button class="nx-market-btn" id="nx-fee-back">Буцах</button>';document.getElementById("nx-fee-back").onclick=backAction;return;}
@@ -3985,6 +3986,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     };
   }
   async function showWholesaleFeeHistory(backAction=showWholesaleCatalog){
+    startWholesaleNotificationWatch().catch(err=>console.warn("Мэдэгдлийн тохиргоо:",err));
     const {data:auth,error:authError}=await db.auth.getUser();
     if(authError||!auth.user){host.innerHTML='<p class="nx-market-muted">Төлбөрийн түүх харахын тулд нэвтэрнэ үү.</p><button class="nx-market-btn" id="nx-fee-history-back">Буцах</button>';document.getElementById("nx-fee-history-back").onclick=backAction;return;}
     host.innerHTML='<button class="nx-market-btn secondary" id="nx-fee-history-back">‹ Буцах</button><h2 class="nexora-ad-heading">НИЙЛҮҮЛЭГЧИЙН ТӨЛБӨРИЙН ТҮҮХ</h2><p class="nx-market-muted">Лого болон бөөний бараа байршуулалтын төлбөрийн хүсэлт, админы шийдвэр энд харагдана.</p><p class="nx-market-muted">Ачаалж байна…</p>';
@@ -4011,6 +4013,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     const {data,error:authError}=await db.auth.getUser();
     if(authError||!data.user){host.innerHTML='<button class="nx-market-btn secondary" id="nx-store-back">‹ Буцах</button><h2 class="nexora-ad-heading">ДЭЛГҮҮР НЭЭХ</h2><p class="nx-market-muted">Дэлгүүрээ бүртгүүлэхийн тулд эхлээд нэвтэрнэ үү.</p>';document.getElementById("nx-store-back").onclick=loadProducts;return;}
     marketUser=data.user;
+    startWholesaleNotificationWatch().catch(err=>console.warn("Мэдэгдлийн тохиргоо:",err));
     const [profileRes,bankRes,feeRes]=await Promise.all([
       db.from("nexora_store_profiles").select("id,user_id,store_name,owner_type,phone,logo_path,description,address").eq("user_id",marketUser.id).maybeSingle(),
       db.from("store_bank_accounts").select("id,bank_name,account_number,account_holder,phone,store_name").eq("user_id",marketUser.id).maybeSingle(),
@@ -4030,9 +4033,9 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       '<label>Хаяг / байршил</label><input class="nx-market-input" name="address" maxlength="250" value="'+esc(store?.address||"")+'">'+
       '<label>Утас</label><input class="nx-market-input" name="phone" type="tel" value="'+esc(store?.phone||"")+'">'+
       '<button class="nx-market-btn" type="submit">'+(store?"Дэлгүүрийн мэдээлэл хадгалах":"Дэлгүүр нээх")+'</button></form><p id="nx-store-msg" class="nx-market-muted"></p>'+
-      '<div class="nx-market-toolbar" style="margin-top:14px"><button type="button" class="nx-market-btn secondary" id="nx-store-fee-history">Төлбөрийн түүх харах</button></div><section class="nx-admin-card" style="margin-top:16px"><h3>ЗАХИАЛГЫН ТӨЛБӨР ХҮЛЭЭН АВАХ ДАНС</h3><p class="nx-market-muted">Худалдан авагч таны барааг захиалахад энэ дансны мэдээлэл харагдана.</p><form id="nx-store-bank-form"><label>Банкны нэр *</label><input class="nx-market-input" name="bank_name" required value="'+esc(bank?.bank_name||"")+'"><label>Дансны дугаар *</label><input class="nx-market-input" name="account_number" required value="'+esc(bank?.account_number||"")+'"><label>Данс эзэмшигчийн нэр *</label><input class="nx-market-input" name="account_holder" required value="'+esc(bank?.account_holder||"")+'"><label>Утас *</label><input class="nx-market-input" name="bank_phone" type="tel" required value="'+esc(bank?.phone||"")+'"><button class="nx-market-btn" type="submit">Данс хадгалах</button></form><p id="nx-store-bank-msg" class="nx-market-muted"></p></section>';
+      '<div class="nx-market-toolbar" style="margin-top:14px"><button type="button" class="nx-market-btn secondary" id="nx-store-fee-history">Төлбөрийн түүх харах</button><button type="button" class="nx-market-btn secondary" id="nx-store-notifications">🔔 Мэдэгдэл</button></div><section class="nx-admin-card" style="margin-top:16px"><h3>ЗАХИАЛГЫН ТӨЛБӨР ХҮЛЭЭН АВАХ ДАНС</h3><p class="nx-market-muted">Худалдан авагч таны барааг захиалахад энэ дансны мэдээлэл харагдана.</p><form id="nx-store-bank-form"><label>Банкны нэр *</label><input class="nx-market-input" name="bank_name" required value="'+esc(bank?.bank_name||"")+'"><label>Дансны дугаар *</label><input class="nx-market-input" name="account_number" required value="'+esc(bank?.account_number||"")+'"><label>Данс эзэмшигчийн нэр *</label><input class="nx-market-input" name="account_holder" required value="'+esc(bank?.account_holder||"")+'"><label>Утас *</label><input class="nx-market-input" name="bank_phone" type="tel" required value="'+esc(bank?.phone||"")+'"><button class="nx-market-btn" type="submit">Данс хадгалах</button></form><p id="nx-store-bank-msg" class="nx-market-muted"></p></section>';
     document.getElementById("nx-store-back").onclick=loadProducts;
-    document.getElementById("nx-store-fee-history").onclick=()=>showWholesaleFeeHistory(showStore);
+    document.getElementById("nx-store-fee-history").onclick=()=>showWholesaleFeeHistory(showStore);document.getElementById("nx-store-notifications").onclick=()=>showWholesaleNotifications(showStore);if(wholesaleNotificationUserId)refreshWholesaleNotificationBadge(wholesaleNotificationUserId);
     document.getElementById("nx-store-form").onsubmit=async e=>{
       e.preventDefault();const form=e.currentTarget,btn=form.querySelector('button[type="submit"]'),msg=document.getElementById("nx-store-msg");btn.disabled=true;
       try{
