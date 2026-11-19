@@ -3869,7 +3869,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       <label>Тайлбар</label><textarea class="nx-market-textarea" name="description" rows="4"></textarea>
       <label>Холбоо барих утас</label><input class="nx-market-input" name="phone" type="tel">
       <label>Байршил</label><input class="nx-market-input" name="location">
-      <button class="nx-market-btn" type="submit">Хяналтад илгээх</button></form><p id="nx-market-msg" class="nx-market-muted"></p>`;
+      <button class="nx-market-btn" type="submit">Нийтлэх</button></form><p id="nx-market-msg" class="nx-market-muted"></p>`;
     document.getElementById("nx-market-back").onclick=loadProducts;
     const imageInput=document.querySelector('#nx-market-form [name="product_image"]');
     imageInput.addEventListener("change",()=>{
@@ -3890,7 +3890,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       if(checkError||!stillActive)throw new Error(checkError?"Дэлгүүрийн эрхийг шалгаж чадсангүй: "+checkError.message:"Дэлгүүрийн эрх идэвхгүй болсон байна.");
       const {data:product,error}=await db.from("market_products").insert({owner_id:marketUser.id,title:v.title.trim(),category:v.category.trim(),price:Number(v.price),description:v.description.trim(),phone:v.phone.trim(),location:v.location.trim(),image_path:uploadedPaths[0],image_url:null,status:"active"}).select("id").single();if(error)throw error;
       const {error:imageError}=await db.from("market_product_images").insert(uploadedPaths.map((path,index)=>({product_id:product.id,owner_id:marketUser.id,image_path:path,display_order:index})));if(imageError)throw imageError;
-      host.innerHTML='<h2 class="nexora-ad-heading">БАРАА НИЙТЛЭГДЛЭЭ</h2><p class="nx-market-muted">Таны барааны '+uploadedPaths.length+' зураг цомог болж хадгалагдлаа.</p><button class="nx-market-btn" id="nx-market-back">Бараа үзэх</button>';document.getElementById("nx-market-back").onclick=loadProducts;
+      await loadProducts();
       }catch(uploadError){if(uploadedPaths.length)await db.storage.from("market-product-images").remove(uploadedPaths);msg.textContent="Алдаа: "+uploadError.message;btn.disabled=false;}
     };
   }
