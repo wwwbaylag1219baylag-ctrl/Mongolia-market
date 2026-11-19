@@ -3859,7 +3859,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       host.querySelectorAll("[data-retail-order-complete]").forEach(btn=>btn.onclick=async()=>{btn.disabled=true;const {error}=await db.rpc("nexora_complete_market_seller_order",{p_order_id:btn.dataset.retailOrderComplete});if(error){showCartToast("Захиалга дуусгахад алдаа: "+error.message);btn.disabled=false;return;}await showRetailSellerOrders();});
     }catch(err){host.innerHTML='<button class="nx-market-btn secondary" id="nx-retail-orders-back">Буцах</button><p class="nx-market-muted">Захиалгууд ачаалахад алдаа: '+esc(err.message||err)+'</p>';document.getElementById("nx-retail-orders-back").onclick=loadProducts;}
   }
-  async function showMyRetailProducts()async function showMyRetailProducts(){
+  async function showMyRetailProducts(){
     const {data:auth,error:authError}=await db.auth.getUser();
     if(authError||!auth?.user){host.innerHTML='<p class="nx-market-muted">Өөрийн барааг удирдахын тулд нэвтэрнэ үү.</p><button class="nx-market-btn" id="nx-my-retail-back">Буцах</button>';document.getElementById("nx-my-retail-back").onclick=loadProducts;return;}
     const user=auth.user;host.innerHTML='<button class="nx-market-btn secondary" id="nx-my-retail-back">‹ Онлайн дэлгүүр</button><h2 class="nexora-ad-heading">МИНИЙ ЖИЖИГЛЭНГИЙН БАРАА</h2><p class="nx-market-muted">Таны нийтэлсэн болон хяналтад байгаа бараанууд.</p><p class="nx-market-muted">Ачаалж байна…</p>';
@@ -4556,7 +4556,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
    ordersHost.querySelectorAll("[data-cancel-order]").forEach(b=>b.onclick=async()=>{if(!confirm("Төлбөр хүлээж буй захиалгыг цуцлах уу?"))return;b.disabled=true;const {error}=await db.rpc("nexora_cancel_market_unpaid_order",{p_order_id:b.dataset.cancelOrder});if(error){alert("Цуцлахад алдаа: "+error.message);b.disabled=false;return;}await loadOrders();});
   }catch(e){ordersHost.innerHTML='<p style="color:#ff9999">'+esc(e.message)+'</p>';}
  }
-  document.addEventListener("click",e=>document.addEventListener("click",e=>{if(e.target.closest("#nexora-my-ads-open"))loadAds();if(e.target.closest("#nexora-my-orders-open"))loadOrders();});
+  document.addEventListener("click",e=>{if(e.target.closest("#nexora-my-ads-open"))loadAds();if(e.target.closest("#nexora-my-orders-open"))loadOrders();});
 })();
 </script>
 
