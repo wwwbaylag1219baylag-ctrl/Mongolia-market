@@ -3549,7 +3549,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 (function(){
   const db=window.NEXORA_SUPABASE,host=document.getElementById("market-app");
   if(!db||!host)return;
-  let products=[],cart=[],marketUser=null,searchText="",productViewStates={};
+  let products=[],cart=[],marketUser=null,searchText="",productViewStates={},productApprovalChannel=null,productApprovalPoll=null;
+  function stopProductApprovalWatch(){if(productApprovalChannel){db.removeChannel(productApprovalChannel);productApprovalChannel=null;}if(productApprovalPoll){clearInterval(productApprovalPoll);productApprovalPoll=null;}}
   const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const money=v=>Number(v||0).toLocaleString("mn-MN")+" ₮";
   const productTileStyle=document.createElement("style");
@@ -3606,6 +3607,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   }
 
   async function loadProducts(){
+    stopProductApprovalWatch();
     host.innerHTML='<p class="nx-market-muted">Бараануудыг ачаалж байна…</p>';
     const {data,error}=await db.from("market_products").select("id,title,category,price,description,phone,location,image_path,image_url,status,created_at,owner_id,stock_quantity,min_order_quantity,wholesale_price_tiers").eq("status","active").order("created_at",{ascending:false}).limit(100);
     if(error){host.innerHTML='<p>Бараа ачаалж чадсангүй: '+esc(error.message)+'</p>';return;}
@@ -3850,7 +3852,32 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         for(let i=0;i<files.length;i++){const uploadFile=await compressMarketProductImage(files[i]),ext=uploadFile.type==="image/webp"?"webp":uploadFile.type==="image/png"?"png":"jpg",path=marketUser.id+"/market-products/"+Date.now()+"_"+i+"."+ext;msg.textContent=(i+1)+"/"+files.length+" зураг байршуулж байна…";const {error:uploadError}=await db.storage.from("market-product-images").upload(path,uploadFile,{cacheControl:"31536000",upsert:false,contentType:uploadFile.type});if(uploadError)throw uploadError;uploadedPaths.push(path);}
         const {data:product,error}=await db.from("market_products").insert({owner_id:marketUser.id,title:v.title.trim(),category:v.category.trim(),price:Number(v.price),stock_quantity:stock,min_order_quantity:minQty,wholesale_price_tiers:tiers,description:v.description.trim(),phone:v.phone.trim(),location:v.location.trim(),image_path:uploadedPaths[0],image_url:null,status:"pending"}).select("id").single();if(error)throw error;
         const {error:imageError}=await db.from("market_product_images").insert(uploadedPaths.map((path,index)=>({product_id:product.id,owner_id:marketUser.id,image_path:path,display_order:index})));if(imageError)throw imageError;
-        host.innerHTML='<h2 class="nexora-ad-heading">БАРАА ХЯНАЛТАД ИЛГЭЭГДЛЭЭ</h2><p class="nx-market-muted">Админ баталгаажуулсны дараа бараа худалдааны платформд харагдана.</p><button class="nx-market-btn" id="nx-market-back">Бараа үзэх</button>';document.getElementById("nx-market-back").onclick=loadProducts;
+        host.innerHTML='<h2 class="nexora-ad-heading">БАРАА ХЯНАЛТАД ИЛГЭЭГДЛЭЭ</h2><p class="nx-market-muted" id="nx-product-review-status">Админ баталгаажуулмагц та автоматаар Барааны жагсаалт руу шилжинэ. Энэ дэлгэцийг нээлттэй байлгана уу.</p><button class="nx-market-btn" id="nx-market-back">Одоо бараа үзэх</button>';
+        document.getElementById("nx-market-back").onclick=loadProducts;
+        const finishProductReview=async status=>{
+          if(status!=="active"&&status!=="rejected")return;
+          stopProductApprovalWatch();
+          const statusNode=document.getElementById("nx-product-review-status");
+          if(!statusNode)return;
+          if(status==="active"){
+            statusNode.textContent="✓ Бараа баталгаажлаа. Барааны жагсаалт нээгдэж байна…";
+            await loadProducts();
+          }else{
+            statusNode.textContent="Бараа нийтлэх хүсэлт буцаагдлаа. Админы тайлбарыг шалгана уу.";
+          }
+        };
+        productApprovalChannel=db.channel("nexora-product-review-"+product.id)
+          .on("postgres_changes",{event:"UPDATE",schema:"public",table:"market_products",filter:"id=eq."+product.id},payload=>{
+            finishProductReview(payload.new?.status);
+          })
+          .subscribe(status=>{
+            if(status==="CHANNEL_ERROR"||status==="TIMED_OUT"){
+              if(!productApprovalPoll)productApprovalPoll=setInterval(async()=>{
+                const {data,error}=await db.from("market_products").select("status").eq("id",product.id).maybeSingle();
+                if(!error&&data)finishProductReview(data.status);
+              },5000);
+            }
+          });
       }catch(err){if(uploadedPaths.length)await db.storage.from("market-product-images").remove(uploadedPaths);msg.textContent="Алдаа: "+err.message;btn.disabled=false;}
     };
   }
