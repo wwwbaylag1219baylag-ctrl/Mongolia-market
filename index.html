@@ -3768,7 +3768,6 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       document.getElementById("nx-retail-hub-fees").onclick=()=>showRetailFeeHistory(openRetailProfile);
     }catch(err){
       host.innerHTML='<p class="nx-market-muted">Профайл нээхэд алдаа гарлаа: '+esc(err.message||err)+'</p>';
-      document.getElementById("nx-retail-hub-back").onclick=loadProducts;
     }
   }
   async function showStore(backAction=loadProducts){
