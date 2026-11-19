@@ -3965,9 +3965,11 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         if(store){const {data,error}=await db.from("nexora_store_profiles").update(payload).eq("id",store.id).eq("user_id",marketUser.id).select("id").single();if(error)throw error;saved=data;}
         else{const {data,error}=await db.from("nexora_store_profiles").insert(payload).select("id").single();if(error)throw error;saved=data;}
         if(file&&file.size){
+          let supplier=null;
+          if(logoFee>0){const {data:supplierRow,error:supplierError}=await db.from("market_suppliers").select("id,status").eq("owner_id",marketUser.id).maybeSingle();if(supplierError)throw supplierError;if(!supplierRow||supplierRow.status!=="approved")throw new Error("Лого төлбөр илгээхийн тулд нийлүүлэгчийн эрх баталгаажсан байх шаардлагатай.");supplier=supplierRow;}
           const ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg",path=marketUser.id+"/"+Date.now()+"."+ext;
           const {error:uploadError}=await db.storage.from("market-store-logos").upload(path,file,{upsert:false,contentType:file.type,cacheControl:"31536000"});if(uploadError)throw uploadError;
-          if(logoFee>0){const {data:supplier,error:supplierError}=await db.from("market_suppliers").select("id,status").eq("owner_id",marketUser.id).maybeSingle();if(supplierError)throw supplierError;if(!supplier||supplier.status!=="approved")throw new Error("Лого төлбөр илгээхийн тулд нийлүүлэгчийн эрх баталгаажсан байх шаардлагатай.");await showWholesaleFeePayment({feeType:"logo",amount:logoFee,supplierId:supplier.id,storeId:saved.id,pendingLogoPath:path,backAction:showStore});return;}else{const {error:updateError}=await db.from("nexora_store_profiles").update({logo_path:path}).eq("id",saved.id).eq("user_id",marketUser.id);if(updateError)throw updateError;}
+          if(logoFee>0){await showWholesaleFeePayment({feeType:"logo",amount:logoFee,supplierId:supplier.id,storeId:saved.id,pendingLogoPath:path,backAction:showStore});return;}else{const {error:updateError}=await db.from("nexora_store_profiles").update({logo_path:path}).eq("id",saved.id).eq("user_id",marketUser.id);if(updateError)throw updateError;}
         }
         msg.textContent="✓ Дэлгүүрийн мэдээлэл хадгалагдлаа.";await showStore();
       }catch(err){msg.textContent="Алдаа: "+err.message;btn.disabled=false;}
