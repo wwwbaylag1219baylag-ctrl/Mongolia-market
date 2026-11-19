@@ -3697,6 +3697,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         <button class="nx-market-btn" id="nx-market-publish">+ Бараа нийтлэх</button>
         <button class="nx-market-btn secondary" id="nx-market-cart">🛒 Сагс (${cart.reduce((n,x)=>n+x.qty,0)})</button>
         <button class="nx-market-btn secondary" id="nx-market-my-products">Миний бараа</button>
+        <button class="nx-market-btn secondary" id="nx-market-supplier-orders">Надад ирсэн захиалга</button>
         <button class="nx-market-btn secondary" id="nx-market-store">Дэлгүүр нээх</button>
         <button class="nx-market-btn secondary" id="nx-market-supplier">Нийлүүлэгч болох</button>
         <button class="nx-market-btn secondary" id="nx-market-refresh">Шинэчлэх</button>
@@ -3735,6 +3736,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     document.getElementById("nx-market-publish").onclick=showPublish;
     document.getElementById("nx-market-cart").onclick=showCart;
     document.getElementById("nx-market-my-products").onclick=showMyProducts;
+    document.getElementById("nx-market-supplier-orders").onclick=showSupplierOrders;
     document.getElementById("nx-market-refresh").onclick=loadProducts;
     document.getElementById("nx-market-store").onclick=showStore;
     document.getElementById("nx-market-supplier").onclick=showSupplier;
@@ -3794,6 +3796,52 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     document.getElementById("nx-product-detail-cart").onclick=()=>{if(addProductToCart(p,Math.max(1,Number(p.min_order_quantity||1)))){showProductDetail(p.id);showCartToast("✓ "+p.title+" сагсанд нэмэгдлээ");}};
     const photo=document.getElementById("nx-product-detail-image");
     if(photo)photo.onclick=()=>{const overlay=document.createElement("div");overlay.style.cssText="position:fixed;inset:0;z-index:2147483000;background:rgba(0,0,0,.97);display:flex;align-items:center;justify-content:center;padding:14px";overlay.innerHTML='<button type="button" aria-label="Хаах" style="position:absolute;top:14px;right:14px;width:46px;height:46px;border:1px solid #d6ad55;border-radius:50%;background:#171717;color:#d6ad55;font-size:28px">×</button><img src="'+esc(p._displayImageUrl)+'" alt="'+esc(p.title)+'" style="max-width:100%;max-height:100%;object-fit:contain">';overlay.onclick=()=>overlay.remove();overlay.querySelector("img").onclick=e=>e.stopPropagation();document.body.appendChild(overlay);};
+  }
+
+  async function showSupplierOrders(){
+    const {data:authData,error:authError}=await db.auth.getUser();
+    if(authError||!authData?.user){
+      host.innerHTML='<button class="nx-market-btn secondary" id="nx-supplier-orders-back">‹ Буцах</button><h2 class="nexora-ad-heading">НАДАД ИРСЭН ЗАХИАЛГА</h2><p class="nx-market-muted">Нийлүүлэгчийн захиалгаа харахын тулд нэвтэрнэ үү.</p>';
+      document.getElementById("nx-supplier-orders-back").onclick=loadProducts;
+      return;
+    }
+    host.innerHTML='<button class="nx-market-btn secondary" id="nx-supplier-orders-back">‹ Буцах</button><p class="nx-market-muted">Танд ирсэн захиалгуудыг ачаалж байна…</p>';
+    try{
+      const {data:orders,error}=await db.rpc("nexora_supplier_order_feed");
+      if(error)throw error;
+      const rows=orders||[];
+      host.innerHTML='<button class="nx-market-btn secondary" id="nx-supplier-orders-back">‹ Бараа, дэлгүүр рүү буцах</button>'+
+        '<h2 class="nexora-ad-heading">НАДАД ИРСЭН ЗАХИАЛГА</h2>'+
+        '<p class="nx-market-muted">Таны дэлгүүрийн бараанд ирсэн захиалгууд · '+rows.length+' захиалга</p>'+
+        (rows.length?'<div class="nx-admin-list">'+rows.map(o=>{
+          const items=Array.isArray(o.seller_items)?o.seller_items:[];
+          const status=({pending_payment:"Төлбөр хүлээгдэж байна",paid:"Төлбөр төлөгдсөн",processing:"Бэлтгэж байна",shipped:"Хүргэлтэд гарсан",completed:"Дууссан",cancelled:"Цуцлагдсан"})[o.order_status]||o.order_status||"—";
+          const payment=({unpaid:"Төлөгдөөгүй",paid:"Төлөгдсөн",refunded:"Буцаагдсан"})[o.payment_status]||o.payment_status||"—";
+          const map=o.delivery_latitude!=null&&o.delivery_longitude!=null?String(o.delivery_latitude)+","+String(o.delivery_longitude):"";
+          return '<article class="nx-admin-card" style="margin:12px 0">'+
+            '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap"><h3 style="margin:0">Захиалга #'+esc(String(o.order_id).slice(0,8))+'</h3><span class="nx-admin-status">'+esc(status)+'</span></div>'+
+            '<p class="nx-market-price">'+money(o.seller_total)+'</p>'+
+            '<div class="nx-admin-meta">'+
+            '<div><strong>Төлбөр:</strong> '+esc(payment)+'</div>'+
+            '<div><strong>Хүлээн авагч:</strong> '+esc(o.recipient_name||"—")+'</div>'+
+            (o.delivery_phone?'<div><strong>Холбоо барих:</strong> <a href="tel:'+esc(o.delivery_phone)+'" style="color:var(--gold)">'+esc(o.delivery_phone)+'</a></div>':'')+
+            (o.delivery_address?'<div><strong>Хүргүүлэх хаяг:</strong> '+esc(o.delivery_address)+'</div>':'')+
+            (o.delivery_note?'<div><strong>Нэмэлт тайлбар:</strong> '+esc(o.delivery_note)+'</div>':'')+
+            '<div><strong>Огноо:</strong> '+esc(o.created_at?new Date(o.created_at).toLocaleString("mn-MN"):"—")+'</div>'+
+            '</div><h4 style="margin:12px 0 7px">Таны захиалсан бараа</h4>'+
+            '<div class="nx-admin-meta">'+items.map(item=>'<div style="display:flex;justify-content:space-between;gap:10px"><span>'+esc(item.title)+' × '+Number(item.quantity||0)+'</span><strong>'+money(Number(item.unit_price||0)*Number(item.quantity||0))+'</strong></div>').join("")+'</div>'+
+            (map?'<button type="button" class="nx-market-btn secondary" data-supplier-order-map="'+esc(map)+'">📍 Хүргэлтийн байршил харах</button>':'')+
+            '</article>';
+        }).join("")+'</div>':'<div class="nx-admin-empty">Одоогоор таны дэлгүүрийн бараанд захиалга ирээгүй байна. Шинэ захиалга ирэхэд энэ хэсэгт харагдана.</div>');
+      document.getElementById("nx-supplier-orders-back").onclick=loadProducts;
+      host.querySelectorAll("[data-supplier-order-map]").forEach(button=>button.onclick=()=>{
+        const point=button.dataset.supplierOrderMap.split(",").map(Number);
+        if(point.length===2&&point.every(Number.isFinite)&&typeof window.NEXORA_OPEN_MAP_SCREEN==="function")window.NEXORA_OPEN_MAP_SCREEN(point[0],point[1],false);
+      });
+    }catch(err){
+      host.innerHTML='<button class="nx-market-btn secondary" id="nx-supplier-orders-back">‹ Буцах</button><p class="nx-market-muted">Захиалга ачаалахад алдаа гарлаа: '+esc(err.message||err)+'</p>';
+      document.getElementById("nx-supplier-orders-back").onclick=loadProducts;
+    }
   }
 
   async function showPublicStore(ownerId){
