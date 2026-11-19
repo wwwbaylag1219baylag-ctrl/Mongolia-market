@@ -3557,7 +3557,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     if(error)throw error;return count||0;
   }
   async function refreshWholesaleNotificationBadge(userId){
-    const button=document.getElementById("nx-wholesale-notifications");if(!button)return;
+    const button=document.getElementById("nx-wholesale-notifications")||document.getElementById("nx-store-notifications")||document.getElementById("nx-fee-notification-open");if(!button)return;
     try{const count=await wholesaleUnreadCount(userId);button.textContent="🔔 Мэдэгдэл"+(count?" ("+count+")":"");}
     catch(err){console.warn("Мэдэгдлийн тоо ачаалсангүй:",err);}
   }
@@ -3981,7 +3981,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         const bank=bankRows.find(x=>x.id===v.bank_account_id);if(!bank)throw new Error("Төлбөрийн дансаа сонгоно уу.");
         const payload={user_id:marketUser.id,supplier_id:supplierId,store_id:storeId,fee_type:feeType,product_id:productId,pending_logo_path:pendingLogoPath,amount:Number(amount),bank_account_id:bank.id,bank_name:bank.bank_name,account_number:bank.account_number,account_holder:bank.account_holder,transfer_reference:v.transfer_reference.trim(),receipt_path:path,status:"pending"};
         const {error:insertError}=await db.from("wholesale_supplier_fee_payments").insert(payload);if(insertError)throw insertError;
-        host.innerHTML='<h2 class="nexora-ad-heading">ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭГДЛЭЭ</h2><p class="nx-market-muted">Админ төлбөрийг шалгаж байна. Баталгаажсаны дараа '+(feeType==="logo"?"лого профайлд харагдана.":"бараа агуулгын хяналт давхар зөвшөөрөгдсөн тохиолдолд идэвхжинэ.")+'</p><div class="nx-market-toolbar"><button class="nx-market-btn" id="nx-fee-done">Буцах</button><button class="nx-market-btn secondary" id="nx-fee-history-open">Төлбөрийн түүх харах</button></div>';document.getElementById("nx-fee-done").onclick=backAction;document.getElementById("nx-fee-history-open").onclick=()=>showWholesaleFeeHistory(backAction);
+        host.innerHTML='<h2 class="nexora-ad-heading">ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭГДЛЭЭ</h2><p class="nx-market-muted">Админ төлбөрийг шалгаж байна. Баталгаажсаны дараа '+(feeType==="logo"?"лого профайлд харагдана.":"бараа агуулгын хяналт давхар зөвшөөрөгдсөн тохиолдолд идэвхжинэ.")+'</p><div class="nx-market-toolbar"><button class="nx-market-btn" id="nx-fee-done">Буцах</button><button class="nx-market-btn secondary" id="nx-fee-history-open">Төлбөрийн түүх харах</button><button class="nx-market-btn secondary" id="nx-fee-notification-open">🔔 Мэдэгдэл</button></div>';document.getElementById("nx-fee-done").onclick=backAction;document.getElementById("nx-fee-history-open").onclick=()=>showWholesaleFeeHistory(backAction);document.getElementById("nx-fee-notification-open").onclick=()=>showWholesaleNotifications(backAction);if(wholesaleNotificationUserId)refreshWholesaleNotificationBadge(wholesaleNotificationUserId);
       }catch(err){if(path)await db.storage.from("payment-receipts").remove([path]);msg.textContent="Алдаа: "+(err.message||err);btn.disabled=false;}
     };
   }
