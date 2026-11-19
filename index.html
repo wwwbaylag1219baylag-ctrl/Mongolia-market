@@ -4071,7 +4071,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         wholesaleProfileButton.setAttribute("aria-label","Нийлүүлэгчийн профайл нээх");
       }
       if(wholesaleNotificationUserId)refreshWholesaleNotificationBadge(wholesaleNotificationUserId);
-      if(!rows.length){host.innerHTML+='<div class="nx-admin-empty">Одоогоор идэвхтэй бөөний бараа алга.</div>';return;}
+      if(!rows.length){host.insertAdjacentHTML("beforeend",'<div class="nx-admin-empty">Одоогоор идэвхтэй бөөний бараа алга.</div>');return;}
       for(const [category,items] of grouped){
         const section=document.createElement("section");section.className="nx-market-category-section";section.innerHTML='<div class="nx-market-category-head"><h2>'+esc(category)+'</h2></div><div class="nx-market-grid" style="display:flex;overflow-x:auto;gap:12px;padding:8px 2px 16px;scroll-snap-type:x mandatory"></div>';
         const grid=section.querySelector(".nx-market-grid");
