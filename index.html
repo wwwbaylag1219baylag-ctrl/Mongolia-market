@@ -3582,7 +3582,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   const db=window.NEXORA_SUPABASE||(window.supabase?.createClient?window.supabase.createClient("https://grbpbmowhkbtuxostfny.supabase.co","sb_publishable_wspX-C4VBPJMmvWuQgsMTw_h40w8O3x"):null);
   if(db&&!window.NEXORA_SUPABASE)window.NEXORA_SUPABASE=db;
   if(!host)return;
-  // Онлайн дэлгүүрийн профайлын сумыг document capture түвшинд барьж, бусад давхаргын event-ээс үл хамааран каталогт буцаана.
+  // Онлайн дэлгүүрийн профайлын ганц сум нь каталог руу биш, худалдааны платформын үндсэн таб руу буцна.
   document.addEventListener("click",event=>{
     const target=event.target instanceof Element?event.target:event.target?.parentElement;
     const retailBack=target?.closest("#nx-retail-profile-back");
@@ -3590,7 +3590,13 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
-    loadProducts();
+    host.classList.remove("nx-profile-fullscreen");
+    document.getElementById("shop")?.classList.remove("nx-shop-profile-fullscreen");
+    window.NEXORA_SHOP_BACK=null;
+    window.NEXORA_SHOP_PROFILE=null;
+    window.NEXORA_SHOP_HOME=null;
+    if(typeof window.NEXORA?.goHome==="function")window.NEXORA.goHome();
+    else if(typeof window.NEXORA?.open==="function")window.NEXORA.open("home");
   },true);
   // Бүх дэд дэлгэцэд нэг стандарт буцах сум: тухайн дэлгэцийн шууд эцэг callback-ийг ашиглана.
   const ensureShopBackArrow=()=>{
