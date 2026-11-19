@@ -3572,6 +3572,12 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     #shop .nx-market-product-info p{margin:9px 0;color:#ddd;font-size:13px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
     #shop .nx-market-add-cart{width:100%;margin-top:7px}
     #shop .nx-market-product-no-image{height:145px;display:grid;place-items:center;color:#aaa39a;font-size:12px}
+    /* Зураг жижиг/том болсон бүх төлөвт картын хүүхдүүд нэг баганад үлдэнэ. */
+    #shop .nx-market-product-tile{display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-auto-flow:row!important;align-items:stretch!important;justify-items:stretch!important;width:100%;min-width:0}
+    #shop .nx-market-product-tile>*{grid-column:1/-1!important;min-width:0;max-width:100%;box-sizing:border-box}
+    #shop .nx-market-product-tile>.nx-market-product-image{display:block!important;width:100%!important;justify-self:stretch!important}
+    #shop .nx-market-product-tile>button.nx-market-add-cart{display:block!important;position:static!important;inset:auto!important;float:none!important;clear:both!important;grid-column:1/-1!important;width:100%!important;min-width:0!important;max-width:100%!important;justify-self:stretch!important;align-self:stretch!important;margin:8px 0 0!important}
+    #shop .nx-market-product-tile.is-compact>.nx-market-price{grid-column:1/-1!important}
   `;
   document.head.appendChild(productTileStyle);
 
