@@ -50,7 +50,7 @@
  const money=v=>Number(v||0).toLocaleString("mn-MN")+" ₮";
  const tabs=[
   ["overview","Тойм"],["ads","Үнэгүй зар"],["payments","Зарын төлбөр"],["products","Бараа"],["retailPayments","Жижиглэнгийн төлбөр"],
-  ["suppliers","Нийлүүлэгч"],["orders","Жижиглэнгийн захиалга"],["orderPayments","Захиалгын төлбөр"],["wholesaleProducts","Бөөний бараа"],["wholesaleOrders","Бөөний захиалга"],["wholesalePayments","Нийлүүлэгчийн төлбөр"],["pricing","Үнийн тохиргоо"],["theme","Платформын өнгө"]
+  ["suppliers","Нийлүүлэгч"],["orders","Жижиглэнгийн захиалга"],["wholesaleProducts","Бөөний бараа"],["wholesaleOrders","Бөөний захиалга"],["wholesalePayments","Нийлүүлэгчийн төлбөр"],["pricing","Үнийн тохиргоо"],["theme","Платформын өнгө"]
  ];
  const sections={
   ads:["Үнэгүй зарын хүсэлт","Шинээр ирсэн, хяналт хүлээж буй зарууд"],
@@ -59,7 +59,6 @@
   retailPayments:["Жижиглэнгийн төлбөр","Онлайн дэлгүүрийн лого болон жижиглэнгийн бараа байршуулалтын төлбөрийн хүсэлт."],
   suppliers:["Нийлүүлэгч","Нийлүүлэгчийн бүртгэлийн хүсэлт"],
   orders:["Жижиглэнгийн захиалгууд","Онлайн дэлгүүрийн жижиглэнгийн захиалга"],
-  orderPayments:["Захиалгын төлбөр","Худалдан авагчдын шилжүүлгийн баримтыг шалгаж, төлбөр баталгаажуулах."],
   wholesaleProducts:["Бөөний бараа","Нийлүүлэгчдийн бөөний барааны хүсэлт — онлайн дэлгүүрээс тусдаа."],
   wholesaleOrders:["Бөөний захиалга","Зөвхөн бөөний худалдааны захиалгууд."],
   wholesalePayments:["Нийлүүлэгчийн төлбөр","Лого болон бөөний бараа байршуулалтын төлбөрийн баримтыг шалгаж баталгаажуулна."],
@@ -234,32 +233,11 @@
     stores:["nexora_store_payments","id,store_id,user_id,amount,bank_name,transfer_reference,receipt_path,status,created_at",[["status","pending"]],"store_payment"],
     suppliers:["market_suppliers","id,name,type,owner_type,register_no,phone,email,address,status,created_at",[["status","pending"]],"supplier"],
     orders:["market_orders","id,buyer_id,items,total_amount,status,payment_status,created_at",[],""],
-    orderPayments:["market_order_payment_requests","id,order_id,buyer_id,bank_account_id,amount,transfer_reference,receipt_path,status,admin_note,created_at",[["status","pending_review"]],"order_payment"]
    }[activeTab];
    const [table,cols,filters,type]=cfg;
    body.innerHTML='<h2 class="nx-admin-section-title">'+sections[activeTab][0]+'</h2><p class="nx-admin-section-note">'+sections[activeTab][1]+'</p><div class="nx-admin-loading">Жагсаалт ачаалж байна…</div>';
    const {data,error}=await query(table,cols,filters);
    if(error)throw error;
-   if(activeTab==="orderPayments"&&data?.length){
-    const bankIds=[...new Set(data.map(r=>r.bank_account_id).filter(Boolean))];
-    if(bankIds.length){
-     const {data:banks,error:bankError}=await db.from("bank_accounts").select("id,bank_name,account_number,account_holder").in("id",bankIds);
-     if(bankError)throw bankError;
-     const byId=new Map((banks||[]).map(b=>[b.id,b]));
-     data.forEach(r=>{const bank=byId.get(r.bank_account_id);if(bank){r.bank_name=bank.bank_name;r.account_number=bank.account_number;r.account_holder=bank.account_holder;}});
-    }
-    const orderIds=[...new Set(data.map(r=>r.order_id).filter(Boolean))];
-    if(orderIds.length){
-     const {data:orders,error:orderError}=await db.from("market_orders").select("id,recipient_name,delivery_phone,delivery_address,items").in("id",orderIds);
-     if(orderError)throw orderError;
-     const byOrder=new Map((orders||[]).map(o=>[o.id,o]));
-     const sellerIds=[...new Set((orders||[]).flatMap(o=>(o.items||[]).map(x=>x.seller_id).filter(Boolean)))];
-     const {data:sellerAccounts,error:sellerError}=sellerIds.length?await db.from("store_bank_accounts").select("user_id,store_name,bank_name,account_number,account_holder,phone").in("user_id",sellerIds):{data:[],error:null};
-     if(sellerError)throw sellerError;
-     const bySeller=new Map((sellerAccounts||[]).map(x=>[String(x.user_id),x]));
-     data.forEach(r=>{const o=byOrder.get(r.order_id);if(o){r.buyer_name=o.recipient_name;r.buyer_phone=o.delivery_phone;r.delivery_address=o.delivery_address;r.seller_accounts=[...new Set((o.items||[]).map(x=>String(x.seller_id)))].map(id=>bySeller.get(id)).filter(Boolean);}});
-    }
-   }
    if(activeTab==="stores"&&data?.length){
     const ids=[...new Set(data.map(r=>r.store_id).filter(Boolean))];
     if(ids.length){
@@ -304,7 +282,6 @@
     if(payment.status!=="pending")throw new Error("Энэ төлбөр өмнө нь шийдвэрлэгдсэн байна. Төлөв: "+payment.status);
     result=action==="approve"?await db.rpc("nexora_approve_store_payment",{p_payment_id:payment.id}):await db.rpc("nexora_reject_store_payment",{p_payment_id:payment.id,p_note:"Админы шийдвэрээр татгалзсан"});
    }
-   else if(type==="order_payment")result=await db.rpc("nexora_review_market_order_payment",{p_payment_id:id,p_approve:action==="approve",p_note:action==="approve"?null:"Админы шийдвэрээр татгалзсан"});
    else if(type==="product")result=await db.rpc("nexora_review_market_retail_product",{p_product_id:id,p_approve:action==="approve"});
    else if(type==="retail_fee_payment")result=await db.rpc("nexora_review_market_retail_fee_payment",{p_payment_id:id,p_approve:action==="approve",p_note:action==="approve"?null:"Төлбөрийн баримт баталгаажаагүй"});
    else if(type==="wholesale_product")result=await db.rpc("nexora_review_wholesale_product",{p_product_id:id,p_approve:action==="approve"});
