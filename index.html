@@ -3647,6 +3647,46 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       document.getElementById("nx-fee-history-back").onclick=backAction;
     }
   }
+  async function showWholesaleFeePayment({feeType,amount,supplierId,storeId=null,productId=null,pendingLogoPath=null,backAction=showWholesaleCatalog}){
+    const {data:auth,error:authError}=await db.auth.getUser();
+    if(authError||!auth?.user)throw new Error("Төлбөр илгээхийн тулд нэвтэрнэ үү.");
+    if(!["logo","product"].includes(feeType))throw new Error("Төлбөрийн төрөл буруу байна.");
+    const feeAmount=Number(amount);
+    if(!Number.isSafeInteger(feeAmount)||feeAmount<=0)throw new Error("Төлбөрийн дүн буруу байна.");
+    const {data:banks,error:bankError}=await db.from("bank_accounts").select("id,bank_name,account_number,account_holder").eq("is_active",true).order("display_order",{ascending:true});
+    if(bankError)throw bankError;
+    if(!banks?.length)throw new Error("Төлбөр хүлээн авах идэвхтэй банкны данс бүртгэгдээгүй байна.");
+    host.innerHTML='<button class="nx-market-btn secondary" id="nx-wholesale-fee-back">‹ Буцах</button><h2 class="nexora-ad-heading">ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭХ</h2><p class="nx-market-muted">'+(feeType==="logo"?"Нийлүүлэгчийн лого байршуулалт":"Бөөний бараа байршуулалт")+'</p><p class="nx-market-price">'+money(feeAmount)+'</p><div id="nx-wholesale-fee-banks"></div><form id="nx-wholesale-fee-form"><label>Банк сонгох *</label><select class="nx-market-select" name="bank_account_id" required>'+banks.map(b=>'<option value="'+esc(b.id)+'">'+esc(b.bank_name)+' · '+esc(b.account_number)+' · '+esc(b.account_holder)+'</option>').join("")+'</select><label>Гүйлгээний утга / лавлах дугаар *</label><input class="nx-market-input" name="transfer_reference" maxlength="150" required><label>Төлбөрийн баримт (JPG, PNG, WEBP, PDF · 8MB хүртэл) *</label><input class="nx-market-input" name="receipt" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required><button class="nx-market-btn" type="submit">ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭХ</button></form><p id="nx-wholesale-fee-message" class="nx-market-muted"></p>';
+    document.getElementById("nx-wholesale-fee-back").onclick=backAction;
+    document.getElementById("nx-wholesale-fee-banks").innerHTML=banks.map(b=>'<section class="nx-admin-card" style="margin:10px 0"><strong>'+esc(b.bank_name)+'</strong><p class="nx-market-price">'+esc(b.account_number)+'</p><p class="nx-market-muted">'+esc(b.account_holder)+'</p></section>').join("");
+    document.getElementById("nx-wholesale-fee-form").onsubmit=async e=>{
+      e.preventDefault();
+      const form=e.currentTarget,button=form.querySelector('button[type="submit"]'),msg=document.getElementById("nx-wholesale-fee-message");
+      const values=Object.fromEntries(new FormData(form).entries()),reference=String(values.transfer_reference||"").trim(),file=form.elements.receipt.files?.[0],bank=banks.find(x=>x.id===values.bank_account_id);
+      if(!bank){msg.textContent="Банкны дансаа сонгоно уу.";return;}
+      if(!reference){msg.textContent="Гүйлгээний утгаа оруулна уу.";return;}
+      if(!file||file.size>8*1024*1024||!["image/jpeg","image/png","image/webp","application/pdf"].includes(file.type)){msg.textContent="8MB хүртэлх JPG, PNG, WEBP эсвэл PDF баримт сонгоно уу.";return;}
+      button.disabled=true;button.textContent="ИЛГЭЭЖ БАЙНА…";
+      const paymentId=crypto.randomUUID(),safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_"),path=auth.user.id+"/wholesale-fees/"+paymentId+"_"+safeName;
+      try{
+        const {error:uploadError}=await db.storage.from("payment-receipts").upload(path,file,{upsert:false,contentType:file.type,cacheControl:"31536000"});
+        if(uploadError)throw uploadError;
+        const payload={id:paymentId,user_id:auth.user.id,supplier_id:supplierId,fee_type:feeType,amount:feeAmount,bank_account_id:bank.id,bank_name:bank.bank_name,account_number:bank.account_number,account_holder:bank.account_holder,transfer_reference:reference,receipt_path:path,status:"pending"};
+        if(storeId)payload.store_id=storeId;
+        if(productId)payload.product_id=productId;
+        if(pendingLogoPath)payload.pending_logo_path=pendingLogoPath;
+        const {error:insertError}=await db.from("wholesale_supplier_fee_payments").insert(payload);
+        if(insertError)throw insertError;
+        host.innerHTML='<h2 class="nexora-ad-heading">ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭЛЭЭ</h2><p class="nx-market-muted">Таны төлбөрийн баримт админы хяналтад орлоо. Баталгаажсаны дараа '+(feeType==="logo"?"нийлүүлэгчийн лого":"бөөний бараа")+' идэвхжинэ.</p><button class="nx-market-btn" id="nx-wholesale-fee-finish">Үргэлжлүүлэх</button><button class="nx-market-btn secondary" id="nx-wholesale-fee-history-open">Төлбөрийн түүх</button>';
+        document.getElementById("nx-wholesale-fee-finish").onclick=backAction;
+        document.getElementById("nx-wholesale-fee-history-open").onclick=()=>showWholesaleFeeHistory(backAction);
+      }catch(err){
+        await db.storage.from("payment-receipts").remove([path]).catch(()=>{});
+        msg.textContent="Алдаа: "+(err.message||err);
+        button.disabled=false;button.textContent="ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭХ";
+      }
+    };
+  }
   async function showStore(){
     const {data,error:authError}=await db.auth.getUser();
     if(authError||!data.user){host.innerHTML='<button class="nx-market-btn secondary" id="nx-store-back">‹ Буцах</button><h2 class="nexora-ad-heading">ДЭЛГҮҮР НЭЭХ</h2><p class="nx-market-muted">Дэлгүүрээ бүртгүүлэхийн тулд эхлээд нэвтэрнэ үү.</p>';document.getElementById("nx-store-back").onclick=loadProducts;return;}
