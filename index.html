@@ -2748,7 +2748,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     return mapLeafletPromise;
   }
 
-  async function openMapScreen(latitude, longitude, chooseLocation) {
+  async function openMapScreen(latitude, longitude, chooseLocation, onChooseLocation) {
     const overlay = document.createElement("div");
     overlay.id = "nx-map-fullscreen";
     overlay.style.cssText = "position:fixed;inset:0;z-index:2147483000;background:#090909;display:flex;flex-direction:column;color:#fff;";
@@ -2821,6 +2821,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         overlay.querySelector("[data-map-save]").onclick = () => {
           if (!mapPickerMarker) { overlay.querySelector("#nx-map-coordinates").textContent = "Эхлээд газрын зураг дээр байршлаа дарж сонгоно уу."; return; }
           const point = mapPickerMarker.getLatLng();
+          if (typeof onChooseLocation === "function") onChooseLocation({ latitude: point.lat, longitude: point.lng });
           const form = document.getElementById("nx-create-ad-form");
           if (form) {
             form.elements.latitude.value = point.lat;
@@ -3877,8 +3878,23 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   function showCart(){
     host.innerHTML=`<button class="nx-market-btn secondary" id="nx-cart-back">‹ Буцах</button><h2 class="nexora-ad-heading">МИНИЙ САГС</h2>
       ${cart.map(x=>`<div class="nx-market-card"><b>${esc(x.title)}</b><p>${money(x.price)} × ${x.qty}</p><button class="nx-market-btn secondary" data-cart-minus="${esc(x.id)}">−</button> <button class="nx-market-btn secondary" data-cart-plus="${esc(x.id)}">+</button> <button class="nx-market-btn secondary" data-cart-remove="${esc(x.id)}">Устгах</button></div>`).join("")||'<p class="nx-market-muted">Сагс хоосон байна.</p>'}
+      <h3>ХҮРГҮҮЛЭХ МЭДЭЭЛЭЛ</h3>
+      <label class="nx-market-muted" for="nx-delivery-name">Хүлээн авагчийн нэр *</label><input class="nx-market-input" id="nx-delivery-name" autocomplete="name" placeholder="Овог, нэр">
+      <label class="nx-market-muted" for="nx-delivery-phone">Утасны дугаар *</label><input class="nx-market-input" id="nx-delivery-phone" type="tel" autocomplete="tel" placeholder="Утасны дугаар">
+      <label class="nx-market-muted" for="nx-delivery-address">Хаягийн дэлгэрэнгүй</label><textarea class="nx-market-input" id="nx-delivery-address" rows="2" placeholder="Дүүрэг, хороо, байр, тоот, орц"></textarea>
+      <button type="button" class="nx-market-btn secondary" id="nx-delivery-map">📍 Газрын зураг дээр байршил тэмдэглэх</button><p id="nx-delivery-map-label" class="nx-market-muted">Байршил сонгоогүй байна. Газрын зураг дээр pin тавина уу. *</p>
+      <label class="nx-market-muted" for="nx-delivery-note">Хүргэлтийн нэмэлт тайлбар</label><textarea class="nx-market-input" id="nx-delivery-note" rows="2" placeholder="Жишээ нь: орцны код, ойр орчны тэмдэглэгээ"></textarea>
       <h3>Нийт: ${money(cart.reduce((n,x)=>n+x.price*x.qty,0))}</h3><button class="nx-market-btn" id="nx-cart-order" ${cart.length?"":"disabled"}>Захиалга үүсгэх</button><p id="nx-market-msg" class="nx-market-muted"></p>`;
     document.getElementById("nx-cart-back").onclick=render;
+    window.__nxDeliveryPoint=null;
+    document.getElementById("nx-delivery-map").onclick=()=>{
+      if(typeof window.NEXORA_OPEN_MAP_SCREEN!=="function"){document.getElementById("nx-delivery-map-label").textContent="Газрын зураг ачаалагдаагүй байна. Дахин оролдоно уу.";return;}
+      window.NEXORA_OPEN_MAP_SCREEN(deliveryPoint?.latitude,deliveryPoint?.longitude,true,point=>{
+        window.__nxDeliveryPoint=point;
+        document.getElementById("nx-delivery-map-label").textContent="Байршил сонгогдлоо ✓  "+point.latitude.toFixed(6)+", "+point.longitude.toFixed(6);
+        document.getElementById("nx-delivery-map").textContent="📍 Байршлыг өөрчлөх";
+      });
+    };
     host.querySelectorAll("[data-cart-minus]").forEach(b=>b.onclick=()=>{const x=cart.find(x=>x.id===b.dataset.cartMinus);if(x){x.qty--;if(x.qty<=0)cart=cart.filter(y=>y!==x);}showCart();});
     host.querySelectorAll("[data-cart-plus]").forEach(b=>b.onclick=()=>{const x=cart.find(x=>x.id===b.dataset.cartPlus);if(x)x.qty++;showCart();});
     host.querySelectorAll("[data-cart-remove]").forEach(b=>b.onclick=()=>{cart=cart.filter(x=>x.id!==b.dataset.cartRemove);showCart();});
@@ -3887,6 +3903,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   async function showOrderPayment(orderId,total,user,sellers){
     host.innerHTML=`<button class="nx-market-btn secondary" id="nx-order-back">‹ Буцах</button><h2 class="nexora-ad-heading">ЗАХИАЛГА ҮҮСЛЭЭ</h2>
       <p class="nx-market-muted">Захиалгын дугаар: ${esc(orderId)}</p><p class="nx-market-price">Нийт: ${money(total)}</p>
+      <p class="nx-market-muted">Хүлээн авагч: ${esc(user?.user_metadata?.full_name||user?.user_metadata?.name||"—")}<br>Хүргүүлэх хаяг: ${esc(document.getElementById("nx-delivery-address")?.value||"Газрын зураг дээр тэмдэглэсэн байршил")}<br>Байршлын координат захиалгад хадгалагдлаа.</p>
       <p class="nx-market-muted">Төлбөрийг бараа худалдан авч буй дэлгүүрийн эзний данс руу шууд шилжүүлнэ үү.</p>
       ${sellers.map(s=>'<section class="nx-admin-card" style="margin:12px 0"><h3>'+esc(s.store_name||"Дэлгүүр")+'</h3><p class="nx-market-price">'+money(s.amount)+'</p><div class="nx-admin-meta"><div><strong>Банк:</strong> '+esc(s.bank_name)+'</div><div><strong>Данс:</strong> '+esc(s.account_number)+'</div><div><strong>Эзэмшигч:</strong> '+esc(s.account_holder)+'</div></div></section>').join("")}
       <p class="nx-market-muted">Шилжүүлгийн дараа дэлгүүрийн эзэнтэй утсаар холбогдон захиалгаа баталгаажуулна уу.</p>
@@ -3898,6 +3915,14 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     const {data,error:authError}=await db.auth.getUser();
     if(authError||!data.user){document.getElementById("nx-market-msg").textContent="Захиалга үүсгэхийн тулд нэвтэрнэ үү.";return;}
     if(!cart.length)return;
+    const recipientName=document.getElementById("nx-delivery-name")?.value.trim()||"";
+    const deliveryPhone=document.getElementById("nx-delivery-phone")?.value.trim()||"";
+    const deliveryAddress=document.getElementById("nx-delivery-address")?.value.trim()||"";
+    const deliveryNote=document.getElementById("nx-delivery-note")?.value.trim()||"";
+    const mapLabel=document.getElementById("nx-delivery-map-label");
+    if(!recipientName||!deliveryPhone){document.getElementById("nx-market-msg").textContent="Хүлээн авагчийн нэр болон утасны дугаараа оруулна уу.";return;}
+    if(!window.__nxDeliveryPoint){document.getElementById("nx-market-msg").textContent="Газрын зураг дээр хүргүүлэх байршлаа pin тавьж сонгоно уу.";return;}
+    const deliveryPoint=window.__nxDeliveryPoint;
     const productIds=cart.map(x=>x.id);
     const {data:productRows,error:productError}=await db.from("market_products").select("id,owner_id").in("id",productIds).eq("status","active");
     if(productError){document.getElementById("nx-market-msg").textContent="Барааны эзнийг шалгахад алдаа: "+productError.message;return;}
@@ -3916,7 +3941,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       return {product_id:x.id,title:x.title,unit_price:x.price,quantity:x.qty,seller_id:ownerId};
     });
     const total=cart.reduce((n,x)=>n+x.price*x.qty,0);
-    const {data:order,error}=await db.from("market_orders").insert({buyer_id:data.user.id,items,total_amount:total,status:"pending_payment",payment_status:"unpaid"}).select("id").single();
+    const {data:order,error}=await db.from("market_orders").insert({buyer_id:data.user.id,items,total_amount:total,status:"pending_payment",payment_status:"unpaid",recipient_name:recipientName,delivery_phone:deliveryPhone,delivery_address:deliveryAddress,delivery_latitude:deliveryPoint.latitude,delivery_longitude:deliveryPoint.longitude,delivery_note:deliveryNote}).select("id").single();
     if(error){document.getElementById("nx-market-msg").textContent="Алдаа: "+error.message;return;}
     const sellers=ownerIds.map(id=>({...bankByOwner.get(String(id)),amount:sellerTotals.get(String(id))||0}));
     cart=[];
@@ -4036,7 +4061,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     products:["market_products","id,title,category,price,owner_id,status,created_at",[["status","pending"]],"product"],
     stores:["nexora_store_payments","id,store_id,user_id,amount,bank_name,transfer_reference,receipt_path,status,created_at",[["status","pending"]],"store_payment"],
     suppliers:["market_suppliers","id,name,type,register_no,phone,email,address,status,created_at",[["status","pending"]],"supplier"],
-    orders:["market_orders","id,buyer_id,items,total_amount,status,payment_status,created_at",[],""],
+    orders:["market_orders","id,buyer_id,items,total_amount,status,payment_status,recipient_name,delivery_phone,delivery_address,delivery_latitude,delivery_longitude,delivery_note,created_at",[],""],
    }[activeTab];
    const [table,cols,filters,type]=cfg;
    body.innerHTML='<h2 class="nx-admin-section-title">'+sections[activeTab][0]+'</h2><p class="nx-admin-section-note">'+sections[activeTab][1]+'</p><div class="nx-admin-loading">Жагсаалт ачаалж байна…</div>';
@@ -4057,6 +4082,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
    }else{
     body.innerHTML='<h2 class="nx-admin-section-title">'+sections[activeTab][0]+'</h2><p class="nx-admin-section-note">'+sections[activeTab][1]+'</p>'+await cards(data,type);
    }
+   body.querySelectorAll("[data-order-map]").forEach(b=>b.onclick=()=>{const pair=b.dataset.orderMap.split(",").map(Number);if(typeof window.NEXORA_OPEN_MAP_SCREEN==="function")window.NEXORA_OPEN_MAP_SCREEN(pair[0],pair[1],false);});
    body.querySelectorAll("[data-review]").forEach(b=>b.onclick=()=>review(b.dataset.review,b.dataset.id,b.dataset.action));
   }catch(e){
    body.innerHTML='<div class="nx-admin-error">Мэдээлэл татахад алдаа гарлаа: '+esc(e?.message||e)+'</div><button class="nx-admin-refresh" id="nx-admin-retry" type="button">↻ Дахин оролдох</button>';
