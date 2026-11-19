@@ -4274,7 +4274,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     if(error||!order){showCartToast("Захиалга олдсонгүй.");return;}
     await showOrderPayment(order.id,auth.user,{recipientName:order.recipient_name,deliveryPhone:order.delivery_phone,deliveryAddress:order.delivery_address,deliveryNote:order.delivery_note,latitude:order.delivery_latitude,longitude:order.delivery_longitude});
   };
-  loadProducts();  loadProducts();
+  loadProducts();
 })();
 </script>
 <script>
