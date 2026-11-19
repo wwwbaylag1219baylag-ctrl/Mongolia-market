@@ -4085,7 +4085,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     window.NEXORA_SHOP_BACK=openRetailProfile;
 
     const {data:auth,error}=await db.auth.getUser();marketUser=auth?.user;
-    if(error||!marketUser){host.innerHTML='<p class="nx-market-muted">Жижиглэнгийн бараа нийтлэхийн тулд нэвтэрнэ үү.</p><button class="nx-market-btn nx-market-back-arrow" id="nx-retail-back" aria-label="Буцах" title="Буцах">‹</button>';document.getElementById("nx-retail-back").onclick=loadProducts;return;}
+    if(error||!marketUser){host.innerHTML='<p class="nx-market-muted">Жижиглэнгийн бараа нийтлэхийн тулд нэвтэрнэ үү.</p><button class="nx-market-btn nx-market-back-arrow" id="nx-retail-back" aria-label="Буцах" title="Буцах">‹</button>';document.getElementById("nx-retail-back").onclick=openRetailProfile;return;}
     const [{data:store,error:storeError},{data:feeConfig,error:feeConfigError}]=await Promise.all([db.from("nexora_store_profiles").select("id,store_name").eq("user_id",marketUser.id).maybeSingle(),db.from("nexora_settings").select("market_product_listing_fee").eq("id",1).single()]);
     if(storeError||feeConfigError){host.innerHTML='<p class="nx-market-muted">Дэлгүүр шалгахад алдаа: '+esc(storeError?.message||feeConfigError?.message)+'</p>';return;}
     const retailListingFee=Number(feeConfig?.market_product_listing_fee||0);
@@ -4912,6 +4912,27 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 #market-app .nx-profile-child-back,
 #market-app .nx-universal-shop-back{
   border:1px solid #00cfff!important;
+  background:linear-gradient(135deg,#07385e,#06213e)!important;
+  color:#55e5ff!important;
+  box-shadow:0 0 10px rgba(0,190,255,.3),inset 0 0 8px rgba(0,170,255,.12)!important;
+  text-shadow:0 0 8px rgba(0,210,255,.7)!important;
+}
+</style>
+
+
+<style id="NEXORA-SHOW-MARKET-FORM-BACK-ARROWS-2026">
+/* Маягт, жагсаалт, дэд дэлгэцийн буцах сумыг нуух ерөнхий дүрмийг хүчингүй болгоно. */
+#market-app button.nx-market-back-arrow,
+#market-app button.nx-profile-back,
+#market-app button.nx-profile-child-back,
+#market-app button.nx-universal-shop-back{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  visibility:visible!important;
+  opacity:1!important;
+  border:1px solid #00cfff!important;
+  border-radius:12px!important;
   background:linear-gradient(135deg,#07385e,#06213e)!important;
   color:#55e5ff!important;
   box-shadow:0 0 10px rgba(0,190,255,.3),inset 0 0 8px rgba(0,170,255,.12)!important;
