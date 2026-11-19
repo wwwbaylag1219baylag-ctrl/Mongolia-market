@@ -1,0 +1,1 @@
+drop index if exists public.market_order_payment_one_pending_per_order;
