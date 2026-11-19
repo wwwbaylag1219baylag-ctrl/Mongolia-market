@@ -103,7 +103,10 @@
    if(r.email)details.push(["И-мэйл",r.email]);
    if(r.bank_name)details.push(["Банк",r.bank_name]);
    if(r.transfer_reference)details.push(["Гүйлгээний утга",r.transfer_reference]);
-   if(r.category)details.push(["Ангилал",r.category]);\n   if(r.stock_quantity!==undefined)details.push(["Үлдэгдэл",Number(r.stock_quantity).toLocaleString("mn-MN")+" ширхэг"]);\n   if(r.min_order_quantity!==undefined)details.push(["Доод захиалга",Number(r.min_order_quantity)+" ширхэг"]);\n   if(Array.isArray(r.wholesale_price_tiers)&&r.wholesale_price_tiers.length)details.push(["Бөөний үнэ",r.wholesale_price_tiers.map(t=>Number(t.min_qty)+"+ ш: "+money(t.price)).join(" · ")]);\n   if(r.type)details.push(["Нийлүүлэгчийн төрөл",r.type]);
+   if(r.category)details.push(["Ангилал",r.category]);
+   if(r.stock_quantity!==undefined)details.push(["Үлдэгдэл",Number(r.stock_quantity).toLocaleString("mn-MN")+" ширхэг"]);
+   if(r.min_order_quantity!==undefined)details.push(["Доод захиалга",Number(r.min_order_quantity)+" ширхэг"]);\n   if(Array.isArray(r.wholesale_price_tiers)&&r.wholesale_price_tiers.length)details.push(["Бөөний үнэ",r.wholesale_price_tiers.map(t=>Number(t.min_qty)+"+ ш: "+money(t.price)).join(" · ")]);
+   if(r.type)details.push(["Нийлүүлэгчийн төрөл",r.type]);
    if(r.package_type)details.push(["Багц",r.package_type]);
    if(r.location||r.address)details.push(["Байршил",r.location||r.address]);
    if(r.register_no)details.push(["Регистр",r.register_no]);
