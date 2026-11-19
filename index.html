@@ -669,6 +669,15 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 
           back: function () {
 
+            // Худалдааны платформ доторх дэд дэлгэцээс эхлээд тухайн
+            // платформын өмнөх дэлгэц рүү буцна; нүүр рүү шууд үсрэхгүй.
+            if (currentScreen === "shop" && typeof window.NEXORA_SHOP_BACK === "function") {
+              const shopBack = window.NEXORA_SHOP_BACK;
+              window.NEXORA_SHOP_BACK = null;
+              shopBack();
+              return;
+            }
+
             if (screenHistory.length > 1) {
 
               screenHistory.pop();
@@ -4008,6 +4017,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     };
   }
   async function showWholesaleCatalog(){
+    // Дээд талын системийн буцах сумыг эхлээд жижиглэнгийн каталог руу чиглүүлнэ.
+    window.NEXORA_SHOP_BACK = loadProducts;
     stopProductApprovalWatch();
     startWholesaleNotificationWatch().catch(err=>console.warn("Мэдэгдлийн тохиргоо:",err));
     host.innerHTML='<button class="nx-market-btn secondary" id="nx-wholesale-back">‹ Онлайн дэлгүүр</button><p class="nx-market-muted">Бөөний бараануудыг ачаалж байна…</p>';
@@ -4150,6 +4161,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     draw();
   }
   async function loadProducts(){
+    window.NEXORA_SHOP_BACK = null;
     let stage="барааны жагсаалт";
     const wait=(promise,label,ms=12000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(label+" хүсэлт 12 секундэд хариу өгсөнгүй. Холболт эсвэл өгөгдлийн сангийн эрхийг шалгана уу.")),ms))]);
     host.innerHTML='<h2 class="nexora-ad-heading">ОНЛАЙН ДЭЛГҮҮР</h2><p class="nx-market-muted">Жижиглэнгийн бараануудыг ачаалж байна…</p>';
