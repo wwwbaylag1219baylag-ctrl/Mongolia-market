@@ -1971,9 +1971,34 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   cursor: pointer;
 }
 
-.nx-ad-card:active {
-  background: #292317;
-}
+.nx-ad-card:active { background: #292317; }
+
+/* Зарын жагсаалт: зураг төвтэй, хоёр шаттай modern card */
+.nx-ad-card-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:17px}
+.nx-ad-card--visual{padding:0!important;margin:0!important;overflow:hidden;border:1px solid color-mix(in srgb,var(--gold,#d6ad55) 26%,transparent)!important;border-radius:22px!important;background:var(--panel,#191919)!important;color:var(--white,#f7f5ef)!important;box-shadow:0 9px 26px rgba(0,0,0,.20);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.nx-ad-card--visual:active{transform:scale(.99);background:var(--panel,#191919)!important;border-color:var(--gold,#d6ad55)!important}
+.nx-ad-card-media{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;background:var(--black,#090909)}
+.nx-ad-card-image{display:block;width:100%;height:100%;object-fit:cover}
+.nx-ad-card-image-placeholder{display:flex;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--white,#f7f5ef);opacity:.58;background:linear-gradient(145deg,var(--panel,#191919),var(--black,#090909))}
+.nx-ad-card-image-placeholder span{font-size:42px}.nx-ad-card-image-placeholder small{font-size:12px}
+.nx-ad-card-media .nx-package-badge{position:absolute;right:12px;bottom:12px;margin:0;z-index:1}
+.nx-ad-card-open-hint{position:absolute;left:12px;bottom:13px;padding:7px 10px;border-radius:999px;background:rgba(0,0,0,.62);color:#fff;font-size:11px;font-weight:750;backdrop-filter:blur(8px)}
+.nx-ad-card-body{padding:15px 16px 14px}
+.nx-ad-card--visual .nx-ad-card-price{margin:0 0 6px;color:var(--gold,#d6ad55);font-size:22px;font-weight:900;line-height:1.25}
+.nx-ad-card--visual .nx-ad-card-title{font-size:17px;font-weight:850;line-height:1.4;color:var(--white,#f7f5ef)}
+.nx-ad-card--visual .nx-ad-card-description{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:7px;color:var(--white,#f7f5ef);opacity:.72;font-size:13px;line-height:1.55}
+.nx-ad-card--visual .nx-ad-card-meta{display:flex;justify-content:space-between;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid color-mix(in srgb,var(--gold,#d6ad55) 17%,transparent);font-size:11px;color:var(--white,#f7f5ef);opacity:.68}
+.nx-ad-card-more{display:flex;justify-content:space-between;align-items:center;margin-top:12px;color:var(--gold,#d6ad55);font-size:12px;font-weight:800}
+.nx-ad-card-more span{font-size:19px}
+@media(min-width:700px){.nx-ad-card-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}}
+@media(min-width:1100px){.nx-ad-card-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.nx-detail-block{border-radius:20px!important;background:var(--panel,#191919)!important;border-color:color-mix(in srgb,var(--gold,#d6ad55) 28%,transparent)!important}
+.nx-detail-label{color:var(--gold,#d6ad55)!important;font-weight:800;letter-spacing:.04em}
+.nx-detail-value{color:var(--white,#f7f5ef)!important}
+.nx-detail-price{color:var(--gold,#d6ad55)!important;font-size:25px;font-weight:900}
+#nx-ad-detail-images img{aspect-ratio:4/3!important;object-fit:cover!important;border-radius:15px!important}
+@media(max-width:420px){.nx-ad-card-media{aspect-ratio:1.12/1}.nx-ad-card-body{padding:13px}.nx-ad-card--visual .nx-ad-card-price{font-size:20px}}
+
 
 .nx-package-badge {
   display: inline-flex;
@@ -2145,6 +2170,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   let filteredAds = [];
   let searchText = "";
   let selectedAd = null;
+  let adCoverUrls = {};
   let loading = false;
   let loadedSelectionKey = "";
   let requestNumber = 0;
@@ -2238,35 +2264,38 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       return;
     }
 
-    results.innerHTML = filteredAds.map(function (ad, index) {
+    results.innerHTML = '<div class="nx-ad-card-grid">' + filteredAds.map(function (ad, index) {
+      const cover = adCoverUrls[ad.id];
       return `
-        <article class="nx-ad-card"
+        <article class="nx-ad-card nx-ad-card--visual"
           data-nx-ad-index="${index}"
           tabindex="0"
-          role="button">
+          role="button"
+          aria-label="${escapeHTML(ad.title || "Зарын дэлгэрэнгүй үзэх")}">
 
-          ${packageBadge(ad.package_type)}
-          <div class="nx-ad-card-title">
-            ${escapeHTML(ad.title || "Гарчиггүй зар")}
+          <div class="nx-ad-card-media">
+            ${cover
+              ? `<img class="nx-ad-card-image" src="${escapeHTML(cover)}" alt="${escapeHTML(ad.title || "Зарын зураг")}" loading="${index<3?"eager":"lazy"}">`
+              : '<div class="nx-ad-card-image-placeholder"><span>📷</span><small>Зураг байхгүй</small></div>'}
+            ${packageBadge(ad.package_type)}
+            <span class="nx-ad-card-open-hint">Дэлгэрэнгүй ›</span>
           </div>
 
-          <div class="nx-ad-card-price">
-            ${formatPrice(ad.price)}
-          </div>
-
-          <div class="nx-ad-card-description">
-            ${escapeHTML(ad.description || "Тайлбар оруулаагүй")}
-          </div>
-
-          <div class="nx-ad-card-meta">
-            <span>📂 ${escapeHTML(ad.category || "")}</span>
-            <span>📅 ${ad.created_at
-              ? escapeHTML(new Date(ad.created_at).toLocaleDateString("mn-MN"))
-              : ""}</span>
+          <div class="nx-ad-card-body">
+            <div class="nx-ad-card-price">${formatPrice(ad.price)}</div>
+            <div class="nx-ad-card-title">${escapeHTML(ad.title || "Гарчиггүй зар")}</div>
+            <div class="nx-ad-card-description">${escapeHTML(ad.description || "Тайлбар оруулаагүй")}</div>
+            <div class="nx-ad-card-meta">
+              <span>📂 ${escapeHTML(ad.subcategory || ad.category || "")}</span>
+              <span>📅 ${ad.created_at
+                ? escapeHTML(new Date(ad.created_at).toLocaleDateString("mn-MN"))
+                : ""}</span>
+            </div>
+            <div class="nx-ad-card-more">Зарын дэлгэрэнгүй мэдээлэл харах <span>→</span></div>
           </div>
         </article>
       `;
-    }).join("");
+    }).join("") + '</div>';
   }
 
   async function loadAds() {
@@ -2301,6 +2330,32 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       }
 
       ads = result.data || [];
+      adCoverUrls = {};
+      if (ads.length) {
+        try {
+          const adIds = ads.map(ad => ad.id).filter(Boolean);
+          if (adIds.length) {
+            const imageResult = await db.from("ad_images")
+              .select("ad_id,image_path,display_order")
+              .in("ad_id", adIds)
+              .order("display_order", {ascending:true});
+            if (!imageResult.error) {
+              const firstImageByAd = {};
+              (imageResult.data || []).forEach(item => {
+                if (!firstImageByAd[item.ad_id]) firstImageByAd[item.ad_id] = item.image_path;
+              });
+              const coverEntries = await Promise.all(Object.entries(firstImageByAd).map(async ([adId,path]) => {
+                const signed = await db.storage.from("classified-images").createSignedUrl(path,3600);
+                return signed.error || !signed.data?.signedUrl ? null : [adId,signed.data.signedUrl];
+              }));
+              coverEntries.filter(Boolean).forEach(([adId,url]) => { adCoverUrls[adId] = url; });
+            }
+          }
+        } catch (imageError) {
+          console.warn("NEXORA ad cover images:", imageError);
+        }
+      }
+      if (thisRequest !== requestNumber) return;
       loading = false;
       const loadedResults = document.getElementById("nx-ad-results");
       if (loadedResults) loadedResults.dataset.loaded = "true";
