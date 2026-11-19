@@ -3503,23 +3503,23 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   const money=v=>Number(v||0).toLocaleString("mn-MN")+" ₮";
   const productTileStyle=document.createElement("style");
   productTileStyle.textContent=`
-    #shop .nx-market-product-tile{display:flex!important;flex-flow:column nowrap!important;align-items:stretch!important;min-width:0;margin:0;padding:9px;border:1px solid rgba(214,173,85,.28);border-radius:13px;background:#171717;overflow:hidden}
+    #shop .nx-market-product-tile{display:flex!important;flex-flow:column nowrap!important;align-items:stretch!important;min-width:0;margin:0;padding:9px;border:1px solid color-mix(in srgb,var(--gold,#d6ad55) 28%,transparent);border-radius:13px;background:var(--panel,#171717);color:var(--white,#f7f5ef);overflow:hidden}
     #shop .nx-market-product-tile>.nx-market-product-image,#shop .nx-market-product-tile>.nx-market-product-no-image{display:block!important;order:0;flex:0 0 auto!important;width:100%!important;max-width:100%;box-sizing:border-box}
     #shop .nx-market-product-tile>.nx-market-price{order:1;flex:0 0 auto}
     #shop .nx-market-product-tile>.nx-market-product-info{order:2;flex:0 0 auto;width:100%;box-sizing:border-box}
     #shop .nx-market-product-tile>button.nx-market-add-cart{display:block!important;order:3;flex:0 0 44px!important;align-self:stretch!important;box-sizing:border-box;width:100%!important;min-width:100%!important;max-width:100%!important;min-height:44px;margin:7px 0 0!important;position:static!important;float:none!important;grid-column:1/-1!important;clear:both!important}
-    #shop .nx-market-product-image{height:145px;object-fit:cover;border-radius:9px;cursor:zoom-in;background:#080808;transition:height .2s ease}
+    #shop .nx-market-product-image{height:145px;object-fit:cover;border-radius:9px;cursor:zoom-in;background:var(--black,#090909);transition:height .2s ease}
     #shop .nx-market-product-tile.is-expanded{grid-column:1/-1}
     #shop .nx-market-grid.is-product-focused{grid-template-columns:minmax(0,1fr)}
     #shop .nx-market-grid.is-product-focused .nx-market-product-tile:not(.is-expanded){display:none!important}
-    #shop .nx-market-product-tile.is-expanded .nx-market-product-image{height:min(58vh,460px);object-fit:contain;background:#080808}
+    #shop .nx-market-product-tile.is-expanded .nx-market-product-image{height:min(58vh,460px);object-fit:contain;background:var(--black,#090909)}
     #shop .nx-market-product-tile.is-compact .nx-market-product-image{height:76px;object-fit:contain}
     #shop .nx-market-product-tile .nx-market-price{margin:8px 2px 2px;font-size:16px}
-    #shop .nx-market-product-info{padding:5px 2px 2px;color:#f7f5ef}
+    #shop .nx-market-product-info{padding:5px 2px 2px;color:var(--white,#f7f5ef)}
     #shop .nx-market-product-info h3{margin:5px 0 8px;font-size:17px}
-    #shop .nx-market-product-info p{margin:9px 0;color:#ddd;font-size:13px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+    #shop .nx-market-product-info p{margin:9px 0;color:var(--white,#f7f5ef);font-size:13px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
     #shop .nx-market-add-cart{width:100%;margin-top:7px}
-    #shop .nx-market-product-no-image{height:145px;display:grid;place-items:center;color:#aaa39a;font-size:12px}
+    #shop .nx-market-product-no-image{height:145px;display:grid;place-items:center;color:var(--white,#f7f5ef);font-size:12px;opacity:.7}
     /* Зураг жижиг/том болсон бүх төлөвт картын хүүхдүүд нэг баганад үлдэнэ. */
     #shop .nx-market-product-tile{display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-auto-flow:row!important;align-items:stretch!important;justify-items:stretch!important;width:100%;min-width:0}
     #shop .nx-market-product-tile>*{grid-column:1/-1!important;min-width:0;max-width:100%;box-sizing:border-box}
