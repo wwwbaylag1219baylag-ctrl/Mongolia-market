@@ -3585,15 +3585,18 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   // Бүх дэд дэлгэцэд нэг стандарт буцах сум: тухайн дэлгэцийн шууд эцэг callback-ийг ашиглана.
   const ensureShopBackArrow=()=>{
     if(!host.isConnected||!host.innerHTML.trim())return;
-    const back=window.NEXORA_SHOP_BACK;
-    if(typeof back!=="function")return;
-    const hasBack=host.querySelector('button.nx-market-back-arrow,button.nx-profile-back,button[id*="back" i],button[aria-label*="буцах" i]');
-    if(!hasBack){
+    const parent=window.NEXORA_SHOP_BACK;
+    if(typeof parent!=="function")return;
+    const selector='button.nx-market-back-arrow,button.nx-profile-back,button.nx-profile-child-back,button.nx-universal-shop-back,button[aria-label*="буцах" i],button[id*="back" i]';
+    const backs=[...host.querySelectorAll(selector)];
+    if(!backs.length){
       const button=document.createElement("button");
       button.type="button";button.className="nx-market-btn secondary nx-market-back-arrow nx-universal-shop-back";
       button.id="nx-universal-shop-back";button.setAttribute("aria-label","Өмнөх хэсэг рүү буцах");button.title="Өмнөх хэсэг рүү буцах";button.textContent="‹";
-      button.addEventListener("click",()=>{const parent=window.NEXORA_SHOP_BACK;if(typeof parent==="function")parent();});
+      button.addEventListener("click",()=>{const target=window.NEXORA_SHOP_BACK;if(typeof target==="function")target();});
       host.insertBefore(button,host.firstChild);
+    }else{
+      backs.slice(1).forEach(button=>button.classList.add("nx-back-duplicate-hidden"));
     }
     if(window.NEXORA_SHOP_PROFILE){
       host.classList.add("nx-profile-fullscreen");
@@ -5075,6 +5078,65 @@ html,body{min-height:100%;overscroll-behavior-y:none}
 #market-app.nx-profile-fullscreen select,
 #market-app.nx-profile-fullscreen textarea{
   max-width:100%!important;min-width:0!important;
+}
+</style>
+
+<style id="NEXORA-RESTORE-PAGE-REFRESH-AND-FORM-SCROLL-2026">
+/* Бүтэн дэлгэцийн маягт: үндсэн document өөрөө гүйлгэх тул Android-ийн доош татаж шинэчлэх үйлдэл хаагдахгүй. */
+html,body{
+  height:auto!important;min-height:100%!important;
+  overflow-x:hidden!important;overflow-y:auto!important;
+  overscroll-behavior-y:auto!important;
+}
+#shop.nx-shop-profile-fullscreen{
+  position:relative!important;inset:auto!important;
+  width:100%!important;height:auto!important;
+  min-height:100vh!important;min-height:100dvh!important;
+  max-height:none!important;overflow:visible!important;
+  overscroll-behavior-y:auto!important;
+}
+#shop.nx-shop-profile-fullscreen>.topbar,
+#shop.nx-shop-profile-fullscreen>.footer{display:none!important}
+#shop.nx-shop-profile-fullscreen>.page-content{
+  position:relative!important;inset:auto!important;
+  width:100%!important;height:auto!important;
+  min-height:100vh!important;min-height:100dvh!important;
+  max-height:none!important;margin:0!important;
+  padding:0!important;overflow:visible!important;
+}
+#shop.nx-shop-profile-fullscreen #market-app,
+#market-app.nx-profile-fullscreen{
+  position:relative!important;inset:auto!important;
+  width:100%!important;height:auto!important;
+  min-height:100vh!important;min-height:100dvh!important;
+  max-height:none!important;margin:0!important;
+  padding:max(14px,env(safe-area-inset-top)) 12px calc(32px + env(safe-area-inset-bottom))!important;
+  box-sizing:border-box!important;
+  overflow:visible!important;overflow-x:clip!important;
+  overscroll-behavior-y:auto!important;
+  touch-action:pan-y!important;
+}
+#market-app.nx-profile-fullscreen .nx-profile-accordion-root,
+#shop.nx-shop-profile-fullscreen #market-app form,
+#shop.nx-shop-profile-fullscreen #market-app .nx-market-card,
+#shop.nx-shop-profile-fullscreen #market-app .nx-profile-accordion-root,
+#market-app.nx-profile-fullscreen form,
+#market-app.nx-profile-fullscreen .nx-market-card{
+  height:auto!important;min-height:0!important;max-height:none!important;
+  overflow:visible!important;touch-action:pan-y!important;
+}
+#shop.nx-shop-profile-fullscreen #market-app input,
+#shop.nx-shop-profile-fullscreen #market-app select,
+#shop.nx-shop-profile-fullscreen #market-app textarea,
+#market-app.nx-profile-fullscreen input,
+#market-app.nx-profile-fullscreen select,
+#market-app.nx-profile-fullscreen textarea{
+  width:100%;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;
+}
+#market-app .nx-back-duplicate-hidden{display:none!important}
+@media(max-width:600px){
+  #shop.nx-shop-profile-fullscreen #market-app,
+  #market-app.nx-profile-fullscreen{padding-left:12px!important;padding-right:12px!important}
 }
 </style>
 
