@@ -3762,7 +3762,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         if(file&&file.size&&!["image/jpeg","image/png","image/webp"].includes(file.type))throw new Error("JPG, PNG эсвэл WEBP зураг сонгоно уу.");
         const payload={user_id:marketUser.id,store_name:v.store_name.trim(),owner_type:v.owner_type,phone:v.phone.trim(),description:v.description.trim(),address:v.address.trim()};
         let saved;
-        if(store){const {data,error}=await db.from("nexora_store_profiles").update(payload).eq("id",store.id).eq("user_id",marketUser.id).select("id").single();if(error)throw error;saved=data;}
+        if(store){const {data,error}=await db.from("nexora_store_profiles").update({store_name:payload.store_name,owner_type:payload.owner_type,phone:payload.phone,description:payload.description,address:payload.address}).eq("id",store.id).eq("user_id",marketUser.id).select("id").single();if(error)throw error;saved=data;}
         else{const {data,error}=await db.from("nexora_store_profiles").insert(payload).select("id").single();if(error)throw error;saved=data;}
         if(file&&file.size){
           const ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg",path=marketUser.id+"/retail-store-logos/"+Date.now()+"."+ext;
@@ -3868,7 +3868,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       let saved=store;
       try{
         const payload={user_id:user.id,store_name:String(v.store_name||"").trim(),owner_type:v.owner_type,phone:String(v.phone||"").trim(),description:String(v.description||"").trim(),address:String(v.address||"").trim()};
-        if(store){const {data,error}=await db.from("nexora_store_profiles").update(payload).eq("id",store.id).eq("user_id",user.id).select("id").single();if(error)throw error;saved=data;}
+        if(store){const {data,error}=await db.from("nexora_store_profiles").update({store_name:payload.store_name,owner_type:payload.owner_type,phone:payload.phone,description:payload.description,address:payload.address}).eq("id",store.id).eq("user_id",user.id).select("id").single();if(error)throw error;saved=data;}
         else{const {data,error}=await db.from("nexora_store_profiles").insert(payload).select("id").single();if(error)throw error;saved=data;}
         if(file&&file.size){
           const ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg",path=user.id+"/wholesale-store-logos/"+crypto.randomUUID()+"."+ext;
