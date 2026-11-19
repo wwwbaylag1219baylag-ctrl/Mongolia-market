@@ -3912,15 +3912,17 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     const {data,error:authError}=await db.auth.getUser();
     if(authError||!data.user){host.innerHTML='<button class="nx-market-btn secondary" id="nx-store-back">‹ Буцах</button><h2 class="nexora-ad-heading">ДЭЛГҮҮР НЭЭХ</h2><p class="nx-market-muted">Дэлгүүрээ бүртгүүлэхийн тулд эхлээд нэвтэрнэ үү.</p>';document.getElementById("nx-store-back").onclick=loadProducts;return;}
     marketUser=data.user;
-    const [profileRes,bankRes]=await Promise.all([
+    const [profileRes,bankRes,feeRes]=await Promise.all([
       db.from("nexora_store_profiles").select("id,user_id,store_name,owner_type,phone,logo_path,description,address").eq("user_id",marketUser.id).maybeSingle(),
-      db.from("store_bank_accounts").select("id,bank_name,account_number,account_holder,phone,store_name").eq("user_id",marketUser.id).maybeSingle()
+      db.from("store_bank_accounts").select("id,bank_name,account_number,account_holder,phone,store_name").eq("user_id",marketUser.id).maybeSingle(),
+      db.from("nexora_settings").select("wholesale_logo_fee").eq("id",1).single()
     ]);
     if(profileRes.error){host.innerHTML='<p class="nx-market-muted">Дэлгүүрийн мэдээлэл уншихад алдаа: '+esc(profileRes.error.message)+'</p>';return;}
     if(bankRes.error){host.innerHTML='<p class="nx-market-muted">Дансны мэдээлэл уншихад алдаа: '+esc(bankRes.error.message)+'</p>';return;}
-    const store=profileRes.data,bank=bankRes.data;
+    if(feeRes.error){host.innerHTML='<p class="nx-market-muted">Төлбөрийн тохиргоо уншихад алдаа: '+esc(feeRes.error.message)+'</p>';return;}
+    const store=profileRes.data,bank=bankRes.data,logoFee=Number(feeRes.data?.wholesale_logo_fee||0);
     const logoUrl=store?.logo_path?db.storage.from("market-store-logos").getPublicUrl(store.logo_path).data.publicUrl:"";
-    host.innerHTML='<button class="nx-market-btn secondary" id="nx-store-back">‹ Буцах</button><h2 class="nexora-ad-heading">НИЙЛҮҮЛЭГЧИЙН ДЭЛГҮҮР</h2><p class="nx-market-muted">Дэлгүүр нээх бүртгэл үнэгүй. Лого болон бараа байршуулалтын төлбөрийг админ тусад нь тохируулна.</p>'+
+    host.innerHTML='<button class="nx-market-btn secondary" id="nx-store-back">‹ Буцах</button><h2 class="nexora-ad-heading">НИЙЛҮҮЛЭГЧИЙН ДЭЛГҮҮР</h2><p class="nx-market-muted">Дэлгүүр нээх бүртгэл үнэгүй. Нийлүүлэгч зөвхөн лого болон бөөний бараа байршуулсны төлбөр төлнө. Одоогийн лого байршуулах үнэ: <strong>${money(logoFee)}</strong>. Захиалга авах, удирдах болон бусад үйлдэл үнэгүй.</p>'+
       (logoUrl?'<img src="'+esc(logoUrl)+'" alt="Дэлгүүрийн лого" style="width:92px;height:92px;border-radius:20px;object-fit:cover;border:1px solid var(--border);margin:8px 0 14px">':'')+
       '<form id="nx-store-form"><label>Дэлгүүр / нийлүүлэгчийн нэр *</label><input class="nx-market-input" name="store_name" required maxlength="100" value="'+esc(store?.store_name||"")+'">'+
       '<label>Нийлүүлэгчийн төрөл *</label><select class="nx-market-select" name="owner_type"><option value="individual" '+(store?.owner_type!=="company"?"selected":"")+'>Хувь хүн</option><option value="company" '+(store?.owner_type==="company"?"selected":"")+'>Компани</option></select>'+
@@ -3977,12 +3979,16 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   async function showPublish(){
     const {data:authData,error:authError}=await db.auth.getUser();marketUser=authData?.user;
     if(authError||!marketUser){host.innerHTML='<button class="nx-market-btn secondary" id="nx-market-back">‹ Буцах</button><h2>Нэвтэрч орно уу</h2><p class="nx-market-muted">Бөөний бараа нийтлэхийн тулд нэвтэрнэ.</p>';document.getElementById("nx-market-back").onclick=loadProducts;return;}
-    const supplierRes=await db.from("market_suppliers").select("id,status,name").eq("owner_id",marketUser.id).maybeSingle();
-    if(supplierRes.error){host.innerHTML='<p class="nx-market-muted">Нийлүүлэгчийн эрх шалгахад алдаа гарлаа: '+esc(supplierRes.error.message)+'</p>';return;}
+    const [supplierRes,feeRes]=await Promise.all([
+      db.from("market_suppliers").select("id,status,name").eq("owner_id",marketUser.id).maybeSingle(),
+      db.from("nexora_settings").select("wholesale_product_listing_fee").eq("id",1).single()
+    ]);
+    if(supplierRes.error||feeRes.error){host.innerHTML='<p class="nx-market-muted">Нийлүүлэгчийн эрх эсвэл төлбөрийн тохиргоо шалгахад алдаа гарлаа: '+esc(supplierRes.error?.message||feeRes.error?.message)+'</p>';return;}
+    const wholesaleListingFee=Number(feeRes.data?.wholesale_product_listing_fee||0);
     if(!supplierRes.data||supplierRes.data.status!=="approved"){
       host.innerHTML='<button class="nx-market-btn secondary" id="nx-market-back">‹ Буцах</button><h2 class="nexora-ad-heading">НИЙЛҮҮЛЭГЧИЙН ЭРХ ШААРДЛАГАТАЙ</h2><p class="nx-market-muted">'+(supplierRes.data?'Таны хүсэлт админы хяналтад байна.':'Бөөний бараа нийтлэхийн тулд нийлүүлэгчээр бүртгүүлнэ үү.')+'</p><button class="nx-market-btn" id="nx-market-supplier-open">Нийлүүлэгч болох</button>';document.getElementById("nx-market-back").onclick=loadProducts;document.getElementById("nx-market-supplier-open").onclick=showSupplier;return;
     }
-    host.innerHTML='<button class="nx-market-btn secondary" id="nx-market-back">‹ Бөөний худалдаа руу буцах</button><h2 class="nexora-ad-heading">БӨӨНИЙ БАРАА НИЙТЛЭХ</h2><p class="nx-market-muted">'+esc(supplierRes.data.name||"Нийлүүлэгч")+' · Энэ бараа онлайн дэлгүүрийн жижиглэнгийн каталогт орохгүй. Бөөний үнэ болон үнийн шатлалаа оруулна.</p>'+
+    host.innerHTML='<button class="nx-market-btn secondary" id="nx-market-back">‹ Бөөний худалдаа руу буцах</button><h2 class="nexora-ad-heading">БӨӨНИЙ БАРАА НИЙТЛЭХ</h2><p class="nx-market-muted">'+esc(supplierRes.data.name||"Нийлүүлэгч")+' · Энэ бараа онлайн дэлгүүрийн жижиглэнгийн каталогт орохгүй. Бөөний үнэ болон үнийн шатлалаа оруулна. Админы тогтоосон нэг бараа байршуулалтын үнэ: <strong>'+money(wholesaleListingFee)+'</strong>. Захиалга авах, удирдах болон үнийн шатлал ашиглахад нэмэлт төлбөргүй.</p>'+
       '<form id="nx-wholesale-form"><label>Барааны нэр *</label><input class="nx-market-input" name="title" required maxlength="120"><label>Ангилал *</label><input class="nx-market-input" name="category" required maxlength="80" placeholder="Жишээ: Электрон бараа"><label>Бөөний үндсэн нэгж үнэ (₮) *</label><input class="nx-market-input" name="price" type="number" min="0" step="1" required><label>Барааны үлдэгдэл (ширхэг) *</label><input class="nx-market-input" name="stock_quantity" type="number" min="0" step="1" required value="1"><label>Захиалгын доод хэмжээ (ширхэг) *</label><input class="nx-market-input" name="min_order_quantity" type="number" min="1" step="1" value="1" required><section class="nx-admin-card" style="margin:12px 0"><h3>БӨӨНИЙ ҮНИЙН ШАТЛАЛ (СОНГОЛТТОЙ)</h3><label>1-р шатны доод тоо</label><input class="nx-market-input" name="tier1_qty" type="number" min="2" placeholder="10"><label>1-р шатны нэгж үнэ (₮)</label><input class="nx-market-input" name="tier1_price" type="number" min="0" placeholder="9000"><label>2-р шатны доод тоо</label><input class="nx-market-input" name="tier2_qty" type="number" min="2" placeholder="50"><label>2-р шатны нэгж үнэ (₮)</label><input class="nx-market-input" name="tier2_price" type="number" min="0" placeholder="8000"></section><label>Барааны зураг (1–6 зураг) *</label><input class="nx-market-input" name="product_image" type="file" accept="image/jpeg,image/png,image/webp" multiple required><div id="nx-wholesale-image-preview" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0"></div><label>Тайлбар</label><textarea class="nx-market-textarea" name="description" rows="4"></textarea><label>Холбоо барих утас</label><input class="nx-market-input" name="phone" type="tel"><label>Байршил</label><input class="nx-market-input" name="location"><button class="nx-market-btn" type="submit">Хяналтад илгээх</button></form><p id="nx-wholesale-msg" class="nx-market-muted"></p>';
     document.getElementById("nx-market-back").onclick=showWholesaleCatalog;
     const imageInput=document.querySelector('#nx-wholesale-form [name="product_image"]');
