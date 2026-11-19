@@ -3731,7 +3731,6 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     const {data,error:authError}=await db.auth.getUser();
     if(authError||!data.user){host.innerHTML='<button class="nx-market-btn secondary" id="nx-store-back">‹ Буцах</button><h2 class="nexora-ad-heading">ДЭЛГҮҮР НЭЭХ</h2><p class="nx-market-muted">Дэлгүүрээ бүртгүүлэхийн тулд эхлээд нэвтэрнэ үү.</p>';document.getElementById("nx-store-back").onclick=loadProducts;return;}
     marketUser=data.user;
-    startWholesaleNotificationWatch().catch(err=>console.warn("Мэдэгдлийн тохиргоо:",err));
     const [profileRes,bankRes,feeRes]=await Promise.all([
       db.from("nexora_store_profiles").select("id,user_id,store_name,owner_type,phone,logo_path,description,address").eq("user_id",marketUser.id).maybeSingle(),
       db.from("store_bank_accounts").select("id,bank_name,account_number,account_holder,phone,store_name").eq("user_id",marketUser.id).maybeSingle(),
