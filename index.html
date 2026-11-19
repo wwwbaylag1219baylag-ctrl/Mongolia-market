@@ -627,6 +627,15 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
               return;
             }
 
+            // Худалдааны платформыг гаднаас шинээр нээх бүрд жижиглэнгийн каталогийн эхлэлд оруулна.
+            // Дэд дэлгэцийн хуучин буцах callback-ийг шинэ нэвтрэлтэд дамжуулахгүй.
+            if (screenName === "shop" && currentScreen !== "shop") {
+              window.NEXORA_SHOP_BACK = null;
+              if (typeof window.NEXORA_SHOP_HOME === "function") {
+                window.NEXORA_SHOP_HOME();
+              }
+            }
+
             // Профайл руу орох үед нэвтэрсэн хэрэглэгч админ эсэхийг шалгана.
             // Админ бол тусдаа админ самбар руу шууд шилжинэ.
             if (screenName === "profile") {
@@ -3792,6 +3801,9 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     }catch(err){host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-retail-history-back" aria-label="Буцах" title="Буцах">‹</button><p class="nx-market-muted">Төлбөрийн түүх ачаалахад алдаа: '+esc(err.message||err)+'</p>';document.getElementById("nx-retail-history-back").onclick=backAction;}
   }
   async function openRetailProfile(){
+    // Онлайн дэлгүүрийн профайлын шууд эцэг дэлгэц нь жижиглэнгийн каталог.
+    // Дээд талын ганц буцах сум энэ callback-ийг ашиглана.
+    window.NEXORA_SHOP_BACK = loadProducts;
     host.innerHTML='<div class="nx-market-loading" role="status" style="padding:28px 16px;text-align:center"><div style="font-size:30px;margin-bottom:10px">👤</div><strong>Онлайн дэлгүүрийн профайл нээгдэж байна…</strong></div>';
     try{
       const {data:authData,error:authError}=await db.auth.getUser();
@@ -4488,6 +4500,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     if(error||!order){showCartToast("Захиалга олдсонгүй.");return;}
     await showOrderPayment(order.id,auth.user,{recipientName:order.recipient_name,deliveryPhone:order.delivery_phone,deliveryAddress:order.delivery_address,deliveryNote:order.delivery_note,latitude:order.delivery_latitude,longitude:order.delivery_longitude});
   };
+  // Худалдааны платформыг home-оос дахин нээхэд үргэлж жижиглэнгийн каталогийг эхлүүлнэ.
+  window.NEXORA_SHOP_HOME = loadProducts;
   loadProducts();
 })();
 </script>
@@ -4636,6 +4650,12 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 })();
 </script>
 
+
+<style id="NEXORA-RETAIL-SINGLE-BACK-2026">
+/* Жижиглэнгийн профайл болон засварын дэлгэцэд дээд талын платформын ганц сумыг ашиглана. */
+#market-app #nx-retail-hub-back,
+#market-app #nx-store-back{display:none!important}
+</style>
 
 <style id="NEXORA-SHOP-PREMIUM-2026">
 /* Худалдааны платформын premium layout — бүх өнгө админы theme хувьсагчаас авна */
