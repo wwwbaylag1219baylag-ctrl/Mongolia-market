@@ -3571,10 +3571,16 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     #shop .nx-market-product-tile>.nx-market-product-info{order:2;flex:0 0 auto;width:100%;box-sizing:border-box}
     #shop .nx-market-product-tile>button.nx-market-add-cart{display:block!important;order:3;flex:0 0 44px!important;align-self:stretch!important;box-sizing:border-box;width:100%!important;min-width:100%!important;max-width:100%!important;min-height:44px;margin:7px 0 0!important;position:static!important;float:none!important;grid-column:1/-1!important;clear:both!important}
     #shop .nx-market-product-image{height:145px;object-fit:cover;border-radius:9px;cursor:zoom-in;background:var(--black,#090909);transition:height .2s ease}
-    #shop .nx-market-product-tile.is-expanded{grid-column:1/-1}
-    #shop .nx-market-grid.is-product-focused{grid-template-columns:minmax(0,1fr)}
-    #shop .nx-market-grid.is-product-focused .nx-market-product-tile:not(.is-expanded){display:none!important}
-    #shop .nx-market-product-tile.is-expanded .nx-market-product-image{height:min(58vh,460px);object-fit:contain;background:var(--black,#090909)}
+    #shop .nx-market-category-section{margin:20px 0 26px;min-width:0}
+    #shop .nx-market-category-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px}
+    #shop .nx-market-category-head h2{margin:0;color:var(--gold,#d6ad55);font-size:17px;font-weight:900}
+    #shop .nx-market-category-head span{flex:0 0 auto;color:var(--white,#f7f5ef);opacity:.62;font-size:11px}
+    #shop .nx-market-category-section .nx-market-grid{display:flex!important;flex-flow:row nowrap!important;gap:11px!important;width:100%;min-width:0;margin:0!important;padding:2px 2px 13px;overflow-x:auto!important;overflow-y:hidden!important;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--gold,#d6ad55) transparent}
+    #shop .nx-market-category-section .nx-market-product-tile{flex:0 0 168px!important;width:168px!important;max-width:168px!important;scroll-snap-align:start}
+    #shop .nx-market-category-section .nx-market-product-tile.is-expanded{flex-basis:260px!important;width:260px!important;max-width:260px!important}
+    #shop .nx-market-product-tile.is-expanded .nx-market-product-image{height:210px!important;object-fit:contain;background:var(--black,#090909)}
+    #shop .nx-market-category-section .nx-market-product-tile.is-compact{flex-basis:132px!important;width:132px!important;max-width:132px!important}
+    #shop .nx-market-category-section .nx-market-product-tile.is-compact .nx-market-product-image{height:76px;object-fit:contain}
     #shop .nx-market-product-tile.is-compact .nx-market-product-image{height:76px;object-fit:contain}
     #shop .nx-market-product-tile .nx-market-price{margin:8px 2px 2px;font-size:16px}
     #shop .nx-market-product-info{padding:5px 2px 2px;color:var(--white,#f7f5ef)}
@@ -3661,23 +3667,28 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         <button class="nx-market-btn secondary" id="nx-market-refresh">Шинэчлэх</button>
       </div>
       <input class="nx-market-input" id="nx-market-search" placeholder="Бараа, ангиллаар хайх…" value="${esc(searchText)}">
-      <div class="nx-market-grid ${filtered.some(p=>Number(productViewStates[p.id]||0)===1)?"is-product-focused":""}">${filtered.map((p,index)=>{
-        const view=Number(productViewStates[p.id]||0);
-        return `
-        <article class="nx-market-product-tile ${view===1?"is-expanded":view===2?"is-compact":""}">
-          ${p._displayImageUrl?`<img class="nx-market-product-image" src="${esc(p._displayImageUrl)}" alt="${esc(p.title)}" data-product-toggle="${esc(p.id)}" loading="${index<4?"eager":"lazy"}" fetchpriority="${index<2?"high":"auto"}" decoding="async">`:'<div class="nx-market-product-no-image">Зураг байхгүй</div>'}
-          <div class="nx-market-price">${money(p.price)}</div>
-          ${view===1?`<div class="nx-market-product-info">
-            ${p._galleryUrls?.length>1?`<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:8px 0 12px">${p._galleryUrls.map((url,photoIndex)=>`<img src="${esc(url)}" alt="${esc(p.title)}" data-product-photo="${esc(p.id)}" data-photo-index="${photoIndex}" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:9px;cursor:zoom-in">`).join("")}</div>`:""}
-            <h3>${esc(p.title)}</h3>
-            <div class="nx-market-muted">${esc(p.category)}</div>
-            <p>${esc(p.description||"Тайлбар оруулаагүй")}</p>
-            ${p.location?`<div class="nx-market-muted">Байршил: ${esc(p.location)}</div>`:""}
-            ${p.phone?`<div class="nx-market-muted">Утас: ${esc(p.phone)}</div>`:""}
-          </div>`:""}
-          <button class="nx-market-btn nx-market-add-cart" type="button" data-cart-add="${esc(p.id)}">🛒 Сагслах</button>
-        </article>`;
-      }).join("")||'<p class="nx-market-muted">Одоогоор идэвхтэй бараа алга.</p>'}</div>`;
+      ${(()=>{const groups=new Map();filtered.forEach(p=>{const category=String(p.category||"Бусад").trim()||"Бусад";if(!groups.has(category))groups.set(category,[]);groups.get(category).push(p);});return groups.size?[...groups.entries()].map(([category,items])=>`
+        <section class="nx-market-category-section">
+          <div class="nx-market-category-head"><h2>${esc(category)}</h2><span>${items.length} бараа</span></div>
+          <div class="nx-market-grid">${items.map((p,index)=>{
+            const view=Number(productViewStates[p.id]||0);
+            return `
+            <article class="nx-market-product-tile ${view===1?"is-expanded":view===2?"is-compact":""}">
+              ${p._displayImageUrl?`<img class="nx-market-product-image" src="${esc(p._displayImageUrl)}" alt="${esc(p.title)}" data-product-toggle="${esc(p.id)}" loading="lazy" decoding="async">`:'<div class="nx-market-product-no-image">Зураг байхгүй</div>'}
+              <div class="nx-market-price">${money(p.price)}</div>
+              ${view===1?`<div class="nx-market-product-info">
+                ${p._galleryUrls?.length>1?`<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:8px 0 12px">${p._galleryUrls.map((url,photoIndex)=>`<img src="${esc(url)}" alt="${esc(p.title)}" data-product-photo="${esc(p.id)}" data-photo-index="${photoIndex}" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:9px;cursor:zoom-in">`).join("")}</div>`:""}
+                <h3>${esc(p.title)}</h3>
+                <div class="nx-market-muted">${esc(p.category||"Бусад")}</div>
+                <p>${esc(p.description||"Тайлбар оруулаагүй")}</p>
+                ${p.location?`<div class="nx-market-muted">Байршил: ${esc(p.location)}</div>`:""}
+                ${p.phone?`<div class="nx-market-muted">Утас: ${esc(p.phone)}</div>`:""}
+              </div>`:""}
+              <button class="nx-market-btn nx-market-add-cart" type="button" data-cart-add="${esc(p.id)}">🛒 Сагслах</button>
+            </article>`;
+          }).join("")}</div>
+        </section>`).join(""):'<p class="nx-market-muted">Одоогоор идэвхтэй бараа алга.</p>';})()} 
+`;
     host.querySelectorAll("[data-product-toggle]").forEach(img=>img.addEventListener("click",()=>{const id=img.dataset.productToggle;productViewStates[id]=Number(productViewStates[id]||0)===1?0:1;render();}));
     host.querySelectorAll("[data-product-photo]").forEach(img=>img.addEventListener("click",()=>{const p=products.find(x=>x.id===img.dataset.productPhoto);window.NEXORA_OPEN_PHOTO_ALBUM?.(p?._galleryUrls||[],Number(img.dataset.photoIndex)||0);}));
     document.getElementById("nx-market-search").addEventListener("input",e=>{searchText=e.target.value;const pos=e.target.selectionStart;render();const el=document.getElementById("nx-market-search");el.focus();el.setSelectionRange(pos,pos);});
