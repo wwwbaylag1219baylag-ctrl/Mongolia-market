@@ -4017,57 +4017,149 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     }catch(err){host.classList.add("nx-profile-fullscreen");host.innerHTML='<section class="nx-profile-accordion-root"><button class="nx-profile-back" id="nx-retail-profile-back" type="button" aria-label="Буцах">‹</button><p class="nx-market-muted">Профайл нээхэд алдаа гарлаа: '+esc(err.message||err)+'</p></section>';document.getElementById("nx-retail-profile-back").onclick=showRetailCatalog;}
   }
   async function showStore(backAction=loadProducts){
-    // Дэлгүүрийн профайл засах маягт нь профайлын дэлгэцийн шууд хүүхэд.
-    window.NEXORA_SHOP_BACK = backAction;
+    window.NEXORA_SHOP_BACK=backAction;
     host.classList.add("nx-profile-fullscreen");
     document.getElementById("shop")?.classList.add("nx-shop-profile-fullscreen");
-    const {data,error:authError}=await db.auth.getUser();
-    if(authError||!data.user){host.innerHTML='<button type="button" class="nx-profile-back nx-market-back-arrow" id="nx-store-back" aria-label="Буцах" title="Буцах" style="position:fixed!important;top:12px!important;left:12px!important;z-index:100005!important;width:46px!important;height:46px!important;min-width:46px!important;margin:0!important;padding:0!important">‹</button><h2 class="nexora-ad-heading">ДЭЛГҮҮР НЭЭХ</h2><p class="nx-market-muted">Дэлгүүр нээх хүсэлт гаргахын өмнө заавал нэвтрэх эсвэл бүртгүүлэх шаардлагатай.</p><button type="button" class="nx-market-btn" id="nx-store-login">НЭВТРЭХ / БҮРТГҮҮЛЭХ</button>';document.getElementById("nx-store-login").onclick=()=>window.NEXORA?.open("profile");document.getElementById("nx-store-back").onclick=e=>{e.preventDefault();const b=e.currentTarget;if(b.dataset.backPending==="1")return;b.dataset.backPending="1";b.disabled=true;Promise.resolve(backAction()).catch(err=>{b.dataset.backPending="0";b.disabled=false;console.error("Дэлгүүрийн профайл руу буцахад алдаа:",err);});};return;}
-    marketUser=data.user;
-    const [profileRes,bankRes,feeRes]=await Promise.all([
+    const backButton='<button type="button" class="nx-profile-back nx-market-back-arrow" id="nx-store-back" aria-label="Буцах" title="Буцах" style="position:fixed!important;top:12px!important;left:12px!important;z-index:100005!important;width:46px!important;height:46px!important;min-width:46px!important;margin:0!important;padding:0!important">‹</button>';
+    function bindBack(){
+      const b=document.getElementById("nx-store-back");
+      if(!b)return;
+      b.onclick=e=>{e.preventDefault();if(b.dataset.backPending==="1")return;b.dataset.backPending="1";b.disabled=true;Promise.resolve(backAction()).catch(err=>{b.dataset.backPending="0";b.disabled=false;console.error("Дэлгүүрийн профайл руу буцахад алдаа:",err);});};
+    }
+    const {data:authData,error:authError}=await db.auth.getUser();
+    if(authError||!authData?.user){
+      host.innerHTML=backButton+'<h2 class="nexora-ad-heading">ДЭЛГҮҮР НЭЭХ</h2><p class="nx-market-muted">Дэлгүүр нээх хүсэлт гаргахын өмнө заавал нэвтрэх эсвэл бүртгүүлэх шаардлагатай.</p><button type="button" class="nx-market-btn" id="nx-store-login">НЭВТРЭХ / БҮРТГҮҮЛЭХ</button>';
+      bindBack();document.getElementById("nx-store-login").onclick=()=>window.NEXORA?.open("profile");return;
+    }
+    marketUser=authData.user;
+    const [profileRes,bankRes,feeRes,settingsRes,banksRes]=await Promise.all([
       db.from("nexora_store_profiles").select("id,user_id,store_name,owner_type,phone,logo_path,description,address").eq("user_id",marketUser.id).maybeSingle(),
       db.from("store_bank_accounts").select("id,bank_name,account_number,account_holder,phone,store_name").eq("user_id",marketUser.id).maybeSingle(),
-      db.from("nexora_settings").select("market_logo_fee").eq("id",1).single()
+      db.from("nexora_settings").select("market_logo_fee").eq("id",1).single(),
+      db.from("nexora_settings").select("individual_price,company_price,duration_days,reminder_days").eq("id",1).single(),
+      db.from("bank_accounts").select("id,bank_name,account_number,account_holder").eq("is_active",true).order("display_order",{ascending:true})
     ]);
-    if(profileRes.error){host.innerHTML='<button type="button" class="nx-profile-back nx-market-back-arrow" id="nx-store-back" aria-label="Буцах" title="Буцах" style="position:fixed!important;top:12px!important;left:12px!important;z-index:100005!important;width:46px!important;height:46px!important;min-width:46px!important;margin:0!important;padding:0!important">‹</button><p class="nx-market-muted">Дэлгүүрийн мэдээлэл уншихад алдаа: '+esc(profileRes.error.message)+'</p>';document.getElementById("nx-store-back").onclick=e=>{e.preventDefault();const b=e.currentTarget;if(b.dataset.backPending==="1")return;b.dataset.backPending="1";b.disabled=true;Promise.resolve(backAction()).catch(err=>{b.dataset.backPending="0";b.disabled=false;console.error("Дэлгүүрийн профайл руу буцахад алдаа:",err);});};return;}
-    if(bankRes.error){host.innerHTML='<button type="button" class="nx-profile-back nx-market-back-arrow" id="nx-store-back" aria-label="Буцах" title="Буцах" style="position:fixed!important;top:12px!important;left:12px!important;z-index:100005!important;width:46px!important;height:46px!important;min-width:46px!important;margin:0!important;padding:0!important">‹</button><p class="nx-market-muted">Дансны мэдээлэл уншихад алдаа: '+esc(bankRes.error.message)+'</p>';document.getElementById("nx-store-back").onclick=e=>{e.preventDefault();const b=e.currentTarget;if(b.dataset.backPending==="1")return;b.dataset.backPending="1";b.disabled=true;Promise.resolve(backAction()).catch(err=>{b.dataset.backPending="0";b.disabled=false;console.error("Дэлгүүрийн профайл руу буцахад алдаа:",err);});};return;}
-    if(feeRes.error){host.innerHTML='<button type="button" class="nx-profile-back nx-market-back-arrow" id="nx-store-back" aria-label="Буцах" title="Буцах" style="position:fixed!important;top:12px!important;left:12px!important;z-index:100005!important;width:46px!important;height:46px!important;min-width:46px!important;margin:0!important;padding:0!important">‹</button><p class="nx-market-muted">Төлбөрийн тохиргоо уншихад алдаа: '+esc(feeRes.error.message)+'</p>';document.getElementById("nx-store-back").onclick=e=>{e.preventDefault();const b=e.currentTarget;if(b.dataset.backPending==="1")return;b.dataset.backPending="1";b.disabled=true;Promise.resolve(backAction()).catch(err=>{b.dataset.backPending="0";b.disabled=false;console.error("Дэлгүүрийн профайл руу буцахад алдаа:",err);});};return;}
-    const store=profileRes.data,bank=bankRes.data,logoFee=Number(feeRes.data?.market_logo_fee||0);
+    if(profileRes.error||bankRes.error||feeRes.error||settingsRes.error||banksRes.error){
+      host.innerHTML=backButton+'<p class="nx-market-muted">Дэлгүүрийн мэдээлэл эсвэл төлбөрийн тохиргоо уншихад алдаа: '+esc(profileRes.error?.message||bankRes.error?.message||feeRes.error?.message||settingsRes.error?.message||banksRes.error?.message)+'</p>';bindBack();return;
+    }
+    const store=profileRes.data,bank=bankRes.data,logoFee=Number(feeRes.data?.market_logo_fee||0),settings=settingsRes.data,banks=banksRes.data||[];
+    const durationDays=Number(settings.duration_days||30);
+    let latestPayment=null,subscription=null,notifications=[];
+    if(store){
+      const [paymentRes,subscriptionRes,noticeRes]=await Promise.all([
+        db.from("nexora_store_payments").select("id,status,amount,created_at,admin_note").eq("store_id",store.id).eq("user_id",marketUser.id).order("created_at",{ascending:false}).limit(1).maybeSingle(),
+        db.from("nexora_subscriptions").select("id,status,starts_at,expires_at").eq("store_id",store.id).eq("user_id",marketUser.id).eq("status","active").gt("expires_at",new Date().toISOString()).order("expires_at",{ascending:false}).limit(1).maybeSingle(),
+        db.from("nexora_store_notifications").select("id,title,message,created_at,read_at").eq("store_id",store.id).eq("user_id",marketUser.id).order("created_at",{ascending:false}).limit(10)
+      ]);
+      if(paymentRes.error||subscriptionRes.error||noticeRes.error){
+        host.innerHTML=backButton+'<p class="nx-market-muted">Дэлгүүрийн төлбөрийн төлөв шалгахад алдаа: '+esc(paymentRes.error?.message||subscriptionRes.error?.message||noticeRes.error?.message)+'</p>';bindBack();return;
+      }
+      latestPayment=paymentRes.data;subscription=subscriptionRes.data;notifications=noticeRes.data||[];
+    }
     const logoUrl=store?.logo_path?db.storage.from("market-store-logos").getPublicUrl(store.logo_path).data.publicUrl:"";
-    host.innerHTML='<button type="button" class="nx-profile-back nx-market-back-arrow" id="nx-store-back" aria-label="Буцах" title="Буцах" style="position:fixed!important;top:12px!important;left:12px!important;z-index:100005!important;width:46px!important;height:46px!important;min-width:46px!important;margin:0!important;padding:0!important">‹</button><h2 class="nexora-ad-heading">ОНЛАЙН ДЭЛГҮҮР</h2><p class="nx-market-muted">Дэлгүүр нээх бүртгэл үнэгүй. Онлайн дэлгүүрийн логоны төлбөрийг админ удирдана. Одоогийн лого байршуулах үнэ: <strong>${money(logoFee)}</strong>. Захиалга авах, удирдах болон бусад үйлдэл үнэгүй.</p>'+
-      (logoUrl?'<img src="'+esc(logoUrl)+'" alt="Дэлгүүрийн лого" style="width:92px;height:92px;border-radius:20px;object-fit:cover;border:1px solid var(--border);margin:8px 0 14px">':'')+
-      '<form id="nx-store-form"><label>Онлайн дэлгүүрийн нэр *</label><input class="nx-market-input" name="store_name" required maxlength="100" value="'+esc(store?.store_name||"")+'">'+
-      '<label>Дэлгүүрийн төрөл *</label><select class="nx-market-select" name="owner_type"><option value="individual" '+(store?.owner_type!=="company"?"selected":"")+'>Хувь хүн</option><option value="company" '+(store?.owner_type==="company"?"selected":"")+'>Компани</option></select>'+
-      '<label>Дэлгүүрийн лого (JPG, PNG, WEBP · 5MB хүртэл)</label><input class="nx-market-input" name="store_logo" type="file" accept="image/jpeg,image/png,image/webp">'+
-      '<label>Танилцуулга</label><textarea class="nx-market-textarea" name="description" rows="3" maxlength="1000">'+esc(store?.description||"")+'</textarea>'+
-      '<label>Хаяг / байршил</label><input class="nx-market-input" name="address" maxlength="250" value="'+esc(store?.address||"")+'">'+
-      '<label>Утас</label><input class="nx-market-input" name="phone" type="tel" value="'+esc(store?.phone||"")+'">'+
-      '<button class="nx-market-btn" type="submit">'+(store?"Дэлгүүрийн мэдээлэл хадгалах":"Дэлгүүр нээх")+'</button></form><p id="nx-store-msg" class="nx-market-muted"></p>'+
-      '<div class="nx-market-toolbar" style="margin-top:14px"><button type="button" class="nx-market-btn secondary" id="nx-store-retail-fee-history">Жижиглэнгийн төлбөрийн түүх</button></div><section class="nx-admin-card" style="margin-top:16px"><h3>ЖИЖИГЛЭНГИЙН ЗАХИАЛГЫН ТӨЛБӨР ХҮЛЭЭН АВАХ ДАНС</h3><p class="nx-market-muted">Онлайн дэлгүүрийн худалдан авагчид энэ дансны мэдээлэл харагдана. Бөөний захиалгын урсгалаас тусдаа.</p><form id="nx-store-bank-form"><label>Банкны нэр *</label><input class="nx-market-input" name="bank_name" required value="'+esc(bank?.bank_name||"")+'"><label>Дансны дугаар *</label><input class="nx-market-input" name="account_number" required value="'+esc(bank?.account_number||"")+'"><label>Данс эзэмшигчийн нэр *</label><input class="nx-market-input" name="account_holder" required value="'+esc(bank?.account_holder||"")+'"><label>Утас *</label><input class="nx-market-input" name="bank_phone" type="tel" required value="'+esc(bank?.phone||"")+'"><button class="nx-market-btn" type="submit">Данс хадгалах</button></form><p id="nx-store-bank-msg" class="nx-market-muted"></p></section>';
-    document.getElementById("nx-store-back").onclick=e=>{e.preventDefault();const b=e.currentTarget;if(b.dataset.backPending==="1")return;b.dataset.backPending="1";b.disabled=true;Promise.resolve(backAction()).catch(err=>{b.dataset.backPending="0";b.disabled=false;console.error("Дэлгүүрийн профайл руу буцахад алдаа:",err);});};
-    document.getElementById("nx-store-retail-fee-history").onclick=()=>showRetailFeeHistory(showStore);
-    document.getElementById("nx-store-form").onsubmit=async e=>{
-      e.preventDefault();const form=e.currentTarget,btn=form.querySelector('button[type="submit"]'),msg=document.getElementById("nx-store-msg");btn.disabled=true;
-      try{
-        const v=Object.fromEntries(new FormData(form).entries()),file=v.store_logo;
-        if(file&&file.size>5*1024*1024)throw new Error("Лого 5MB-аас бага байх ёстой.");
-        if(file&&file.size&&!["image/jpeg","image/png","image/webp"].includes(file.type))throw new Error("JPG, PNG эсвэл WEBP зураг сонгоно уу.");
-        const payload={user_id:marketUser.id,store_name:v.store_name.trim(),owner_type:v.owner_type,phone:v.phone.trim(),description:v.description.trim(),address:v.address.trim()};
-        let saved;
-        if(store){const {data,error}=await db.from("nexora_store_profiles").update({store_name:payload.store_name,owner_type:payload.owner_type,phone:payload.phone,description:payload.description,address:payload.address}).eq("id",store.id).eq("user_id",marketUser.id).select("id").single();if(error)throw error;saved=data;}
-        else{const {data,error}=await db.from("nexora_store_profiles").insert(payload).select("id").single();if(error)throw error;saved=data;}
-        if(file&&file.size){
-          const ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg",path=marketUser.id+"/retail-store-logos/"+Date.now()+"."+ext;
-          const {error:uploadError}=await db.storage.from("market-store-logos").upload(path,file,{upsert:false,contentType:file.type,cacheControl:"31536000"});if(uploadError)throw uploadError;
-          if(logoFee>0){await showRetailFeePayment({feeType:"logo",amount:logoFee,storeId:saved.id,pendingLogoPath:path,backAction:()=>showStore(backAction)});return;}else{const {error:updateError}=await db.rpc("nexora_update_free_store_logo",{p_store_id:saved.id,p_logo_path:path,p_market_type:"retail"});if(updateError)throw updateError;}
-        }
-        msg.textContent="✓ Дэлгүүрийн мэдээлэл хадгалагдлаа.";await showStore(backAction);
-      }catch(err){msg.textContent="Алдаа: "+err.message;btn.disabled=false;}
+    const isActive=!!subscription&&new Date(subscription.expires_at)>new Date();
+    const paymentPending=latestPayment?.status==="pending";
+    const amountFor=type=>type==="company"?Number(settings.company_price):Number(settings.individual_price);
+    const renderStoreForm=()=>{
+      const statusHtml=!store?"<p class=\"nx-market-muted\">Мэдээллээ бөглөөд үргэлжлүүлсний дараа сарын эрхийн төлбөрөө төлж, баримтаа админд илгээнэ.</p>":
+        (isActive?'<section class="nx-admin-card" style="margin:12px 0"><h3>ДЭЛГҮҮРИЙН ЭРХ · ИДЭВХТЭЙ</h3><p class="nx-market-muted">Дуусах огноо: '+esc(new Date(subscription.expires_at).toLocaleString("mn-MN"))+' · Үлдсэн '+Math.max(0,Math.ceil((new Date(subscription.expires_at)-Date.now())/86400000))+' хоног</p></section>':
+        (paymentPending?'<section class="nx-admin-card" style="margin:12px 0"><h3>ТӨЛБӨРИЙН БАРИМТ ХЯНАЛТАД</h3><p class="nx-market-muted">'+money(latestPayment.amount)+' · '+esc(new Date(latestPayment.created_at).toLocaleString("mn-MN"))+'</p><p class="nx-market-muted">Админ гүйлгээг шалгаж баталгаажуулсны дараа дэлгүүрийн эрх идэвхжинэ.</p></section>':
+        (latestPayment?.status==="rejected"?'<section class="nx-admin-card" style="margin:12px 0;border-color:#c66"><h3>ТӨЛБӨРИЙН ХҮСЭЛТ ТАТГАЛЗСАН</h3><p class="nx-market-muted">'+esc(latestPayment.admin_note||"Админ төлбөрийг баталгаажуулсангүй.")+'</p><p class="nx-market-muted">Мэдээллээ шалгаад төлбөрийн баримтаа дахин илгээнэ үү.</p></section>':
+        '<section class="nx-admin-card" style="margin:12px 0"><h3>ДЭЛГҮҮРИЙН ЭРХ ИДЭВХГҮЙ</h3><p class="nx-market-muted">Дэлгүүр нээх эсвэл эрхээ сунгахын тулд сарын төлбөрөө төлж, баримтаа илгээнэ үү.</p></section>')));
+      host.innerHTML=backButton+'<h2 class="nexora-ad-heading">'+(store?esc(store.store_name):"ОНЛАЙН ДЭЛГҮҮР НЭЭХ")+'</h2>'+statusHtml+
+        (logoUrl?'<img src="'+esc(logoUrl)+'" alt="Дэлгүүрийн лого" style="width:92px;height:92px;border-radius:20px;object-fit:cover;border:1px solid var(--border);margin:8px 0 14px">':'')+
+        '<form id="nx-store-form"><label>Онлайн дэлгүүрийн нэр *</label><input class="nx-market-input" name="store_name" required maxlength="100" value="'+esc(store?.store_name||"")+'">'+
+        '<label>Дэлгүүрийн төрөл *</label><select class="nx-market-select" name="owner_type"><option value="individual" '+(store?.owner_type!=="company"?"selected":"")+'>Хувь хүн</option><option value="company" '+(store?.owner_type==="company"?"selected":"")+'>Компани</option></select>'+
+        '<label>Дэлгүүрийн лого (JPG, PNG, WEBP · 5MB хүртэл)</label><input class="nx-market-input" name="store_logo" type="file" accept="image/jpeg,image/png,image/webp">'+
+        '<label>Танилцуулга</label><textarea class="nx-market-textarea" name="description" rows="3" maxlength="1000">'+esc(store?.description||"")+'</textarea>'+
+        '<label>Хаяг / байршил</label><input class="nx-market-input" name="address" maxlength="250" value="'+esc(store?.address||"")+'">'+
+        '<label>Утас</label><input class="nx-market-input" name="phone" type="tel" value="'+esc(store?.phone||"")+'">'+
+        '<button class="nx-market-btn" type="submit">'+(store?"МЭДЭЭЛЭЛ ХАДГАЛАХ":"ҮРГЭЛЖЛҮҮЛЭХ")+'</button></form><p id="nx-store-msg" class="nx-market-muted"></p>'+
+        (store?((!paymentPending?'<button type="button" class="nx-market-btn" id="nx-store-pay">'+(isActive?"ЭРХ СУНГАХ / САРЫН ТӨЛБӨР ТӨЛӨХ":"САРЫН ЭРХИЙН ТӨЛБӨР ТӨЛӨХ")+'</button>':'')+
+        '<div class="nx-market-toolbar" style="margin-top:14px"><button type="button" class="nx-market-btn secondary" id="nx-store-retail-fee-history">Жижиглэнгийн төлбөрийн түүх</button></div>'+
+        '<section class="nx-admin-card" style="margin-top:16px"><h3>ЖИЖИГЛЭНГИЙН ЗАХИАЛГЫН ТӨЛБӨР ХҮЛЭЭН АВАХ ДАНС</h3><p class="nx-market-muted">Онлайн дэлгүүрийн худалдан авагчид энэ дансны мэдээлэл харагдана. Бөөний захиалгын урсгалаас тусдаа.</p><form id="nx-store-bank-form"><label>Банкны нэр *</label><input class="nx-market-input" name="bank_name" required value="'+esc(bank?.bank_name||"")+'"><label>Дансны дугаар *</label><input class="nx-market-input" name="account_number" required value="'+esc(bank?.account_number||"")+'"><label>Данс эзэмшигчийн нэр *</label><input class="nx-market-input" name="account_holder" required value="'+esc(bank?.account_holder||"")+'"><label>Утас *</label><input class="nx-market-input" name="bank_phone" type="tel" required value="'+esc(bank?.phone||"")+'"><button class="nx-market-btn" type="submit">Данс хадгалах</button></form><p id="nx-store-bank-msg" class="nx-market-muted"></p></section>':'')+
+        (notifications.length?'<section class="nx-admin-card" style="margin-top:16px"><h3>ДЭЛГҮҮРИЙН МЭДЭГДЭЛ</h3>'+notifications.map(n=>'<article style="padding:10px 0;border-bottom:1px solid #34312c"><strong>'+esc(n.title)+'</strong><p class="nx-market-muted">'+esc(n.message)+'</p><p class="nx-market-muted">'+esc(new Date(n.created_at).toLocaleString("mn-MN"))+'</p>'+(n.read_at?"":'<button class="nx-market-btn secondary" type="button" data-store-notice-read="'+esc(n.id)+'">Уншсан</button>')+'</article>').join("")+'</section>':'');
+      bindBack();
+      const history=document.getElementById("nx-store-retail-fee-history");if(history)history.onclick=()=>showRetailFeeHistory(()=>showStore(backAction));
+      const pay=document.getElementById("nx-store-pay");if(pay)pay.onclick=()=>showStorePayment(store,settings,banks,backAction);
+      host.querySelectorAll("[data-store-notice-read]").forEach(b=>b.onclick=async()=>{const {error}=await db.from("nexora_store_notifications").update({read_at:new Date().toISOString()}).eq("id",b.dataset.storeNoticeRead).eq("user_id",marketUser.id);if(error){alert("Мэдэгдэл шинэчлэхэд алдаа: "+error.message);return;}showStore(backAction);});
+      const storeForm=document.getElementById("nx-store-form");
+      storeForm.onsubmit=async e=>{
+        e.preventDefault();const form=e.currentTarget,btn=form.querySelector('button[type="submit"]'),msg=document.getElementById("nx-store-msg");btn.disabled=true;
+        let uploadedLogoPath=null;
+        try{
+          const v=Object.fromEntries(new FormData(form).entries()),file=v.store_logo;
+          if(!String(v.store_name||"").trim())throw new Error("Дэлгүүрийн нэрээ оруулна уу.");
+          if(file&&file.size>5*1024*1024)throw new Error("Лого 5MB-аас бага байх ёстой.");
+          if(file&&file.size&&!("image/jpeg,image/png,image/webp".split(",").includes(file.type)))throw new Error("JPG, PNG эсвэл WEBP зураг сонгоно уу.");
+          const payload={user_id:marketUser.id,store_name:v.store_name.trim(),owner_type:v.owner_type,phone:String(v.phone||"").trim(),description:String(v.description||"").trim(),address:String(v.address||"").trim()};
+          let saved=store;
+          if(store){
+            const {data,error}=await db.from("nexora_store_profiles").update({store_name:payload.store_name,owner_type:payload.owner_type,phone:payload.phone,description:payload.description,address:payload.address}).eq("id",store.id).eq("user_id",marketUser.id).select("id").single();
+            if(error)throw error;saved=data;
+          }else{
+            const {data,error}=await db.from("nexora_store_profiles").insert(payload).select("id").single();
+            if(error)throw error;saved=data;
+          }
+          if(file&&file.size){
+            const ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg",path=marketUser.id+"/retail-store-logos/"+Date.now()+"."+ext;
+            const {error:uploadError}=await db.storage.from("market-store-logos").upload(path,file,{upsert:false,contentType:file.type,cacheControl:"31536000"});
+            if(uploadError)throw uploadError;uploadedLogoPath=path;
+            if(logoFee>0){
+              if(store){await showRetailFeePayment({feeType:"logo",amount:logoFee,storeId:saved.id,pendingLogoPath:path,backAction:()=>showStore(backAction)});return;}
+            }else{
+              const {error:updateError}=await db.rpc("nexora_update_free_store_logo",{p_store_id:saved.id,p_logo_path:path,p_market_type:"retail"});
+              if(updateError)throw updateError;
+            }
+          }
+          if(!store){await showStorePayment(saved,settings,banks,backAction,uploadedLogoPath);return;}
+          msg.textContent="✓ Дэлгүүрийн мэдээлэл хадгалагдлаа.";await showStore(backAction);
+        }catch(err){if(uploadedLogoPath)await db.storage.from("market-store-logos").remove([uploadedLogoPath]).catch(()=>{});msg.textContent="Алдаа: "+(err.message||err);btn.disabled=false;}
+      };
+      const bankForm=document.getElementById("nx-store-bank-form");
+      if(bankForm)bankForm.onsubmit=async e=>{
+        e.preventDefault();const form=e.currentTarget,btn=form.querySelector('button[type="submit"]'),v=Object.fromEntries(new FormData(form).entries());btn.disabled=true;
+        const {error}=await db.from("store_bank_accounts").upsert({user_id:marketUser.id,store_name:document.querySelector('#nx-store-form [name="store_name"]').value.trim(),bank_name:v.bank_name.trim(),account_number:v.account_number.trim(),account_holder:v.account_holder.trim(),phone:v.bank_phone.trim(),updated_at:new Date().toISOString()},{onConflict:"user_id"});
+        const msg=document.getElementById("nx-store-bank-msg");msg.textContent=error?"Алдаа: "+error.message:"✓ Дансны мэдээлэл хадгалагдлаа.";btn.disabled=false;
+      };
     };
-    document.getElementById("nx-store-bank-form").onsubmit=async e=>{
-      e.preventDefault();const form=e.currentTarget,btn=form.querySelector('button[type="submit"]'),v=Object.fromEntries(new FormData(form).entries());btn.disabled=true;
-      const {error}=await db.from("store_bank_accounts").upsert({user_id:marketUser.id,store_name:document.querySelector('#nx-store-form [name="store_name"]').value.trim(),bank_name:v.bank_name.trim(),account_number:v.account_number.trim(),account_holder:v.account_holder.trim(),phone:v.bank_phone.trim(),updated_at:new Date().toISOString()},{onConflict:"user_id"});
-      const msg=document.getElementById("nx-store-bank-msg");msg.textContent=error?"Алдаа: "+error.message:"✓ Дансны мэдээлэл хадгалагдлаа.";btn.disabled=false;
+    if(!store){
+      renderStoreForm();return;
+    }
+    renderStoreForm();
+  }
+  async function showStorePayment(store,settings,banks,backAction=loadProducts,pendingLogoPath=null){
+    const amount=store.owner_type==="company"?Number(settings.company_price):Number(settings.individual_price);
+    if(!banks?.length){host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-store-payment-back">‹ Буцах</button><h2 class="nexora-ad-heading">ДЭЛГҮҮРИЙН ТӨЛБӨР</h2><p class="nx-market-muted">Админ одоогоор төлбөр хүлээн авах идэвхтэй данс тохируулаагүй байна.</p>';document.getElementById("nx-store-payment-back").onclick=()=>showStore(backAction);return;}
+    window.NEXORA_SHOP_BACK=()=>showStore(backAction);
+    host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-store-payment-back">‹ Буцах</button><h2 class="nexora-ad-heading">ДЭЛГҮҮРИЙН САРЫН ЭРХИЙН ТӨЛБӨР</h2>'+
+      '<p class="nx-market-muted">'+esc(store.store_name)+' · '+(store.owner_type==="company"?"Компани":"Хувь хүн")+'</p>'+
+      '<p class="nx-market-price">'+money(amount)+' / '+Number(settings.duration_days||30)+' хоног</p>'+
+      '<p class="nx-market-muted">Төлбөрөө шилжүүлээд гүйлгээний утга болон баримтаа хавсаргана уу. Админ шалгаж баталгаажуулсны дараа дэлгүүрийн эрх идэвхжинэ.</p>'+
+      '<div>'+banks.map(b=>'<section class="nx-admin-card" style="margin:10px 0"><strong>'+esc(b.bank_name)+'</strong><p class="nx-market-price">'+esc(b.account_number)+'</p><p class="nx-market-muted">'+esc(b.account_holder)+'</p></section>').join("")+'</div>'+
+      '<form id="nx-store-payment-form"><label>Төлбөр шилжүүлсэн банк *</label><select class="nx-market-select" name="bank_id" required>'+banks.map(b=>'<option value="'+esc(b.id)+'">'+esc(b.bank_name)+' · '+esc(b.account_number)+'</option>').join("")+'</select>'+
+      '<label>Гүйлгээний утга / лавлах дугаар *</label><input class="nx-market-input" name="transfer_reference" required maxlength="120">'+
+      '<label>Төлбөрийн баримт (JPG, PNG, WEBP, PDF · 5MB хүртэл) *</label><input class="nx-market-input" name="receipt" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required>'+
+      '<button class="nx-market-btn" type="submit">ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭХ</button></form><p id="nx-store-payment-msg" class="nx-market-muted"></p>';
+    document.getElementById("nx-store-payment-back").onclick=()=>showStore(backAction);
+    document.getElementById("nx-store-payment-form").onsubmit=async e=>{
+      e.preventDefault();const form=e.currentTarget,btn=form.querySelector('button[type="submit"]'),msg=document.getElementById("nx-store-payment-msg"),v=Object.fromEntries(new FormData(form).entries()),bank=banks.find(x=>x.id===v.bank_id),file=v.receipt;
+      if(!bank||!file){msg.textContent="Банк болон төлбөрийн баримтаа сонгоно уу.";return;}
+      if(file.size>5*1024*1024||!["image/jpeg","image/png","image/webp","application/pdf"].includes(file.type)){msg.textContent="5MB хүртэлх JPG, PNG, WEBP эсвэл PDF баримт сонгоно уу.";return;}
+      btn.disabled=true;btn.textContent="ИЛГЭЭЖ БАЙНА…";
+      const ext=(file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"")||"jpg";
+      const path=marketUser.id+"/store/"+store.id+"/"+Date.now()+"."+ext;
+      try{
+        const {error:uploadError}=await db.storage.from("payment-receipts").upload(path,file,{contentType:file.type||"application/octet-stream",upsert:false});
+        if(uploadError)throw uploadError;
+        const {error:insertError}=await db.from("nexora_store_payments").insert({store_id:store.id,user_id:marketUser.id,amount,bank_name:bank.bank_name,transfer_reference:String(v.transfer_reference||"").trim(),receipt_path:path,status:"pending"});
+        if(insertError)throw insertError;
+        if(pendingLogoPath){await showRetailFeePayment({feeType:"logo",amount:0,storeId:store.id,pendingLogoPath,backAction:()=>showStore(backAction)});return;}
+        await showStore(backAction);
+      }catch(err){
+        await db.storage.from("payment-receipts").remove([path]).catch(()=>{});
+        msg.textContent="Алдаа: "+(err.message||err);btn.disabled=false;btn.textContent="ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭХ";
+      }
     };
   }
   // 2026-11-19: submit registration receipts through the authenticated, validated RPC.
