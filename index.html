@@ -4321,7 +4321,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       const catalogView=document.createElement("div");catalogView.id="nx-wholesale-catalog-view";host.appendChild(catalogView);
       const renderWholesaleCategoryView=()=>{
         if(!wholesaleActiveCategory){
-          window.NEXORA_SHOP_BACK=loadProducts;
+          window.NEXORA_SHOP_BACK=()=>renderRetailCategories();
           window.NEXORA_SHOP_NEXT=()=>{if(!wholesalePendingCategory)return;wholesaleActiveCategory=wholesalePendingCategory;wholesalePendingCategory=null;renderWholesaleCategoryView();};
           catalogView.innerHTML='<div class="nx-market-category-choices">'+[...grouped.entries()].map(([category,items])=>'<button type="button" class="nx-market-category-choice" data-wholesale-category="'+esc(category)+'"><strong>'+esc(category)+'</strong><span>'+items.length+' бараа</span></button>').join("")+'</div>';
           catalogView.querySelectorAll("[data-wholesale-category]").forEach(button=>button.onclick=()=>{
