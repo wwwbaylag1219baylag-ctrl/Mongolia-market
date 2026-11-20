@@ -420,7 +420,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   #shop .nx-temu-product-meta { margin-top:3px; color:#888; font-size:10px; line-height:1.4; }
   #shop .nx-temu-product-action { width:calc(100% - 18px); min-height:36px; margin:4px 9px 10px; padding:8px 7px; border:0; border-radius:18px; background:#f26722; color:#fff; font-size:11px; font-weight:850; }
   #shop .nx-temu-empty { margin:6px 14px 20px; padding:28px 14px; border:1px dashed #ddd; border-radius:14px; color:#888; text-align:center; font-size:13px; }
-  #shop .nx-temu-bottom-nav { position:fixed; left:0; right:0; bottom:0; z-index:40; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); padding:7px 6px calc(7px + env(safe-area-inset-bottom)); border-top:1px solid #eee; background:rgba(255,255,255,.98); box-shadow:0 -4px 14px #0000000a; }
+  #shop .nx-temu-bottom-nav { position:fixed; left:0; right:0; bottom:0; z-index:40; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); padding:7px 6px calc(7px + env(safe-area-inset-bottom)); border-top:1px solid #eee; background:rgba(255,255,255,.98); box-shadow:0 -4px 14px #0000000a; }
   #shop .nx-temu-nav-item { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; min-height:48px; padding:3px; border:0; background:transparent; color:#777; font-size:9px; font-weight:700; }
   #shop .nx-temu-nav-item span:first-child { font-size:19px; line-height:1.2; }
   #shop .nx-temu-nav-item.active { color:#ed641f; }
@@ -4607,7 +4607,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     const existing=cart.find(x=>String(x.id)===String(product.id));
     if(existing){if(existing.qty+1>stock){showCartToast("Үлдэгдэл хүрэлцэхгүй байна.");return;}existing.qty++;existing.price=priceForQuantity({price:existing.basePrice,wholesale_price_tiers:existing.wholesale_price_tiers},existing.qty);}
     else{const item={id:product.id,title:product.title,price:Number(product.price||0),basePrice:Number(product.price||0),qty:minQty,minQty,stock,wholesale_price_tiers:[]};item.price=priceForQuantity(item,item.qty);cart.push(item);}
-    showCartToast("✓ "+product.title+" сагсанд нэмэгдлээ.");const cartButton=document.getElementById("nx-retail-cart");if(cartButton)cartButton.textContent="🛒 Сагс ("+cart.reduce((n,x)=>n+x.qty,0)+")";
+    showCartToast("✓ "+product.title+" сагсанд нэмэгдлээ.");const cartButton=document.getElementById("nx-temu-cart");if(cartButton)cartButton.innerHTML="<span>🛒</span><span>Сагс ("+cart.reduce((n,x)=>n+x.qty,0)+")</span>";
   }
   function render(){showRetailCatalog();}
   async function showRetailProductDetail(product){
@@ -4714,12 +4714,10 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       '<button class="nx-temu-nav-item active" id="nx-temu-home" type="button"><span>⌂</span><span>Нүүр</span></button>'+
       '<button class="nx-temu-nav-item" id="nx-temu-categories" type="button"><span>▦</span><span>Ангилал</span></button>'+
       '<button class="nx-temu-nav-item" id="nx-temu-cart" type="button"><span>🛒</span><span>Сагс '+(count?'('+count+')':'')+'</span></button>'+
-      '<button class="nx-temu-nav-item" id="nx-temu-profile-nav" type="button"><span>◉</span><span>Удирдлага</span></button>'+
     '</nav>';
     window.NEXORA_SHOP_BACK=()=>window.NEXORA?.open("home");
     window.NEXORA_SHOP_NEXT=null;
     document.getElementById("nx-temu-profile").onclick=openRetailProfile;
-    document.getElementById("nx-temu-profile-nav").onclick=openRetailProfile;
     document.getElementById("nx-temu-home").onclick=()=>{retailActiveCategory=null;searchText="";const input=document.getElementById("nx-retail-search");if(input)input.value="";renderRetailCategories();host.querySelector(".nx-temu-page")?.scrollTo({top:0,behavior:"smooth"});};
     document.getElementById("nx-temu-categories").onclick=()=>host.querySelector("#nx-temu-category-rail")?.scrollIntoView({behavior:"smooth",block:"start"});
     document.getElementById("nx-temu-cart").onclick=showCart;
