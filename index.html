@@ -4695,10 +4695,12 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     try{
       const {data:auth}=await db.auth.getUser();
       if(!auth?.user)return;
-      const {data:profile}=await db.from("nexora_store_profiles").select("logo_path,wholesale_logo_path").eq("user_id",auth.user.id).maybeSingle();
-      const path=profile?.logo_path||profile?.wholesale_logo_path||"";
-      const url=path?db.storage.from("market-store-logos").getPublicUrl(path).data.publicUrl:(auth.user.user_metadata?.avatar_url||"");
-      if(url){button.innerHTML='<img src="'+esc(url)+'" alt="">';}
+      const {data:profile}=await db.from("nexora_store_profiles").select("logo_path").eq("user_id",auth.user.id).maybeSingle();
+      // Жижиглэнгийн профайлд зөвхөн дэлгүүрийн лого харуулна. Барааны зураг болон хувийн avatar ашиглахгүй.
+      const path=profile?.logo_path||"";
+      const url=path?db.storage.from("market-store-logos").getPublicUrl(path).data.publicUrl:"";
+      if(url){button.innerHTML='<img src="'+esc(url)+'" alt="Дэлгүүрийн лого">';}
+      else{button.innerHTML='<span class="nx-temu-mark" aria-hidden="true">N</span>';}
     }catch(error){console.warn("NEXORA профайлын зураг:",error);}
   }
   function showRetailCatalog(){
