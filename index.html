@@ -4009,12 +4009,35 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       host.innerHTML='<section class="nx-profile-accordion-root"><button class="nx-profile-back" id="nx-retail-profile-back" type="button" aria-label="Буцах">‹</button><h2 class="nx-profile-heading">УДИРДЛАГЫН ХЭСЭГ</h2><div class="nx-profile-accordion-content"><details class="nx-help-group"><summary>Дэлгүүрийн үндсэн мэдээлэл</summary><div class="nx-help-items"><p class="nx-market-muted">'+esc(authData.user.email||"Нэвтэрсэн хэрэглэгч")+'</p>'+(store?'<p class="nx-wholesale-status">'+esc(store.store_name)+' · '+(store.owner_type==="company"?"Компани":"Хувь хүн")+'</p>':'<p class="nx-market-muted">Онлайн дэлгүүрээ нээж үндсэн мэдээллээ бүртгүүлнэ үү.</p>')+'</div></details><details class="nx-help-group"><summary>Дэлгүүрийн бүртгэл ба тохиргоо</summary><div class="nx-help-items"><button class="nx-market-btn" id="nx-retail-hub-store">'+(store?"Дэлгүүрээ удирдах":"＋ Дэлгүүр нээх")+'</button></div></details><details class="nx-help-group"><summary>Бараа ба захиалгын удирдлага</summary><div class="nx-help-items"><button class="nx-market-btn" id="nx-retail-hub-publish">＋ Жижиглэнгийн бараа нийтлэх</button><button class="nx-market-btn secondary" id="nx-retail-hub-products">Миний бараа</button><button class="nx-market-btn secondary" id="nx-retail-hub-orders">Надад ирсэн захиалга</button></div></details><details class="nx-help-group"><summary>Төлбөр ба бусад мэдээлэл</summary><div class="nx-help-items"><button class="nx-market-btn secondary" id="nx-retail-hub-fees">Төлбөрийн түүх</button></div></details></div></section>';
       
       document.getElementById("nx-retail-profile-back").onclick=showRetailCatalog;
-      document.getElementById("nx-retail-hub-store").onclick=()=>showStore(openRetailProfile);
+      document.getElementById("nx-retail-hub-store").onclick=()=>showBusinessTypeChoice(openRetailProfile);
       document.getElementById("nx-retail-hub-publish").onclick=showRetailPublish;
       document.getElementById("nx-retail-hub-products").onclick=showMyRetailProducts;
       document.getElementById("nx-retail-hub-orders").onclick=showRetailSellerOrders;
       document.getElementById("nx-retail-hub-fees").onclick=()=>showRetailFeeHistory(openRetailProfile);
     }catch(err){host.classList.add("nx-profile-fullscreen");host.innerHTML='<section class="nx-profile-accordion-root"><button class="nx-profile-back" id="nx-retail-profile-back" type="button" aria-label="Буцах">‹</button><p class="nx-market-muted">Профайл нээхэд алдаа гарлаа: '+esc(err.message||err)+'</p></section>';document.getElementById("nx-retail-profile-back").onclick=showRetailCatalog;}
+  }
+  async function showBusinessTypeChoice(backAction=loadProducts){
+    window.NEXORA_SHOP_BACK=backAction;
+    host.classList.add("nx-profile-fullscreen");
+    document.getElementById("shop")?.classList.add("nx-shop-profile-fullscreen");
+    const {data:authData,error:authError}=await db.auth.getUser();
+    if(authError||!authData?.user){
+      host.innerHTML='<button type="button" class="nx-market-btn secondary nx-market-back-arrow" id="nx-business-choice-back">‹ Буцах</button><h2 class="nexora-ad-heading">БИЗНЕСЭЭ БҮРТГҮҮЛЭХ</h2><p class="nx-market-muted">Жижиглэнгийн дэлгүүр эсвэл бөөний нийлүүлэгчээр бүртгүүлэхийн тулд эхлээд нэвтэрнэ үү.</p><button type="button" class="nx-market-btn" id="nx-business-choice-login">НЭВТРЭХ / БҮРТГҮҮЛЭХ</button>';
+      document.getElementById("nx-business-choice-back").onclick=backAction;
+      document.getElementById("nx-business-choice-login").onclick=()=>window.NEXORA?.open("profile");
+      return;
+    }
+    marketUser=authData.user;
+    host.innerHTML='<button type="button" class="nx-market-btn secondary nx-market-back-arrow" id="nx-business-choice-back">‹ Буцах</button>'+
+      '<h2 class="nexora-ad-heading">БИЗНЕСЭЭ БҮРТГҮҮЛЭХ</h2>'+
+      '<p class="nx-market-muted">Та ямар төрлийн худалдаа эрхлэх вэ? Сонгосон төрлийн бүртгэл, төлбөр, бараа болон захиалга тусдаа удирдагдана.</p>'+
+      '<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0">'+
+      '<button type="button" id="nx-business-choice-retail" class="nx-admin-card" style="display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:10px;padding:16px;border:1px solid var(--border);border-radius:16px;background:var(--card);color:var(--text);min-height:190px;cursor:pointer"><span style="font-size:34px">🛍️</span><strong style="font-size:15px">ЖИЖИГЛЭН ХУДАЛДАА</strong><span class="nx-market-muted" style="font-size:12px">Онлайн дэлгүүр нээж бараагаа ширхэгээр худалдах</span><span style="font-size:11px;font-weight:700">B2C · Жижиглэнгийн дэлгүүр</span></button>'+
+      '<button type="button" id="nx-business-choice-wholesale" class="nx-admin-card" style="display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:10px;padding:16px;border:1px solid var(--border);border-radius:16px;background:var(--card);color:var(--text);min-height:190px;cursor:pointer"><span style="font-size:34px">📦</span><strong style="font-size:15px">БӨӨНИЙ НИЙЛҮҮЛЭГЧ</strong><span class="nx-market-muted" style="font-size:12px">Бараагаа бөөний үнээр нийлүүлж захиалга авах</span><span style="font-size:11px;font-weight:700">B2B · Нийлүүлэгч</span></button>'+
+      '</div><p class="nx-market-muted" style="font-size:12px">Хоёр төрлийн худалдаа эрхэлдэг бол тус бүрээр нь бүртгүүлж болно.</p>';
+    document.getElementById("nx-business-choice-back").onclick=backAction;
+    document.getElementById("nx-business-choice-retail").onclick=()=>showStore(()=>showBusinessTypeChoice(backAction));
+    document.getElementById("nx-business-choice-wholesale").onclick=()=>showSupplier(()=>showBusinessTypeChoice(backAction));
   }
   async function showStore(backAction=loadProducts){
     window.NEXORA_SHOP_BACK=backAction;
@@ -4498,7 +4521,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
           
           document.getElementById("nx-wholesale-profile-back").onclick=showWholesaleCatalog;
           const bind=(id,action,label)=>{const el=document.getElementById(id);if(el)el.onclick=()=>runWholesaleScreen(action,label);};
-          bind("nx-hub-register",()=>showSupplier(openWholesaleProfile),"Нийлүүлэгчээр бүртгүүлэх");
+          bind("nx-hub-register",()=>showBusinessTypeChoice(openWholesaleProfile),"Бизнесийн төрлөө сонгох");
           bind("nx-hub-store",()=>showWholesaleStore(openWholesaleProfile),"Нийлүүлэгчийн профайл");
           bind("nx-hub-publish",()=>showPublish(openWholesaleProfile),"Бөөний бараа нийтлэх");
           bind("nx-hub-products",showMyWholesaleProducts,"Миний бөөний бараа");
