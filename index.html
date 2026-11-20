@@ -5736,4 +5736,116 @@ button.nx-platform-back:focus-visible,
   #ads .nx-accordion-panel { grid-template-columns: minmax(0,1fr); }
 }
 
+
+/* NEXORA ADS — үндсэн 8 ангиллын шинэ premium grid */
+#ads .page-content .nx-full-screen .nexora-ad-grid{
+  width:100%;
+  max-width:1080px;
+  box-sizing:border-box;
+  margin:18px auto 0;
+  padding:0 2px 28px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+#ads .page-content .nx-full-screen .nexora-ad-category{
+  position:relative;
+  box-sizing:border-box;
+  min-width:0;
+  min-height:164px;
+  padding:25px 11px 15px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:11px;
+  text-align:center;
+  border:1px solid rgba(214,173,85,.32);
+  border-radius:20px;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(214,173,85,.15),transparent 58%),
+    linear-gradient(145deg,#222018 0%,#171717 68%,#111 100%);
+  box-shadow:0 9px 22px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.06);
+  overflow:hidden;
+}
+#ads .page-content .nx-full-screen .nexora-ad-category::before{
+  content:"";
+  position:absolute;
+  inset:0 22% auto;
+  height:2px;
+  border-radius:0 0 8px 8px;
+  background:linear-gradient(90deg,transparent,rgba(231,190,99,.8),transparent);
+  opacity:.7;
+}
+#ads .page-content .nx-full-screen .nexora-ad-category::after{
+  content:"↗";
+  position:absolute;
+  right:11px;
+  bottom:9px;
+  margin:0;
+  color:#d6ad55;
+  font-size:17px;
+  opacity:.72;
+}
+#ads .page-content .nx-full-screen .nexora-ad-icon{
+  flex:0 0 62px;
+  width:62px;
+  height:62px;
+  border-radius:19px;
+  font-size:34px;
+  background:linear-gradient(145deg,rgba(214,173,85,.23),rgba(214,173,85,.06));
+  border:1px solid rgba(214,173,85,.27);
+  box-shadow:0 5px 17px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.1);
+}
+#ads .page-content .nx-full-screen .nexora-ad-name{
+  flex:0 0 auto;
+  width:100%;
+  max-width:230px;
+  min-height:2.6em;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#f7f2e7;
+  font-size:13px;
+  line-height:1.32;
+  font-weight:800;
+  letter-spacing:-.15px;
+  overflow-wrap:normal;
+  word-break:normal;
+}
+#ads .page-content .nx-full-screen .nexora-ad-number{
+  position:absolute;
+  top:9px;
+  right:9px;
+  margin:0;
+  padding:4px 7px;
+  font-size:8px;
+  letter-spacing:.25px;
+  background:rgba(214,173,85,.09);
+}
+#ads .page-content .nx-full-screen .nexora-ad-category:active,
+#ads .page-content .nx-full-screen .nexora-ad-category.selected{
+  transform:scale(.975);
+  border-color:#f0c66c;
+  background:radial-gradient(circle at 50% 0%,rgba(214,173,85,.23),transparent 62%),#211d15;
+  box-shadow:0 0 0 2px rgba(214,173,85,.14),0 8px 20px rgba(0,0,0,.3);
+}
+@media(min-width:700px){
+  #ads .page-content .nx-full-screen .nexora-ad-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:16px;
+    padding-inline:4px;
+  }
+  #ads .page-content .nx-full-screen .nexora-ad-category{min-height:190px;padding:30px 14px 18px}
+  #ads .page-content .nx-full-screen .nexora-ad-icon{width:72px;height:72px;flex-basis:72px;font-size:39px}
+  #ads .page-content .nx-full-screen .nexora-ad-name{font-size:15px}
+}
+@media(max-width:380px){
+  #ads .page-content .nx-full-screen .nexora-ad-grid{gap:9px;padding-inline:0}
+  #ads .page-content .nx-full-screen .nexora-ad-category{min-height:150px;padding:23px 7px 12px;border-radius:16px;gap:9px}
+  #ads .page-content .nx-full-screen .nexora-ad-icon{width:53px;height:53px;flex-basis:53px;font-size:29px;border-radius:15px}
+  #ads .page-content .nx-full-screen .nexora-ad-name{font-size:11.5px}
+  #ads .page-content .nx-full-screen .nexora-ad-number{font-size:7px;right:6px;top:7px;padding:4px 5px}
+}
+
 </style>
