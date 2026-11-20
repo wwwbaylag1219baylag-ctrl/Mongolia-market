@@ -458,11 +458,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 
           </button>
 
-          <button
-            class="platform-card nx-commerce-entry"
-            type="button"
-            onclick="NEXORA.open('shop')"
-            aria-label="NEXORA худалдааны платформ руу орох">
+          <div class="platform-card nx-commerce-entry" aria-label="NEXORA худалдааны платформ">
 
             <span class="nx-commerce-entry-head">
               <span class="nx-commerce-entry-logo">NEXORA</span>
@@ -471,17 +467,17 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
             </span>
 
             <span class="nx-commerce-entry-zones">
-              <span class="nx-commerce-entry-zone nx-commerce-retail" role="button" tabindex="0" aria-label="Онлайн дэлгүүр рүү орох" onclick="event.stopPropagation();NEXORA.open('shop').then(()=>window.NEXORA_SHOP_BACK?.('retail'))" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();NEXORA.open('shop').then(()=>window.NEXORA_SHOP_BACK?.('retail'))}">
+              <button type="button" class="nx-commerce-entry-zone nx-commerce-retail" aria-label="Онлайн дэлгүүр рүү орох" onclick="window.NEXORA_SHOP_OPEN('retail')">
                 <span class="nx-commerce-entry-symbol" aria-hidden="true">🛍️</span>
                 <span class="nx-commerce-entry-name">Онлайн<br>Дэлгүүр</span>
                 <span class="nx-commerce-entry-caption">Жижиглэнгийн худалдаа</span>
-              </span>
-              <span class="nx-commerce-entry-zone nx-commerce-wholesale" role="button" tabindex="0" aria-label="Бөөний худалдаа руу орох" onclick="event.stopPropagation();NEXORA.open('shop').then(()=>window.NEXORA_SHOP_BACK?.('wholesale'))" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();NEXORA.open('shop').then(()=>window.NEXORA_SHOP_BACK?.('wholesale'))}">
+              </div>
+              <button type="button" class="nx-commerce-entry-zone nx-commerce-wholesale" aria-label="Бөөний худалдаа руу орох" onclick="window.NEXORA_SHOP_OPEN('wholesale')">
                 <span class="nx-commerce-entry-symbol" aria-hidden="true">▤</span>
                 <span class="nx-commerce-entry-name">Бөөний<br>Худалдаа</span>
                 <span class="nx-commerce-entry-caption">Бөөнөөр худалдаа</span>
-              </span>
-            </span>
+              </button>
+            </div>
             <span class="nx-commerce-entry-hint">ХУДАЛДААНЫ ПЛАТФОРМД НЭВТРЭХ ›</span>
           </button>
 
@@ -4669,6 +4665,13 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     };
     host.innerHTML="";
   }
+  // Хоёр тусдаа товчны найдвартай чиглүүлэлт: тус бүр өөрийн каталогийг нээнэ.
+  window.NEXORA_SHOP_OPEN = async function(zone){
+    if(zone!=="retail"&&zone!=="wholesale")return;
+    await window.NEXORA?.open("shop");
+    if(zone==="retail")showRetailCatalog();
+    else await showWholesaleCatalog();
+  };
   function renderRetailCategories(){
     const target=document.getElementById("nx-retail-categories");if(!target)return;
     const query=String(searchText||"").trim().toLowerCase();
