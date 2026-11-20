@@ -435,6 +435,61 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     #shop .nx-temu-products { gap:13px; padding-inline:14px; }
   }
 </style>
+
+<style id="NEXORA-COMMERCE-DUAL-SCROLL-2026">
+/* Худалдааны барааны жагсаалт: босоо хуудас + хэвтээ зурагтай барааны мөр */
+@media(max-width:699px){
+  #market-app:has(.nx-market-grid){
+    height:100dvh!important;min-height:100dvh!important;
+    overflow-y:auto!important;overflow-x:hidden!important;
+    overscroll-behavior-y:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+    touch-action:pan-y!important;
+  }
+  #shop .nx-temu-page{
+    overflow-y:auto!important;overflow-x:hidden!important;
+    overscroll-behavior-y:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+    touch-action:pan-y!important;
+  }
+  #market-app .nx-market-grid{
+    display:flex!important;flex-flow:row nowrap!important;
+    align-items:stretch!important;gap:12px!important;
+    width:100%!important;max-width:100%!important;
+    overflow-x:auto!important;overflow-y:hidden!important;
+    padding:8px 14px 18px!important;margin:14px 0!important;
+    scroll-snap-type:x mandatory!important;
+    scroll-padding-left:14px!important;
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior-x:contain!important;
+    touch-action:pan-x pan-y!important;
+    scrollbar-width:thin!important;
+  }
+  #market-app .nx-market-grid>.nx-market-product-tile{
+    box-sizing:border-box!important;
+    flex:0 0 min(72vw,260px)!important;
+    width:min(72vw,260px)!important;min-width:min(72vw,260px)!important;
+    max-width:260px!important;height:auto!important;
+    scroll-snap-align:start!important;
+  }
+}
+@media(min-width:700px){
+  #market-app .nx-market-grid{
+    display:flex!important;flex-flow:row nowrap!important;
+    align-items:stretch!important;gap:16px!important;
+    overflow-x:auto!important;overflow-y:hidden!important;
+    padding:10px 4px 20px!important;
+    scroll-snap-type:x proximity!important;
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior-x:contain!important;
+  }
+  #market-app .nx-market-grid>.nx-market-product-tile{
+    flex:0 0 250px!important;width:250px!important;min-width:250px!important;
+    scroll-snap-align:start!important;
+  }
+}
+</style>
+
 </head>
 
 <body>
