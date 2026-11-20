@@ -5733,6 +5733,41 @@ html,body{
 }
 #market-app #nx-store-back:disabled{opacity:.65!important;pointer-events:none!important}
 </style>
+
+<style id="NEXORA-SUPPLIER-FORM-BACK-VISIBILITY-FIX-2026">
+/* Нийлүүлэгчийн бүртгэл болон төлбөрийн дэлгэцээс буцах сумыг ил гаргана. */
+#market-app #nx-supplier-back,
+#market-app #nx-supplier-payment-back{
+  display:inline-flex!important;
+  visibility:visible!important;
+  pointer-events:auto!important;
+  position:relative!important;
+  z-index:100020!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:44px!important;
+  min-width:44px!important;
+  height:44px!important;
+  min-height:44px!important;
+  margin:0 0 14px!important;
+  padding:0!important;
+  border:1px solid #16c8ff!important;
+  border-radius:12px!important;
+  background:#061a43!important;
+  color:#b8efff!important;
+  font-size:30px!important;
+  font-weight:500!important;
+  line-height:1!important;
+  opacity:1!important;
+  box-shadow:0 0 10px rgba(0,174,255,.28)!important;
+}
+#market-app #nx-supplier-back:active,
+#market-app #nx-supplier-payment-back:active{
+  background:#0b2b60!important;
+  transform:scale(.97);
+}
+</style>
+
 </body>
 
 <style id="NEXORA-RETAIL-PLATFORM-HEADER-BACK-ARROW-2026">
