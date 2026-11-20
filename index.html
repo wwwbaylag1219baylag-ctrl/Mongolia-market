@@ -1657,6 +1657,12 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 
   function showCategoryList() {
     const categories = window.NEXORA_AD_CATEGORIES || [];
+    currentCategory = null;
+    currentGroup = null;
+    currentSubcategory = null;
+    selectedCategory = null;
+    selectedGroup = null;
+    selectedItem = null;
 
     content.innerHTML = `
       <div class="nx-full-screen" data-nx-stage="categories">
@@ -1692,6 +1698,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     currentCategory = category;
     currentGroup = null;
     currentSubcategory = null;
+    selectedGroup = null;
+    selectedItem = null;
 
     const groups = subcategories[category.number] || {};
 
@@ -1760,6 +1768,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 
   function showSubcategoryItems(group) {
     currentGroup = group;
+    currentSubcategory = null;
+    selectedItem = null;
 
     const items = subcategories[currentCategory.number][group];
 
