@@ -671,7 +671,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
               window.NEXORA_SHOP_BACK = null;
               window.NEXORA_SHOP_PROFILE = null;
               if (typeof window.NEXORA_SHOP_HOME === "function") {
-                window.NEXORA_SHOP_HOME();
+                await window.NEXORA_SHOP_HOME();
               }
             }
 
@@ -4597,13 +4597,16 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     renderRetailCategories();
   }
   function showShopLanding(){
-    // Худалдааны ганц үндсэн зураг гаднах home дэлгэц дээр байна; дотоод дэлгэцэд давхарлахгүй.
+    // Нүүрний зураг дээр баруун шудрахад тухайн каталог, зүүн шудрахад тухайн удирдлага нээгдэнэ.
     host.classList.remove("nx-profile-fullscreen");
     document.getElementById("shop")?.classList.remove("nx-shop-profile-fullscreen");
-    window.NEXORA_SHOP_BACK=()=>window.NEXORA?.open("home");
+    window.NEXORA_SHOP_BACK=(zone)=>{
+      if(zone==="retail")showRetailCatalog();
+      else if(zone==="wholesale")showWholesaleCatalog();
+    };
     window.NEXORA_SHOP_NEXT=(zone)=>{
-      if(zone==="retail"){window.NEXORA_SHOP_BACK=()=>window.NEXORA?.open("home");openRetailProfile();}
-      else if(zone==="wholesale"){window.NEXORA_SHOP_BACK=()=>window.NEXORA?.open("home");showWholesaleCatalog().then(()=>document.getElementById("nx-wholesale-profile-entry")?.click());}
+      if(zone==="retail")openRetailProfile();
+      else if(zone==="wholesale")showWholesaleCatalog().then(()=>document.getElementById("nx-wholesale-profile-entry")?.click());
     };
     host.innerHTML="";
   }
