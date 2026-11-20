@@ -336,6 +336,7 @@
 html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:hidden}
   
 /* NEXORA mobile dual marketplace home: retail above, wholesale below */
+@media(max-width:699px){.nx-shop-profile-open{display:inline-flex;align-items:center;gap:6px}.nx-shop-profile-logo{width:27px;height:27px;flex:0 0 27px;display:grid;place-items:center;overflow:hidden;border:1px solid rgba(214,173,85,.7);border-radius:50%;background:#090909;color:#d6ad55;font-size:13px;font-weight:900}.nx-shop-profile-logo img{width:100%;height:100%;object-fit:cover;border-radius:50%}}
 @media(max-width:699px){
   #market-app{padding:0!important;min-height:calc(100dvh - 0px)!important;height:100dvh!important;overflow:hidden!important}
   #shop>.topbar,#shop>.footer{display:none!important}
@@ -4275,7 +4276,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     stopProductApprovalWatch();
     startWholesaleNotificationWatch().catch(err=>console.warn("Мэдэгдлийн тохиргоо:",err));
     host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-wholesale-back" aria-label="Буцах" title="Буцах">‹</button><p class="nx-market-muted">Бөөний бараануудыг ачаалж байна…</p>';
-    document.getElementById("nx-wholesale-back").onclick=()=>{window.NEXORA_SHOP_BACK=null;loadProducts();};
+    document.getElementById("nx-wholesale-back").onclick=showShopLanding;
     try{
       const {data,error}=await db.from("wholesale_products").select("id,owner_id,title,category,price,description,phone,location,image_paths,stock_quantity,min_order_quantity,wholesale_price_tiers,created_at").eq("status","active").order("created_at",{ascending:false}).limit(100);
       if(error)throw error;
@@ -4559,7 +4560,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       if(zone==="retail")showRetailCatalog();
       else if(zone==="wholesale"){window.NEXORA_SHOP_PROFILE_RETURN=showShopLanding;showWholesaleCatalog();}
     };
-    host.innerHTML='<div class="nx-shop-dual-home"><section class="nx-shop-zone nx-shop-zone-retail" data-shop-zone="retail"><div class="nx-shop-zone-head"><div class="nx-shop-zone-brand"><span class="nx-shop-zone-logo" id="nx-shop-retail-logo">N</span><div><strong>ОНЛАЙН ДЭЛГҮҮР</strong><small>Жижиглэн худалдаа</small></div></div><button type="button" class="nx-shop-profile-open" id="nx-shop-retail-profile">ПРОФАЙЛ <span>›</span></button></div><div class="nx-shop-zone-prompt"><span class="nx-shop-zone-symbol">◇</span><strong>Бараа үзэх</strong><small>Зүүн тийш шударна уу</small></div></section><section class="nx-shop-zone nx-shop-zone-wholesale" data-shop-zone="wholesale"><div class="nx-shop-zone-head"><div class="nx-shop-zone-brand"><span class="nx-shop-zone-logo" id="nx-shop-wholesale-logo">N</span><div><strong>БӨӨНИЙ ХУДАЛДАА</strong><small>Нийлүүлэгчийн бараа</small></div></div><button type="button" class="nx-shop-profile-open" id="nx-shop-wholesale-profile">ПРОФАЙЛ <span>›</span></button></div><div class="nx-shop-zone-prompt"><span class="nx-shop-zone-symbol">▦</span><strong>Бөөний бараа үзэх</strong><small>Зүүн тийш шударна уу</small></div></section></div>';
+    host.innerHTML='<div class="nx-shop-dual-home"><section class="nx-shop-zone nx-shop-zone-retail" data-shop-zone="retail"><div class="nx-shop-zone-head"><div class="nx-shop-zone-brand"><span class="nx-shop-zone-logo" id="nx-shop-retail-logo">N</span><div><strong>ОНЛАЙН ДЭЛГҮҮР</strong><small>Жижиглэн худалдаа</small></div></div><button type="button" class="nx-shop-profile-open" id="nx-shop-retail-profile"><span class="nx-shop-profile-logo" id="nx-shop-retail-profile-logo">N</span><span>ПРОФАЙЛ</span><span>›</span></button></div><div class="nx-shop-zone-prompt"><span class="nx-shop-zone-symbol">◇</span><strong>Бараа үзэх</strong><small>Зүүн тийш шударна уу</small></div></section><section class="nx-shop-zone nx-shop-zone-wholesale" data-shop-zone="wholesale"><div class="nx-shop-zone-head"><div class="nx-shop-zone-brand"><span class="nx-shop-zone-logo" id="nx-shop-wholesale-logo">N</span><div><strong>БӨӨНИЙ ХУДАЛДАА</strong><small>Нийлүүлэгчийн бараа</small></div></div><button type="button" class="nx-shop-profile-open" id="nx-shop-wholesale-profile"><span class="nx-shop-profile-logo" id="nx-shop-wholesale-profile-logo">N</span><span>ПРОФАЙЛ</span><span>›</span></button></div><div class="nx-shop-zone-prompt"><span class="nx-shop-zone-symbol">▦</span><strong>Бөөний бараа үзэх</strong><small>Зүүн тийш шударна уу</small></div></section></div>';
     document.getElementById("nx-shop-retail-profile").onclick=openRetailProfile;
     document.getElementById("nx-shop-wholesale-profile").onclick=()=>{
       window.NEXORA_SHOP_PROFILE_RETURN=showShopLanding;
@@ -4572,8 +4573,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       const retail=profile.logo_path?db.storage.from("market-store-logos").getPublicUrl(profile.logo_path).data.publicUrl:"";
       const wholesale=profile.wholesale_logo_path?db.storage.from("market-store-logos").getPublicUrl(profile.wholesale_logo_path).data.publicUrl:"";
       const retailNode=document.getElementById("nx-shop-retail-logo"),wholesaleNode=document.getElementById("nx-shop-wholesale-logo");
-      if(retailNode&&retail)retailNode.innerHTML='<img src="'+esc(retail)+'" alt="Онлайн дэлгүүрийн байгууллагын лого">';
-      if(wholesaleNode&&wholesale)wholesaleNode.innerHTML='<img src="'+esc(wholesale)+'" alt="Бөөний худалдааны байгууллагын лого">';
+      if(retailNode&&retail)retailNode.innerHTML='<img src="'+esc(retail)+'" alt="Онлайн дэлгүүрийн байгууллагын лого">';const retailProfileLogo=document.getElementById("nx-shop-retail-profile-logo");if(retailProfileLogo&&retail)retailProfileLogo.innerHTML='<img src="'+esc(retail)+'" alt="Онлайн дэлгүүрийн байгууллагын лого">';
+      if(wholesaleNode&&wholesale)wholesaleNode.innerHTML='<img src="'+esc(wholesale)+'" alt="Бөөний худалдааны байгууллагын лого">';const wholesaleProfileLogo=document.getElementById("nx-shop-wholesale-profile-logo");if(wholesaleProfileLogo&&wholesale)wholesaleProfileLogo.innerHTML='<img src="'+esc(wholesale)+'" alt="Бөөний худалдааны байгууллагын лого">';
     }).catch(err=>console.warn("Худалдааны профайлын лого:",err));
   }
   function renderRetailCategories(){
