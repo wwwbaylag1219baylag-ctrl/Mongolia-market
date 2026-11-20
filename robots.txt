@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://wwwbaylag1219baylag-ctrl.github.io/Mongolia-market/sitemap.xml
