@@ -1700,66 +1700,15 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     currentSubcategory = null;
     selectedGroup = null;
     selectedItem = null;
-
-    const groups = subcategories[category.number] || {};
-
-    if (category.number === 3) {
-      const jobFields = Object.keys(groups);
-      content.innerHTML = `
-        <div class="nx-full-screen" data-nx-stage="groups">
-          ${backButton()}
-          <div class="nx-category-path"><span>ҮНДСЭН АНГИЛАЛ</span><b>›</b><strong>${category.name}</strong></div>
-          <div class="nx-category-heading">
-            <div class="nx-screen-title">${category.icon} ${category.name}</div>
-          </div>
-          <div class="nx-screen-subtitle">Та одоо <strong>${category.name}</strong> ангилалд байна. Ажлын салбараа сонгоно уу.</div>
-          <div class="nx-subcategory-list nx-category-card-list nx-job-sector-grid">
-            ${jobFields.map((field, index) => `
-              <button type="button" class="nx-subcategory-item nx-choice-card" data-nx-job-field="${index}">
-                <span class="nx-choice-index">${String(index+1).padStart(2,"0")}</span><span class="nx-choice-name">${field}</span><span class="nx-choice-arrow">›</span>
-              </button>
-            `).join("")}
-          </div>
-        </div>
-      `;
-      return;
-    }
-
+    const groups = Object.keys(subcategories[category.number] || {});
     content.innerHTML = `
       <div class="nx-full-screen" data-nx-stage="groups">
-        ${backButton()}
-        <div class="nx-category-path"><span>ҮНДСЭН АНГИЛАЛ</span><b>›</b><strong>${category.name}</strong></div>
-        <div class="nx-category-heading">
-          <div class="nx-screen-title">${category.icon} ${category.name}</div>
-        </div>
-        <div class="nx-screen-subtitle">
-          Та одоо <strong>${category.name}</strong> ангилалд байна. Доорх дэд ангиллыг сонгоод дэлгэрүүлнэ үү.
-        </div>
-
-        <div class="nx-subcategory-list nx-subcategory-accordion nx-category-card-list">
-          ${Object.entries(groups).map(([group, items], index) => `
-            <section class="nx-accordion-section">
-              <button type="button"
-                class="nx-subcategory-item nx-accordion-tab nx-choice-card"
-                data-nx-group="${index}"
-                aria-expanded="false">
-                <span class="nx-choice-name">${group}</span>
-                <span class="nx-choice-count">${items.length} төрөл</span>
-                <span class="nx-accordion-arrow">⌄</span>
-              </button>
-              <div class="nx-accordion-panel" data-nx-group-panel="${index}" hidden>
-                ${items.length ? items.map((item, itemIndex) => `
-                  <button type="button"
-                    class="nx-subcategory-item nx-accordion-option"
-                    data-nx-item="${itemIndex}">
-                    <span>${item}</span>
-                    <span>›</span>
-                  </button>
-                `).join("") : `
-                  <div class="nx-empty-info">Одоогоор дэд ангилал байхгүй.</div>
-                `}
-              </div>
-            </section>
+        <div class="nx-subcategory-list nx-category-card-list nx-job-sector-grid">
+          ${groups.map((group, index) => `
+            <button type="button" class="nx-subcategory-item nx-choice-card" data-nx-group="${index}" aria-pressed="false">
+              <span class="nx-choice-index">${String(index+1).padStart(2,"0")}</span>
+              <span class="nx-choice-name">${group}</span>
+            </button>
           `).join("")}
         </div>
       </div>
@@ -5236,6 +5185,24 @@ html,body{
   #market-app .nx-market-product-detail,#market-app .nx-market-card{touch-action:pan-y}
 }
 @media(max-width:380px){#market-app .nx-market-grid{gap:9px!important}}
+</style>
+
+<style id="NEXORA-ADS-SWIPE-FULLSCREEN-2026">
+@media(max-width:699px){
+  #ads .page-content{touch-action:pan-y;overscroll-behavior-y:contain}
+  #ads .page-content .nx-full-screen{min-height:calc(100dvh - 72px);height:auto;box-sizing:border-box;padding:14px 12px;display:flex;flex-direction:column;justify-content:center}
+  #ads .page-content .nx-full-screen .nx-category-heading,
+  #ads .page-content .nx-full-screen .nx-screen-subtitle,
+  #ads .page-content .nx-full-screen .nx-category-path,
+  #ads .page-content .nx-full-screen .nx-back,
+  #ads .page-content .nx-full-screen .nx-platform-back{display:none!important}
+  #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-grid{width:100%;max-width:900px;margin:auto}
+  #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-number{display:none!important}
+  #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category{min-height:clamp(125px,21vh,205px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+  #ads .page-content .nx-full-screen .nx-subcategory-list{width:100%;max-width:900px;margin:auto}
+  #ads .page-content .nx-full-screen .nx-subcategory-item.selected{border-color:#f3ca69!important;background:linear-gradient(110deg,#493919,#282116)!important;box-shadow:0 0 0 2px rgba(214,173,85,.2),0 8px 24px rgba(214,173,85,.12)!important}
+  #ads .page-content .nx-full-screen .nx-list-message{padding:20px}
+}
 </style>
 </body>
 
