@@ -899,15 +899,17 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   }
 
   function cacheUserAvatar(user) {
-    const avatar = user?.user_metadata?.avatar_url ||
-      user?.user_metadata?.picture || user?.user_metadata?.photo_url || "";
+    const avatar = user?.user_metadata?.profile_avatar_url ||
+      user?.user_metadata?.avatar_url || user?.user_metadata?.picture ||
+      user?.user_metadata?.photo_url || "";
     if (!avatar || !/^https:\/\//i.test(String(avatar))) return;
     try { localStorage.setItem(AVATAR_CACHE_KEY, String(avatar)); } catch (_) {}
   }
 
   function avatarMarkup(user) {
-    const avatar = user?.user_metadata?.avatar_url ||
-      user?.user_metadata?.picture || user?.user_metadata?.photo_url || getCachedAvatar();
+    const avatar = user?.user_metadata?.profile_avatar_url ||
+      user?.user_metadata?.avatar_url || user?.user_metadata?.picture ||
+      user?.user_metadata?.photo_url || getCachedAvatar();
     if (avatar && /^https:\/\//i.test(String(avatar))) {
       return '<img src="' + safe(avatar) + '" alt="Профайлын зураг" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
     }
@@ -992,6 +994,13 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         ${safe(user.email)}
       </p>
 
+      <input id="nexora-profile-avatar-file" type="file" accept="image/*" style="display:none">
+      <button id="nexora-profile-avatar-change" type="button"
+        style="width:100%;padding:12px;margin:0 0 14px;border:1px solid rgba(214,173,85,.55);
+        border-radius:10px;background:#191919;color:#d6ad55;font-weight:700;">
+        ЗУРАГ / ДЭЛГҮҮРИЙН ЛОГО СОЛИХ
+      </button>
+
        <button id="nexora-my-ads-open" type="button"
         style="width:100%;padding:13px;margin:0 0 10px;border:1px solid #d6ad55;
         border-radius:10px;background:#191919;color:#d6ad55;font-weight:700;">
@@ -1010,7 +1019,48 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       </button>
     `;
 
-     const logoutButton = document.getElementById("nexora-logout");
+     const avatarPicker = document.getElementById("nexora-profile-avatar-file");
+    const avatarChange = document.getElementById("nexora-profile-avatar-change");
+    avatarChange?.addEventListener("click", () => avatarPicker?.click());
+    avatarPicker?.addEventListener("change", async function () {
+      const file = avatarPicker.files?.[0];
+      if (!file) return;
+      if (!file.type.startsWith("image/")) {
+        alert("Зөвхөн зургийн файл сонгоно уу.");
+        avatarPicker.value = "";
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        alert("Зургийн хэмжээ 5MB-аас бага байх ёстой.");
+        avatarPicker.value = "";
+        return;
+      }
+      avatarChange.disabled = true;
+      avatarChange.textContent = "ЗУРГИЙГ ХАДГАЛЖ БАЙНА…";
+      try {
+        const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+        const path = "profiles/" + user.id + "/avatar-" + Date.now() + "." + ext;
+        const { error: uploadError } = await db.storage.from("market-store-logos").upload(path, file, {
+          upsert: true, contentType: file.type, cacheControl: "3600"
+        });
+        if (uploadError) throw uploadError;
+        const { data: publicData } = db.storage.from("market-store-logos").getPublicUrl(path);
+        const avatarUrl = publicData?.publicUrl;
+        if (!avatarUrl) throw new Error("Зургийн холбоос үүссэнгүй.");
+        const { data: updated, error: updateError } = await db.auth.updateUser({
+          data: { profile_avatar_url: avatarUrl }
+        });
+        if (updateError) throw updateError;
+        cacheUserAvatar(updated.user || { user_metadata: { profile_avatar_url: avatarUrl } });
+        await renderUser(updated.user || user);
+      } catch (error) {
+        alert("Профайлын зураг хадгалахад алдаа гарлаа: " + (error.message || error));
+        avatarChange.disabled = false;
+        avatarChange.textContent = "ЗУРАГ / ДЭЛГҮҮРИЙН ЛОГО СОЛИХ";
+      }
+    });
+
+    const logoutButton = document.getElementById("nexora-logout");
 
     logoutButton.addEventListener("click", async function () {
       logoutButton.disabled = true;
