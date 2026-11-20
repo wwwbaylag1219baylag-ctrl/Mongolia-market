@@ -341,7 +341,10 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   #market-app{padding:0!important;min-height:calc(100dvh - 0px)!important;height:100dvh!important;overflow:hidden!important}
   #shop>.topbar,#shop>.footer{display:none!important}
   .nx-shop-dual-home{height:100dvh;min-height:100%;display:grid;grid-template-rows:1fr 1fr;gap:0;background:#090909;overflow:hidden}
-  .nx-shop-zone{position:relative;min-height:0;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(14px,4vw,22px);overflow:hidden;touch-action:pan-y;border-bottom:1px solid rgba(214,173,85,.65);background:radial-gradient(ellipse at 80% 20%,rgba(214,173,85,.12),transparent 55%),linear-gradient(145deg,#202019,#090909 78%)}
+  .nx-shop-zone{position:relative;isolation:isolate;min-height:0;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(14px,4vw,22px);overflow:hidden;touch-action:pan-y;border-bottom:1px solid rgba(214,173,85,.65);background:#111}
+  .nx-shop-zone:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(5,5,5,.88),rgba(5,5,5,.48) 55%,rgba(5,5,5,.3)),linear-gradient(0deg,rgba(5,5,5,.72),transparent 65%)}
+  .nx-shop-zone-photo{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;opacity:.82}
+  .nx-shop-zone-head,.nx-shop-zone-prompt{position:relative;z-index:1}
   .nx-shop-zone-wholesale{border-bottom:0;background:radial-gradient(ellipse at 15% 80%,rgba(214,173,85,.12),transparent 55%),linear-gradient(145deg,#101010,#211d15 90%)}
   .nx-shop-zone-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
   .nx-shop-zone-brand{display:flex;align-items:center;gap:10px;min-width:0}
@@ -4560,7 +4563,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       if(zone==="retail")showRetailCatalog();
       else if(zone==="wholesale"){window.NEXORA_SHOP_PROFILE_RETURN=showShopLanding;showWholesaleCatalog();}
     };
-    host.innerHTML='<div class="nx-shop-dual-home"><section class="nx-shop-zone nx-shop-zone-retail" data-shop-zone="retail"><div class="nx-shop-zone-head"><div class="nx-shop-zone-brand"><span class="nx-shop-zone-logo" id="nx-shop-retail-logo">N</span><div><strong>ОНЛАЙН ДЭЛГҮҮР</strong><small>Жижиглэн худалдаа</small></div></div><button type="button" class="nx-shop-profile-open" id="nx-shop-retail-profile"><span class="nx-shop-profile-logo" id="nx-shop-retail-profile-logo">N</span><span>ПРОФАЙЛ</span><span>›</span></button></div><div class="nx-shop-zone-prompt"><span class="nx-shop-zone-symbol">◇</span><strong>Бараа үзэх</strong><small>Зүүн тийш шударна уу</small></div></section><section class="nx-shop-zone nx-shop-zone-wholesale" data-shop-zone="wholesale"><div class="nx-shop-zone-head"><div class="nx-shop-zone-brand"><span class="nx-shop-zone-logo" id="nx-shop-wholesale-logo">N</span><div><strong>БӨӨНИЙ ХУДАЛДАА</strong><small>Нийлүүлэгчийн бараа</small></div></div><button type="button" class="nx-shop-profile-open" id="nx-shop-wholesale-profile"><span class="nx-shop-profile-logo" id="nx-shop-wholesale-profile-logo">N</span><span>ПРОФАЙЛ</span><span>›</span></button></div><div class="nx-shop-zone-prompt"><span class="nx-shop-zone-symbol">▦</span><strong>Бөөний бараа үзэх</strong><small>Зүүн тийш шударна уу</small></div></section></div>';
+    host.innerHTML='<div class="nx-shop-dual-home"><section class="nx-shop-zone nx-shop-zone-retail" data-shop-zone="retail"><img class="nx-shop-zone-photo" id="nx-shop-retail-photo" alt="Онлайн дэлгүүрийн барааны зураг"><div class="nx-shop-zone-head"><div class="nx-shop-zone-brand"><span class="nx-shop-zone-logo" id="nx-shop-retail-logo">N</span><div><strong>ОНЛАЙН ДЭЛГҮҮР</strong><small>Жижиглэн худалдаа</small></div></div><button type="button" class="nx-shop-profile-open" id="nx-shop-retail-profile"><span class="nx-shop-profile-logo" id="nx-shop-retail-profile-logo">N</span><span>ПРОФАЙЛ</span><span>›</span></button></div><div class="nx-shop-zone-prompt"><span class="nx-shop-zone-symbol">◇</span><strong>Бараа үзэх</strong><small>Зүүн тийш шударна уу</small></div></section><section class="nx-shop-zone nx-shop-zone-wholesale" data-shop-zone="wholesale"><img class="nx-shop-zone-photo" id="nx-shop-wholesale-photo" alt="Бөөний худалдааны барааны зураг"><div class="nx-shop-zone-head"><div class="nx-shop-zone-brand"><span class="nx-shop-zone-logo" id="nx-shop-wholesale-logo">N</span><div><strong>БӨӨНИЙ ХУДАЛДАА</strong><small>Нийлүүлэгчийн бараа</small></div></div><button type="button" class="nx-shop-profile-open" id="nx-shop-wholesale-profile"><span class="nx-shop-profile-logo" id="nx-shop-wholesale-profile-logo">N</span><span>ПРОФАЙЛ</span><span>›</span></button></div><div class="nx-shop-zone-prompt"><span class="nx-shop-zone-symbol">▦</span><strong>Бөөний бараа үзэх</strong><small>Зүүн тийш шударна уу</small></div></section></div>';
     document.getElementById("nx-shop-retail-profile").onclick=openRetailProfile;
     document.getElementById("nx-shop-wholesale-profile").onclick=()=>{
       window.NEXORA_SHOP_PROFILE_RETURN=showShopLanding;
@@ -4575,6 +4578,22 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       const retailNode=document.getElementById("nx-shop-retail-logo"),wholesaleNode=document.getElementById("nx-shop-wholesale-logo");
       if(retailNode&&retail)retailNode.innerHTML='<img src="'+esc(retail)+'" alt="Онлайн дэлгүүрийн байгууллагын лого">';const retailProfileLogo=document.getElementById("nx-shop-retail-profile-logo");if(retailProfileLogo&&retail)retailProfileLogo.innerHTML='<img src="'+esc(retail)+'" alt="Онлайн дэлгүүрийн байгууллагын лого">';
       if(wholesaleNode&&wholesale)wholesaleNode.innerHTML='<img src="'+esc(wholesale)+'" alt="Бөөний худалдааны байгууллагын лого">';const wholesaleProfileLogo=document.getElementById("nx-shop-wholesale-profile-logo");if(wholesaleProfileLogo&&wholesale)wholesaleProfileLogo.innerHTML='<img src="'+esc(wholesale)+'" alt="Бөөний худалдааны байгууллагын лого">';
+      const [retailProduct,wholesaleProduct]=await Promise.all([
+        db.from("market_products").select("image_path").eq("status","active").not("image_path","is",null).order("created_at",{ascending:false}).limit(1).maybeSingle(),
+        db.from("wholesale_products").select("image_paths").eq("status","active").order("created_at",{ascending:false}).limit(1).maybeSingle()
+      ]);
+      const retailPath=retailProduct.data?.image_path,wholesalePath=wholesaleProduct.data?.image_paths?.[0];
+      const photoPaths=[retailPath,wholesalePath].filter(Boolean);
+      if(photoPaths.length){
+        const signed=await db.storage.from("market-product-images").createSignedUrls(photoPaths,3600);
+        if(!signed.error){
+          const retailUrl=retailPath?signed.data?.[photoPaths.indexOf(retailPath)]?.signedUrl:"";
+          const wholesaleUrl=wholesalePath?signed.data?.[photoPaths.indexOf(wholesalePath)]?.signedUrl:"";
+          const retailPhoto=document.getElementById("nx-shop-retail-photo"),wholesalePhoto=document.getElementById("nx-shop-wholesale-photo");
+          if(retailPhoto&&retailUrl)retailPhoto.src=retailUrl;
+          if(wholesalePhoto&&wholesaleUrl)wholesalePhoto.src=wholesaleUrl;
+        }
+      }
     }).catch(err=>console.warn("Худалдааны профайлын лого:",err));
   }
   function renderRetailCategories(){
