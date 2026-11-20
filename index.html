@@ -3669,6 +3669,32 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       document.getElementById("shop")?.classList.add("nx-shop-profile-fullscreen");
     }
   };
+  // Худалдааны бүх дэд дэлгэцэд босоо гүйлгэлтийг хадгалж, хэвтээ шудралтыг навигацид ашиглана.
+  let nxMarketTouchStart = null;
+  host.style.touchAction = "pan-y";
+  host.addEventListener("touchstart", event => {
+    if (event.touches.length !== 1) { nxMarketTouchStart = null; return; }
+    nxMarketTouchStart = {x:event.touches[0].clientX,y:event.touches[0].clientY};
+  }, {passive:true});
+  host.addEventListener("touchend", event => {
+    if (!nxMarketTouchStart || event.changedTouches.length !== 1) return;
+    const dx=event.changedTouches[0].clientX-nxMarketTouchStart.x;
+    const dy=event.changedTouches[0].clientY-nxMarketTouchStart.y;
+    nxMarketTouchStart=null;
+    if(Math.abs(dx)<65 || Math.abs(dx)<Math.abs(dy)*1.25) return;
+    const target=event.target;
+    if(target.closest("input,textarea,select,button,a,img,[contenteditable='true'],iframe")) return;
+    const scroller=target.closest("[data-nx-horizontal-scroll],.nx-market-grid");
+    if(scroller && scroller.scrollWidth>scroller.clientWidth+8) return;
+    if(dx<0){
+      const next=window.NEXORA_SHOP_NEXT;
+      if(typeof next==="function") next();
+    }else{
+      const back=window.NEXORA_SHOP_BACK;
+      if(typeof back==="function") back();
+      else if(window.NEXORA&&typeof window.NEXORA.back==="function") window.NEXORA.back();
+    }
+  }, {passive:true});
   const shopBackObserver=new MutationObserver(()=>queueMicrotask(ensureShopBackArrow));
   shopBackObserver.observe(host,{childList:true,subtree:true});
   queueMicrotask(ensureShopBackArrow);
@@ -5171,6 +5197,11 @@ html,body{
 #ads .page-content .nx-full-screen:has(.nexora-ad-grid) .nexora-ad-number{display:none!important}
 #ads .page-content .nexora-ad-category.selected,#ads .page-content .nx-subcategory-item.selected{border-color:#f3ca69!important;background:linear-gradient(110deg,#493919,#282116)!important;box-shadow:0 0 0 2px rgba(214,173,85,.2),0 8px 24px rgba(214,173,85,.12)!important}
 #ads .page-content .nx-back,#ads .page-content .nx-platform-back,#ads .page-content .nx-list-back{display:none!important}
+</style>
+
+<style id="NEXORA-GESTURE-MARKET-BASE-2026">
+#market-app{touch-action:pan-y;overscroll-behavior-x:contain}
+#market-app .nx-market-back-arrow,#market-app .nx-universal-shop-back{display:none!important}
 </style>
 </body>
 
