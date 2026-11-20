@@ -3649,7 +3649,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       document.getElementById("shop")?.classList.add("nx-shop-profile-fullscreen");
     }
   };
-  // Үндсэн нүүрэн дээрх NEXORA зургийн доторх хэсэгт шууд шударч орно. Товшилт ямар ч үйлдэл хийхгүй.
+  // Зөвхөн худалдааны үндсэн зураг дээрх хоёр бүсэд шудралт ажиллана.
   (function bindHomeCommerceSwipe(){
     const home=document.getElementById("home");
     if(!home||home.dataset.commerceSwipeBound==="1")return;
@@ -3665,17 +3665,12 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       const dx=e.changedTouches[0].clientX-start.x,dy=e.changedTouches[0].clientY-start.y,zone=start.zone;
       start=null;
       if(Math.abs(dx)<65||Math.abs(dx)<Math.abs(dy)*1.25)return;
-      window.NEXORA?.open("shop");
-      window.setTimeout(()=>{
-        if(dx<0){
-          if(typeof window.NEXORA_SHOP_NEXT==="function")window.NEXORA_SHOP_NEXT(zone);
-        }else{
-          if(typeof window.NEXORA_SHOP_BACK==="function")window.NEXORA_SHOP_BACK(zone);
-        }
-      },80);
+      Promise.resolve(window.NEXORA?.open("shop")).then(()=>{
+        if(dx<0){if(typeof window.NEXORA_SHOP_NEXT==="function")window.NEXORA_SHOP_NEXT(zone);}
+        else{if(typeof window.NEXORA_SHOP_BACK==="function")window.NEXORA_SHOP_BACK(zone);}
+      });
     },{passive:true});
-  })();
-  // Худалдааны дэлгэцийн хэвтээ шудралт. Босоо scroll болон form-ийн оролтод хүрэхгүй.
+  })();  // Худалдааны дэлгэцийн хэвтээ шудралт. Босоо scroll болон form-ийн оролтод хүрэхгүй.
   let nxMarketTouchStart = null;
   host.style.touchAction = "pan-y";
   host.addEventListener("touchstart", event => {
@@ -4596,20 +4591,15 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     renderRetailCategories();
   }
   function showShopLanding(){
+    // Худалдааны ганц үндсэн зураг гаднах home дэлгэц дээр байна; дотоод дэлгэцэд давхарлахгүй.
     host.classList.remove("nx-profile-fullscreen");
     document.getElementById("shop")?.classList.remove("nx-shop-profile-fullscreen");
-    window.NEXORA_SHOP_BACK=(zone)=>{
-      if(zone==="retail")showRetailCatalog();
-      else if(zone==="wholesale")showWholesaleCatalog();
-      else showRetailCatalog();
-    };
+    window.NEXORA_SHOP_BACK=()=>window.NEXORA?.open("home");
     window.NEXORA_SHOP_NEXT=(zone)=>{
-      if(zone==="retail"){window.NEXORA_SHOP_BACK=showShopLanding;openRetailProfile();}
-      else if(zone==="wholesale"){window.NEXORA_SHOP_PROFILE_RETURN=showShopLanding;showWholesaleCatalog().then(()=>document.getElementById("nx-wholesale-profile-entry")?.click());}
-      else {window.NEXORA_SHOP_BACK=showShopLanding;openRetailProfile();}
+      if(zone==="retail"){window.NEXORA_SHOP_BACK=()=>window.NEXORA?.open("home");openRetailProfile();}
+      else if(zone==="wholesale"){window.NEXORA_SHOP_BACK=()=>window.NEXORA?.open("home");showWholesaleCatalog().then(()=>document.getElementById("nx-wholesale-profile-entry")?.click());}
     };
-    host.innerHTML='<div class="nx-shop-reference-screen"><img class="nx-shop-reference-image" src="./file_000000006cac82119903b577d19b0fd1.png" alt="NEXORA худалдааны платформ: Онлайн дэлгүүр болон Бөөний худалдаа"><div class="nx-shop-reference-swipe-zone nx-shop-reference-retail" data-shop-zone="retail" aria-label="Онлайн дэлгүүрийн шудралтын хэсэг"></div><div class="nx-shop-reference-swipe-zone nx-shop-reference-wholesale" data-shop-zone="wholesale" aria-label="Бөөний худалдааны шудралтын хэсэг"></div></div>';
-    // Энэ нүүрэнд дэлгүүрийн барааны зураг татахгүй. Зөвхөн тогтмол жишиг зураг харагдана.
+    host.innerHTML="";
   }
   function renderRetailCategories(){
     const target=document.getElementById("nx-retail-categories");if(!target)return;
