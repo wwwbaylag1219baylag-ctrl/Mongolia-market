@@ -608,61 +608,18 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 
     <!-- ПРОФАЙЛ -->
     <section id="profile" class="screen">
-
       <header class="topbar">
-        <button class="back-button" type="button"
-          onclick="NEXORA.back()" aria-label="Буцах">‹</button>
-
+        <button class="back-button" type="button" onclick="NEXORA.back()" aria-label="Буцах">‹</button>
         <div class="page-heading">МИНИЙ ПРОФАЙЛ</div>
-
         <div class="header-space"></div>
       </header>
-
       <main class="page-content">
-
-        <div class="welcome-panel">
-          <h2>Тавтай морил!</h2>
-          <p>
-            NEXORA хэрэглэгчийн хувийн хэсэг.
-            Эндээс таны бүртгэл, зар, захиалга болон
-            тохиргооны мэдээлэл харагдана.
-          </p>
+        <div class="welcome-panel" id="nexora-auth-panel" style="min-height:62vh;">
+          <h2>Миний профайл</h2>
+          <p>Таны хувийн бүртгэл, зар болон захиалгын хэсэг.</p>
         </div>
-
-        <div style="height:16px"></div>
-
-        <div class="welcome-panel" id="nexora-auth-panel">
-          <h2>Хэрэглэгчийн бүртгэл</h2>
-          <p>
-            Бүртгүүлэх болон нэвтрэх үйлдлийг
-            дараагийн хэсэгт Supabase-тэй холбоно.
-          </p>
-        </div>
-
-        <div style="height:16px"></div>
-
-        <div class="welcome-panel">
-          <h2>Миний зарууд</h2>
-          <p>
-            Таны нийтэлсэн зарууд энд харагдана.
-          </p>
-        </div>
-
-        <div style="height:16px"></div>
-
-        <div class="welcome-panel">
-          <h2>Миний захиалгууд</h2>
-          <p>
-            Худалдааны платформоос хийсэн захиалгууд энд харагдана.
-          </p>
-        </div>
-
-        <!-- ADMIN ХЭСЭГ ДАРААГИЙН BACKEND-ЭЭР ЭРХ ШАЛГАЖ ХОЛБОГДОНО -->
-
       </main>
-
       <footer class="footer">NEXORA</footer>
-
     </section>
 
 <!-- 2-Р ХЭСЭГ ДУУСАВ -->
@@ -926,90 +883,83 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   }
 
   let currentMode = "login";
+  const AVATAR_CACHE_KEY = "nexora_profile_avatar_v1";
 
   function safe(value) {
     return String(value || "").replace(/[&<>"']/g, function (c) {
-      return {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-      }[c];
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
     });
+  }
+
+  function getCachedAvatar() {
+    try {
+      const value = localStorage.getItem(AVATAR_CACHE_KEY) || "";
+      return /^https:\/\//i.test(value) ? value : "";
+    } catch (_) { return ""; }
+  }
+
+  function cacheUserAvatar(user) {
+    const avatar = user?.user_metadata?.avatar_url ||
+      user?.user_metadata?.picture || user?.user_metadata?.photo_url || "";
+    if (!avatar || !/^https:\/\//i.test(String(avatar))) return;
+    try { localStorage.setItem(AVATAR_CACHE_KEY, String(avatar)); } catch (_) {}
+  }
+
+  function avatarMarkup(user) {
+    const avatar = user?.user_metadata?.avatar_url ||
+      user?.user_metadata?.picture || user?.user_metadata?.photo_url || getCachedAvatar();
+    if (avatar && /^https:\/\//i.test(String(avatar))) {
+      return '<img src="' + safe(avatar) + '" alt="Профайлын зураг" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+    }
+    return '<svg viewBox="0 0 100 100" role="img" aria-label="Профайлын зураг" style="width:68%;height:68%;color:#d6ad55" fill="none" stroke="currentColor" stroke-width="5"><circle cx="50" cy="34" r="18"/><path d="M15 88c3-20 17-30 35-30s32 10 35 30"/></svg>';
   }
 
   function showMessage(message, isError) {
     const box = document.getElementById("nexora-auth-message");
     if (!box) return;
-
     box.textContent = message;
     box.style.display = "block";
     box.style.color = isError ? "#ff8b8b" : "#b9e9a5";
   }
 
-  function renderForm(mode) {
-    currentMode = mode;
-
+  function renderChoice() {
+    currentMode = "choice";
     panel.innerHTML = `
-      <h2>Хэрэглэгчийн бүртгэл</h2>
-
-      <div style="display:flex;gap:10px;margin:16px 0;">
-        <button type="button" data-mode="login"
-          style="flex:1;padding:12px;border-radius:10px;
-          border:1px solid #d6ad55;background:${mode === "login" ? "#d6ad55" : "#191919"};
-          color:${mode === "login" ? "#090909" : "#f7f5ef"};">
-          Нэвтрэх
-        </button>
-
-        <button type="button" data-mode="register"
-          style="flex:1;padding:12px;border-radius:10px;
-          border:1px solid #d6ad55;background:${mode === "register" ? "#d6ad55" : "#191919"};
-          color:${mode === "register" ? "#090909" : "#f7f5ef"};">
-          Бүртгүүлэх
-        </button>
-      </div>
-
-      <form id="nexora-auth-form">
-        ${mode === "register" ? `
-          <label>Овог, нэр</label>
-          <input name="full_name" type="text" required
-            placeholder="Нэрээ оруулна уу"
-            autocomplete="name"
-            style="${inputStyle}">
-
-          <label>Утасны дугаар</label>
-          <input name="phone" type="tel"
-            placeholder="Утасны дугаар"
-            autocomplete="tel"
-            style="${inputStyle}">
-        ` : ""}
-
-        <label>И-мэйл хаяг</label>
-        <input name="email" type="email" required
-          placeholder="name@example.com"
-          autocomplete="email"
-          style="${inputStyle}">
-
-        <label>Нууц үг</label>
-        <input name="password" type="password" required
-          minlength="${mode === "register" ? "8" : "1"}"
-          placeholder="${mode === "register" ? "8-аас дээш тэмдэгт" : "Нууц үг"}"
-          autocomplete="${mode === "register" ? "new-password" : "current-password"}"
-          style="${inputStyle}">
-
-        <div id="nexora-auth-message"
-          style="display:none;margin:14px 0;font-size:13px;line-height:1.6;">
+      <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:22px 8px 12px;">
+        <div style="width:116px;height:116px;border-radius:50%;display:grid;place-items:center;overflow:hidden;background:#171717;border:3px solid #d6ad55;box-shadow:0 0 0 6px rgba(214,173,85,.10);margin:8px auto 14px;">
+          ${avatarMarkup(null)}
         </div>
+        <h2 style="margin:4px 0 8px;color:#f7f5ef;">МИНИЙ ПРОФАЙЛ</h2>
+        <p style="margin:0 0 24px;color:#aaa39a;">Нэвтэрч өөрийн профайл, дэлгүүр болон захиалгаа удирдана уу.</p>
+        <button type="button" data-mode="login" style="width:100%;padding:15px;border-radius:12px;border:0;background:#d6ad55;color:#090909;font-weight:800;">НЭВТРЭХ</button>
+        <button type="button" data-mode="register" style="width:100%;padding:15px;margin-top:11px;border-radius:12px;border:1px solid #d6ad55;background:#191919;color:#f7f5ef;font-weight:800;">БҮРТГҮҮЛЭХ</button>
+      </div>`;
+  }
 
-        <button id="nexora-auth-submit" type="submit"
-          style="width:100%;padding:15px;margin-top:16px;
-          border:0;border-radius:12px;background:#d6ad55;
-          color:#090909;font-weight:bold;">
-          ${mode === "register" ? "Бүртгэл үүсгэх" : "Нэвтрэх"}
-        </button>
-      </form>
-    `;
+  function renderForm(mode, notice = "", emailValue = "") {
+    currentMode = mode;
+    const registering = mode === "register";
+    panel.innerHTML = `
+      <button type="button" data-auth-back style="padding:9px 14px;margin:0 0 14px;border:1px solid rgba(214,173,85,.5);border-radius:10px;background:#191919;color:#d6ad55;">‹ Профайл руу буцах</button>
+      <div style="display:flex;align-items:center;gap:14px;margin:4px 0 20px;">
+        <div style="width:66px;height:66px;flex:0 0 66px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:#171717;border:2px solid #d6ad55;">${avatarMarkup(null)}</div>
+        <div><h2 style="margin:0 0 5px;color:#f7f5ef;">${registering ? "ШИНЭ БҮРТГЭЛ" : "НЭВТРЭХ"}</h2><p style="margin:0;color:#aaa39a;font-size:13px;">${registering ? "NEXORA профайл үүсгэх" : "Өмнөх бүртгэлээрээ нэвтрэх"}</p></div>
+      </div>
+      <form id="nexora-auth-form">
+        ${registering ? `
+          <label>Овог, нэр</label>
+          <input name="full_name" type="text" required placeholder="Нэрээ оруулна уу" autocomplete="name" style="${inputStyle}">
+          <label>Утасны дугаар</label>
+          <input name="phone" type="tel" placeholder="Утасны дугаар" autocomplete="tel" style="${inputStyle}">
+        ` : ""}
+        <label>И-мэйл хаяг</label>
+        <input name="email" type="email" required placeholder="name@example.com" autocomplete="email" value="${safe(emailValue)}" style="${inputStyle}">
+        <label>Нууц үг</label>
+        <input name="password" type="password" required minlength="${registering ? "8" : "1"}" placeholder="${registering ? "8-аас дээш тэмдэгт" : "Нууц үг"}" autocomplete="${registering ? "new-password" : "current-password"}" style="${inputStyle}">
+        <div id="nexora-auth-message" style="display:${notice ? "block" : "none"};margin:14px 0;font-size:13px;line-height:1.6;color:#b9e9a5;">${safe(notice)}</div>
+        <button id="nexora-auth-submit" type="submit" style="width:100%;padding:15px;margin-top:16px;border:0;border-radius:12px;background:#d6ad55;color:#090909;font-weight:bold;">${registering ? "Бүртгэл үүсгэх" : "Нэвтрэх"}</button>
+        <button type="button" data-mode="${registering ? "login" : "register"}" style="width:100%;padding:13px;margin-top:10px;border:1px solid rgba(214,173,85,.45);border-radius:12px;background:#191919;color:#d6ad55;">${registering ? "Нэвтрэх хэсэг рүү" : "Шинээр бүртгүүлэх"}</button>
+      </form>`;
   }
 
   const inputStyle =
@@ -1020,15 +970,19 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 
     async function renderUser(user) {
     if (!user) {
-      renderForm(currentMode);
+      renderChoice();
       return;
     }
+    cacheUserAvatar(user);
 
      const name =
       user.user_metadata?.full_name || user.email || "Хэрэглэгч";
 
     panel.innerHTML = `
-      <h2>Миний бүртгэл</h2>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
+        <div style="width:78px;height:78px;flex:0 0 78px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:#171717;border:2px solid #d6ad55;">${avatarMarkup(user)}</div>
+        <div><h2 style="margin:0 0 6px;">Миний профайл</h2><p style="margin:0;color:#aaa39a;font-size:13px;">NEXORA хэрэглэгч</p></div>
+      </div>
 
       <p style="margin:12px 0;color:#f7f5ef;">
         ${safe(name)}
@@ -1075,9 +1029,10 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   }
 
   panel.addEventListener("click", function (event) {
+    const back = event.target.closest("[data-auth-back]");
+    if (back) { renderChoice(); return; }
     const button = event.target.closest("[data-mode]");
     if (!button) return;
-
     renderForm(button.dataset.mode);
   });
 
@@ -1164,11 +1119,11 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   db.auth.onAuthStateChange(function (event, session) {
     if (event === "SIGNED_OUT") {
       currentMode = "login";
-      renderForm("login");
+      renderChoice();
     }
   });
 
-  renderForm("login");
+  renderChoice();
   initialize();
 
   window.NEXORA_SUPABASE = db;
@@ -4050,50 +4005,13 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       document.getElementById("nx-retail-history-back").onclick=backAction;
     }catch(err){host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-retail-history-back" aria-label="Буцах" title="Буцах">‹</button><p class="nx-market-muted">Төлбөрийн түүх ачаалахад алдаа: '+esc(err.message||err)+'</p>';document.getElementById("nx-retail-history-back").onclick=backAction;}
   }
-  function showCommerceAuthChoice(backAction, afterAuth){
-    host.classList.add("nx-profile-fullscreen");
-    document.getElementById("shop")?.classList.add("nx-shop-profile-fullscreen");
-    const renderChoice=()=>{
-      host.innerHTML='<section class="nx-profile-accordion-root nx-commerce-auth-root"><button class="nx-profile-back" id="nx-commerce-auth-back" type="button" aria-label="Буцах">‹</button><h2 class="nx-profile-heading">NEXORA · ХЭРЭГЛЭГЧИЙН БҮРТГЭЛ</h2><p class="nx-market-muted" style="margin:12px 0 22px">Өөрийн бүртгэлээр нэвтрэх эсвэл шинээр бүртгүүлнэ үү.</p><div class="nx-commerce-auth-actions"><button class="nx-market-btn" id="nx-commerce-auth-login">НЭВТРЭХ</button><button class="nx-market-btn secondary" id="nx-commerce-auth-register">БҮРТГҮҮЛЭХ</button></div></section>';
-      document.getElementById("nx-commerce-auth-back").onclick=backAction;
-      document.getElementById("nx-commerce-auth-login").onclick=()=>renderForm("login");
-      document.getElementById("nx-commerce-auth-register").onclick=()=>renderForm("register");
-    };
-    const renderForm=(mode,message="",emailValue="")=>{
-      const registering=mode==="register";
-      host.innerHTML='<section class="nx-profile-accordion-root nx-commerce-auth-root"><button class="nx-profile-back" id="nx-commerce-auth-back" type="button" aria-label="Буцах">‹</button><h2 class="nx-profile-heading">'+(registering?'ШИНЭ БҮРТГЭЛ':'НЭВТРЭХ')+'</h2><p class="nx-market-muted" style="margin:10px 0 18px">'+(registering?'Мэдээллээ бөглөж NEXORA бүртгэл үүсгэнэ үү.':'Өмнө бүртгүүлсэн имэйл, нууц үгээ оруулна уу.')+'</p><form id="nx-commerce-auth-form" class="nx-commerce-auth-form">'+(registering?'<label>Овог, нэр *</label><input class="nx-market-input" name="full_name" required maxlength="120" autocomplete="name" placeholder="Овог, нэр"><label>Утасны дугаар</label><input class="nx-market-input" name="phone" type="tel" autocomplete="tel" placeholder="Утасны дугаар">':'')+'<label>И-мэйл хаяг *</label><input class="nx-market-input" name="email" type="email" required autocomplete="email" placeholder="name@example.com" value="'+esc(emailValue)+'"><label>Нууц үг *</label><input class="nx-market-input" name="password" type="password" required minlength="'+(registering?'8':'1')+'" autocomplete="'+(registering?'new-password':'current-password')+'" placeholder="'+(registering?'8-аас дээш тэмдэгт':'Нууц үг')+'"><p id="nx-commerce-auth-message" class="nx-market-muted" role="status" style="margin:12px 0;color:#f0d28a">'+esc(message)+'</p><button class="nx-market-btn" type="submit">'+(registering?'БҮРТГЭЛ ҮҮСГЭХ':'НЭВТРЭХ')+'</button><button class="nx-market-btn secondary" id="nx-commerce-auth-switch" type="button" style="margin-top:10px">'+(registering?'Нэвтрэх хэсэг рүү':'Шинээр бүртгүүлэх')+'</button></form></section>';
-      document.getElementById("nx-commerce-auth-back").onclick=renderChoice;
-      document.getElementById("nx-commerce-auth-switch").onclick=()=>renderForm(registering?"login":"register", "", emailValue);
-      document.getElementById("nx-commerce-auth-form").onsubmit=async e=>{
-        e.preventDefault();
-        const form=e.currentTarget,submit=form.querySelector('button[type="submit"]'),v=Object.fromEntries(new FormData(form).entries());
-        const msg=document.getElementById("nx-commerce-auth-message");
-        submit.disabled=true;submit.textContent="ТҮР ХҮЛЭЭНЭ ҮҮ…";
-        try{
-          let result;
-          if(registering){
-            result=await db.auth.signUp({email:String(v.email).trim(),password:v.password,options:{data:{full_name:String(v.full_name||"").trim(),phone:String(v.phone||"").trim()}}});
-          }else{
-            result=await db.auth.signInWithPassword({email:String(v.email).trim(),password:v.password});
-          }
-          if(result.error)throw result.error;
-          if(result.data?.session&&result.data?.user){marketUser=result.data.user;await afterAuth();return;}
-          renderForm("login","Бүртгэл үүслээ. И-мэйл хаягтаа очсон баталгаажуулах холбоосыг нээгээд дараа нь нэвтэрнэ үү.",String(v.email).trim());
-        }catch(err){
-          msg.textContent=err?.message||"Алдаа гарлаа. Дахин оролдоно уу.";
-          submit.disabled=false;submit.textContent=registering?"БҮРТГЭЛ ҮҮСГЭХ":"НЭВТРЭХ";
-        }
-      };
-    };
-    renderChoice();
-  }
   async function openRetailProfile(){
     window.NEXORA_SHOP_PROFILE=openRetailProfile;window.NEXORA_SHOP_BACK=showRetailCatalog;window.NEXORA_SHOP_NEXT=showRetailCatalog;
     document.getElementById("shop")?.classList.add("nx-shop-profile-fullscreen");
     host.innerHTML='<div class="nx-market-loading">Профайл нээгдэж байна…</div>';
     try{
       const {data:authData,error:authError}=await db.auth.getUser();if(authError)throw authError;
-      if(!authData?.user){showCommerceAuthChoice(showRetailCatalog,openRetailProfile);return;}
+      if(!authData?.user){window.NEXORA?.open("profile");return;}
       const {data:store,error:storeError}=await db.from("nexora_store_profiles").select("id,store_name,owner_type,logo_path").eq("user_id",authData.user.id).maybeSingle();if(storeError)throw storeError;
       const logo=store?.logo_path?db.storage.from("market-store-logos").getPublicUrl(store.logo_path).data.publicUrl:(authData.user.user_metadata?.avatar_url||"");
       const name=store?.store_name||authData.user.user_metadata?.full_name||authData.user.email||"Миний онлайн дэлгүүр";
@@ -4602,7 +4520,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         host.innerHTML='<div class="nx-market-loading">Нийлүүлэгчийн профайл нээгдэж байна…</div>';
         try{
           const {data:authData,error:authError}=await db.auth.getUser();if(authError)throw authError;
-          if(!authData?.user){showCommerceAuthChoice(showWholesaleCatalog,openWholesaleProfile);return;}
+          if(!authData?.user){window.NEXORA?.open("profile");return;}
           const [{data:supplier,error:supplierError},{data:store,error:storeError}]=await Promise.all([db.from("market_suppliers").select("id,name,status,type").eq("owner_id",authData.user.id).maybeSingle(),db.from("nexora_store_profiles").select("store_name,owner_type,wholesale_logo_path").eq("user_id",authData.user.id).maybeSingle()]);
           if(supplierError)throw supplierError;if(storeError)throw storeError;
           const approved=supplier?.status==="approved",pending=supplier?.status==="pending";
