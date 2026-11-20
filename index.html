@@ -733,14 +733,12 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
               return;
             }
 
-            // Худалдааны платформыг гаднаас шинээр нээх бүрд жижиглэнгийн каталогийн эхлэлд оруулна.
-            // Дэд дэлгэцийн хуучин буцах callback-ийг шинэ нэвтрэлтэд дамжуулахгүй.
-            if (screenName === "shop" && currentScreen !== "shop") {
+            // Худалдааны дэлгэцийг эхлээд шууд харуулна. Каталогийн өгөгдөл
+            // татахыг дэлгэц шилжсэний дараа ард нь эхлүүлнэ (UI-г блоклохгүй).
+            const shouldLoadShop = screenName === "shop" && currentScreen !== "shop";
+            if (shouldLoadShop) {
               window.NEXORA_SHOP_BACK = null;
               window.NEXORA_SHOP_PROFILE = null;
-              if (typeof window.NEXORA_SHOP_HOME === "function") {
-                await window.NEXORA_SHOP_HOME();
-              }
             }
 
             // Профайл руу орох үед нэвтэрсэн хэрэглэгч админ эсэхийг шалгана.
@@ -773,12 +771,17 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
             }
 
             screenHistory.push(screenName);
+            showScreen(screenName);
 
             if (screenName === "ads" && typeof window.NEXORA_AD_HOME === "function") {
               window.NEXORA_AD_HOME();
             }
 
-            showScreen(screenName);
+            if (shouldLoadShop && typeof window.NEXORA_SHOP_HOME === "function") {
+              Promise.resolve().then(() => window.NEXORA_SHOP_HOME()).catch(error => {
+                console.error("NEXORA худалдааны каталог эхлүүлэхэд алдаа:", error);
+              });
+            }
 
           },
 
