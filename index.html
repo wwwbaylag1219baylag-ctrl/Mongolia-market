@@ -5228,6 +5228,8 @@ html,body{
 
 <style id="NEXORA-ADS-SWIPE-FULLSCREEN-2026">
 @media(max-width:699px){
+  #ads>.topbar,#ads>.footer{display:none!important}
+  #ads>.page-content{height:100dvh;min-height:100dvh;overflow-y:auto;padding-top:0!important;padding-bottom:0!important;touch-action:pan-y;overscroll-behavior-y:contain}
   #ads .page-content{touch-action:pan-y;overscroll-behavior-y:contain}
   #ads .page-content .nx-full-screen{min-height:calc(100dvh - 72px);height:auto;box-sizing:border-box;padding:14px 12px;display:flex;flex-direction:column;justify-content:center}
   #ads .page-content .nx-full-screen .nx-category-heading,
@@ -5241,6 +5243,8 @@ html,body{
   #ads .page-content .nx-full-screen .nx-subcategory-list{width:100%;max-width:900px;margin:auto}
   #ads .page-content .nx-full-screen .nx-subcategory-item.selected{border-color:#f3ca69!important;background:linear-gradient(110deg,#493919,#282116)!important;box-shadow:0 0 0 2px rgba(214,173,85,.2),0 8px 24px rgba(214,173,85,.12)!important}
   #ads .page-content .nx-full-screen .nx-list-message{padding:20px}
+  #ads .page-content .nx-list-screen .nx-list-back,
+  #ads .page-content [data-nx-detail-back]{display:none!important}
 }
 </style>
 
