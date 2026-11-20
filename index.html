@@ -3978,7 +3978,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     }catch(err){host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-retail-history-back" aria-label="Буцах" title="Буцах">‹</button><p class="nx-market-muted">Төлбөрийн түүх ачаалахад алдаа: '+esc(err.message||err)+'</p>';document.getElementById("nx-retail-history-back").onclick=backAction;}
   }
   async function openRetailProfile(){
-    window.NEXORA_SHOP_PROFILE=openRetailProfile;window.NEXORA_SHOP_BACK=showRetailCatalog;window.NEXORA_SHOP_NEXT=()=>window.NEXORA?.open("home");
+    window.NEXORA_SHOP_PROFILE=openRetailProfile;window.NEXORA_SHOP_BACK=showRetailCatalog;window.NEXORA_SHOP_NEXT=showRetailCatalog;
     document.getElementById("shop")?.classList.add("nx-shop-profile-fullscreen");
     host.innerHTML='<div class="nx-market-loading">Профайл нээгдэж байна…</div>';
     try{
@@ -4372,7 +4372,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       const openWholesaleProfile=async()=>{
         window.NEXORA_SHOP_PROFILE=openWholesaleProfile;
         window.NEXORA_SHOP_BACK=showWholesaleCatalog;
-        window.NEXORA_SHOP_PROFILE=openWholesaleProfile;window.NEXORA_SHOP_BACK=showWholesaleCatalog;window.NEXORA_SHOP_NEXT=()=>window.NEXORA?.open("home");
+        window.NEXORA_SHOP_PROFILE=openWholesaleProfile;window.NEXORA_SHOP_BACK=showWholesaleCatalog;window.NEXORA_SHOP_NEXT=showWholesaleCatalog;
         document.getElementById("shop")?.classList.add("nx-shop-profile-fullscreen");
         host.innerHTML='<div class="nx-market-loading">Нийлүүлэгчийн профайл нээгдэж байна…</div>';
         try{
@@ -6214,4 +6214,17 @@ button.nx-platform-back:focus-visible,
 #market-app .nx-nexora-card .nx-shop-zone-head,#market-app .nx-nexora-card .nx-shop-zone-prompt{display:none!important}
 @media(min-width:700px){#market-app .nx-nexora-blue-home{max-width:900px;margin:0 auto;padding:22px;gap:18px}#market-app .nx-nexora-card-copy strong{font-size:clamp(30px,3vw,44px)}}
 @media(max-height:650px) and (max-width:699px){#market-app .nx-nexora-blue-home{grid-template-rows:90px minmax(0,1fr) minmax(0,1fr);gap:8px;padding:8px}#market-app .nx-nexora-platform-title{margin-top:4px}}
+</style>
+
+<style id="NEXORA-ALWAYS-VISIBLE-QUICK-CART-2026">
+/* Барааны зураг дээрээс шууд сагслах/захиалах товч үргэлж харагдана */
+#market-app .nx-market-product-tile{position:relative!important}
+#market-app .nx-market-product-tile>[data-retail-add],
+#market-app .nx-market-product-tile>button:not(.nx-market-back-arrow){
+ position:absolute!important;top:12px!important;right:12px!important;z-index:5!important;
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ width:auto!important;min-width:76px!important;min-height:38px!important;margin:0!important;
+ padding:8px 11px!important;border-radius:11px!important;font-size:12px!important;
+ box-shadow:0 3px 12px rgba(0,0,0,.42)!important;opacity:1!important;visibility:visible!important;
+}
 </style>
