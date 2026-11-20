@@ -1659,7 +1659,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     const categories = window.NEXORA_AD_CATEGORIES || [];
 
     content.innerHTML = `
-      <div class="nx-full-screen">
+      <div class="nx-full-screen" data-nx-stage="categories">
         <div class="nx-category-heading">
           <div class="nx-category-title-wrap">
             <button type="button" class="nx-platform-back" data-nx-platform-back aria-label="Нүүр хуудас руу буцах" title="Буцах">‹</button>
@@ -1698,7 +1698,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     if (category.number === 3) {
       const jobFields = Object.keys(groups);
       content.innerHTML = `
-        <div class="nx-full-screen">
+        <div class="nx-full-screen" data-nx-stage="groups">
           ${backButton()}
           <div class="nx-category-path"><span>ҮНДСЭН АНГИЛАЛ</span><b>›</b><strong>${category.name}</strong></div>
           <div class="nx-category-heading">
@@ -1718,7 +1718,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     }
 
     content.innerHTML = `
-      <div class="nx-full-screen">
+      <div class="nx-full-screen" data-nx-stage="groups">
         ${backButton()}
         <div class="nx-category-path"><span>ҮНДСЭН АНГИЛАЛ</span><b>›</b><strong>${category.name}</strong></div>
         <div class="nx-category-heading">
@@ -1764,7 +1764,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     const items = subcategories[currentCategory.number][group];
 
     content.innerHTML = `
-      <div class="nx-full-screen">
+      <div class="nx-full-screen" data-nx-stage="items">
         ${backButton()}
         <div class="nx-category-path"><span>${currentCategory.name}</span><b>›</b><strong>${group}</strong></div>
         <div class="nx-category-heading">
@@ -1948,26 +1948,26 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     showCategoryList();
   };
   window.NEXORA_AD_BACK = function () {
-    const stage = content.querySelector(".nx-full-screen");
+    const stage = content.querySelector("[data-nx-stage]")?.dataset.nxStage;
     if (content.querySelector(".nx-list-screen")) {
-      currentSubcategory = null;
-      showSubcategoryItems(currentGroup);
-    } else if (stage && currentSubcategory) {
       currentSubcategory = null;
       selectedItem = null;
       showSubcategoryItems(currentGroup);
-    } else if (stage && currentGroup) {
+    } else if (stage === "items") {
+      currentSubcategory = null;
+      selectedItem = null;
       currentGroup = null;
       selectedGroup = null;
       showSubcategories(currentCategory);
-    } else if (stage && currentCategory) {
+    } else if (stage === "groups") {
+      currentGroup = null;
+      selectedGroup = null;
       currentCategory = null;
       selectedCategory = null;
       showCategoryList();
-    } else if (window.NEXORA && typeof window.NEXORA.back === "function") {
-      window.NEXORA.back();
-    } else {
-      window.NEXORA?.open?.("home");
+    } else if (stage === "categories") {
+      if (window.NEXORA && typeof window.NEXORA.back === "function") window.NEXORA.back();
+      else window.NEXORA?.open?.("home");
     }
   };
 
