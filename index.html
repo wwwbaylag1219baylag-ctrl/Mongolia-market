@@ -4408,7 +4408,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       if(wholesaleNotificationUserId)refreshWholesaleNotificationBadge(wholesaleNotificationUserId);
       const showWholesaleProductDetail=(product)=>{
          window.NEXORA_SHOP_BACK=showWholesaleCatalog;
-         window.NEXORA_SHOP_NEXT=()=>window.NEXORA?.open("home");
+         window.NEXORA_SHOP_NEXT=showWholesaleCatalog;
         const profile=profileMap.get(String(product.owner_id))||{},paths=product.image_paths||[];
         const images=paths.map(path=>urls.get(product.id+"|"+path)).filter(Boolean);let selected=0;
         const draw=()=>{
@@ -4418,7 +4418,18 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
           document.getElementById("nx-wholesale-detail-order").onclick=()=>addToWholesaleCart(product);
           host.querySelectorAll("[data-wholesale-thumb]").forEach(b=>b.onclick=()=>{selected=Number(b.dataset.wholesaleThumb);draw();});
           const main=document.getElementById("nx-wholesale-detail-image");
-          if(main&&images.length>1){let startX=0;main.addEventListener("touchstart",e=>{startX=e.changedTouches[0].clientX;},{passive:true});main.addEventListener("touchend",e=>{const delta=e.changedTouches[0].clientX-startX;if(Math.abs(delta)>45){selected=(selected+(delta<0?1:-1)+images.length)%images.length;draw();}},{passive:true});}
+          if(main){
+            main.onclick=()=>{
+              const overlay=document.createElement("div");
+              overlay.style.cssText="position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.97);display:flex;align-items:center;justify-content:center;padding:16px";
+              overlay.innerHTML='<button type="button" id="nx-wholesale-lightbox-close" style="position:absolute;top:18px;right:18px;padding:12px 16px;background:#222;color:#fff;border:1px solid #d6ad55;border-radius:12px">✕ Хаах</button><button type="button" id="nx-wholesale-lightbox-prev" style="position:absolute;left:12px;top:50%;padding:12px;background:#222;color:#fff;border:1px solid #d6ad55;border-radius:12px">‹</button><img src="'+esc(current)+'" alt="'+esc(product.title)+'" style="max-width:100%;max-height:86vh;object-fit:contain"><button type="button" id="nx-wholesale-lightbox-next" style="position:absolute;right:12px;top:50%;padding:12px;background:#222;color:#fff;border:1px solid #d6ad55;border-radius:12px">›</button>';
+              document.body.appendChild(overlay);
+              overlay.querySelector("#nx-wholesale-lightbox-close").onclick=()=>overlay.remove();
+              overlay.querySelector("#nx-wholesale-lightbox-prev").onclick=()=>{selected=(selected-1+images.length)%images.length;overlay.querySelector("img").src=images[selected];};
+              overlay.querySelector("#nx-wholesale-lightbox-next").onclick=()=>{selected=(selected+1)%images.length;overlay.querySelector("img").src=images[selected];};
+            };
+            if(images.length>1){let startX=0;main.addEventListener("touchstart",e=>{startX=e.changedTouches[0].clientX;},{passive:true});main.addEventListener("touchend",e=>{const delta=e.changedTouches[0].clientX-startX;if(Math.abs(delta)>45){selected=(selected+(delta<0?1:-1)+images.length)%images.length;draw();}},{passive:true});}
+          }
         };
         draw();
       };
@@ -4586,12 +4597,12 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   function render(){loadProducts();}
   async function showRetailProductDetail(product){
      window.NEXORA_SHOP_BACK=showRetailCatalog;
-     window.NEXORA_SHOP_NEXT=()=>window.NEXORA?.open("home");
+     window.NEXORA_SHOP_NEXT=showRetailCatalog;
     const images=product._images?.length?product._images:[],storeName=product._storeName||"Онлайн дэлгүүр";let selected=0;
     const draw=()=>{
       const current=images[selected]?.url||"";
       host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-retail-detail-back" aria-label="Буцах" title="Буцах">‹</button><h2 class="nexora-ad-heading">'+esc(product.title)+'</h2>'+(current?'<div style="position:relative"><img id="nx-retail-detail-image" src="'+esc(current)+'" alt="'+esc(product.title)+'" style="width:100%;max-height:430px;object-fit:contain;background:#101010;border-radius:14px"><div class="nx-market-muted" style="text-align:center;margin-top:8px">'+(selected+1)+' / '+images.length+'</div></div>':'<div style="aspect-ratio:1;background:#171717;border-radius:14px;display:grid;place-items:center">Зураггүй</div>')+'<div style="display:flex;gap:8px;overflow-x:auto;padding:10px 0">'+images.map((im,i)=>'<button type="button" data-retail-thumb="'+i+'" style="border:2px solid '+(i===selected?'#d6ad55':'#444')+';padding:2px;border-radius:9px;background:transparent;flex:0 0 66px"><img src="'+esc(im.url)+'" alt="Зураг '+(i+1)+'" style="width:60px;height:60px;object-fit:cover;border-radius:6px"></button>').join("")+'</div><p class="nx-market-muted">Дэлгүүр: '+esc(storeName)+'</p><p class="nx-market-price">'+money(product.price)+'</p><p class="nx-market-muted">Үлдэгдэл: '+Number(product.stock_quantity||0)+' ширхэг · Доод захиалга: '+Number(product.min_order_quantity||1)+' ширхэг</p><p>'+esc(product.description||"")+'</p><p class="nx-market-muted">Байршил: '+esc(product.location||"—")+' · Утас: '+esc(product.phone||"—")+'</p><button class="nx-market-btn" id="nx-retail-detail-add" '+(Number(product.stock_quantity||0)<Number(product.min_order_quantity||1)?'disabled':'')+'>САГСАНД НЭМЭХ</button>';
-      document.getElementById("nx-retail-detail-back").onclick=loadProducts;
+      document.getElementById("nx-retail-detail-back").onclick=showRetailCatalog;
       document.getElementById("nx-retail-detail-add").onclick=()=>addToCart(product);
       host.querySelectorAll("[data-retail-thumb]").forEach(b=>b.onclick=()=>{selected=Number(b.dataset.retailThumb);draw();});
       const mainImage=document.getElementById("nx-retail-detail-image");
