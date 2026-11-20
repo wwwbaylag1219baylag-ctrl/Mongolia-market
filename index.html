@@ -4626,34 +4626,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       else if(zone==="wholesale"){window.NEXORA_SHOP_PROFILE_RETURN=showShopLanding;showWholesaleCatalog().then(()=>document.getElementById("nx-wholesale-profile-entry")?.click());}
       else {window.NEXORA_SHOP_BACK=showShopLanding;openRetailProfile();}
     };
-    host.innerHTML='<div class="nx-shop-dual-home nx-nexora-blue-home"><header class="nx-nexora-brand-header"><div class="nx-nexora-wordmark">NE<span>X</span>ORA</div><div class="nx-nexora-platform-title">ХУДАЛДААНЫ ПЛАТФОРМ</div><div class="nx-nexora-cart-mark" aria-hidden="true">🛒</div></header><section class="nx-shop-zone nx-shop-zone-retail nx-nexora-card" data-shop-zone="retail"><img class="nx-shop-zone-photo" id="nx-shop-retail-photo" alt="Онлайн дэлгүүрийн супермаркет"><div class="nx-nexora-card-copy"><div class="nx-nexora-card-icon">🛍️</div><strong>Онлайн<br>Дэлгүүр</strong><small>Жижиглэнгийн худалдаа</small><em>ЗҮҮН ТИЙШ ШУДАРЧ УДИРДЛАГА</em></div></section><section class="nx-shop-zone nx-shop-zone-wholesale nx-nexora-card" data-shop-zone="wholesale"><img class="nx-shop-zone-photo" id="nx-shop-wholesale-photo" alt="Бөөний худалдааны агуулах"><div class="nx-nexora-card-copy"><div class="nx-nexora-card-icon">▤</div><strong>Бөөний<br>Худалдаа</strong><small>Бөөнөөр худалдаа</small><em>ЗҮҮН ТИЙШ ШУДАРЧ УДИРДЛАГА</em></div></section></div>';
-    // Лого нь зөвхөн таних тэмдэг; навигаци зөвхөн хэвтээ шудралтаар хийгдэнэ.
-    db.auth.getUser().then(async({data,error})=>{
-      if(error||!data?.user)return;
-      const {data:profile}=await db.from("nexora_store_profiles").select("logo_path,wholesale_logo_path").eq("user_id",data.user.id).maybeSingle();
-      if(!profile)return;
-      const retail=profile.logo_path?db.storage.from("market-store-logos").getPublicUrl(profile.logo_path).data.publicUrl:"";
-      const wholesale=profile.wholesale_logo_path?db.storage.from("market-store-logos").getPublicUrl(profile.wholesale_logo_path).data.publicUrl:"";
-      const retailNode=document.getElementById("nx-shop-retail-logo"),wholesaleNode=document.getElementById("nx-shop-wholesale-logo");
-      if(retailNode&&retail)retailNode.innerHTML='<img src="'+esc(retail)+'" alt="Онлайн дэлгүүрийн байгууллагын лого">';const retailProfileLogo=document.getElementById("nx-shop-retail-profile-logo");if(retailProfileLogo&&retail)retailProfileLogo.innerHTML='<img src="'+esc(retail)+'" alt="Онлайн дэлгүүрийн байгууллагын лого">';
-      if(wholesaleNode&&wholesale)wholesaleNode.innerHTML='<img src="'+esc(wholesale)+'" alt="Бөөний худалдааны байгууллагын лого">';const wholesaleProfileLogo=document.getElementById("nx-shop-wholesale-profile-logo");if(wholesaleProfileLogo&&wholesale)wholesaleProfileLogo.innerHTML='<img src="'+esc(wholesale)+'" alt="Бөөний худалдааны байгууллагын лого">';
-      const [retailProduct,wholesaleProduct]=await Promise.all([
-        db.from("market_products").select("image_path").eq("status","active").not("image_path","is",null).order("created_at",{ascending:false}).limit(1).maybeSingle(),
-        db.from("wholesale_products").select("image_paths").eq("status","active").order("created_at",{ascending:false}).limit(1).maybeSingle()
-      ]);
-      const retailPath=retailProduct.data?.image_path,wholesalePath=wholesaleProduct.data?.image_paths?.[0];
-      const photoPaths=[retailPath,wholesalePath].filter(Boolean);
-      if(photoPaths.length){
-        const signed=await db.storage.from("market-product-images").createSignedUrls(photoPaths,3600);
-        if(!signed.error){
-          const retailUrl=retailPath?signed.data?.[photoPaths.indexOf(retailPath)]?.signedUrl:"";
-          const wholesaleUrl=wholesalePath?signed.data?.[photoPaths.indexOf(wholesalePath)]?.signedUrl:"";
-          const retailPhoto=document.getElementById("nx-shop-retail-photo"),wholesalePhoto=document.getElementById("nx-shop-wholesale-photo");
-          if(retailPhoto&&retailUrl)retailPhoto.src=retailUrl;
-          if(wholesalePhoto&&wholesaleUrl)wholesalePhoto.src=wholesaleUrl;
-        }
-      }
-    }).catch(err=>console.warn("Худалдааны профайлын лого:",err));
+    host.innerHTML='<div class="nx-shop-reference-screen"><img class="nx-shop-reference-image" src="./file_000000006cac82119903b577d19b0fd1.png" alt="NEXORA худалдааны платформ: Онлайн дэлгүүр болон Бөөний худалдаа"><div class="nx-shop-reference-swipe-zone nx-shop-reference-retail" data-shop-zone="retail" aria-label="Онлайн дэлгүүрийн шудралтын хэсэг"></div><div class="nx-shop-reference-swipe-zone nx-shop-reference-wholesale" data-shop-zone="wholesale" aria-label="Бөөний худалдааны шудралтын хэсэг"></div></div>';
+    // Энэ нүүрэнд дэлгүүрийн барааны зураг татахгүй. Зөвхөн тогтмол жишиг зураг харагдана.
   }
   function renderRetailCategories(){
     const target=document.getElementById("nx-retail-categories");if(!target)return;
@@ -5401,6 +5375,25 @@ html,body{
 #shop .nx-market-product-info h3{font-size:11px!important;line-height:1.25!important}
 #shop .nx-market-product-tile .nx-market-price{font-size:12px!important}
 }
+</style>
+<style id="NEXORA-EXACT-COMMERCE-REFERENCE">
+/* Илгээсэн NEXORA зураг — барааны динамик зургуудыг үндсэн нүүрэнд огт ачаалахгүй */
+#market-app .nx-shop-reference-screen{
+  position:relative;width:100%;max-width:100%;margin:0 auto;
+  overflow:hidden;background:#061b58;line-height:0;
+  touch-action:pan-y;
+}
+#market-app .nx-shop-reference-image{
+  display:block;width:100%;height:auto;max-width:100%;object-fit:contain;
+  margin:0;padding:0;pointer-events:none;user-select:none;-webkit-user-drag:none;
+}
+#market-app .nx-shop-reference-swipe-zone{
+  position:absolute;left:0;right:0;z-index:2;background:transparent;
+  touch-action:pan-y;user-select:none;-webkit-user-select:none;
+}
+#market-app .nx-shop-reference-retail{top:19%;height:38%}
+#market-app .nx-shop-reference-wholesale{top:59%;height:38%}
+#market-app .nx-shop-reference-swipe-zone:active{background:rgba(0,145,255,.025)}
 </style>
 </body>
 
