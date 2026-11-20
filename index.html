@@ -4095,10 +4095,10 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
           const payload={user_id:marketUser.id,store_name:v.store_name.trim(),owner_type:v.owner_type,phone:String(v.phone||"").trim(),description:String(v.description||"").trim(),address:String(v.address||"").trim()};
           let saved=store;
           if(store){
-            const {data,error}=await db.from("nexora_store_profiles").update({store_name:payload.store_name,owner_type:payload.owner_type,phone:payload.phone,description:payload.description,address:payload.address}).eq("id",store.id).eq("user_id",marketUser.id).select("id").single();
+            const {data,error}=await db.from("nexora_store_profiles").update({store_name:payload.store_name,owner_type:payload.owner_type,phone:payload.phone,description:payload.description,address:payload.address}).eq("id",store.id).eq("user_id",marketUser.id).select("id,store_name,owner_type").single();
             if(error)throw error;saved=data;
           }else{
-            const {data,error}=await db.from("nexora_store_profiles").insert(payload).select("id").single();
+            const {data,error}=await db.from("nexora_store_profiles").insert(payload).select("id,store_name,owner_type").single();
             if(error)throw error;saved=data;
           }
           if(file&&file.size){
@@ -4112,7 +4112,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
               if(updateError)throw updateError;
             }
           }
-          if(!store){await showStorePayment(saved,settings,banks,backAction,uploadedLogoPath);return;}
+          if(!store){await showStorePayment(saved,settings,banks,backAction,uploadedLogoPath,logoFee);return;}
           msg.textContent="✓ Дэлгүүрийн мэдээлэл хадгалагдлаа.";await showStore(backAction);
         }catch(err){if(uploadedLogoPath)await db.storage.from("market-store-logos").remove([uploadedLogoPath]).catch(()=>{});msg.textContent="Алдаа: "+(err.message||err);btn.disabled=false;}
       };
@@ -4128,7 +4128,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     }
     renderStoreForm();
   }
-  async function showStorePayment(store,settings,banks,backAction=loadProducts,pendingLogoPath=null){
+  async function showStorePayment(store,settings,banks,backAction=loadProducts,pendingLogoPath=null,logoFee=0){
     const amount=store.owner_type==="company"?Number(settings.company_price):Number(settings.individual_price);
     if(!banks?.length){host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-store-payment-back">‹ Буцах</button><h2 class="nexora-ad-heading">ДЭЛГҮҮРИЙН ТӨЛБӨР</h2><p class="nx-market-muted">Админ одоогоор төлбөр хүлээн авах идэвхтэй данс тохируулаагүй байна.</p>';document.getElementById("nx-store-payment-back").onclick=()=>showStore(backAction);return;}
     window.NEXORA_SHOP_BACK=()=>showStore(backAction);
@@ -4154,7 +4154,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         if(uploadError)throw uploadError;
         const {error:insertError}=await db.from("nexora_store_payments").insert({store_id:store.id,user_id:marketUser.id,amount,bank_name:bank.bank_name,transfer_reference:String(v.transfer_reference||"").trim(),receipt_path:path,status:"pending"});
         if(insertError)throw insertError;
-        if(pendingLogoPath){await showRetailFeePayment({feeType:"logo",amount:0,storeId:store.id,pendingLogoPath,backAction:()=>showStore(backAction)});return;}
+        if(pendingLogoPath&&logoFee>0){await showRetailFeePayment({feeType:"logo",amount:logoFee,storeId:store.id,pendingLogoPath,backAction:()=>showStore(backAction)});return;}
         await showStore(backAction);
       }catch(err){
         await db.storage.from("payment-receipts").remove([path]).catch(()=>{});
