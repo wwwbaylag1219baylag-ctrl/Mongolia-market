@@ -4576,8 +4576,9 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   function showWholesaleCart(){
     window.NEXORA_SHOP_NEXT=showShopLanding;window.NEXORA_SHOP_BACK=showShopLanding;
     const total=wholesaleCart.reduce((n,x)=>n+Number(x.price||0)*Number(x.qty||1),0);
-    host.innerHTML='<div class="nx-catalog-topline"><span class="nx-swipe-home-hint">← энд шудар</span><strong>🛒 БӨӨНИЙ САГС</strong></div>'+
+    host.innerHTML='<div class="nx-catalog-topline"><button type="button" class="nx-market-btn secondary" id="nx-wholesale-cart-back">‹ Буцах</button><strong>🛒 БӨӨНИЙ САГС</strong></div>'+
       (wholesaleCart.map(p=>'<article class="nx-market-card"><h3>'+esc(p.title)+'</h3><p class="nx-market-price">'+money(p.price)+' × '+p.qty+' ш</p><div class="nx-market-toolbar"><button class="nx-market-btn secondary" data-wh-cart-minus="'+esc(p.id)+'">−</button><button class="nx-market-btn secondary" data-wh-cart-plus="'+esc(p.id)+'">＋</button><button class="nx-market-btn secondary" data-wh-cart-remove="'+esc(p.id)+'">Устгах</button><button class="nx-market-btn" data-wh-cart-order="'+esc(p.id)+'">Захиалах</button></div></article>').join("")||'<div class="nx-admin-empty">Бөөний сагс хоосон байна.</div>')+'<h3>Нийт дүн: '+money(total)+'</h3>';
+    document.getElementById("nx-wholesale-cart-back").onclick=showWholesaleCatalog;
     host.querySelectorAll("[data-wh-cart-minus]").forEach(b=>b.onclick=()=>{const p=wholesaleCart.find(x=>String(x.id)===b.dataset.whCartMinus);if(p&&p.qty>Number(p.min_order_quantity||1))p.qty--;showWholesaleCart();});
     host.querySelectorAll("[data-wh-cart-plus]").forEach(b=>b.onclick=()=>{const p=wholesaleCart.find(x=>String(x.id)===b.dataset.whCartPlus);if(p&&p.qty<Number(p.stock_quantity||0))p.qty++;showWholesaleCart();});
     host.querySelectorAll("[data-wh-cart-remove]").forEach(b=>b.onclick=()=>{wholesaleCart=wholesaleCart.filter(x=>String(x.id)!==b.dataset.whCartRemove);showWholesaleCart();});
@@ -4826,7 +4827,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       <button type="button" class="nx-market-btn secondary" id="nx-delivery-map">📍 Газрын зураг дээр байршил тэмдэглэх</button><p id="nx-delivery-map-label" class="nx-market-muted">Байршил сонгоогүй байна. Газрын зураг дээр pin тавина уу. *</p>
       <label class="nx-market-muted" for="nx-delivery-note">Хүргэлтийн нэмэлт тайлбар</label><textarea class="nx-market-input" id="nx-delivery-note" rows="2" placeholder="Жишээ нь: орцны код, ойр орчны тэмдэглэгээ"></textarea>
       <h3>Нийт: ${money(cart.reduce((n,x)=>n+x.price*x.qty,0))}</h3><button class="nx-market-btn" id="nx-cart-order" ${cart.length?"":"disabled"}>Захиалга үүсгэх</button><p id="nx-market-msg" class="nx-market-muted"></p>`;
-    document.getElementById("nx-cart-back").onclick=render;
+    document.getElementById("nx-cart-back").onclick=()=>{render();};
     window.__nxDeliveryPoint=null;
     document.getElementById("nx-delivery-map").onclick=()=>{
       if(typeof window.NEXORA_OPEN_MAP_SCREEN!=="function"){document.getElementById("nx-delivery-map-label").textContent="Газрын зураг ачаалагдаагүй байна. Дахин оролдоно уу.";return;}
@@ -6332,4 +6333,17 @@ button.nx-platform-back:focus-visible,
  padding:8px 11px!important;border-radius:11px!important;font-size:12px!important;
  box-shadow:0 3px 12px rgba(0,0,0,.42)!important;opacity:1!important;visibility:visible!important;
 }
+</style>
+
+<style id="NEXORA-CART-BACK-VISIBILITY-FIX-2026">
+/* Сагсны буцах товчийг худалдааны платформд ил харагдуулна. */
+#market-app #nx-cart-back,
+#market-app #nx-wholesale-cart-back{
+  display:inline-flex!important;visibility:visible!important;pointer-events:auto!important;
+  position:relative!important;z-index:100010!important;align-items:center!important;justify-content:center!important;
+  min-width:76px!important;min-height:42px!important;margin:0 0 12px!important;padding:8px 14px!important;
+  border:1px solid #d6ad55!important;border-radius:12px!important;background:#171717!important;color:#ffe0a0!important;
+  font-size:16px!important;font-weight:700!important;line-height:1.2!important;opacity:1!important;
+}
+#market-app .nx-catalog-topline #nx-wholesale-cart-back{flex:0 0 auto!important;margin:0!important}
 </style>
