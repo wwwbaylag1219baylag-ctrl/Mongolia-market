@@ -2265,6 +2265,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 
     const query = searchText.trim().toLowerCase();
 
+    const packagePriority = { premium: 0, vip: 1, featured: 2, basic: 3 };
     filteredAds = ads.filter(function (ad) {
       const text = [
         ad.title,
@@ -2274,6 +2275,16 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       ].join(" ").toLowerCase();
 
       return text.includes(query);
+    }).sort(function (a, b) {
+      const aType = String(a.package_type || "basic").toLowerCase();
+      const bType = String(b.package_type || "basic").toLowerCase();
+      const aPriority = packagePriority[aType] ?? 3;
+      const bPriority = packagePriority[bType] ?? 3;
+
+      if (aPriority !== bPriority) return aPriority - bPriority;
+
+      // Ижил багцтай зарууд дотроо хамгийн сүүлд нийтлэгдсэн нь эхэндээ байна.
+      return new Date(b.created_at || 0) - new Date(a.created_at || 0);
     });
 
     if (loading) {
