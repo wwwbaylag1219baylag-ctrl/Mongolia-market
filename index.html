@@ -1638,6 +1638,9 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   let currentCategory = null;
   let currentSubcategory = null;
   let currentGroup = null;
+  let selectedCategory = null;
+  let selectedGroup = null;
+  let selectedItem = null;
 
   function createToggleButton() {
     return '<button type="button" class="nx-create-toggle" data-nx-create-toggle>+ ЗАР НИЙТЛЭХ</button>';
@@ -1855,7 +1858,10 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       const category = (window.NEXORA_AD_CATEGORIES || [])
         .find(item => item.number === number);
 
-      if (category) showSubcategories(category);
+      if (category) {
+        selectedCategory = category;
+        content.querySelectorAll('[data-nx-category]').forEach(node => node.classList.toggle('selected', node === categoryButton));
+      }
       return;
     }
 
@@ -1865,35 +1871,21 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       const field = fields[Number(jobFieldButton.dataset.nxJobField)];
       if (field) {
         currentGroup = field;
-        showSubcategoryItems(field);
+        selectedGroup = field;
+        content.querySelectorAll('[data-nx-job-field]').forEach(node => node.classList.toggle('selected', node === jobFieldButton));
       }
       return;
     }
 
     const groupButton = event.target.closest("[data-nx-group]");
-
     if (groupButton) {
       const groupIndex = Number(groupButton.dataset.nxGroup);
       const groups = Object.keys(subcategories[currentCategory.number] || {});
       const group = groups[groupIndex];
-      const panel = content.querySelector(`[data-nx-group-panel="${groupIndex}"]`);
-      if (!group || !panel) return;
-
-      const willOpen = panel.hidden;
-      content.querySelectorAll("[data-nx-group-panel]").forEach(node => {
-        node.hidden = true;
-      });
-      content.querySelectorAll("[data-nx-group][aria-expanded]").forEach(node => {
-        node.setAttribute("aria-expanded", "false");
-      });
-
-      if (willOpen) {
-        panel.hidden = false;
-        groupButton.setAttribute("aria-expanded", "true");
-        currentGroup = group;
-      } else {
-        currentGroup = null;
-      }
+      if (!group) return;
+      currentGroup = group;
+      selectedGroup = group;
+      content.querySelectorAll("[data-nx-group]").forEach(node => node.classList.toggle("selected", node === groupButton));
       return;
     }
 
@@ -1903,9 +1895,49 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       const items = subcategories[currentCategory.number][currentGroup] || [];
       const item = items[Number(itemButton.dataset.nxItem)];
 
-      if (item) showListingPlaceholder(item);
+      if (item) {
+        currentSubcategory = item;
+        selectedItem = item;
+        content.querySelectorAll('[data-nx-item]').forEach(node => node.classList.toggle('selected', node === itemButton));
+      }
     }
   });
+
+
+  // Гар утасны хэвтээ шудралт: сонголт баталгаажсаны дараа дараагийн шат руу орно.
+  let nxAdsTouchStart = null;
+  content.addEventListener("touchstart", event => {
+    if (event.touches.length !== 1) { nxAdsTouchStart = null; return; }
+    nxAdsTouchStart = { x:event.touches[0].clientX, y:event.touches[0].clientY };
+  }, { passive:true });
+  content.addEventListener("touchend", event => {
+    if (!nxAdsTouchStart || event.changedTouches.length !== 1) return;
+    const dx = event.changedTouches[0].clientX - nxAdsTouchStart.x;
+    const dy = event.changedTouches[0].clientY - nxAdsTouchStart.y;
+    nxAdsTouchStart = null;
+    if (Math.abs(dx) < 65 || Math.abs(dx) < Math.abs(dy) * 1.25) return;
+    if (event.target.closest("input,textarea,select,iframe,[contenteditable='true'],#nx-photo-album")) return;
+
+    if (dx < 0) {
+      if (selectedCategory && !currentCategory) {
+        currentCategory = selectedCategory;
+        showSubcategories(selectedCategory);
+      } else if (currentCategory && selectedGroup && !currentSubcategory) {
+        showSubcategoryItems(selectedGroup);
+      } else if (currentCategory && currentGroup && currentSubcategory) {
+        showListingPlaceholder(currentSubcategory);
+      }
+      return;
+    }
+
+    if (content.querySelector("[data-nx-detail-back]")) {
+      content.querySelector("[data-nx-detail-back]").click();
+    } else if (content.querySelector("[data-nx-list-back]")) {
+      content.querySelector("[data-nx-list-back]").click();
+    } else {
+      window.NEXORA_AD_BACK();
+    }
+  }, { passive:true });
 
   window.NEXORA_AD_SUBCATEGORIES = subcategories;
   window.NEXORA_AD_HOME = function () {
@@ -1916,16 +1948,26 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     showCategoryList();
   };
   window.NEXORA_AD_BACK = function () {
-    if (currentSubcategory) {
+    const stage = content.querySelector(".nx-full-screen");
+    if (content.querySelector(".nx-list-screen")) {
       currentSubcategory = null;
-      if (currentCategory?.number === 3 && !currentGroup) showSubcategories(currentCategory);
-      else showSubcategoryItems(currentGroup);
-    } else if (currentGroup) {
+      showSubcategoryItems(currentGroup);
+    } else if (stage && currentSubcategory) {
+      currentSubcategory = null;
+      selectedItem = null;
+      showSubcategoryItems(currentGroup);
+    } else if (stage && currentGroup) {
       currentGroup = null;
+      selectedGroup = null;
       showSubcategories(currentCategory);
-    } else {
+    } else if (stage && currentCategory) {
       currentCategory = null;
+      selectedCategory = null;
       showCategoryList();
+    } else if (window.NEXORA && typeof window.NEXORA.back === "function") {
+      window.NEXORA.back();
+    } else {
+      window.NEXORA?.open?.("home");
     }
   };
 
@@ -5115,6 +5157,20 @@ html,body{
 #market-app .nx-retail-profile-logo{left:2px!important;width:52px!important;height:52px!important;min-width:52px!important;flex-basis:52px!important}
 #market-app .nx-retail-action-group>.nx-retail-notched{padding-left:19px!important;mask-image:radial-gradient(circle 25px at 0 50%,transparent 97%,#000 103%)!important;-webkit-mask-image:radial-gradient(circle 25px at 0 50%,transparent 97%,#000 103%)!important}
 }
+</style>
+
+<style id="NEXORA-GESTURE-ADS-2026">
+/* Зарын үндсэн дэлгэц: 8 ангилал л харагдана; шатлал хурууны шудралтаар удирдагдана. */
+#ads .page-content .nx-full-screen:has(.nexora-ad-grid) .nx-category-heading,
+#ads .page-content .nx-full-screen:has(.nexora-ad-grid) .nx-screen-subtitle,
+#ads .page-content .nx-full-screen:has(.nexora-ad-grid) .nx-platform-back,
+#ads .page-content .nx-full-screen:has(.nexora-ad-grid) .nx-create-toggle{display:none!important}
+#ads .page-content .nx-full-screen:has(.nexora-ad-grid){min-height:calc(100dvh - 72px);display:flex;align-items:center;justify-content:center;padding:12px;box-sizing:border-box}
+#ads .page-content .nx-full-screen:has(.nexora-ad-grid) .nexora-ad-grid{width:100%;max-width:900px;margin:auto}
+#ads .page-content .nx-full-screen:has(.nexora-ad-grid) .nexora-ad-category{min-height:clamp(125px,21vh,205px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+#ads .page-content .nx-full-screen:has(.nexora-ad-grid) .nexora-ad-number{display:none!important}
+#ads .page-content .nexora-ad-category.selected,#ads .page-content .nx-subcategory-item.selected{border-color:#f3ca69!important;background:linear-gradient(110deg,#493919,#282116)!important;box-shadow:0 0 0 2px rgba(214,173,85,.2),0 8px 24px rgba(214,173,85,.12)!important}
+#ads .page-content .nx-back,#ads .page-content .nx-platform-back,#ads .page-content .nx-list-back{display:none!important}
 </style>
 </body>
 
