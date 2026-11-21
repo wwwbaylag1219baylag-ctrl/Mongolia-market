@@ -145,17 +145,17 @@
  }
  async function overview(){
   const count=async(table,status)=>{let q=db.from(table).select("id",{count:"exact",head:true});if(status)q=q.eq("status",status);const {count,error}=await q;if(error)throw error;return count??0;};
-  const [ads,adPayments,retailProducts,wholesaleProducts,retailFees,wholesaleFees,supplierFees,storeFees]=await Promise.all([
+  const [ads,adPayments,retailProducts,wholesaleProducts,retailFees,wholesaleFees,supplierFees,storeFees,orderPayments]=await Promise.all([
    count("classified_ads","pending_review"),count("payment_requests","pending_review"),
    count("market_products","pending"),count("wholesale_products","pending"),
    count("market_retail_fee_payments","pending"),count("wholesale_supplier_fee_payments","pending"),
-   count("market_supplier_registration_payments","pending"),count("nexora_store_payments","pending")
+   count("market_supplier_registration_payments","pending"),count("nexora_store_payments","pending"),count("market_order_payment_requests","pending_review")
   ]);
   const stats=[
    ["Үнэгүй зарын хүсэлт",ads,"ads"],
    ["Зарын төлбөр",adPayments,"payments"],
    ["Жижиглэн + бөөний бараа",retailProducts+wholesaleProducts,"products"],
-   ["Худалдааны төлбөрийн хүсэлт",retailFees+wholesaleFees+supplierFees+storeFees,"commercePayments"],
+   ["Худалдааны төлбөрийн хүсэлт",retailFees+wholesaleFees+supplierFees+storeFees+orderPayments,"commercePayments"],
    ["Бүртгэлтэй нийлүүлэгч",await count("market_suppliers",null),"suppliers"]
   ];
   return '<h2 class="nx-admin-section-title">Хяналтын тойм</h2><p class="nx-admin-section-note">Зарын төлбөр тусдаа. Худалдааны бүх төлбөр нэг удирдлагад нэгтгэгдсэн.</p><div class="nx-admin-stats">'+stats.map(x=>
@@ -252,7 +252,9 @@
      ["market_retail_fee_payments","id,user_id,store_id,product_id,fee_type,amount,bank_name,account_number,account_holder,transfer_reference,receipt_path,status,admin_note,created_at","retail_fee_payment"],
      ["wholesale_supplier_fee_payments","id,user_id,supplier_id,store_id,fee_type,product_id,amount,bank_name,account_number,account_holder,transfer_reference,receipt_path,status,admin_note,created_at","wholesale_fee_payment"],
      ["market_supplier_registration_payments","id,user_id,supplier_id,owner_type,supplier_name,payment_purpose,phone,email,register_no,amount,bank_name,account_number,account_holder,transfer_reference,receipt_path,status,admin_note,created_at","supplier_registration_payment"],
-     ["nexora_store_payments","id,store_id,user_id,amount,bank_name,transfer_reference,receipt_path,status,admin_note,created_at","store_payment"]
+     ["nexora_store_payments","id,store_id,user_id,amount,bank_name,transfer_reference,receipt_path,status,admin_note,created_at","store_payment"],
+     ["market_order_payment_requests","id,order_id,buyer_id,amount,transfer_reference,receipt_path,status,created_at","market_order_payment"],
+     ["market_order_payment_requests","id,order_id,buyer_id,amount,transfer_reference,receipt_path,status,created_at","market_order_payment"]
     ];
     const loaded=await Promise.all(sources.map(async x=>{const {data,error}=await query(x[0],x[1],[["status","pending"]]);if(error)throw error;return {data:data||[],type:x[2]};}));
     const blocks=await Promise.all(loaded.map(x=>cards(x.data,x.type)));
@@ -307,6 +309,9 @@
   try{
    if(type==="ad_payment")result=await db.rpc(action==="approve"?"admin_approve_payment_request":"admin_reject_payment_request",{p_request_id:id});
    else if(type==="free_ad")result=await db.rpc("admin_review_free_ad",{p_ad_id:id,p_approve:action==="approve"});
+   else if(type==="market_order_payment"){
+    result=await db.rpc("nexora_review_market_order_payment",{p_payment_id:id,p_approve:action==="approve",p_note:action==="approve"?null:"Төлбөрийн баримт баталгаажаагүй"});
+   }
    else if(["store_payment","retail_fee_payment","wholesale_fee_payment","supplier_registration_payment"].includes(type)){
     const kindMap={store_payment:"store",retail_fee_payment:"retail_fee",wholesale_fee_payment:"wholesale_fee",supplier_registration_payment:"supplier_registration"};
     const paymentId=String(id??"").trim();if(!paymentId)throw new Error("Төлбөрийн хүсэлтийн ID хоосон байна.");
