@@ -5013,8 +5013,11 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       ["Гэр ахуй","Цэвэрлэгээний хэрэгсэл","photo-1581578731548-c64695cc6952"]
     ].filter(x=>!x[2].includes("placeholder")).map((x,i)=>({category:x[0],title:x[1],image:"https://images.unsplash.com/"+x[2]+"?auto=format&fit=crop&w=720&q=85",id:"demo-"+i,_isDemo:true}));
     const retailProducts=products.filter(p=>p._marketType==="retail");
-    const realCategories=new Set(retailProducts.map(p=>p.category||"Бусад"));
-    const visibleDemos=demoProducts.filter(p=>!realCategories.has(p.category));
+    // Ангиллын бичлэгийн том/жижиг үсэг, илүү зайг үл харгалзан бодит бараатай ангиллыг танина.
+    const normalizeCategory=value=>String(value||"Бусад").trim().toLocaleLowerCase("mn").replace(/\\s+/g," ");
+    // Зураг нь амжилттай ачаалагдсан идэвхтэй бодит бараа байгаа үед л тухайн ангиллын жишээ зургийг солино.
+    const realCategoriesWithPhotos=new Set(retailProducts.filter(p=>(p._images||[]).some(image=>image?.url)).map(p=>normalizeCategory(p.category)));
+    const visibleDemos=demoProducts.filter(p=>!realCategoriesWithPhotos.has(normalizeCategory(p.category)));
     const sourceProducts=[...retailProducts,...visibleDemos];
     const query=String(searchText||"").trim().toLocaleLowerCase("mn");
     const allCategories=[...new Set(sourceProducts.map(p=>p.category||"Бусад"))].sort((a,b)=>a.localeCompare(b,"mn"));
