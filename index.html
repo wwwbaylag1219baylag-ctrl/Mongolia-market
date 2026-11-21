@@ -4580,13 +4580,13 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     try{
       const [retailRes,wholesaleRes]=await Promise.all([
         db.rpc("nexora_get_retail_seller_orders"),
-        db.from("wholesale_orders").select("id,buyer_id,items,total_amount,status,buyer_name,buyer_phone,delivery_address,note,created_at").eq("supplier_id",auth.user.id).order("created_at",{ascending:false}).limit(100)
+        db.from("wholesale_orders").select("id,buyer_id,items,total_amount,status,payment_status,buyer_name,buyer_phone,delivery_address,note,created_at").eq("supplier_id",auth.user.id).order("created_at",{ascending:false}).limit(100)
       ]);
       if(retailRes.error)throw retailRes.error;if(wholesaleRes.error)throw wholesaleRes.error;
       const retail=retailRes.data||[],wholesale=wholesaleRes.data||[];
       const rows=[
         ...retail.map(o=>({kind:"retail",id:o.order_id,created_at:o.created_at,status:o.status,total:o.seller_total,order:o})),
-        ...wholesale.map(o=>({kind:"wholesale",id:o.id,created_at:o.created_at,status:o.status,total:o.total_amount,order:o}))
+        ...wholesale.map(o=>({kind:"wholesale",id:o.id,created_at:o.created_at,status:o.status,total:o.total_amount,payment:o.payment_status||"unpaid",order:o}))
       ].sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
       const retailStatus={pending_payment:"Төлбөр хүлээгдэж байна",payment_rejected:"Төлбөр баталгаажаагүй",processing:"Бэлтгэж байна",completed:"Дууссан",cancelled:"Цуцалсан"};
       const wholesaleStatus={pending:"Шинэ захиалга",accepted:"Зөвшөөрсөн",rejected:"Татгалзсан",processing:"Бэлтгэж байна",completed:"Дууссан",cancelled:"Цуцалсан"};
@@ -4605,7 +4605,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
           else if(o.status==="processing")actions='<button class="nx-market-btn" data-unified-wholesale-status="completed" data-id="'+esc(row.id)+'">Дуусгах</button>';
           actions+='<button class="nx-market-btn secondary" data-unified-wholesale-detail="'+esc(row.id)+'">Захиалгын явц, дэлгэрэнгүй</button>';
         }
-        return '<article class="nx-admin-card" style="margin:12px 0"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><h3>Захиалга #'+esc(String(row.id).slice(0,10))+'</h3><span class="nx-admin-status">'+(isRetail?"🛍️ Жижиглэн · ":"📦 Бөөний · ")+esc((isRetail?retailStatus:wholesaleStatus)[o.status]||o.status)+'</span></div>'+itemHtml+'<p class="nx-market-price">'+(isRetail?"Таны дэлгүүрийн дүн: ":"Захиалгын дүн: ")+money(row.total)+'</p><div class="nx-admin-meta"><div><strong>Захиалагч:</strong> '+esc(isRetail?o.recipient_name||"—":o.buyer_name||"—")+'</div><div><strong>Утас:</strong> '+esc(isRetail?o.delivery_phone||"—":o.buyer_phone||"—")+'</div><div><strong>Хаяг:</strong> '+esc(o.delivery_address||"—")+'</div><div><strong>Огноо:</strong> '+esc(row.created_at?new Date(row.created_at).toLocaleString("mn-MN"):"—")+'</div>'+(isRetail?'<div><strong>Төлбөр:</strong> '+esc(o.payment_status==="paid"?"Баталгаажсан":o.payment_status==="rejected"?"Баталгаажаагүй":"Хүлээгдэж байна")+'</div>':'')+'</div>'+actions+'</article>';
+        return '<article class="nx-admin-card" style="margin:12px 0"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><h3>Захиалга #'+esc(String(row.id).slice(0,10))+'</h3><span class="nx-admin-status">'+(isRetail?"🛍️ Жижиглэн · ":"📦 Бөөний · ")+esc((isRetail?retailStatus:wholesaleStatus)[o.status]||o.status)+'</span></div>'+itemHtml+'<p class="nx-market-price">'+(isRetail?"Таны дэлгүүрийн дүн: ":"Захиалгын дүн: ")+money(row.total)+'</p><div class="nx-admin-meta"><div><strong>Захиалагч:</strong> '+esc(isRetail?o.recipient_name||"—":o.buyer_name||"—")+'</div><div><strong>Утас:</strong> '+esc(isRetail?o.delivery_phone||"—":o.buyer_phone||"—")+'</div><div><strong>Хаяг:</strong> '+esc(o.delivery_address||"—")+'</div><div><strong>Огноо:</strong> '+esc(row.created_at?new Date(row.created_at).toLocaleString("mn-MN"):"—")+'</div>'+('<div><strong>Төлбөр:</strong> '+esc(o.payment_status==="paid"?"Баталгаажсан":o.payment_status==="pending_review"?"Админы хяналтад":o.payment_status==="rejected"?"Баримт дахин хүлээнэ":"Төлбөр хүлээгдэж байна")+'</div>')+'</div>'+actions+'</article>';
       }).join("");
       host.innerHTML='<button class="nx-market-btn secondary" id="nx-unified-seller-back">‹ Профайл руу буцах</button><h2 class="nexora-ad-heading">НАДАД ИРСЭН НЭГДСЭН ЗАХИАЛГА</h2><p class="nx-market-muted">Нийт '+rows.length+' захиалга · Жижиглэн '+retail.length+' · Бөөний '+wholesale.length+'</p>'+(cards||'<div class="nx-admin-empty">Одоогоор захиалга ирээгүй байна.</div>');
       document.getElementById("nx-unified-seller-back").onclick=backAction;
@@ -4922,7 +4922,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     try{
       const [retailRes,wholesaleRes]=await Promise.all([
         db.from("market_orders").select("id,items,total_amount,status,payment_status,created_at,recipient_name,delivery_phone,delivery_address,delivery_latitude,delivery_longitude,delivery_note").eq("buyer_id",auth.user.id).order("created_at",{ascending:false}).limit(100),
-        db.from("wholesale_orders").select("id,supplier_id,items,total_amount,status,buyer_name,buyer_phone,delivery_address,note,created_at,updated_at").eq("buyer_id",auth.user.id).order("created_at",{ascending:false}).limit(100)
+        db.from("wholesale_orders").select("id,supplier_id,items,total_amount,status,payment_status,buyer_name,buyer_phone,delivery_address,note,created_at,updated_at").eq("buyer_id",auth.user.id).order("created_at",{ascending:false}).limit(100)
       ]);
       if(retailRes.error)throw retailRes.error;if(wholesaleRes.error)throw wholesaleRes.error;
       const retail=retailRes.data||[],wholesale=wholesaleRes.data||[];
@@ -4941,7 +4941,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       const cards=rows.map(o=>{
         const isRetail=o.kind==="retail";
         const count=(o.order.items||[]).length;
-        return '<article class="nx-admin-card" style="margin:12px 0"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><div><h3>Захиалга #'+esc(String(o.id).slice(0,10))+'</h3><p class="nx-market-muted">'+(isRetail?"🛍️ Жижиглэн":"📦 Бөөний")+' · '+esc(names.get(o.seller)||"Худалдагч / нийлүүлэгч")+'</p></div><span class="nx-admin-status">'+esc(status[o.status]||o.status||"—")+'</span></div><p class="nx-market-price">'+money(o.total)+'</p><p class="nx-market-muted">'+count+' төрлийн бараа · '+esc(o.created_at?new Date(o.created_at).toLocaleString("mn-MN"):"—")+'</p>'+(isRetail?'<p class="nx-market-muted">Төлбөр: '+esc(o.payment==="paid"?"Баталгаажсан":o.payment==="unpaid"?"Төлбөр хүлээж байна":o.payment||"—")+'</p><button class="nx-market-btn" data-unified-retail-order="'+esc(o.id)+'">Дансны мэдээлэл / дэлгэрэнгүй</button>':'<button class="nx-market-btn" data-unified-wholesale-order="'+esc(o.id)+'">Дэлгэрэнгүй үзэх</button>')+'</article>';
+        return '<article class="nx-admin-card" style="margin:12px 0"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><div><h3>Захиалга #'+esc(String(o.id).slice(0,10))+'</h3><p class="nx-market-muted">'+(isRetail?"🛍️ Жижиглэн":"📦 Бөөний")+' · '+esc(names.get(o.seller)||"Худалдагч / нийлүүлэгч")+'</p></div><span class="nx-admin-status">'+esc(status[o.status]||o.status||"—")+'</span></div><p class="nx-market-price">'+money(o.total)+'</p><p class="nx-market-muted">'+count+' төрлийн бараа · '+esc(o.created_at?new Date(o.created_at).toLocaleString("mn-MN"):"—")+'</p>'+(isRetail?'<p class="nx-market-muted">Төлбөр: '+esc(o.payment==="paid"?"Баталгаажсан":o.payment==="unpaid"?"Төлбөр хүлээж байна":o.payment||"—")+'</p><button class="nx-market-btn" data-unified-retail-order="'+esc(o.id)+'">Дансны мэдээлэл / дэлгэрэнгүй</button>':'<p class="nx-market-muted">Төлбөр: '+esc(o.payment==="paid"?"Баталгаажсан":o.payment==="pending_review"?"Админы хяналтад":o.payment==="rejected"?"Баримт дахин илгээх шаардлагатай":"Төлбөр хүлээж байна")+'</p><button class="nx-market-btn" data-unified-wholesale-order="'+esc(o.id)+'">Дэлгэрэнгүй / төлбөрийн баримт</button>')+'</article>';
       }).join("");
       host.innerHTML='<button class="nx-market-btn secondary" id="nx-unified-orders-back">‹ Профайл руу буцах</button><h2 class="nexora-ad-heading">МИНИЙ НЭГДСЭН ЗАХИАЛГА</h2><p class="nx-market-muted">Нийт '+rows.length+' захиалга · Жижиглэн '+retail.length+' · Бөөний '+wholesale.length+'</p>'+(cards||'<div class="nx-admin-empty">Одоогоор захиалга алга байна.</div>');
       document.getElementById("nx-unified-orders-back").onclick=backAction;
@@ -4987,13 +4987,24 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     host.innerHTML='<button class="nx-market-btn secondary" id="nx-order-detail-back">‹ Буцах</button><h2 class="nexora-ad-heading">ЗАХИАЛГЫН ДЭЛГЭРЭНГҮЙ</h2><p class="nx-market-muted">Ачаалж байна…</p>';
     document.getElementById("nx-order-detail-back").onclick=backAction;
     try{
-      const {data:o,error}=await db.from("wholesale_orders").select("id,buyer_id,supplier_id,items,total_amount,status,buyer_name,buyer_phone,delivery_address,note,created_at,updated_at").eq("id",orderId).maybeSingle();
+      const {data:o,error}=await db.from("wholesale_orders").select("id,buyer_id,supplier_id,items,total_amount,status,payment_status,buyer_name,buyer_phone,delivery_address,note,created_at,updated_at").eq("id",orderId).maybeSingle();
       if(error)throw error;if(!o||o.buyer_id!==auth.user.id&&o.supplier_id!==auth.user.id){throw new Error("Захиалга олдсонгүй эсвэл харах эрхгүй байна.");}
       const [profile,historyRes]=await Promise.all([
         db.from("nexora_store_profiles").select("store_name").eq("user_id",o.supplier_id).maybeSingle(),
         db.from("wholesale_order_status_history").select("old_status,new_status,note,created_at").eq("order_id",o.id).order("created_at",{ascending:true})
       ]);
       if(historyRes.error)throw historyRes.error;
+      let paymentRows=[],supplierBanks=[];
+      if(o.buyer_id===auth.user.id){
+        const [paymentRes,bankRes]=await Promise.all([
+          db.from("wholesale_order_payment_requests").select("id,status,transfer_reference,receipt_path,admin_note,created_at,reviewed_at").eq("order_id",o.id).order("created_at",{ascending:false}).limit(5),
+          db.from("store_bank_accounts").select("bank_name,account_number,account_holder,store_name,phone").eq("user_id",o.supplier_id)
+        ]);
+        if(paymentRes.error)throw paymentRes.error;
+        if(bankRes.error)throw bankRes.error;
+        paymentRows=paymentRes.data||[];
+        supplierBanks=bankRes.data||[];
+      }
       const labels={pending:"Хүлээгдэж байна",accepted:"Зөвшөөрсөн",rejected:"Татгалзсан",processing:"Бэлтгэж байна",completed:"Дууссан",cancelled:"Цуцалсан"};
       const descriptions={pending:"Захиалга нийлүүлэгчийн хариуг хүлээж байна",accepted:"Нийлүүлэгч захиалгыг зөвшөөрсөн",rejected:"Нийлүүлэгч захиалгаас татгалзсан",processing:"Нийлүүлэгч барааг бэлтгэж байна",completed:"Захиалга дууссан",cancelled:"Захиалга цуцлагдсан"};
       const items=Array.isArray(o.items)?o.items:[];
@@ -5001,9 +5012,37 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       const history=historyRes.data||[];
       const timeline=history.map((h,i)=>'<div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)"><div style="width:12px;height:12px;flex:0 0 12px;border-radius:50%;background:var(--gold,#d6ad55);margin-top:5px"></div><div style="min-width:0"><strong>'+esc(labels[h.new_status]||h.new_status)+'</strong><p class="nx-market-muted" style="margin:4px 0">'+esc(h.note||descriptions[h.new_status]||"Төлөв шинэчлэгдсэн")+'</p><small class="nx-market-muted">'+esc(h.created_at?new Date(h.created_at).toLocaleString("mn-MN"):"—")+'</small></div></div>').join("");
       const canCancel=o.buyer_id===auth.user.id&&o.status==="pending";
-      host.innerHTML='<button class="nx-market-btn secondary" id="nx-order-detail-back">‹ Буцах</button><h2 class="nexora-ad-heading">ЗАХИАЛГЫН ДЭЛГЭРЭНГҮЙ</h2><article class="nx-admin-card"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><h3>Захиалга #'+esc(String(o.id).slice(0,12))+'</h3><span class="nx-admin-status">'+esc(labels[o.status]||o.status)+'</span></div><p class="nx-market-muted">Нийлүүлэгч: '+esc(profile.data?.store_name||"Нийлүүлэгч")+'</p><p class="nx-market-muted">Үүсгэсэн: '+esc(o.created_at?new Date(o.created_at).toLocaleString("mn-MN"):"—")+'</p><p class="nx-market-muted">Сүүлд шинэчилсэн: '+esc(o.updated_at?new Date(o.updated_at).toLocaleString("mn-MN"):"—")+'</p><h3>Захиалсан бараа</h3>'+(itemHtml||'<p class="nx-market-muted">Барааны мэдээлэл алга.</p>')+'<h3 class="nx-market-price">Нийт дүн: '+money(o.total_amount)+'</h3><div class="nx-admin-meta"><div><strong>Хүлээн авагч:</strong> '+esc(o.buyer_name||"—")+'</div><div><strong>Утас:</strong> '+esc(o.buyer_phone||"—")+'</div><div><strong>Хүргэлтийн хаяг:</strong> '+esc(o.delivery_address||"—")+'</div><div><strong>Тайлбар:</strong> '+esc(o.note||"—")+'</div></div></article><section class="nx-admin-card" style="margin-top:14px"><h3>ЗАХИАЛГЫН ЯВЦ</h3><p class="nx-market-muted">'+esc(descriptions[o.status]||"Захиалгын төлөв")+'</p>'+(timeline||'<p class="nx-market-muted">Явцын мэдээлэл одоогоор алга.</p>')+'<button class="nx-market-btn secondary" id="nx-order-refresh">↻ Явцыг шинэчлэх</button>'+(canCancel?'<button class="nx-market-btn secondary" id="nx-order-cancel" style="margin-left:8px">Захиалга цуцлах</button>':"")+'</section>';
+      const paymentLabels={unpaid:"Төлбөр хүлээгдэж байна",pending_review:"Баримт админы хяналтад",paid:"Төлбөр баталгаажсан",rejected:"Баримт баталгаажаагүй — дахин илгээж болно"};
+      const latestPayment=paymentRows[0]||null;
+      let paymentPanel="";
+      if(o.buyer_id===auth.user.id){
+        const bankHtml=supplierBanks.map(b=>'<div class="nx-admin-meta" style="padding:10px 0;border-bottom:1px solid var(--border)"><div><strong>'+esc(b.store_name||profile.data?.store_name||"Нийлүүлэгч")+'</strong></div><div>Банк: '+esc(b.bank_name)+'</div><div>Данс: <strong>'+esc(b.account_number)+'</strong></div><div>Эзэмшигч: '+esc(b.account_holder)+'</div>'+(b.phone?'<div>Утас: '+esc(b.phone)+'</div>':"")+'</div>').join("");
+        const requestStatus=latestPayment?.status||o.payment_status||"unpaid";
+        paymentPanel='<section class="nx-admin-card" style="margin:14px 0"><h3>ТӨЛБӨРИЙН МЭДЭЭЛЭЛ</h3><p class="nx-market-muted">Төлөв: <strong>'+esc(paymentLabels[requestStatus]||requestStatus)+'</strong></p><p class="nx-market-price">Төлөх дүн: '+money(o.total_amount)+'</p>'+(bankHtml||'<p class="nx-market-muted">Нийлүүлэгч банкны дансаа бүртгүүлээгүй байна. Нийлүүлэгчтэй холбогдоно уу.</p>')+(requestStatus==="pending_review"?'<p class="nx-market-muted">Таны баримтыг админ шалгаж байна. Шийдвэр гарсны дараа энэ хэсэг шинэчлэгдэнэ.</p>':requestStatus==="paid"?'<p class="nx-market-muted">Төлбөр баталгаажсан. Нийлүүлэгч захиалгыг үргэлжлүүлэн боловсруулна.</p>':supplierBanks.length?'<form id="nx-wholesale-payment-form" style="margin-top:12px"><label class="nx-market-label" for="nx-wholesale-transfer-reference">Гүйлгээний утга (заавал)</label><input id="nx-wholesale-transfer-reference" name="reference" class="nx-market-input" maxlength="160" required placeholder="Захиалгын дугаар эсвэл гүйлгээний утга"><label class="nx-market-label" for="nx-wholesale-payment-receipt">Төлбөрийн баримт (зураг эсвэл PDF, 8MB хүртэл)</label><input id="nx-wholesale-payment-receipt" name="receipt" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required><button class="nx-market-btn" type="submit">ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭХ</button></form>':"")+'</section>';
+      }
+      host.innerHTML='<button class="nx-market-btn secondary" id="nx-order-detail-back">‹ Буцах</button><h2 class="nexora-ad-heading">ЗАХИАЛГЫН ДЭЛГЭРЭНГҮЙ</h2>'+paymentPanel+'<article class="nx-admin-card"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><h3>Захиалга #'+esc(String(o.id).slice(0,12))+'</h3><span class="nx-admin-status">'+esc(labels[o.status]||o.status)+'</span></div><p class="nx-market-muted">Нийлүүлэгч: '+esc(profile.data?.store_name||"Нийлүүлэгч")+'</p><p class="nx-market-muted">Үүсгэсэн: '+esc(o.created_at?new Date(o.created_at).toLocaleString("mn-MN"):"—")+'</p><p class="nx-market-muted">Сүүлд шинэчилсэн: '+esc(o.updated_at?new Date(o.updated_at).toLocaleString("mn-MN"):"—")+'</p><h3>Захиалсан бараа</h3>'+(itemHtml||'<p class="nx-market-muted">Барааны мэдээлэл алга.</p>')+'<h3 class="nx-market-price">Нийт дүн: '+money(o.total_amount)+'</h3><div class="nx-admin-meta"><div><strong>Хүлээн авагч:</strong> '+esc(o.buyer_name||"—")+'</div><div><strong>Утас:</strong> '+esc(o.buyer_phone||"—")+'</div><div><strong>Хүргэлтийн хаяг:</strong> '+esc(o.delivery_address||"—")+'</div><div><strong>Тайлбар:</strong> '+esc(o.note||"—")+'</div></div></article><section class="nx-admin-card" style="margin-top:14px"><h3>ЗАХИАЛГЫН ЯВЦ</h3><p class="nx-market-muted">'+esc(descriptions[o.status]||"Захиалгын төлөв")+'</p>'+(timeline||'<p class="nx-market-muted">Явцын мэдээлэл одоогоор алга.</p>')+'<button class="nx-market-btn secondary" id="nx-order-refresh">↻ Явцыг шинэчлэх</button>'+(canCancel?'<button class="nx-market-btn secondary" id="nx-order-cancel" style="margin-left:8px">Захиалга цуцлах</button>':"")+'</section>';
       document.getElementById("nx-order-detail-back").onclick=backAction;
       document.getElementById("nx-order-refresh").onclick=()=>showWholesaleOrderDetail(orderId,backAction);
+      const paymentForm=document.getElementById("nx-wholesale-payment-form");
+      if(paymentForm)paymentForm.onsubmit=async e=>{
+        e.preventDefault();
+        const submit=paymentForm.querySelector('button[type="submit"]');
+        const file=paymentForm.elements.receipt.files[0];
+        const reference=String(paymentForm.elements.reference.value||"").trim();
+        if(!file||!reference){alert("Гүйлгээний утга болон баримтаа оруулна уу.");return;}
+        if(file.size>8*1024*1024){alert("Баримтын файл 8MB-аас хэтрэх ёсгүй.");return;}
+        if(!["image/jpeg","image/png","image/webp","application/pdf"].includes(file.type)){alert("JPG, PNG, WEBP зураг эсвэл PDF файл сонгоно уу.");return;}
+        submit.disabled=true;submit.textContent="ИЛГЭЭЖ БАЙНА…";
+        const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+        const path=auth.user.id+"/"+o.id+"/"+Date.now()+"_"+safeName;
+        try{
+          const upload=await db.storage.from("payment-receipts").upload(path,file,{upsert:false,contentType:file.type});
+          if(upload.error)throw upload.error;
+          const inserted=await db.from("wholesale_order_payment_requests").insert({order_id:o.id,buyer_id:auth.user.id,transfer_reference:reference,receipt_path:path});
+          if(inserted.error){await db.storage.from("payment-receipts").remove([path]);throw inserted.error;}
+          await showWholesaleOrderDetail(orderId,backAction);
+        }catch(err){alert("Баримт илгээж чадсангүй: "+(err.message||err));submit.disabled=false;submit.textContent="ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭХ";}
+      };
       const cancel=document.getElementById("nx-order-cancel");
       if(cancel)cancel.onclick=async()=>{
         if(!confirm("Хүлээгдэж буй захиалгыг цуцлах уу?"))return;
