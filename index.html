@@ -5040,7 +5040,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       let url="";
       if(path){
         const raw=String(path);
-        if(/^https?:\\/\\//i.test(raw))url=raw;
+        if(raw.startsWith("http://")||raw.startsWith("https://"))url=raw;
         else{
           const objectPath=raw.split("/").filter(Boolean).join("/");
           const storage=db.storage.from("market-store-logos");
