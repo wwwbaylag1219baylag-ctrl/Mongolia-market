@@ -5029,7 +5029,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       const ownerType=profile.owner_type||supplierRes.data?.owner_type||"individual";
       const path=ownerType==="company"
         ?(profile.logo_path||profile.wholesale_logo_path||"")
-        :(profile.personal_photo_path||profile.logo_path||auth.user.user_metadata?.avatar_url||auth.user.user_metadata?.picture||"");
+        :(profile.logo_path||profile.personal_photo_path||auth.user.user_metadata?.avatar_url||auth.user.user_metadata?.picture||"");
       const url=path?(String(path).startsWith("http")?path:db.storage.from("market-store-logos").getPublicUrl(path).data.publicUrl):"";
       if(url){button.innerHTML='<img src="'+esc(url)+'" alt="'+(ownerType==="company"?"Дэлгүүрийн лого":"Хэрэглэгчийн зураг")+'">';}
       else{button.innerHTML='<img src="./assets/nexora-logo.jpg" alt="NEXORA">';}
