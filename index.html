@@ -5254,7 +5254,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   const db=window.supabase.createClient(url,key);
   function apply(config){
     const t={background:"#090909",panel:"#171717",text:"#f7f5ef",accent:"#d6ad55",button:"#d6ad55",button_text:"#090909",header:"#301d27",secondary:"#583442",border:"#a88d75",muted:"#b9afa4",icon:"#d9b9a8",input:"#292522",retail_accent:"#f26722",...(config||{})};
-    const mix=(hex,level=100)=>{const n=parseInt(String(hex).replace("#",""),16);if(!Number.isFinite(n))return hex;const f=Math.max(0,Math.min(100,Number(level)||0))/100;const target=f<1?0:255;const k=Math.abs(f-1);return "#"+[16,8,0].map(s=>Math.round(((n>>s)&255)*(1-k)+target*k).toString(16).padStart(2,"0")).join("");};
+    const mix=(hex,level=100)=>{const n=parseInt(String(hex).replace("#",""),16);if(!Number.isFinite(n))return hex;const f=Math.max(0,Math.min(200,Number(level)||0))/100;const target=f<1?0:255;const k=f<1?1-f:f-1;return "#"+[16,8,0].map(s=>Math.round(((n>>s)&255)*(1-k)+target*k).toString(16).padStart(2,"0")).join("");};
     const c={...t};["background","panel","text","accent","button","button_text","header","secondary","border","muted","icon","input","retail_accent"].forEach(k=>c[k]=mix(t[k],t[k+"_level"]??100));
     const style=document.getElementById("nx-public-theme");
     const css=`
