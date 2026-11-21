@@ -5039,9 +5039,9 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         if(String(path).startsWith("http"))url=String(path);
         else{
           const storage=db.storage.from("market-store-logos");
-          const {data:signedData,error:signedError}=await storage.createSignedUrl(String(path).replace(/^\\/+/, ""),3600);
+          const {data:signedData,error:signedError}=await storage.createSignedUrl(String(path).split("/").filter(Boolean).join("/"),3600);
           if(!signedError&&signedData?.signedUrl)url=signedData.signedUrl;
-          if(!url)url=storage.getPublicUrl(String(path).replace(/^\\/+/, "")).data?.publicUrl||"";
+          if(!url)url=storage.getPublicUrl(String(path).split("/").filter(Boolean).join("/")).data?.publicUrl||"";
         }
       }
       if(!button.isConnected)return;
