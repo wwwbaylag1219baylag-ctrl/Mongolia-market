@@ -3839,7 +3839,15 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     if(Math.abs(dx)<65 || Math.abs(dx)<Math.abs(dy)*1.25) return;
     const target=start.target;
     if(target.closest("input,textarea,select,button:not([data-retail-category]):not([data-wholesale-category]):not(.nx-shop-zone),a,[contenteditable='true'],iframe,#nx-retail-detail-image,#nx-wholesale-detail-image,[data-retail-thumb],[data-wholesale-thumb],#nx-retail-lightbox-close,#nx-retail-lightbox-prev,#nx-retail-lightbox-next") && !target.closest("[data-shop-zone]")) return;
-    const scroller=target.closest("[data-nx-horizontal-scroll],.nx-retail-thumbnails");
+    // Барааны каталог, ангиллын мөр болон бусад хэвтээ гүйлгэгч доторх шудралтыг
+    // дэлгэц хоорондын навигаци гэж үзэхгүй; тухайн жагсаалт өөрөө гүйлгэнэ.
+    let scroller=target.closest("[data-nx-horizontal-scroll],.nx-retail-thumbnails,.nx-temu-products,.nx-temu-category-rail");
+    if(!scroller){
+      for(let node=target;node&&node!==host;node=node.parentElement){
+        const overflowX=getComputedStyle(node).overflowX;
+        if((overflowX==="auto"||overflowX==="scroll")&&node.scrollWidth>node.clientWidth+8){scroller=node;break;}
+      }
+    }
     if(scroller && scroller.scrollWidth>scroller.clientWidth+8) return;
     if(dx<0){
       // Зүүн тийш шудрахад худалдааны өмнөх дэлгэц рүү буцна.
