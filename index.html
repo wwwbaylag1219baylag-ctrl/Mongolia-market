@@ -4937,7 +4937,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     if(item){if(item.qty+1>stock){showCartToast("Үлдэгдэл хүрэлцэхгүй байна.");return;}item.qty++;}
     else wholesaleCart.push({...product,qty:minQty,_cartQty:minQty});
     showCartToast("✓ "+product.title+" бөөний сагсанд нэмэгдлээ.");
-    const button=document.getElementById("nx-wholesale-cart");if(button)button.textContent="🛒 "+wholesaleCart.reduce((n,x)=>n+x.qty,0);
+    const button=document.getElementById("nx-wholesale-cart");if(button)button.textContent="🛒 "+(cart.reduce((n,x)=>n+x.qty,0)+wholesaleCart.reduce((n,x)=>n+x.qty,0));
   }
   function showWholesaleCart(){showCart();}
     async function placeWholesaleOrder(product,backAction=showRetailCatalog){
@@ -4968,7 +4968,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     const existing=cart.find(x=>String(x.id)===String(product.id));
     if(existing){if(existing.qty+1>stock){showCartToast("Үлдэгдэл хүрэлцэхгүй байна.");return;}existing.qty++;existing.price=priceForQuantity({price:existing.basePrice,wholesale_price_tiers:existing.wholesale_price_tiers},existing.qty);}
     else{const item={id:product.id,title:product.title,price:Number(product.price||0),basePrice:Number(product.price||0),qty:minQty,minQty,stock,wholesale_price_tiers:[],_imageUrl:product._images?.[0]?.url||"",_storeName:product._storeName||"Онлайн дэлгүүр"};item.price=priceForQuantity(item,item.qty);cart.push(item);}
-    showCartToast("✓ "+product.title+" сагсанд нэмэгдлээ.");const cartButton=document.getElementById("nx-temu-cart");if(cartButton)cartButton.innerHTML="<span>🛒</span><span>Сагс ("+cart.reduce((n,x)=>n+x.qty,0)+")</span>";
+    showCartToast("✓ "+product.title+" сагсанд нэмэгдлээ.");const cartButton=document.getElementById("nx-temu-cart");if(cartButton)cartButton.innerHTML="<span>🛒</span><span>Сагс ("+(cart.reduce((n,x)=>n+x.qty,0)+wholesaleCart.reduce((n,x)=>n+x.qty,0))+")</span>";
   }
   function render(){showRetailCatalog();}
   async function showRetailProductDetail(product){
