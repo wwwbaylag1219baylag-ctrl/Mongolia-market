@@ -988,6 +988,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         <input name="email" type="email" required placeholder="name@example.com" autocomplete="email" value="${safe(emailValue)}" style="${inputStyle}">
         <label>Нууц үг</label>
         <input name="password" type="password" required minlength="${registering ? "8" : "1"}" placeholder="${registering ? "8-аас дээш тэмдэгт" : "Нууц үг"}" autocomplete="${registering ? "new-password" : "current-password"}" style="${inputStyle}">
+        ${!registering ? '<button type="button" id="nexora-forgot-password" style="display:block;margin:-5px 0 12px auto;padding:5px 0;border:0;background:transparent;color:#d6ad55;font-size:13px;">НУУЦ ҮГЭЭ МАРТСАН УУ?</button>' : ""}
         <div id="nexora-auth-message" style="display:${notice ? "block" : "none"};margin:14px 0;font-size:13px;line-height:1.6;color:#b9e9a5;">${safe(notice)}</div>
         <button id="nexora-auth-submit" type="submit" style="width:100%;padding:15px;margin-top:16px;border:0;border-radius:12px;background:#d6ad55;color:#090909;font-weight:bold;">${registering ? "Бүртгэл үүсгэх" : "Нэвтрэх"}</button>
         <button type="button" data-mode="${registering ? "login" : "register"}" style="width:100%;padding:13px;margin-top:10px;border:1px solid rgba(214,173,85,.45);border-radius:12px;background:#191919;color:#d6ad55;">${registering ? "Нэвтрэх хэсэг рүү" : "Шинээр бүртгүүлэх"}</button>
@@ -1122,6 +1123,26 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   }
 
   panel.addEventListener("click", async function (event) {
+    const forgotButton = event.target.closest("#nexora-forgot-password");
+    if (forgotButton) {
+      const emailInput = panel.querySelector('input[name="email"]');
+      const email = String(emailInput?.value || "").trim();
+      currentMode = "password-reset-request";
+      panel.innerHTML = `
+        <button type="button" data-mode="login" style="padding:9px 14px;margin:0 0 14px;border:1px solid rgba(214,173,85,.5);border-radius:10px;background:#191919;color:#d6ad55;">‹ Нэвтрэх рүү буцах</button>
+        <div style="text-align:center;padding:12px 4px;">
+          <div style="font-size:44px;margin-bottom:10px;">🔐</div>
+          <h2 style="color:#f7f5ef;">НУУЦ ҮГ СЭРГЭЭХ</h2>
+          <p style="color:#aaa39a;line-height:1.6;">Бүртгэлтэй и-мэйлээ оруулбал нууц үг шинэчлэх холбоос илгээнэ.</p>
+        </div>
+        <form id="nexora-auth-form">
+          <label>И-мэйл хаяг</label>
+          <input name="email" type="email" required autocomplete="email" value="${safe(email)}" placeholder="name@example.com" style="${inputStyle}">
+          <div id="nexora-auth-message" style="display:none;margin:14px 0;font-size:13px;line-height:1.6;"></div>
+          <button id="nexora-auth-submit" type="submit" style="width:100%;padding:15px;margin-top:16px;border:0;border-radius:12px;background:#d6ad55;color:#090909;font-weight:bold;">СЭРГЭЭХ ХОЛБООС ИЛГЭЭХ</button>
+        </form>`;
+      return;
+    }
     const resendButton = event.target.closest("#nexora-resend-confirmation");
     if (resendButton) {
       resendButton.disabled = true;
@@ -1164,6 +1185,24 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     submit.textContent = "Түр хүлээнэ үү...";
 
     try {
+      if (currentMode === "password-update") {
+        const { error } = await db.auth.updateUser({ password });
+        if (error) throw error;
+        await db.auth.signOut();
+        currentMode = "login";
+        renderForm("login", "Нууц үг амжилттай шинэчлэгдлээ. Шинэ нууц үгээрээ нэвтэрнэ үү.", email);
+        return;
+      }
+      if (currentMode === "password-reset-request") {
+        const { error } = await db.auth.resetPasswordForEmail(email, {
+          redirectTo: window.location.origin + window.location.pathname
+        });
+        if (error) throw error;
+        showMessage("Хэрэв энэ и-мэйл бүртгэлтэй бол нууц үг шинэчлэх холбоос илгээгдэнэ. И-мэйл болон спам хавтсаа шалгана уу.", false);
+        submit.textContent = "ХОЛБООС ИЛГЭЭЛЭЭ";
+        submit.disabled = true;
+        return;
+      }
       if (currentMode === "register") {
         const fullName = String(
           formData.get("full_name") || ""
@@ -1237,6 +1276,17 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   }
 
   db.auth.onAuthStateChange(function (event, session) {
+    if (event === "PASSWORD_RECOVERY" && session?.user) {
+      currentMode = "password-update";
+      panel.innerHTML = `
+        <div style="text-align:center;padding:12px 4px;"><div style="font-size:44px;">🔐</div><h2 style="color:#f7f5ef;">ШИНЭ НУУЦ ҮГ ТОХИРУУЛАХ</h2></div>
+        <form id="nexora-auth-form">
+          <label>Шинэ нууц үг</label>
+          <input name="password" type="password" required minlength="8" autocomplete="new-password" placeholder="8-аас дээш тэмдэгт" style="${inputStyle}">
+          <div id="nexora-auth-message" style="display:none;margin:14px 0;font-size:13px;line-height:1.6;"></div>
+          <button id="nexora-auth-submit" type="submit" style="width:100%;padding:15px;margin-top:16px;border:0;border-radius:12px;background:#d6ad55;color:#090909;font-weight:bold;">НУУЦ ҮГ ХАДГАЛАХ</button>
+        </form>`;
+    }
     if (event === "SIGNED_OUT") {
       currentMode = "login";
       renderChoice();
