@@ -4171,14 +4171,14 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       if(authError)throw authError;
       if(!authData?.user || !authData.user.email_confirmed_at){await window.NEXORA?.open("profile");window.NEXORA_SHOP_AUTH_FORM?.();window.NEXORA_SHOP_NEXT=null;return;}
       const [storeRes,supplierRes]=await Promise.all([
-        db.from("nexora_store_profiles").select("id,user_id,store_name,owner_type,logo_path,wholesale_logo_path").eq("user_id",authData.user.id).maybeSingle(),
+        db.from("nexora_store_profiles").select("id,user_id,store_name,owner_type,logo_path,wholesale_logo_path,personal_photo_path").eq("user_id",authData.user.id).maybeSingle(),
         db.from("market_suppliers").select("id,name,status,type,owner_type").eq("owner_id",authData.user.id).maybeSingle()
       ]);
       if(storeRes.error)throw storeRes.error;
       if(supplierRes.error)throw supplierRes.error;
       const store=storeRes.data,supplier=supplierRes.data;
       const name=store?.store_name||supplier?.name||authData.user.user_metadata?.full_name||authData.user.email||"Удирдлагын хэсэг";
-      const logoPath=store?.logo_path||store?.wholesale_logo_path||"";
+      const logoPath=store?.logo_path||store?.wholesale_logo_path||(store?.owner_type==="individual"?store?.personal_photo_path:"")||"";
       const logoUrl=logoPath?(logoPath.startsWith("http")?logoPath:db.storage.from("market-store-logos").getPublicUrl(logoPath).data.publicUrl):"";
       const supplierApproved=supplier?.status==="approved";
       const supplierPending=supplier?.status==="pending";
@@ -4628,21 +4628,26 @@ if(file&&file.size){
     const user=auth.user;
     const [supplierRes,profileRes,feeRes]=await Promise.all([
       db.from("market_suppliers").select("id,status,name").eq("owner_id",user.id).maybeSingle(),
-      db.from("nexora_store_profiles").select("id,user_id,store_name,owner_type,phone,wholesale_logo_path,description,address").eq("user_id",user.id).maybeSingle(),
+      db.from("nexora_store_profiles").select("id,user_id,store_name,owner_type,phone,wholesale_logo_path,personal_photo_path,description,address").eq("user_id",user.id).maybeSingle(),
       db.from("nexora_settings").select("wholesale_logo_fee").eq("id",1).single()
     ]);
     if(supplierRes.error||profileRes.error||feeRes.error){host.innerHTML='<p class="nx-market-muted">Нийлүүлэгчийн профайл ачаалахад алдаа: '+esc(supplierRes.error?.message||profileRes.error?.message||feeRes.error?.message)+'</p><button class="nx-market-btn nx-market-back-arrow" id="nx-wholesale-store-back" aria-label="Буцах" title="Буцах">‹</button>';document.getElementById("nx-wholesale-store-back").onclick=backAction;return;}
     if(!supplierRes.data||supplierRes.data.status!=="approved"){host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-wholesale-store-back" aria-label="Буцах" title="Буцах">‹</button><h2 class="nexora-ad-heading">НИЙЛҮҮЛЭГЧИЙН ЭРХ ШААРДЛАГАТАЙ</h2><p class="nx-market-muted">Нийлүүлэгчийн профайл удирдахын тулд админаар баталгаажсан байх шаардлагатай.</p>';document.getElementById("nx-wholesale-store-back").onclick=backAction;return;}
     const store=profileRes.data,logoFee=Number(feeRes.data?.wholesale_logo_fee||0),logoUrl=store?.wholesale_logo_path?db.storage.from("market-store-logos").getPublicUrl(store.wholesale_logo_path).data.publicUrl:"";
-    host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-wholesale-store-back" aria-label="Буцах" title="Буцах">‹</button><h2 class="nexora-ad-heading">БӨӨНИЙ ДЭЛГҮҮРИЙН МЭДЭЭЛЭЛ</h2><p class="nx-market-muted">Нэгдсэн профайлын бөөний чиглэлийн нэр, танилцуулга болон лого. Бөөний каталог, үнэ, захиалгын урсгал жижиглэнгийн хэсгээс тусдаа хэвээр байна.</p><p class="nx-market-muted">Бөөний лого байршуулалтын үнэ: <strong>'+money(logoFee)+'</strong></p>'+(logoUrl?'<img src="'+esc(logoUrl)+'" alt="Нийлүүлэгчийн лого" style="width:96px;height:96px;border-radius:18px;object-fit:cover;border:1px solid var(--border);margin:8px 0 14px">':"")+'<form id="nx-wholesale-store-form"><label>Нийлүүлэгч / дэлгүүрийн нэр *</label><input class="nx-market-input" name="store_name" required maxlength="100" value="'+esc(store?.store_name||supplierRes.data.name||"")+'"><label>Эзэмшигчийн төрөл *</label><select class="nx-market-select" name="owner_type"><option value="individual" '+(store?.owner_type!=="company"?"selected":"")+' >Хувь хүн</option><option value="company" '+(store?.owner_type==="company"?"selected":"")+' >Компани</option></select><label>Бөөний дэлгүүрийн лого (JPG, PNG, WEBP · 5MB хүртэл)</label><input class="nx-market-input" name="logo" type="file" accept="image/jpeg,image/png,image/webp"><label>Танилцуулга</label><textarea class="nx-market-textarea" name="description" rows="3" maxlength="1000">'+esc(store?.description||"")+'</textarea><label>Хаяг / байршил</label><input class="nx-market-input" name="address" maxlength="250" value="'+esc(store?.address||"")+'"><label>Утас</label><input class="nx-market-input" name="phone" type="tel" value="'+esc(store?.phone||"")+'"><button class="nx-market-btn" type="submit">ПРОФАЙЛ ХАДГАЛАХ</button></form><p id="nx-wholesale-store-message" class="nx-market-muted"></p><button class="nx-market-btn secondary" id="nx-wholesale-store-fee-history">Бөөний төлбөрийн түүх</button>';
+    host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-wholesale-store-back" aria-label="Буцах" title="Буцах">‹</button><h2 class="nexora-ad-heading">БӨӨНИЙ ДЭЛГҮҮРИЙН МЭДЭЭЛЭЛ</h2><p class="nx-market-muted">Нэгдсэн профайлын бөөний чиглэлийн нэр, танилцуулга болон лого. Бөөний каталог, үнэ, захиалгын урсгал жижиглэнгийн хэсгээс тусдаа хэвээр байна.</p><p class="nx-market-muted">Бөөний лого байршуулалтын үнэ: <strong>'+money(logoFee)+'</strong></p>'+(logoUrl?'<img src="'+esc(logoUrl)+'" alt="Нийлүүлэгчийн лого" style="width:96px;height:96px;border-radius:18px;object-fit:cover;border:1px solid var(--border);margin:8px 0 14px">':"")+'<form id="nx-wholesale-store-form"><label>Нийлүүлэгч / дэлгүүрийн нэр *</label><input class="nx-market-input" name="store_name" required maxlength="100" value="'+esc(store?.store_name||supplierRes.data.name||"")+'"><label>Эзэмшигчийн төрөл *</label><select class="nx-market-select" name="owner_type"><option value="individual" '+(store?.owner_type!=="company"?"selected":"")+' >Хувь хүн</option><option value="company" '+(store?.owner_type==="company"?"selected":"")+' >Компани</option></select><label>Бөөний дэлгүүрийн лого (JPG, PNG, WEBP · 5MB хүртэл)</label><input class="nx-market-input" name="logo" type="file" accept="image/jpeg,image/png,image/webp"><div id="nx-wholesale-personal-photo-wrap"><label>Хувийн зураг (зөвхөн хувь хүн · лого байхгүй үед Профайлд харагдана)</label><input class="nx-market-input" name="personal_photo" type="file" accept="image/jpeg,image/png,image/webp"></div><label>Танилцуулга</label><textarea class="nx-market-textarea" name="description" rows="3" maxlength="1000">'+esc(store?.description||"")+'</textarea><label>Хаяг / байршил</label><input class="nx-market-input" name="address" maxlength="250" value="'+esc(store?.address||"")+'"><label>Утас</label><input class="nx-market-input" name="phone" type="tel" value="'+esc(store?.phone||"")+'"><button class="nx-market-btn" type="submit">ПРОФАЙЛ ХАДГАЛАХ</button></form><p id="nx-wholesale-store-message" class="nx-market-muted"></p><button class="nx-market-btn secondary" id="nx-wholesale-store-fee-history">Бөөний төлбөрийн түүх</button>';
     document.getElementById("nx-wholesale-store-back").onclick=backAction;
     document.getElementById("nx-wholesale-store-fee-history").onclick=()=>showWholesaleFeeHistory(()=>showWholesaleStore(backAction));
-    document.getElementById("nx-wholesale-store-form").onsubmit=async e=>{
-      e.preventDefault();const form=e.currentTarget,button=form.querySelector('button[type="submit"]'),msg=document.getElementById("nx-wholesale-store-message"),v=Object.fromEntries(new FormData(form).entries()),file=v.logo;
+    const wholesaleForm=document.getElementById("nx-wholesale-store-form"),wholesaleOwnerType=wholesaleForm.elements.owner_type,wholesalePersonalPhotoWrap=document.getElementById("nx-wholesale-personal-photo-wrap");
+    const syncWholesalePersonalPhoto=()=>{if(wholesalePersonalPhotoWrap)wholesalePersonalPhotoWrap.style.display=wholesaleOwnerType.value==="individual"?"block":"none";};
+    wholesaleOwnerType.addEventListener("change",syncWholesalePersonalPhoto);syncWholesalePersonalPhoto();
+    wholesaleForm.onsubmit=async e=>{
+      e.preventDefault();const form=e.currentTarget,button=form.querySelector('button[type="submit"]'),msg=document.getElementById("nx-wholesale-store-message"),v=Object.fromEntries(new FormData(form).entries()),file=v.logo,personalPhoto=v.personal_photo;
       if(file&&file.size>5*1024*1024){msg.textContent="Лого 5MB-аас бага байх ёстой.";return;}
+      if(personalPhoto&&personalPhoto.size>5*1024*1024){msg.textContent="Хувийн зураг 5MB-аас бага байх ёстой.";return;}
       if(file&&file.size&& !["image/jpeg","image/png","image/webp"].includes(file.type)){msg.textContent="JPG, PNG эсвэл WEBP зураг сонгоно уу.";return;}
+      if(personalPhoto&&personalPhoto.size&&!["image/jpeg","image/png","image/webp"].includes(personalPhoto.type)){msg.textContent="Хувийн зураг JPG, PNG эсвэл WEBP байх ёстой.";return;}
       button.disabled=true;
-      let saved=store;
+      let saved=store,uploadedWholesalePersonalPhotoPath=null;
       try{
         const payload={user_id:user.id,store_name:String(v.store_name||"").trim(),owner_type:v.owner_type,phone:String(v.phone||"").trim(),description:String(v.description||"").trim(),address:String(v.address||"").trim()};
         if(store){const {data,error}=await db.from("nexora_store_profiles").update({store_name:payload.store_name,owner_type:payload.owner_type,phone:payload.phone,description:payload.description,address:payload.address}).eq("id",store.id).eq("user_id",user.id).select("id").single();if(error)throw error;saved=data;}
@@ -4653,8 +4658,13 @@ if(file&&file.size){
           if(logoFee>0){await showWholesaleFeePayment({feeType:"logo",amount:logoFee,supplierId:supplierRes.data.id,storeId:saved.id,pendingLogoPath:path,backAction:()=>showWholesaleStore(backAction)});return;}
           const {error:updateError}=await db.rpc("nexora_update_free_store_logo",{p_store_id:saved.id,p_logo_path:path,p_market_type:"wholesale"});if(updateError)throw updateError;
         }
+        if(personalPhoto&&personalPhoto.size){
+          const ext=personalPhoto.type==="image/png"?"png":personalPhoto.type==="image/webp"?"webp":"jpg",photoPath=user.id+"/personal-photos/"+crypto.randomUUID()+"."+ext;
+          const {error:photoUploadError}=await db.storage.from("market-store-logos").upload(photoPath,personalPhoto,{upsert:false,contentType:personalPhoto.type,cacheControl:"31536000"});if(photoUploadError)throw photoUploadError;uploadedWholesalePersonalPhotoPath=photoPath;
+          const {error:photoSaveError}=await db.from("nexora_store_profiles").update({personal_photo_path:photoPath}).eq("id",saved.id).eq("user_id",user.id);if(photoSaveError)throw photoSaveError;
+        }
         msg.textContent="✓ Бөөний нийлүүлэгчийн профайл хадгалагдлаа.";await showWholesaleStore(backAction);
-      }catch(err){msg.textContent="Алдаа: "+(err.message||err);button.disabled=false;}
+      }catch(err){if(uploadedWholesalePersonalPhotoPath)await db.storage.from("market-store-logos").remove([uploadedWholesalePersonalPhotoPath]).catch(()=>{});msg.textContent="Алдаа: "+(err.message||err);button.disabled=false;}
     };
   }
   async function showMyWholesaleProducts(){
