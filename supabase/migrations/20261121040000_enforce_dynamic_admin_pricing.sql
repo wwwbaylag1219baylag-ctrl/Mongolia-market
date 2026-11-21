@@ -240,3 +240,52 @@ begin
   end if;
 end
 $$;
+
+create or replace function public.nexora_activate_free_store(p_store_id uuid)
+returns uuid
+language plpgsql
+security definer
+set search_path = ''
+as $function$
+declare
+  v_user uuid := auth.uid();
+  v_owner_type text;
+  v_fee bigint;
+  v_days integer;
+  v_subscription_id uuid;
+  v_starts_at timestamptz;
+begin
+  if v_user is null then raise exception 'Нэвтрэх шаардлагатай.'; end if;
+  perform pg_advisory_xact_lock(hashtextextended(p_store_id::text, 0));
+  select p.owner_type into v_owner_type
+  from public.nexora_store_profiles as p
+  where p.id = p_store_id and p.user_id = v_user
+  for update;
+  if not found then raise exception 'Таны дэлгүүрийн профайл олдсонгүй.'; end if;
+  select case when v_owner_type = 'company' then s.company_price else s.individual_price end,
+         s.duration_days
+    into v_fee, v_days
+  from public.nexora_settings as s where s.id = 1;
+  if not found then raise exception 'Дэлгүүрийн төлбөрийн тохиргоо олдсонгүй.'; end if;
+  if v_fee <> 0 then raise exception 'Дэлгүүрийн эрх төлбөртэй байна.'; end if;
+  select s.id into v_subscription_id
+  from public.nexora_subscriptions as s
+  where s.store_id = p_store_id and s.user_id = v_user
+    and s.status = 'active' and s.starts_at <= now() and s.expires_at > now()
+  order by s.expires_at desc limit 1;
+  if found then return v_subscription_id; end if;
+  select greatest(now(), coalesce(max(s.expires_at), now()))
+    into v_starts_at
+  from public.nexora_subscriptions as s
+  where s.store_id = p_store_id and s.user_id = v_user;
+  insert into public.nexora_subscriptions
+    (store_id, user_id, amount, starts_at, expires_at, status)
+  values
+    (p_store_id, v_user, 0, v_starts_at, v_starts_at + make_interval(days => v_days), 'active')
+  returning id into v_subscription_id;
+  return v_subscription_id;
+end;
+$function$;
+
+revoke all on function public.nexora_activate_free_store(uuid) from public;
+grant execute on function public.nexora_activate_free_store(uuid) to authenticated;
