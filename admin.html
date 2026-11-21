@@ -50,18 +50,16 @@
  const money=v=>Number(v||0).toLocaleString("mn-MN")+" ₮";
  const tabs=[
   ["overview","Тойм"],["ads","Үнэгүй зар"],["payments","Зарын төлбөр"],["products","Бараа"],
-  ["retailPayments","Жижиглэнгийн байршуулалт"],["supplierRegistrationPayments","Нийлүүлэгчийн бүртгэлийн төлбөр"],["suppliers","Нийлүүлэгч"],["wholesaleProducts","Бөөний бараа"],
-  ["wholesalePayments","Бөөний байршуулалт"],["pricing","Үнийн тохиргоо"],["theme","Платформын өнгө"]
+  ["commercePayments","Худалдааны төлбөр"],["suppliers","Нийлүүлэгч"],["wholesaleProducts","Бөөний бараа"],
+  ["pricing","Үнийн тохиргоо"],["theme","Платформын өнгө"]
  ];
  const sections={
   ads:["Үнэгүй зарын хүсэлт","Шинээр ирсэн, хяналт хүлээж буй зарууд"],
   payments:["Зарын төлбөр","Төлбөрийн баримт болон багцын мэдээлэл"],
   products:["Бараа бүтээгдэхүүн","Нийтлэх зөвшөөрөл хүлээж буй бараа"],
-  retailPayments:["Жижиглэнгийн байршуулалтын төлбөр","Дэлгүүрийн лого болон жижиглэнгийн бараа байршуулалтын суурь хураамжийн хүсэлт."],
+  commercePayments:["Худалдааны нэгдсэн төлбөр","Дэлгүүрийн эрх, нийлүүлэгчийн бүртгэл, жижиглэн болон бөөний бараа нийтлэх бүх төлбөрийг нэг жагсаалтаас хянана. Зар сурталчилгааны төлбөр тусдаа хэвээр."],
   suppliers:["Нийлүүлэгч","Бүртгэлтэй нийлүүлэгчдийн жагсаалт"],
-  supplierRegistrationPayments:["Нийлүүлэгчийн бүртгэлийн төлбөр","Хувь хүн 150,000₮ · Компани 350,000₮. Шилжүүлгийн утга, баримтыг шалгаад зөвшөөрөх эсвэл татгалзах."],
-  wholesaleProducts:["Бөөний бараа","Нийлүүлэгчдийн бөөний барааны хүсэлт — онлайн дэлгүүрээс тусдаа."],
-  wholesalePayments:["Бөөний байршуулалтын төлбөр","Нийлүүлэгчийн лого болон бөөний бараа байршуулалтын суурь хураамжийн хүсэлтийг шалгаж баталгаажуулна."],
+  wholesaleProducts:["Бөөний бараа","Хуучин бөөний барааны хүсэлт — нэг каталогт нэгтгэх шилжилтийн үед хянана."],
   pricing:["Үнийн тохиргоо","Зарын багц болон лого, бараа байршуулалтын суурь хураамжийг удирдах"],
   theme:["Платформын өнгөний тохиргоо","Админ самбарын харагдах өнгийг өөрчлөх"]
  };
@@ -146,24 +144,22 @@
   return '<div class="nx-admin-list">'+html.join("")+'</div>';
  }
  async function overview(){
+  const count=async(table,status)=>{let q=db.from(table).select("id",{count:"exact",head:true});if(status)q=q.eq("status",status);const {count,error}=await q;if(error)throw error;return count??0;};
+  const [ads,adPayments,retailProducts,wholesaleProducts,retailFees,wholesaleFees,supplierFees,storeFees]=await Promise.all([
+   count("classified_ads","pending_review"),count("payment_requests","pending_review"),
+   count("market_products","pending"),count("wholesale_products","pending"),
+   count("market_retail_fee_payments","pending"),count("wholesale_supplier_fee_payments","pending"),
+   count("market_supplier_registration_payments","pending"),count("nexora_store_payments","pending")
+  ]);
   const stats=[
-   ["Үнэгүй зар","classified_ads","status","pending_review","ads"],
-   ["Зарын төлбөр","payment_requests","status","pending_review","payments"],
-   ["Жижиглэнгийн бараа","market_products","status","pending","products"],
-   ["Жижиглэнгийн байршуулалт","market_retail_fee_payments","status","pending","retailPayments"],
-   ["Нийлүүлэгчийн бүртгэлийн төлбөр","market_supplier_registration_payments","status","pending","supplierRegistrationPayments"],
-   ["Бөөний бараа","wholesale_products","status","pending","wholesaleProducts"],
-   ["Бөөний байршуулалт","wholesale_supplier_fee_payments","status","pending","wholesalePayments"]
+   ["Үнэгүй зарын хүсэлт",ads,"ads"],
+   ["Зарын төлбөр",adPayments,"payments"],
+   ["Жижиглэн + бөөний бараа",retailProducts+wholesaleProducts,"products"],
+   ["Худалдааны төлбөрийн хүсэлт",retailFees+wholesaleFees+supplierFees+storeFees,"commercePayments"],
+   ["Бүртгэлтэй нийлүүлэгч",await count("market_suppliers",null),"suppliers"]
   ];
-  const results=await Promise.all(stats.map(async x=>{
-   let q=db.from(x[1]).select("id",{count:"exact",head:true});
-   if(x[2])q=q.eq(x[2],x[3]);
-   const {count,error}=await q;
-   if(error)throw new Error(x[0]+": "+error.message);
-   return count??0;
-  }));
-  return '<h2 class="nx-admin-section-title">Хяналтын тойм</h2><p class="nx-admin-section-note">Шийдвэр хүлээж буй зар, бараа, лого болон байршуулалтын төлбөрийн хүсэлтүүд.</p><div class="nx-admin-stats">'+stats.map((x,i)=>
-   '<div class="nx-admin-stat"><div class="nx-admin-stat-label">'+x[0]+'</div><div class="nx-admin-stat-value">'+results[i]+'</div><button type="button" class="nx-admin-stat-link" data-open-tab="'+x[4]+'">Жагсаалт харах →</button></div>'
+  return '<h2 class="nx-admin-section-title">Хяналтын тойм</h2><p class="nx-admin-section-note">Зарын төлбөр тусдаа. Худалдааны бүх төлбөр нэг удирдлагад нэгтгэгдсэн.</p><div class="nx-admin-stats">'+stats.map(x=>
+   '<div class="nx-admin-stat"><div class="nx-admin-stat-label">'+x[0]+'</div><div class="nx-admin-stat-value">'+x[1]+'</div><button type="button" class="nx-admin-stat-link" data-open-tab="'+x[2]+'">Жагсаалт харах →</button></div>'
   ).join("")+'</div>';
  }
  async function loadPricing(){
@@ -240,16 +236,27 @@
     body.querySelectorAll("[data-open-tab]").forEach(b=>b.onclick=()=>{activeTab=b.dataset.openTab;loadTab();});
     return;
    }
+   if(activeTab==="commercePayments"){
+    const sources=[
+     ["market_retail_fee_payments","id,user_id,store_id,product_id,fee_type,amount,bank_name,account_number,account_holder,transfer_reference,receipt_path,status,admin_note,created_at","retail_fee_payment"],
+     ["wholesale_supplier_fee_payments","id,user_id,supplier_id,store_id,fee_type,product_id,amount,bank_name,account_number,account_holder,transfer_reference,receipt_path,status,admin_note,created_at","wholesale_fee_payment"],
+     ["market_supplier_registration_payments","id,user_id,supplier_id,owner_type,supplier_name,phone,email,register_no,amount,bank_name,account_number,account_holder,transfer_reference,receipt_path,status,admin_note,created_at","supplier_registration_payment"],
+     ["nexora_store_payments","id,store_id,user_id,amount,bank_name,transfer_reference,receipt_path,status,admin_note,created_at","store_payment"]
+    ];
+    const loaded=await Promise.all(sources.map(async x=>{const {data,error}=await query(x[0],x[1],[["status","pending"]]);if(error)throw error;return {data:data||[],type:x[2]};}));
+    const blocks=await Promise.all(loaded.map(x=>cards(x.data,x.type)));
+    body.innerHTML='<h2 class="nx-admin-section-title">'+sections.commercePayments[0]+'</h2><p class="nx-admin-section-note">'+sections.commercePayments[1]+'</p>'+(loaded.every(x=>!x.data.length)?empty("Худалдааны төлбөрийн хүлээгдэж буй хүсэлт алга."):blocks.join(""));
+    body.querySelectorAll("[data-review]").forEach(b=>b.onclick=()=>review(b.dataset.review,b.dataset.id,b.dataset.action));
+    return;
+   }
    const cfg={
     ads:["classified_ads","id,title,category,price,status,package_type,package_days,package_amount,created_at",[["status","pending_review"]],"free_ad"],
     payments:["payment_requests","id,ad_id,user_id,amount,package_days,transfer_reference,receipt_path,status,created_at",[["status","pending_review"]],"ad_payment"],
     products:["market_products","id,title,category,price,owner_id,status,stock_quantity,min_order_quantity,created_at",[["status","pending"]],"product"],
-    retailPayments:["market_retail_fee_payments","id,user_id,store_id,product_id,fee_type,amount,bank_name,account_number,account_holder,transfer_reference,receipt_path,status,admin_note,created_at",[["status","pending"]],"retail_fee_payment"],
     wholesaleProducts:["wholesale_products","id,title,category,price,owner_id,status,stock_quantity,min_order_quantity,wholesale_price_tiers,created_at",[["status","pending"]],"wholesale_product"],
-    wholesalePayments:["wholesale_supplier_fee_payments","id,user_id,supplier_id,store_id,fee_type,product_id,amount,bank_name,account_number,account_holder,transfer_reference,receipt_path,status,admin_note,created_at",[["status","pending"]],"wholesale_fee_payment"],
     stores:["nexora_store_payments","id,store_id,user_id,amount,bank_name,transfer_reference,receipt_path,status,created_at",[["status","pending"]],"store_payment"],
     suppliers:["market_suppliers","id,name,type,owner_type,register_no,phone,email,address,status,created_at",[],""],
-    supplierRegistrationPayments:["market_supplier_registration_payments","id,user_id,supplier_id,owner_type,supplier_name,supplier_type,register_no,phone,email,address,amount,bank_name,account_number,account_holder,transfer_reference,receipt_path,status,admin_note,created_at",[["status","pending"]],"supplier_registration_payment"],
+
    }[activeTab];
    const [table,cols,filters,type]=cfg;
    body.innerHTML='<h2 class="nx-admin-section-title">'+sections[activeTab][0]+'</h2><p class="nx-admin-section-note">'+sections[activeTab][1]+'</p><div class="nx-admin-loading">Жагсаалт ачаалж байна…</div>';
