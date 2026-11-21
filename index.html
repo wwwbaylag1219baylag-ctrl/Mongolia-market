@@ -937,6 +937,23 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     box.style.color = isError ? "#ff8b8b" : "#b9e9a5";
   }
 
+  let pendingConfirmationEmail = "";
+
+  function renderEmailConfirmation(email, notice = "") {
+    pendingConfirmationEmail = String(email || "").trim();
+    currentMode = "confirmation";
+    panel.innerHTML = `
+      <div style="text-align:center;padding:18px 6px;">
+        <div style="font-size:48px;margin-bottom:10px;">✉️</div>
+        <h2 style="margin:0 0 10px;color:#f7f5ef;">И-МЭЙЛЭЭ БАТАЛГААЖУУЛААРАЙ</h2>
+        <p style="color:#aaa39a;line-height:1.65;font-size:14px;">${safe(pendingConfirmationEmail)} хаяг руу баталгаажуулах холбоос илгээлээ. Ирсэн имэйл болон спам хавтсаа шалгана уу.</p>
+        <div id="nexora-confirmation-message" style="display:${notice ? "block" : "none"};margin:14px 0;color:#b9e9a5;font-size:13px;line-height:1.6;">${safe(notice)}</div>
+        <button id="nexora-resend-confirmation" type="button" style="width:100%;padding:14px;margin-top:10px;border:0;border-radius:12px;background:#d6ad55;color:#090909;font-weight:800;">БАТАЛГААЖУУЛАХ ИМЭЙЛ ДАХИН ИЛГЭЭХ</button>
+        <button type="button" data-mode="login" style="width:100%;padding:13px;margin-top:10px;border:1px solid rgba(214,173,85,.45);border-radius:12px;background:#191919;color:#d6ad55;">НЭВТРЭХ ХЭСЭГ РҮҮ</button>
+        <button type="button" data-auth-back style="width:100%;padding:12px;margin-top:8px;border:0;background:transparent;color:#aaa39a;">Буцах</button>
+      </div>`;
+  }
+
   function renderChoice() {
     currentMode = "choice";
     panel.innerHTML = `
@@ -1104,7 +1121,26 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     });
   }
 
-  panel.addEventListener("click", function (event) {
+  panel.addEventListener("click", async function (event) {
+    const resendButton = event.target.closest("#nexora-resend-confirmation");
+    if (resendButton) {
+      resendButton.disabled = true;
+      resendButton.textContent = "ИЛГЭЭЖ БАЙНА…";
+      try {
+        if (!pendingConfirmationEmail) throw new Error("И-мэйл хаяг олдсонгүй. Дахин бүртгүүлнэ үү.");
+        const { error } = await db.auth.resend({ type: "signup", email: pendingConfirmationEmail });
+        if (error) throw error;
+        const message = document.getElementById("nexora-confirmation-message");
+        if (message) { message.textContent = "Баталгаажуулах имэйлийг дахин илгээлээ. Спам хавтсаа ч шалгаарай."; message.style.display = "block"; }
+      } catch (error) {
+        const message = document.getElementById("nexora-confirmation-message");
+        if (message) { message.textContent = error.message || "Имэйл илгээхэд алдаа гарлаа."; message.style.color = "#ff8b8b"; message.style.display = "block"; }
+      } finally {
+        resendButton.disabled = false;
+        resendButton.textContent = "БАТАЛГААЖУУЛАХ ИМЭЙЛ ДАХИН ИЛГЭЭХ";
+      }
+      return;
+    }
     const back = event.target.closest("[data-auth-back]");
     if (back) { renderChoice(); return; }
     const button = event.target.closest("[data-mode]");
@@ -1153,11 +1189,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         if (data.session) {
           await renderUser(data.user);
         } else {
-          renderForm("login");
-          showMessage(
-            "Бүртгэл үүслээ. И-мэйл хаягтаа очсон баталгаажуулах холбоосыг нээнэ үү.",
-            false
-          );
+          renderEmailConfirmation(email, "Бүртгэл амжилттай үүслээ. Имэйлээ баталгаажуулсны дараа нэвтэрнэ үү.");
         }
       } else {
         const { data, error } = await db.auth.signInWithPassword({
@@ -1170,6 +1202,10 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         await renderUser(data.user);
       }
     } catch (error) {
+      if (currentMode === "login" && /email not confirmed|email_not_confirmed|confirm your email/i.test(String(error.message || ""))) {
+        renderEmailConfirmation(email, "Таны имэйл хараахан баталгаажаагүй байна. Баталгаажуулах холбоосоо дахин илгээнэ үү.");
+        return;
+      }
       showMessage(
         error.message || "Алдаа гарлаа. Дахин оролдоно уу.",
         true
