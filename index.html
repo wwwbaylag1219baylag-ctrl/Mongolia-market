@@ -780,6 +780,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
             const shouldLoadShop = screenName === "shop" && currentScreen !== "shop";
             if (shouldLoadShop) {
               window.NEXORA_SHOP_BACK = null;
+              window.NEXORA_SHOP_NEXT = null;
               window.NEXORA_SHOP_PROFILE = null;
             }
 
@@ -797,9 +798,14 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
             }
 
             if (shouldLoadShop && typeof window.NEXORA_SHOP_HOME === "function") {
-              Promise.resolve().then(() => window.NEXORA_SHOP_HOME()).catch(error => {
+              // Худалдааны үндсэн дэлгэц бүрэн бэлэн болсны дараа л шудралтын
+              // callback ажиллана. Ингэснээр loadProducts-ийн түр callback-ийг
+              // барьж аваад шудралт алга болох/гацах асуудал арилна.
+              try {
+                await Promise.resolve(window.NEXORA_SHOP_HOME());
+              } catch (error) {
                 console.error("NEXORA худалдааны каталог эхлүүлэхэд алдаа:", error);
-              });
+              }
             }
 
           },
@@ -3805,7 +3811,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     const home=document.getElementById("home");
     if(!home||home.dataset.commerceSwipeBound==="1")return;
     home.dataset.commerceSwipeBound="1";
-    let start=null;
+    let start=null, opening=false;
     home.addEventListener("touchstart",e=>{
       const zone=e.target.closest("[data-home-shop-zone]");
       if(!zone||e.touches.length!==1){start=null;return;}
@@ -3815,12 +3821,18 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       if(!start||e.changedTouches.length!==1)return;
       const dx=e.changedTouches[0].clientX-start.x,dy=e.changedTouches[0].clientY-start.y,zone=start.zone;
       start=null;
-      if(Math.abs(dx)<65||Math.abs(dx)<Math.abs(dy)*1.25)return;
-      Promise.resolve(window.NEXORA?.open("shop")).then(()=>{
-        if(dx<0){if(typeof window.NEXORA_SHOP_NEXT==="function")window.NEXORA_SHOP_NEXT(zone);}
-        else{if(typeof window.NEXORA_SHOP_BACK==="function")window.NEXORA_SHOP_BACK(zone);}
-      });
+      if(Math.abs(dx)<65||Math.abs(dx)<Math.abs(dy)*1.25||opening)return;
+      opening=true;
+      Promise.resolve(window.NEXORA?.open("shop"))
+        .then(()=>{
+          // Зүүн = удирдлага/профайл, баруун = каталог.
+          const action=dx<0?window.NEXORA_SHOP_NEXT:window.NEXORA_SHOP_BACK;
+          if(typeof action==="function")action(zone);
+        })
+        .catch(error=>console.error("NEXORA худалдааны шудралт:",error))
+        .finally(()=>{opening=false;});
     },{passive:true});
+    home.addEventListener("touchcancel",()=>{start=null;},{passive:true});
   })();  // Худалдааны дэлгэцийн хэвтээ шудралт. Босоо scroll болон form-ийн оролтод хүрэхгүй.
   let nxMarketTouchStart = null;
   host.style.touchAction = "pan-y";
