@@ -5795,11 +5795,22 @@ html,body{
   #ads>.page-content{height:100dvh;min-height:100dvh;overflow-y:auto;padding-top:0!important;padding-bottom:0!important;touch-action:pan-y;overscroll-behavior-y:contain}
   #ads .page-content{touch-action:pan-y;overscroll-behavior-y:contain}
   #ads .page-content .nx-full-screen{min-height:calc(100dvh - 72px);height:auto;box-sizing:border-box;padding:14px 12px;display:flex;flex-direction:column;justify-content:center}
-  #ads .page-content .nx-full-screen .nx-category-heading,
   #ads .page-content .nx-full-screen .nx-screen-subtitle,
   #ads .page-content .nx-full-screen .nx-category-path,
   #ads .page-content .nx-full-screen .nx-back,
   #ads .page-content .nx-full-screen .nx-platform-back{display:none!important}
+  /* Үндсэн 8 ангиллын дээрх жижиг Зар нийтлэх товчийг харуулах */
+  #ads .page-content .nx-full-screen[data-nx-stage="categories"]{justify-content:flex-start!important}
+  #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nx-category-heading{
+    display:flex!important;align-items:center;justify-content:flex-end;width:100%;
+    min-height:34px;margin:0 0 10px;padding:0 2px;box-sizing:border-box;
+  }
+  #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nx-category-title-wrap{display:none!important}
+  #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nx-create-toggle{
+    display:inline-flex!important;align-items:center;justify-content:center;
+    min-height:32px;padding:6px 11px;border-radius:9px;font-size:10px;
+    line-height:1;letter-spacing:.2px;box-shadow:0 2px 8px rgba(0,0,0,.18);
+  }
   #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-grid{width:100%;max-width:900px;margin:auto}
   #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-number{display:none!important}
   #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category{min-height:clamp(125px,21vh,205px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
