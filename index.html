@@ -4132,6 +4132,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     await openRetailProfile(backAction);
   }
 
+  let retailManagementSwipeLocked=false;
+
   async function showShopAuthSuccess(message){
     const {data,error}=await db.auth.getUser();
     const user=data?.user;
@@ -4141,6 +4143,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       window.NEXORA_SHOP_NEXT=null;
       return;
     }
+    retailManagementSwipeLocked=false;
     await window.NEXORA?.open("shop");
     document.getElementById("shop")?.classList.add("nx-shop-profile-fullscreen");
     host.classList.add("nx-profile-fullscreen");
@@ -4159,7 +4162,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 
   async function openRetailProfile(backAction=showRetailCatalog){
     window.NEXORA_SHOP_PROFILE=openRetailProfile;
-    window.NEXORA_SHOP_BACK=backAction;
+    window.NEXORA_SHOP_BACK=()=>{retailManagementSwipeLocked=true;backAction();};
     window.NEXORA_SHOP_NEXT=null;
     document.getElementById("shop")?.classList.add("nx-shop-profile-fullscreen");
     host.classList.add("nx-profile-fullscreen");
@@ -5023,7 +5026,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       '<button class="nx-temu-nav-item" id="nx-temu-cart" type="button"><span>🛒</span><span>Сагс '+(count?'('+count+')':'')+'</span></button>'+
     '</nav>';
     window.NEXORA_SHOP_BACK=()=>window.NEXORA?.open("home");
-    window.NEXORA_SHOP_NEXT=()=>enterShopManagement(showRetailCatalog);
+    window.NEXORA_SHOP_NEXT=retailManagementSwipeLocked?null:()=>enterShopManagement(showRetailCatalog);
     document.getElementById("nx-temu-profile").onclick=()=>{window.NEXORA_SHOP_AUTH_FORM?.();window.NEXORA?.open("profile");};
     document.getElementById("nx-temu-home").onclick=()=>{retailActiveCategory=null;searchText="";const input=document.getElementById("nx-retail-search");if(input)input.value="";renderRetailCategories();host.querySelector(".nx-temu-page")?.scrollTo({top:0,behavior:"smooth"});};
     document.getElementById("nx-temu-categories").onclick=()=>host.querySelector("#nx-temu-category-rail")?.scrollIntoView({behavior:"smooth",block:"start"});
