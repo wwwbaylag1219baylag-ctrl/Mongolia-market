@@ -4267,7 +4267,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     }
     marketUser=authData.user;
     const [profileRes,bankRes,feeRes,settingsRes,banksRes]=await Promise.all([
-      db.from("nexora_store_profiles").select("id,user_id,store_name,owner_type,phone,logo_path,description,address").eq("user_id",marketUser.id).maybeSingle(),
+      db.from("nexora_store_profiles").select("id,user_id,store_name,owner_type,phone,logo_path,personal_photo_path,description,address").eq("user_id",marketUser.id).maybeSingle(),
       db.from("store_bank_accounts").select("id,bank_name,account_number,account_holder,phone,store_name").eq("user_id",marketUser.id).maybeSingle(),
       db.from("nexora_settings").select("market_logo_fee").eq("id",1).single(),
       db.from("nexora_settings").select("individual_price,company_price,duration_days,reminder_days").eq("id",1).single(),
@@ -4304,7 +4304,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         (logoUrl?'<img src="'+esc(logoUrl)+'" alt="Дэлгүүрийн лого" style="width:92px;height:92px;border-radius:20px;object-fit:cover;border:1px solid var(--border);margin:8px 0 14px">':'')+
         '<form id="nx-store-form"><label>Онлайн дэлгүүрийн нэр *</label><input class="nx-market-input" name="store_name" required maxlength="100" value="'+esc(store?.store_name||"")+'">'+
         '<label>Дэлгүүрийн төрөл *</label><select class="nx-market-select" name="owner_type"><option value="individual" '+(store?.owner_type!=="company"?"selected":"")+'>Хувь хүн</option><option value="company" '+(store?.owner_type==="company"?"selected":"")+'>Компани</option></select>'+
-        '<label>Дэлгүүрийн лого (JPG, PNG, WEBP · 5MB хүртэл)</label><input class="nx-market-input" name="store_logo" type="file" accept="image/jpeg,image/png,image/webp">'+
+        '<label>Дэлгүүрийн лого (JPG, PNG, WEBP · 5MB хүртэл)</label><input class="nx-market-input" name="store_logo" type="file" accept="image/jpeg,image/png,image/webp"><div id="nx-personal-photo-wrap" style="display:block"><label>Хувийн зураг (зөвхөн хувь хүн · лого байхгүй үед Профайлд харагдана)</label><input class="nx-market-input" name="personal_photo" type="file" accept="image/jpeg,image/png,image/webp"></div>'+
         '<label>Танилцуулга</label><textarea class="nx-market-textarea" name="description" rows="3" maxlength="1000">'+esc(store?.description||"")+'</textarea>'+
         '<label>Хаяг / байршил</label><input class="nx-market-input" name="address" maxlength="250" value="'+esc(store?.address||"")+'">'+
         '<label>Утас</label><input class="nx-market-input" name="phone" type="tel" value="'+esc(store?.phone||"")+'">'+
@@ -4320,12 +4320,14 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       const storeForm=document.getElementById("nx-store-form");
       storeForm.onsubmit=async e=>{
         e.preventDefault();const form=e.currentTarget,btn=form.querySelector('button[type="submit"]'),msg=document.getElementById("nx-store-msg");btn.disabled=true;
-        let uploadedLogoPath=null;
+        let uploadedLogoPath=null,uploadedPersonalPhotoPath=null;
         try{
-          const v=Object.fromEntries(new FormData(form).entries()),file=v.store_logo;
+          const v=Object.fromEntries(new FormData(form).entries()),file=v.store_logo,personalPhoto=v.personal_photo;
           if(!String(v.store_name||"").trim())throw new Error("Дэлгүүрийн нэрээ оруулна уу.");
           if(file&&file.size>5*1024*1024)throw new Error("Лого 5MB-аас бага байх ёстой.");
+           if(personalPhoto&&personalPhoto.size>5*1024*1024)throw new Error("Хувийн зураг 5MB-аас бага байх ёстой.");
           if(file&&file.size&&!("image/jpeg,image/png,image/webp".split(",").includes(file.type)))throw new Error("JPG, PNG эсвэл WEBP зураг сонгоно уу.");
+           if(personalPhoto&&personalPhoto.size&&!["image/jpeg","image/png","image/webp"].includes(personalPhoto.type))throw new Error("Хувийн зураг JPG, PNG эсвэл WEBP байх ёстой.");
           const payload={user_id:marketUser.id,store_name:v.store_name.trim(),owner_type:v.owner_type,phone:String(v.phone||"").trim(),description:String(v.description||"").trim(),address:String(v.address||"").trim()};
           let saved=store;
           if(store){
@@ -4346,9 +4348,14 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
               if(updateError)throw updateError;
             }
           }
-          if(!store){await showStorePayment(saved,settings,banks,backAction,uploadedLogoPath,logoFee);return;}
+          if(personalPhoto&&personalPhoto.size&&payload.owner_type==="individual"){
+             const ext=personalPhoto.type==="image/png"?"png":personalPhoto.type==="image/webp"?"webp":"jpg",photoPath=marketUser.id+"/personal-profile-photos/"+crypto.randomUUID()+"."+ext;
+             const {error:photoUploadError}=await db.storage.from("market-store-logos").upload(photoPath,personalPhoto,{upsert:false,contentType:personalPhoto.type,cacheControl:"31536000"});if(photoUploadError)throw photoUploadError;uploadedPersonalPhotoPath=photoPath;
+             const {error:photoSaveError}=await db.from("nexora_store_profiles").update({personal_photo_path:photoPath}).eq("id",saved.id).eq("user_id",marketUser.id);if(photoSaveError)throw photoSaveError;
+           }
+           if(!store){await showStorePayment(saved,settings,banks,backAction,uploadedLogoPath,logoFee);return;}
           msg.textContent="✓ Дэлгүүрийн мэдээлэл хадгалагдлаа.";await showStore(backAction);
-        }catch(err){if(uploadedLogoPath)await db.storage.from("market-store-logos").remove([uploadedLogoPath]).catch(()=>{});msg.textContent="Алдаа: "+(err.message||err);btn.disabled=false;}
+        }catch(err){if(uploadedLogoPath)await db.storage.from("market-store-logos").remove([uploadedLogoPath]).catch(()=>{});if(uploadedPersonalPhotoPath)await db.storage.from("market-store-logos").remove([uploadedPersonalPhotoPath]).catch(()=>{});msg.textContent="Алдаа: "+(err.message||err);btn.disabled=false;}
       };
       const bankForm=document.getElementById("nx-store-bank-form");
       if(bankForm)bankForm.onsubmit=async e=>{
@@ -5000,9 +5007,9 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       if(authError)throw authError;
       if(!auth?.user){button.innerHTML='<span class="nx-temu-mark" aria-hidden="true">N</span>';return;}
       // Удирдлагын хэсэгт харагддаг дэлгүүрийн үндсэн/бөөний логоноос эхэлж ижил зургийг Профайлд харуулна.
-      const {data:profile,error:profileError}=await db.from("nexora_store_profiles").select("logo_path,wholesale_logo_path").eq("user_id",auth.user.id).maybeSingle();
+      const {data:profile,error:profileError}=await db.from("nexora_store_profiles").select("owner_type,logo_path,wholesale_logo_path,personal_photo_path").eq("user_id",auth.user.id).maybeSingle();
       if(profileError)throw profileError;
-      const path=profile?.logo_path||profile?.wholesale_logo_path||"";
+      const path=profile?.logo_path||profile?.wholesale_logo_path||(profile?.owner_type==="individual"?profile?.personal_photo_path:"")||"";
       const url=path?(String(path).startsWith("http")?path:db.storage.from("market-store-logos").getPublicUrl(path).data.publicUrl):"";
       if(url){button.innerHTML='<img src="'+esc(url)+'" alt="Дэлгүүрийн лого">';}
       else{button.innerHTML='<span class="nx-temu-mark" aria-hidden="true">N</span>';}
