@@ -507,6 +507,19 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 #market-app .nx-cart-product-content h3{margin:0 0 7px}
 @media(max-width:390px){#market-app .nx-cart-product-image,#market-app .nx-cart-product-no-image{flex-basis:84px;width:84px;height:84px}}
 </style>
+
+<style id="NEXORA-DEMO-CARDS-HORIZONTAL-2026">
+/* Жишээ болон бодит жижиглэнгийн картууд: олон зурагтай, хэвтээ гүйлгэдэг нэг мөр. */
+#shop #nx-retail-categories{width:100%;max-width:100%;overflow:hidden}
+#shop .nx-temu-products{display:flex!important;flex-flow:row nowrap!important;align-items:stretch!important;gap:12px!important;width:100%!important;max-width:100%!important;overflow-x:auto!important;overflow-y:hidden!important;padding:4px 14px 18px!important;margin:0!important;scroll-snap-type:x mandatory!important;scroll-padding-left:14px!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-x:contain!important;touch-action:pan-x pan-y!important;scrollbar-width:thin!important}
+#shop .nx-temu-products>.nx-temu-product{box-sizing:border-box!important;flex:0 0 min(70vw,250px)!important;width:min(70vw,250px)!important;min-width:min(70vw,250px)!important;max-width:250px!important;height:auto!important;scroll-snap-align:start!important}
+#shop .nx-temu-demo-product .nx-temu-demo-image-wrap{height:auto!important;aspect-ratio:1/1!important}
+#shop .nx-temu-demo-product .nx-temu-product-image{width:100%!important;height:100%!important;aspect-ratio:1/1!important;object-fit:cover!important}
+#shop .nx-temu-demo-product .nx-temu-product-title{min-height:34px}
+#shop .nx-temu-demo-note{min-height:34px;line-height:1.45}
+#shop .nx-temu-section-head span{color:#0b82c8!important;font-weight:800!important}
+@media(min-width:700px){#shop .nx-temu-products{gap:16px!important;padding-inline:18px!important}#shop .nx-temu-products>.nx-temu-product{flex-basis:230px!important;width:230px!important;min-width:230px!important}}
+</style>
 </head>
 
 <body>
@@ -4959,35 +4972,49 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   function renderRetailCategories(){
     const target=document.getElementById("nx-retail-categories"),rail=document.getElementById("nx-temu-category-rail");
     if(!target||!rail)return;
-    // Нийтлэгдсэн бодит бараа байхгүй үед л харагдах, захиалга үүсгэдэггүй танилцуулгын жишээ картууд.
-    // Бодит бараа орж ирмэгц жишээнүүдийг бүрэн нууж, Supabase-аас ирсэн жинхэнэ барааг харуулна.
+    // Бодит жижиглэнгийн бараа байхгүй ангилалд л захиалга үүсгэдэггүй жишээ зураг харуулна.
     const demoProducts=[
       ["Цамц, хувцас","Эрэгтэй цамц","photo-1521572163474-6864f9cf17ab"],
+      ["Цамц, хувцас","Эмэгтэй загварын хувцас","photo-1483985988355-763728e1935b"],
       ["Гутал","Өдөр тутмын пүүз","photo-1542291026-7eec264c27ff"],
+      ["Гутал","Арьсан гутал","photo- shoe-placeholder"],
       ["Цүнх","Аяллын үүргэвч","photo-1553062407-98eeb64c6a62"],
+      ["Цүнх","Эмэгтэй гар цүнх","photo-1584917865442-de89df76afd3"],
       ["Цаг, гоёл","Бугуйн цаг","photo-1523275335684-37898b6baf30"],
+      ["Цаг, гоёл","Нарны шил","photo-1511499767150-a48a237f0083"],
       ["Электрон бараа","Чихэвч","photo-1505740420928-5e560c06d30e"],
       ["Электрон бараа","Зөөврийн компьютер","photo-1496181133206-80ce9b88a853"],
+      ["Электрон бараа","Таблет","photo-1544244015-0df4b3ffc6b0"],
       ["Гар утас","Ухаалаг утас","photo-1511707171634-5f897ff02aa9"],
       ["Гэр ахуй","Орчин үеийн сандал","photo-1503602642458-232111445657"],
       ["Гэр ахуй","Зочны өрөөний буйдан","photo-1555041469-a586c61ea9bc"],
       ["Гэр ахуй","Ширээний гэрэл","photo-1507473885765-e6ed057f782c"],
       ["Гал тогоо","Гал тогооны хэрэгсэл","photo-1556911220-e15b29be8c8f"],
+      ["Гал тогоо","Кофе чанагч","photo-1495474472287-4d71bcdd2085"],
       ["Гоо сайхан","Арьс арчилгааны бүтээгдэхүүн","photo-1608248543803-ba4f8c70ae0b"],
+      ["Гоо сайхан","Гоо сайхны хэрэгсэл","photo-1522335789203-aabd1fc54bc9"],
       ["Хүнс","Шинэ жимс, ногоо","photo-1542838132-92c53300491e"],
       ["Ундаа, хүнс","Кофе, цай","photo-1495474472287-4d71bcdd2085"],
       ["Спорт","Унадаг дугуй","photo-1485965120184-e220f721d03e"],
-      ["Гэр ахуй","Тасалгааны ургамал","photo-1485955900006-10f4d324d411"],
+      ["Спорт","Фитнесийн хэрэгсэл","photo-1534438327276-14e5300c3a48"],
       ["Фото, камер","Дижитал камер","photo-1516035069371-29a1b244cc32"],
       ["Тоглоом","Хүүхдийн тоглоом","photo-1596461404969-9ae70f2830c1"],
       ["Багаж хэрэгсэл","Гар багажны иж бүрдэл","photo-1530124566582-a618bc2615dc"],
       ["Тавилга","Гэрийн интерьер","photo-1616486338812-3dadae4b4ace"],
       ["Гэр ахуй","Гэрийн чимэглэл","photo-1600210492486-724fe5c67fb0"],
       ["Хоол, хүнс","Хүнсний бүтээгдэхүүн","photo-1547592180-85f173990554"],
-      ["Спорт","Фитнесийн хэрэгсэл","photo-1534438327276-14e5300c3a48"]
-    ].map((x,i)=>({category:x[0],title:x[1],image:"https://images.unsplash.com/"+x[2]+"?auto=format&fit=crop&w=720&q=85",id:"demo-"+i}));
-    const isDemo=products.length===0;
-    const sourceProducts=isDemo?demoProducts:products;
+      ["Хүүхдийн бараа","Хүүхдийн өрөө","photo-1503454537195-1dcabb73ffb9"],
+      ["Гэр ахуй","Ор дэрний хэрэглэл","photo-1631049307264-da0ec9d70304"],
+      ["Цэцэрлэгжүүлэлт","Тасалгааны ургамал","photo-1485955900006-10f4d324d411"],
+      ["Гэр ахуй","Хивс, интерьер","photo-1600210492486-724fe5c67fb0"],
+      ["Авто хэрэгсэл","Автомашины хэрэгсэл","photo-1492144534655-ae79c964c9d7"],
+      ["Аялал","Аяллын хэрэгсэл","photo-1500530855697-b586d89ba3ee"],
+      ["Гэр ахуй","Цэвэрлэгээний хэрэгсэл","photo-1581578731548-c64695cc6952"]
+    ].filter(x=>!x[2].includes("placeholder")).map((x,i)=>({category:x[0],title:x[1],image:"https://images.unsplash.com/"+x[2]+"?auto=format&fit=crop&w=720&q=85",id:"demo-"+i,_isDemo:true}));
+    const retailProducts=products.filter(p=>p._marketType==="retail");
+    const realCategories=new Set(retailProducts.map(p=>p.category||"Бусад"));
+    const visibleDemos=demoProducts.filter(p=>!realCategories.has(p.category));
+    const sourceProducts=[...retailProducts,...visibleDemos];
     const query=String(searchText||"").trim().toLocaleLowerCase("mn");
     const allCategories=[...new Set(sourceProducts.map(p=>p.category||"Бусад"))].sort((a,b)=>a.localeCompare(b,"mn"));
     const filtered=sourceProducts.filter(p=>
@@ -5001,18 +5028,18 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       renderRetailCategories();
     });
     const count=document.getElementById("nx-temu-product-count");
-    if(count)count.textContent=isDemo?filtered.length+" жишээ зураг":filtered.length+" бараа";
+    if(count)count.textContent=filtered.filter(p=>p._isDemo).length+" жишээ · "+filtered.filter(p=>!p._isDemo).length+" бодит";
     if(!filtered.length){
-      target.innerHTML='<div class="nx-temu-empty">'+(isDemo?"Жишээ зураг олдсонгүй.":"Тохирох бараа олдсонгүй. Хайлтаа өөрчилж үзээрэй.")+'</div>';
+      target.innerHTML='<div class="nx-temu-empty">Тохирох бараа олдсонгүй. Хайлтаа өөрчилж үзээрэй.</div>';
       return;
     }
     target.innerHTML='<div class="nx-temu-products"></div>';
     const grid=target.querySelector(".nx-temu-products");
     filtered.forEach(p=>{
-      if(isDemo){
+      if(p._isDemo){
         const card=document.createElement("article");
         card.className="nx-temu-product nx-temu-demo-product";
-        card.innerHTML='<div class="nx-temu-demo-image-wrap"><img class="nx-temu-product-image" src="'+esc(p.image)+'" alt="'+esc(p.title)+'" loading="lazy"><span class="nx-temu-demo-label">ЖИШЭЭ ЗУРАГ</span></div><div class="nx-temu-product-info"><span class="nx-temu-product-type">'+esc(p.category)+'</span><span class="nx-temu-product-title">'+esc(p.title)+'</span><div class="nx-temu-product-store">Бодит бараа нийтлэгдэхэд зураг автоматаар солигдоно</div></div><div class="nx-temu-demo-note">Танилцуулгын зураг · Захиалга авахгүй</div>';
+        card.innerHTML='<div class="nx-temu-demo-image-wrap"><img class="nx-temu-product-image" src="'+esc(p.image)+'" alt="'+esc(p.title)+'" loading="lazy"><span class="nx-temu-demo-label">ЖИШЭЭ ЗУРАГ</span></div><div class="nx-temu-product-info"><span class="nx-temu-product-type">'+esc(p.category)+'</span><span class="nx-temu-product-title">'+esc(p.title)+'</span><div class="nx-temu-product-store">Бодит бараа нийтлэгдэхэд энэ ангиллын жишээг солино</div></div><div class="nx-temu-demo-note">Танилцуулгын зураг · Захиалга авахгүй</div>';
         grid.appendChild(card);
         return;
       }
@@ -5026,7 +5053,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       card.className="nx-temu-product";
       card.innerHTML='<button type="button" class="nx-temu-product-open" aria-label="'+esc(p.title)+' дэлгэрэнгүй">'+
         (image?'<img class="nx-temu-product-image" src="'+esc(image)+'" alt="'+esc(p.title)+'">':'<div class="nx-temu-product-no-image">Зураггүй</div>')+
-        '<div class="nx-temu-product-info"><span class="nx-temu-product-type">'+(wholesale?"БӨӨНИЙ ҮНЭ":"ЖИЖИГЛЭН")+'</span><span class="nx-temu-product-title">'+esc(p.title)+'</span><div class="nx-temu-product-store">'+esc(p._storeName||"NEXORA дэлгүүр")+'</div><div class="nx-temu-product-price">'+money(p.price)+'</div><div class="nx-temu-product-meta">'+esc(tierText)+'</div></div></button>'+
+        '<div class="nx-temu-product-info"><span class="nx-temu-product-type">'+(wholesale?"БӨӨНИЙ ҮНЭ":"ЖИЖИГЛЭН")+'</span><span class="nx-temu-product-title">'+esc(p.title)+'</span><div class="nx-temu-product-store">'+esc(p._storeName||"Онлайн дэлгүүр")+'</div><div class="nx-temu-product-price">'+money(p.price)+'</div><div class="nx-temu-product-meta">'+esc(tierText)+'</div></div></button>'+
         '<button type="button" class="nx-temu-product-action">'+(wholesale?"Бөөний захиалах":"Сагслах")+'</button>';
       card.querySelector(".nx-temu-product-open").onclick=()=>wholesale?showUnifiedWholesaleDetail(p):showRetailProductDetail(p);
       card.querySelector(".nx-temu-product-action").onclick=()=>wholesale?showUnifiedWholesaleDetail(p):addToCart(p);
