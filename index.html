@@ -4193,6 +4193,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         '<img src="./assets/nexora-logo.jpg" alt="NEXORA" style="width:190px;max-width:70vw;height:76px;object-fit:contain">'+
         '<h2 class="nx-profile-heading">УДИРДЛАГЫН ХЭСЭГ</h2><p class="nx-market-muted">'+esc(name)+'</p><p class="nx-market-muted">'+esc(authData.user.email||"")+'</p></div>'+
         '<div class="nx-profile-accordion-content">'+
+        '<button class="nx-market-btn" id="nx-unified-my-orders">📦 МИНИЙ НЭГДСЭН ЗАХИАЛГА</button>'+
         '<details class="nx-help-group" '+(profileOpenSection==="retail"?"open":"") + '><summary>Онлайн дэлгүүр</summary><div class="nx-help-items">'+
         (store?'<p class="nx-wholesale-status">'+esc(store.store_name)+' · '+(store.owner_type==="company"?"Компани":"Хувь хүн")+'</p>':'<p class="nx-market-muted">Онлайн дэлгүүрийн мэдээллээ бүртгүүлнэ үү.</p>')+
         '<button class="nx-market-btn" id="nx-unified-retail-store">'+(store?"Дэлгүүрийн мэдээлэл удирдах":"＋ Онлайн дэлгүүр нээх")+'</button>'+
@@ -4242,6 +4243,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
            msg.textContent=saved?"Зураг хадгалагдсан. Дэлгэцийн шинэчлэлтэд алдаа гарлаа: "+(err.message||err):"Алдаа: "+(err.message||err);
          }finally{avatarInput.disabled=false;avatarChoose.disabled=false;avatarInput.value="";}
        };
+      bind("nx-unified-my-orders",showMyUnifiedOrders);
       bind("nx-unified-retail-store",()=>showStore(()=>openRetailProfile(backAction)));
       bind("nx-unified-retail-publish",showRetailPublish);
       bind("nx-unified-retail-products",showMyRetailProducts);
@@ -4852,7 +4854,50 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       renderWholesaleCategoryView();
     }catch(err){host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-wholesale-back" aria-label="Буцах" title="Буцах">‹</button><p class="nx-market-muted">Бөөний каталог ачаалахад алдаа: '+esc(err.message||err)+'</p>';document.getElementById("nx-wholesale-back").onclick=loadProducts;}
   }
-  async function showMyWholesaleOrders(){
+  async function showMyUnifiedOrders(){
+    const backAction=()=>openRetailProfile();
+    window.NEXORA_SHOP_BACK=backAction;
+    const {data:auth,error:authError}=await db.auth.getUser();
+    if(authError||!auth?.user){host.innerHTML='<p class="nx-market-muted">Захиалгын түүх харахын тулд нэвтэрнэ үү.</p><button class="nx-market-btn" id="nx-unified-orders-back">Буцах</button>';document.getElementById("nx-unified-orders-back").onclick=backAction;return;}
+    host.innerHTML='<button class="nx-market-btn secondary" id="nx-unified-orders-back">‹ Профайл руу буцах</button><h2 class="nexora-ad-heading">МИНИЙ НЭГДСЭН ЗАХИАЛГА</h2><p class="nx-market-muted">Жижиглэн болон бөөний бүх захиалга нэг дор.</p><p class="nx-market-muted">Ачаалж байна…</p>';
+    document.getElementById("nx-unified-orders-back").onclick=backAction;
+    try{
+      const [retailRes,wholesaleRes]=await Promise.all([
+        db.from("market_orders").select("id,items,total_amount,status,payment_status,created_at,recipient_name,delivery_phone,delivery_address,delivery_latitude,delivery_longitude,delivery_note").eq("buyer_id",auth.user.id).order("created_at",{ascending:false}).limit(100),
+        db.from("wholesale_orders").select("id,supplier_id,items,total_amount,status,buyer_name,buyer_phone,delivery_address,note,created_at,updated_at").eq("buyer_id",auth.user.id).order("created_at",{ascending:false}).limit(100)
+      ]);
+      if(retailRes.error)throw retailRes.error;if(wholesaleRes.error)throw wholesaleRes.error;
+      const retail=retailRes.data||[],wholesale=wholesaleRes.data||[];
+      const sellerIds=[...new Set([
+        ...retail.flatMap(o=>(o.items||[]).map(i=>String(i.seller_id||"")).filter(Boolean)),
+        ...wholesale.map(o=>String(o.supplier_id||"")).filter(Boolean)
+      ])];
+      const profileRes=sellerIds.length?await db.from("nexora_store_profiles").select("user_id,store_name").in("user_id",sellerIds):{data:[],error:null};
+      if(profileRes.error)throw profileRes.error;
+      const names=new Map((profileRes.data||[]).map(p=>[String(p.user_id),p.store_name||"Дэлгүүр / нийлүүлэгч"]));
+      const status={pending_payment:"Төлбөр хүлээгдэж байна",payment_rejected:"Төлбөр баталгаажаагүй",processing:"Бэлтгэж байна",completed:"Дууссан",cancelled:"Цуцалсан",pending:"Нийлүүлэгчийн хариу хүлээж байна",accepted:"Зөвшөөрсөн",rejected:"Татгалзсан"};
+      const rows=[
+        ...retail.map(o=>({kind:"retail",id:o.id,total:o.total_amount,status:o.status,payment:o.payment_status,created_at:o.created_at,seller:String((o.items||[])[0]?.seller_id||""),order:o})),
+        ...wholesale.map(o=>({kind:"wholesale",id:o.id,total:o.total_amount,status:o.status,payment:"—",created_at:o.created_at,seller:String(o.supplier_id||""),order:o}))
+      ].sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
+      const cards=rows.map(o=>{
+        const isRetail=o.kind==="retail";
+        const count=(o.order.items||[]).length;
+        return '<article class="nx-admin-card" style="margin:12px 0"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><div><h3>Захиалга #'+esc(String(o.id).slice(0,10))+'</h3><p class="nx-market-muted">'+(isRetail?"🛍️ Жижиглэн":"📦 Бөөний")+' · '+esc(names.get(o.seller)||"Худалдагч / нийлүүлэгч")+'</p></div><span class="nx-admin-status">'+esc(status[o.status]||o.status||"—")+'</span></div><p class="nx-market-price">'+money(o.total)+'</p><p class="nx-market-muted">'+count+' төрлийн бараа · '+esc(o.created_at?new Date(o.created_at).toLocaleString("mn-MN"):"—")+'</p>'+(isRetail?'<p class="nx-market-muted">Төлбөр: '+esc(o.payment==="paid"?"Баталгаажсан":o.payment==="unpaid"?"Төлбөр хүлээж байна":o.payment||"—")+'</p><button class="nx-market-btn" data-unified-retail-order="'+esc(o.id)+'">Дансны мэдээлэл / дэлгэрэнгүй</button>':'<button class="nx-market-btn" data-unified-wholesale-order="'+esc(o.id)+'">Дэлгэрэнгүй үзэх</button>')+'</article>';
+      }).join("");
+      host.innerHTML='<button class="nx-market-btn secondary" id="nx-unified-orders-back">‹ Профайл руу буцах</button><h2 class="nexora-ad-heading">МИНИЙ НЭГДСЭН ЗАХИАЛГА</h2><p class="nx-market-muted">Нийт '+rows.length+' захиалга · Жижиглэн '+retail.length+' · Бөөний '+wholesale.length+'</p>'+(cards||'<div class="nx-admin-empty">Одоогоор захиалга алга байна.</div>');
+      document.getElementById("nx-unified-orders-back").onclick=backAction;
+      host.querySelectorAll("[data-unified-retail-order]").forEach(btn=>btn.onclick=()=>{
+        const o=retail.find(x=>String(x.id)===btn.dataset.unifiedRetailOrder);if(!o)return;
+        showOrderPayment(o.id,auth.user,{recipientName:o.recipient_name,deliveryPhone:o.delivery_phone,deliveryAddress:o.delivery_address,deliveryNote:o.delivery_note,latitude:o.delivery_latitude,longitude:o.delivery_longitude},showMyUnifiedOrders);
+      });
+      host.querySelectorAll("[data-unified-wholesale-order]").forEach(btn=>btn.onclick=()=>showWholesaleOrderDetail(btn.dataset.unifiedWholesaleOrder,showMyUnifiedOrders));
+    }catch(err){
+      host.innerHTML='<button class="nx-market-btn secondary" id="nx-unified-orders-back">Буцах</button><p class="nx-market-muted">Нэгдсэн захиалгууд ачаалахад алдаа: '+esc(err.message||err)+'</p>';
+      document.getElementById("nx-unified-orders-back").onclick=backAction;
+    }
+  }
+    async function showMyWholesaleOrders(){
     window.NEXORA_SHOP_BACK=window.NEXORA_SHOP_PROFILE||showWholesaleCatalog;
 
     startWholesaleNotificationWatch().catch(err=>console.warn("Мэдэгдлийн тохиргоо:",err));
@@ -5285,7 +5330,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     });
     document.getElementById("nx-cart-order").onclick=placeOrder;
   }
-    async function showOrderPayment(orderIds,user,delivery={}){
+    async function showOrderPayment(orderIds,user,delivery={},backAction=loadProducts){
     const ids=(Array.isArray(orderIds)?orderIds:[orderIds]).filter(Boolean);
     if(!ids.length){host.innerHTML='<p class="nx-market-muted">Захиалгын мэдээлэл олдсонгүй.</p>';return;}
     const {data:orders,error}=await db.from("market_orders").select("id,items,total_amount").in("id",ids).eq("buyer_id",user.id).order("created_at",{ascending:true});
@@ -5298,7 +5343,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     const banks=new Map((bankRows||[]).map(x=>[String(x.user_id),x]));
     const accountCards=orders.map(order=>{const sellerId=sellerForOrder.get(String(order.id)),bank=banks.get(sellerId);return '<section class="nx-admin-card" style="margin:12px 0"><h3>'+esc(bank?.store_name||"Худалдагчийн дэлгүүр")+'</h3><p class="nx-market-muted">Захиалгын дугаар: '+esc(order.id)+'</p><p class="nx-market-price">Төлөх дүн: '+money(order.total_amount)+'</p>'+(bank?'<p><strong>Банк:</strong> '+esc(bank.bank_name)+'</p><p class="nx-market-price">'+esc(bank.account_number)+'</p><p><strong>Данс эзэмшигч:</strong> '+esc(bank.account_holder)+'</p><p><strong>Холбоо барих:</strong> '+esc(bank.phone||"—")+'</p>':'<p class="nx-market-muted">Худалдагч банкны дансаа бүртгүүлээгүй байна. Худалдагчтай утсаар холбогдоно уу.</p>')+'<p class="nx-market-muted">Гүйлгээний утгад захиалгын дугаарыг бичнэ үү.</p></section>';}).join("");
     host.innerHTML='<button class="nx-market-btn secondary" id="nx-order-back">‹ Буцах</button><h2 class="nexora-ad-heading">ХУДАЛДАГЧ РУУ ТӨЛБӨР ШИЛЖҮҮЛЭХ</h2><p class="nx-market-muted">NEXORA захиалгын төлбөр хүлээн авахгүй. Доорх дэлгүүр бүрийн данс руу тус тус шилжүүлнэ. Худалдагч мөнгө орсныг шалгаж төлбөрийг өөрөө баталгаажуулна.</p>'+accountCards+'<p class="nx-market-muted">Хүлээн авагч: '+esc(delivery.recipientName||"—")+' · Утас: '+esc(delivery.deliveryPhone||"—")+' · Хаяг: '+esc(delivery.deliveryAddress||"Газрын зураг дээр тэмдэглэсэн")+'</p>'+(delivery.latitude!=null&&delivery.longitude!=null?'<button type="button" class="nx-market-btn secondary" id="nx-order-delivery-map">📍 Хүргэлтийн байршил харах</button>':"");
-    document.getElementById("nx-order-back").onclick=loadProducts;const mapButton=document.getElementById("nx-order-delivery-map");if(mapButton)mapButton.onclick=()=>window.NEXORA_OPEN_MAP_SCREEN(delivery.latitude,delivery.longitude,false);
+    document.getElementById("nx-order-back").onclick=backAction;const mapButton=document.getElementById("nx-order-delivery-map");if(mapButton)mapButton.onclick=()=>window.NEXORA_OPEN_MAP_SCREEN(delivery.latitude,delivery.longitude,false);
   }
   async function placeOrder(){
     const msg=document.getElementById("nx-market-msg"),button=document.getElementById("nx-cart-order");
