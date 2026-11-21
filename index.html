@@ -504,7 +504,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 
         <div style="display:flex;align-items:center;gap:8px">
           <button class="profile-button" type="button" onclick="NEXORA.open('help')">❔ Тусламж</button>
-          <button class="profile-button" type="button" onclick="NEXORA.open('profile')">☰ Профайл</button>
+          <button class="profile-button" type="button" onclick="window.location.href='./admin.html'" aria-label="Админ удирдлага">⚙ Админ</button>
         </div>
       </header>
 
@@ -610,13 +610,13 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     <section id="profile" class="screen">
       <header class="topbar">
         <button class="back-button" type="button" onclick="NEXORA.back()" aria-label="Буцах">‹</button>
-        <div class="page-heading">МИНИЙ ПРОФАЙЛ</div>
+        <div class="page-heading">НЭВТРЭХ / БҮРТГҮҮЛЭХ</div>
         <div class="header-space"></div>
       </header>
       <main class="page-content">
         <div class="welcome-panel" id="nexora-auth-panel" style="min-height:62vh;">
-          <h2>Миний профайл</h2>
-          <p>Таны хувийн бүртгэл, зар болон захиалгын хэсэг.</p>
+          <h2>НЭВТРЭХ / БҮРТГҮҮЛЭХ</h2>
+          <p>Дэлгүүр болон бөөний худалдааны үйлчилгээг ашиглахын тулд бүртгэлээрээ нэвтэрнэ үү.</p>
         </div>
       </main>
       <footer class="footer">NEXORA</footer>
@@ -908,8 +908,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         <div style="width:116px;height:116px;border-radius:50%;display:grid;place-items:center;overflow:hidden;background:#171717;border:3px solid #d6ad55;box-shadow:0 0 0 6px rgba(214,173,85,.10);margin:8px auto 14px;">
           ${avatarMarkup(null)}
         </div>
-        <h2 style="margin:4px 0 8px;color:#f7f5ef;">МИНИЙ ПРОФАЙЛ</h2>
-        <p style="margin:0 0 24px;color:#aaa39a;">Нэвтэрч өөрийн профайл, дэлгүүр болон захиалгаа удирдана уу.</p>
+        <h2 style="margin:4px 0 8px;color:#f7f5ef;">НЭВТРЭХ / БҮРТГҮҮЛЭХ</h2>
+        <p style="margin:0 0 24px;color:#aaa39a;">Дэлгүүр нээх, бөөний нийлүүлэгчээр бүртгүүлэх болон захиалгаа удирдахын тулд нэвтэрнэ үү.</p>
         <button type="button" data-mode="login" style="width:100%;padding:15px;border-radius:12px;border:0;background:#d6ad55;color:#090909;font-weight:800;">НЭВТРЭХ</button>
         <button type="button" data-mode="register" style="width:100%;padding:15px;margin-top:11px;border-radius:12px;border:1px solid #d6ad55;background:#191919;color:#f7f5ef;font-weight:800;">БҮРТГҮҮЛЭХ</button>
       </div>`;
@@ -919,7 +919,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     currentMode = mode;
     const registering = mode === "register";
     panel.innerHTML = `
-      <button type="button" data-auth-back style="padding:9px 14px;margin:0 0 14px;border:1px solid rgba(214,173,85,.5);border-radius:10px;background:#191919;color:#d6ad55;">‹ Профайл руу буцах</button>
+      <button type="button" data-auth-back style="padding:9px 14px;margin:0 0 14px;border:1px solid rgba(214,173,85,.5);border-radius:10px;background:#191919;color:#d6ad55;">‹ Сонголт руу буцах</button>
       <div style="display:flex;align-items:center;gap:14px;margin:4px 0 20px;">
         <div style="width:66px;height:66px;flex:0 0 66px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:#171717;border:2px solid #d6ad55;">${avatarMarkup(null)}</div>
         <div><h2 style="margin:0 0 5px;color:#f7f5ef;">${registering ? "ШИНЭ БҮРТГЭЛ" : "НЭВТРЭХ"}</h2><p style="margin:0;color:#aaa39a;font-size:13px;">${registering ? "NEXORA профайл үүсгэх" : "Өмнөх бүртгэлээрээ нэвтрэх"}</p></div>
