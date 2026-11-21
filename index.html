@@ -4214,7 +4214,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       if(storeRes.error)throw storeRes.error;
       if(supplierRes.error)throw supplierRes.error;
       const store=storeRes.data,supplier=supplierRes.data;
-      const name=store?.store_name||supplier?.name||authData.user.user_metadata?.full_name||authData.user.email||"Миний профайл";
+      const name=store?.store_name||supplier?.name||authData.user.user_metadata?.full_name||authData.user.email||"Удирдлагын хэсэг";
       const logoPath=store?.logo_path||store?.wholesale_logo_path||"";
       const logoUrl=logoPath?(logoPath.startsWith("http")?logoPath:db.storage.from("market-store-logos").getPublicUrl(logoPath).data.publicUrl):"";
       const supplierApproved=supplier?.status==="approved";
