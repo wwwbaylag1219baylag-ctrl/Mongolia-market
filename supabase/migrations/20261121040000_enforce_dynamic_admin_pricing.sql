@@ -213,3 +213,30 @@ create index if not exists market_supplier_registration_payments_reviewed_by_idx
   on public.market_supplier_registration_payments (reviewed_by);
 create index if not exists market_supplier_registration_payments_supplier_id_idx
   on public.market_supplier_registration_payments (supplier_id);
+
+-- Keep the database constraints compatible with admin-configured amounts and durations.
+alter table public.payment_requests
+  drop constraint if exists payment_requests_package_amount_check,
+  drop constraint if exists payment_requests_package_days_check;
+alter table public.payment_requests
+  add constraint payment_requests_package_amount_check check (amount >= 0),
+  add constraint payment_requests_package_days_check check (package_days between 1 and 365);
+
+alter table public.nexora_store_payments
+  drop constraint if exists nexora_store_payments_amount_check;
+alter table public.nexora_store_payments
+  add constraint nexora_store_payments_amount_check check (amount >= 0);
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint
+    where conrelid='public.nexora_settings'::regclass
+      and conname='nexora_settings_store_pricing_check'
+  ) then
+    alter table public.nexora_settings
+      add constraint nexora_settings_store_pricing_check
+      check (individual_price >= 0 and company_price >= 0 and duration_days between 1 and 365);
+  end if;
+end
+$$;
