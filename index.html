@@ -509,16 +509,18 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 </style>
 
 <style id="NEXORA-DEMO-CARDS-HORIZONTAL-2026">
-/* Жишээ болон бодит жижиглэнгийн картууд: олон зурагтай, хэвтээ гүйлгэдэг нэг мөр. */
+/* Барааны картууд 3 мөрөөр, том дэлгэцэд 4 мөрөөр байрлаж хэвтээ гүйлгэнэ. */
 #shop #nx-retail-categories{width:100%;max-width:100%;overflow:hidden}
-#shop .nx-temu-products{display:flex!important;flex-flow:row nowrap!important;align-items:stretch!important;gap:12px!important;width:100%!important;max-width:100%!important;overflow-x:auto!important;overflow-y:hidden!important;padding:4px 14px 18px!important;margin:0!important;scroll-snap-type:x mandatory!important;scroll-padding-left:14px!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-x:contain!important;touch-action:pan-x pan-y!important;scrollbar-width:thin!important}
-#shop .nx-temu-products>.nx-temu-product{box-sizing:border-box!important;flex:0 0 min(70vw,250px)!important;width:min(70vw,250px)!important;min-width:min(70vw,250px)!important;max-width:250px!important;height:auto!important;scroll-snap-align:start!important}
+#shop .nx-temu-products{display:grid!important;grid-auto-flow:column!important;grid-template-rows:repeat(3,minmax(0,1fr))!important;grid-auto-columns:min(42vw,170px)!important;align-items:stretch!important;gap:10px!important;width:100%!important;max-width:100%!important;overflow-x:auto!important;overflow-y:hidden!important;padding:4px 14px 18px!important;margin:0!important;scroll-snap-type:x proximity!important;scroll-padding-left:14px!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-x:contain!important;touch-action:pan-x pan-y!important;scrollbar-width:thin!important}
+#shop .nx-temu-products>.nx-temu-product{box-sizing:border-box!important;min-width:0!important;width:100%!important;max-width:none!important;height:100%!important;scroll-snap-align:start!important}
 #shop .nx-temu-demo-product .nx-temu-demo-image-wrap{height:auto!important;aspect-ratio:1/1!important}
 #shop .nx-temu-demo-product .nx-temu-product-image{width:100%!important;height:100%!important;aspect-ratio:1/1!important;object-fit:cover!important}
-#shop .nx-temu-demo-product .nx-temu-product-title{min-height:34px}
-#shop .nx-temu-demo-note{min-height:34px;line-height:1.45}
+#shop .nx-temu-demo-product .nx-temu-product-title{min-height:30px;font-size:11px!important}
+#shop .nx-temu-demo-product .nx-temu-product-info{padding:7px!important}
+#shop .nx-temu-demo-note{min-height:28px;line-height:1.35;font-size:9px!important;padding:5px 7px!important}
 #shop .nx-temu-section-head span{color:#0b82c8!important;font-weight:800!important}
-@media(min-width:700px){#shop .nx-temu-products{gap:16px!important;padding-inline:18px!important}#shop .nx-temu-products>.nx-temu-product{flex-basis:230px!important;width:230px!important;min-width:230px!important}}
+@media(min-width:700px){#shop .nx-temu-products{grid-template-rows:repeat(4,minmax(0,1fr))!important;grid-auto-columns:180px!important;gap:12px!important;padding-inline:18px!important}}
+
 </style>
 </head>
 
