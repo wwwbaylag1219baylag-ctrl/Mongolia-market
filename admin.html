@@ -191,8 +191,11 @@
    #nexora-admin-app .nx-admin-card,.nx-admin-card,#nexora-admin-app .nx-admin-stat,.nx-admin-stat,.nx-admin-login{background:${c.panel}!important;color:${c.text}!important;border-color:${c.border}!important}
    #nexora-admin-app .nx-admin-card h3,#nexora-admin-app .nx-admin-section-title,.nx-admin-section-title,#nexora-admin-app .nx-admin-head .nexora-ad-heading{color:${c.accent}!important}
    #nexora-admin-app .nx-admin-tabs button,.nx-admin-tabs button,#nexora-admin-app .nx-admin-refresh,.nx-admin-refresh,#nexora-admin-app .nx-admin-home,.nx-admin-home,#nexora-admin-app .nx-admin-logout,.nx-admin-logout{border-color:${c.border}!important}
+   #nexora-admin-app .nx-admin-tabs button{background:${c.secondary}!important;color:${c.text}!important;border-color:${c.border}!important}
    #nexora-admin-app .nx-admin-tabs button.active,#nexora-admin-app .nx-admin-refresh,.nx-admin-refresh,.nx-admin-login-submit{background:${c.button}!important;color:${c.button_text}!important}
+   .nx-admin-focusbar{background:${c.header}!important;border-color:${c.border}!important}.nx-admin-focusbar strong,.nx-admin-back{color:${c.accent}!important}
    #nexora-admin-app .nx-admin-search,.nx-admin-search,.nx-admin-login input{background:${c.input}!important;color:${c.text}!important;border-color:${c.border}!important}
+   .nx-admin-subtitle,.nx-admin-section-note,.nx-admin-meta{color:${c.muted}!important}.nx-admin-status,.nx-admin-receipt{color:${c.icon}!important}
    #nexora-admin-app .nx-admin-stat,.nx-admin-status{border-color:${c.border}!important;color:${c.accent}!important}
    .nx-admin-subtitle,.nx-admin-section-note,.nx-admin-meta{color:${c.muted}!important}
   `;
@@ -210,7 +213,7 @@
   const values=()=>Object.fromEntries(new FormData(form).entries());
   const mix=(hex,level=100)=>{const n=parseInt(String(hex).replace("#",""),16);if(!Number.isFinite(n))return hex;const f=Math.max(0,Math.min(200,Number(level)||0))/100;const target=f<1?0:255;const k=f<1?1-f:f-1;return "#"+[16,8,0].map(s=>Math.round(((n>>s)&255)*(1-k)+target*k).toString(16).padStart(2,"0")).join("");};
   const resolved=()=>{const v=values(),c={...v};fields.forEach(([k])=>c[k]=mix(v[k],v[k+"_level"]));c.retail_accent=mix("#f26722",v.retail_accent_level);return c;};
-  const preview=()=>{const c=resolved(),p=document.getElementById("nx-theme-preview"),b=document.getElementById("nx-theme-preview-button");p.style.background=c.background;p.style.color=c.text;p.firstElementChild.style.background=c.panel;p.firstElementChild.style.color=c.accent;p.children[1].style.color=c.muted;b.style.background=c.button;b.style.color=c.button_text;p.children[3].style.borderColor=c.border;p.children[3].style.color=c.icon;p.children[4].style.background=c.retail_accent;form.querySelectorAll("[data-level-for]").forEach(o=>o.textContent=form.elements[o.dataset.levelFor+"_level"].value+"%");applyAdminTheme({...values(),...c});};
+  const preview=()=>{const c=resolved(),p=document.getElementById("nx-theme-preview"),b=document.getElementById("nx-theme-preview-button");p.style.background=c.background;p.style.color=c.text;p.firstElementChild.style.background=c.panel;p.firstElementChild.style.color=c.accent;p.children[1].style.color=c.muted;b.style.background=c.button;b.style.color=c.button_text;p.children[3].style.borderColor=c.border;p.children[3].style.color=c.icon;p.children[4].style.background=c.retail_accent;form.querySelectorAll("[data-level-for]").forEach(o=>o.textContent=form.elements[o.dataset.levelFor+"_level"].value+"%");applyAdminTheme(values());};
   form.querySelectorAll('input[type="color"],input[type="range"]').forEach(el=>el.addEventListener("input",preview));
   const initial={...t};fields.forEach(([k])=>{initial[k+"_level"]=t[k+"_level"]??100;});initial.retail_accent_level=t.retail_accent_level??100;
   const presetsFull={};Object.entries(presets).forEach(([name,p])=>presetsFull[name]={...initial,...p});
