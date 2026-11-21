@@ -973,9 +973,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     const registering = mode === "register";
     panel.innerHTML = `
       <button type="button" data-auth-back style="padding:9px 14px;margin:0 0 14px;border:1px solid rgba(214,173,85,.5);border-radius:10px;background:#191919;color:#d6ad55;">‹ Сонголт руу буцах</button>
-      <div style="display:flex;align-items:center;gap:14px;margin:4px 0 20px;">
-        <div style="width:66px;height:66px;flex:0 0 66px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:#171717;border:2px solid #d6ad55;">${avatarMarkup(null)}</div>
-        <div><h2 style="margin:0 0 5px;color:#f7f5ef;">${registering ? "ШИНЭ БҮРТГЭЛ" : "НЭВТРЭХ"}</h2><p style="margin:0;color:#aaa39a;font-size:13px;">${registering ? "NEXORA профайл үүсгэх" : "Өмнөх бүртгэлээрээ нэвтрэх"}</p></div>
+      <div style="margin:4px 0 20px;">
+        <h2 style="margin:0 0 5px;color:#f7f5ef;">${registering ? "ШИНЭ БҮРТГЭЛ" : "НЭВТРЭХ"}</h2><p style="margin:0;color:#aaa39a;font-size:13px;">${registering ? "NEXORA бүртгэл үүсгэх" : "Өмнөх бүртгэлээрээ нэвтрэх"}</p>
       </div>
       <form id="nexora-auth-form">
         ${registering ? `
@@ -1012,9 +1011,9 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       user.user_metadata?.full_name || user.email || "Хэрэглэгч";
 
     panel.innerHTML = `
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
-        <div style="width:78px;height:78px;flex:0 0 78px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:#171717;border:2px solid #d6ad55;">${avatarMarkup(user)}</div>
-        <div><h2 style="margin:0 0 6px;">Миний профайл</h2><p style="margin:0;color:#aaa39a;font-size:13px;">NEXORA хэрэглэгч</p></div>
+      <div style="margin:4px 0 18px;padding:4px 0 14px;border-bottom:1px solid rgba(214,173,85,.25);">
+        <h2 style="margin:0 0 6px;color:#f7f5ef;">Удирдлагын хэсэг</h2>
+        <p style="margin:0;color:#aaa39a;font-size:13px;">NEXORA дансны удирдлага</p>
       </div>
 
       <p style="margin:12px 0;color:#f7f5ef;">
@@ -1024,13 +1023,6 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       <p style="color:#aaa39a;font-size:13px;word-break:break-all;">
         ${safe(user.email)}
       </p>
-
-      <input id="nexora-profile-avatar-file" type="file" accept="image/*" style="display:none">
-      <button id="nexora-profile-avatar-change" type="button"
-        style="width:100%;padding:12px;margin:0 0 14px;border:1px solid rgba(214,173,85,.55);
-        border-radius:10px;background:#191919;color:#d6ad55;font-weight:700;">
-        ЗУРАГ / ДЭЛГҮҮРИЙН ЛОГО СОЛИХ
-      </button>
 
        <button id="nexora-my-ads-open" type="button"
         style="width:100%;padding:13px;margin:0 0 10px;border:1px solid #d6ad55;
@@ -4224,12 +4216,12 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       const store=storeRes.data,supplier=supplierRes.data;
       const name=store?.store_name||supplier?.name||authData.user.user_metadata?.full_name||authData.user.email||"Миний профайл";
       const logoPath=store?.logo_path||store?.wholesale_logo_path||"";
-      const logoUrl=logoPath?(logoPath.startsWith("http")?logoPath:db.storage.from("market-store-logos").getPublicUrl(logoPath).data.publicUrl):(authData.user.user_metadata?.profile_avatar_url||authData.user.user_metadata?.avatar_url||"");
+      const logoUrl=logoPath?(logoPath.startsWith("http")?logoPath:db.storage.from("market-store-logos").getPublicUrl(logoPath).data.publicUrl):"";
       const supplierApproved=supplier?.status==="approved";
       const supplierPending=supplier?.status==="pending";
       host.innerHTML='<section class="nx-profile-accordion-root"><div class="nx-profile-identity" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;margin:4px 0 18px">'+
         (logoUrl?'<img src="'+esc(logoUrl)+'" alt="" style="width:76px;height:76px;object-fit:cover;border-radius:50%;border:1px solid var(--border)">':'<div style="width:76px;height:76px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--border);font-size:30px">◯</div>')+
-        '<h2 class="nx-profile-heading">МИНИЙ ПРОФАЙЛ</h2><p class="nx-market-muted">'+esc(name)+'</p><p class="nx-market-muted">'+esc(authData.user.email||"")+'</p></div>'+
+        '<h2 class="nx-profile-heading">УДИРДЛАГЫН ХЭСЭГ</h2><p class="nx-market-muted">'+esc(name)+'</p><p class="nx-market-muted">'+esc(authData.user.email||"")+'</p></div>'+
         '<div class="nx-profile-accordion-content">'+
         '<details class="nx-help-group" '+(profileOpenSection==="retail"?"open":"") + '><summary>Онлайн дэлгүүр</summary><div class="nx-help-items">'+
         (store?'<p class="nx-wholesale-status">'+esc(store.store_name)+' · '+(store.owner_type==="company"?"Компани":"Хувь хүн")+'</p>':'<p class="nx-market-muted">Онлайн дэлгүүрийн мэдээллээ бүртгүүлнэ үү.</p>')+
@@ -4753,7 +4745,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     window.NEXORA_SHOP_BACK = showShopLanding;
     stopProductApprovalWatch();
     startWholesaleNotificationWatch().catch(err=>console.warn("Мэдэгдлийн тохиргоо:",err));
-    host.innerHTML='<div class="nx-catalog-topline"><span class="nx-swipe-home-hint">← энд шудар</span><button class="nx-wholesale-profile-entry" id="nx-wholesale-profile-entry" type="button" aria-label="Профайл"><span aria-hidden="true">◯</span></button><button class="nx-catalog-cart" id="nx-wholesale-cart" type="button" aria-label="Бөөний сагс">🛒</button></div><p class="nx-market-muted">Бөөний бараануудыг ачаалж байна…</p>';
+    host.innerHTML='<div class="nx-catalog-topline"><span class="nx-swipe-home-hint">← энд шудар</span><button class="nx-catalog-cart" id="nx-wholesale-cart" type="button" aria-label="Бөөний сагс">🛒</button></div><p class="nx-market-muted">Бөөний бараануудыг ачаалж байна…</p>';
     window.NEXORA_SHOP_NEXT=()=>openRetailProfile(showWholesaleCatalog);
     window.NEXORA_SHOP_BACK=showShopLanding;
     document.getElementById("nx-wholesale-cart").onclick=showWholesaleCart;
@@ -4765,17 +4757,11 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       const allPaths=rows.flatMap(x=>(x.image_paths||[]).map(path=>({id:x.id,path}))),signed=allPaths.length?await db.storage.from("market-product-images").createSignedUrls(allPaths.map(x=>x.path),3600):{data:[]};
       const urls=new Map();(signed.data||[]).forEach((x,i)=>{if(x?.signedUrl&&!x.error)urls.set(allPaths[i].id+"|"+allPaths[i].path,x.signedUrl);});
       const grouped=new Map();rows.forEach(p=>{const key=p.category||"Бусад";if(!grouped.has(key))grouped.set(key,[]);grouped.get(key).push(p);});
-      host.innerHTML='<div class="nx-catalog-topline"><span class="nx-swipe-home-hint">← энд шудар</span><button class="nx-wholesale-profile-entry" id="nx-wholesale-profile-entry" type="button" aria-label="Профайл"><span aria-hidden="true">◯</span></button><button class="nx-catalog-cart" id="nx-wholesale-cart" type="button" aria-label="Бөөний сагс">🛒</button></div><div class="nexora-ad-heading">БӨӨНИЙ ХУДАЛДАА</div><p class="nx-market-muted">Нийлүүлэгчдийн бөөний бараа · Жижиглэнгийн бараанаас тусдаа.</p>';
+      host.innerHTML='<div class="nx-catalog-topline"><span class="nx-swipe-home-hint">← энд шудар</span><button class="nx-catalog-cart" id="nx-wholesale-cart" type="button" aria-label="Бөөний сагс">🛒</button></div><div class="nexora-ad-heading">БӨӨНИЙ ХУДАЛДАА</div><p class="nx-market-muted">Нийлүүлэгчдийн бөөний бараа · Жижиглэнгийн бараанаас тусдаа.</p>';
       document.getElementById("nx-wholesale-cart").onclick=showWholesaleCart;
       const runWholesaleScreen=async(action,label)=>{const parent=openWholesaleProfile;document.getElementById("shop")?.classList.add("nx-shop-profile-fullscreen");host.classList.add("nx-profile-fullscreen");window.NEXORA_SHOP_BACK=parent;try{const {data:authData,error:authError}=await db.auth.getUser();if(authError)throw authError;if(!authData?.user){host.innerHTML='<section class="nx-profile-accordion-root"><button class="nx-profile-back" id="nx-wholesale-login-back" aria-label="Буцах">‹</button><h2 class="nx-profile-heading">НЭВТРЭХ ШААРДЛАГАТАЙ</h2><p class="nx-market-muted">'+esc(label)+' хэсгийг ашиглахын тулд NEXORA бүртгэлдээ нэвтэрч эсвэл шинэ бүртгэл үүсгэнэ үү.</p><button class="nx-market-btn" id="nx-wholesale-login-open">НЭВТРЭХ / БҮРТГҮҮЛЭХ</button></section>';document.getElementById("nx-wholesale-login-back").onclick=parent;document.getElementById("nx-wholesale-login-open").onclick=()=>window.NEXORA?.open("profile");return;}host.innerHTML='<div class="nx-market-loading" role="status" style="padding:24px;text-align:center">' + label + ' нээгдэж байна…</div>';await action();window.NEXORA_SHOP_BACK=parent;const back=host.querySelector("button[id$=\"-back\"],button[id*=\"-back\"],button.nx-market-back-arrow");if(back){back.classList.add("nx-profile-child-back");back.onclick=parent;}}catch(err){console.error("NEXORA wholesale screen error:",err);host.innerHTML='<section class="nx-profile-accordion-root"><button class="nx-profile-back" id="nx-wholesale-action-back" aria-label="Буцах">‹</button><div class="nx-market-error" role="alert" style="padding:16px;margin-top:12px">Хэсэг нээхэд алдаа гарлаа: '+esc(err?.message||String(err))+'</div></section>';document.getElementById("nx-wholesale-action-back").onclick=parent;window.NEXORA_SHOP_BACK=parent;}};
       const openWholesaleProfile=async()=>openRetailProfile(showWholesaleCatalog);
-      const wholesaleProfileButton=document.getElementById("nx-wholesale-profile-entry");
-      if(wholesaleProfileButton){
-        wholesaleProfileButton.addEventListener("click",()=>openRetailProfile(showWholesaleCatalog));
-        wholesaleProfileButton.setAttribute("aria-label","Нэгдсэн профайл нээх");
-        wholesaleProfileButton.title="Профайл";
-        db.auth.getUser().then(async({data,error})=>{if(error||!data?.user)return;const {data:profile}=await db.from("nexora_store_profiles").select("logo_path,wholesale_logo_path").eq("user_id",data.user.id).maybeSingle();const avatar=profile?.logo_path||profile?.wholesale_logo_path||data.user.user_metadata?.profile_avatar_url||data.user.user_metadata?.avatar_url||"";if(!avatar)return;const url=avatar.startsWith("http")?avatar:db.storage.from("market-store-logos").getPublicUrl(avatar).data.publicUrl;const button=document.getElementById("nx-wholesale-profile-entry");if(button)button.innerHTML='<img src="'+esc(url)+'" alt="" style="width:40px;height:40px;object-fit:cover;border-radius:50%">';}).catch(err=>console.warn("Профайлын зураг:",err));
-      }
+
       if(wholesaleNotificationUserId)refreshWholesaleNotificationBadge(wholesaleNotificationUserId);
       const showWholesaleProductDetail=(product)=>{
          window.NEXORA_SHOP_BACK=showWholesaleCatalog;
