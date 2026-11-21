@@ -3809,6 +3809,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   }, {passive:true});
   if(!db){host.innerHTML='<div class="nx-market-error">Худалдааны системтэй холбогдож чадсангүй. Интернэт холболтоо шалгаад хуудсыг дахин ачаална уу.</div>';console.error("NEXORA marketplace: Supabase client unavailable");return;}
   let products=[],cart=[],wholesaleCart=[],marketUser=null,searchText="",productViewStates={},productApprovalChannel=null,productApprovalPoll=null,wholesaleNotificationChannel=null,wholesaleNotificationUserId=null;
+  let profileOpenSection="retail"; // Нэгдсэн профайлаас буцаж ороход хамгийн сүүлд дэлгэсэн accordion-ийг сэргээнэ.
   let retailActiveCategory=null,retailPendingCategory=null;
   // This app runs in its own IIFE; keep its display helpers local.
   const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -4050,18 +4051,30 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         (logoUrl?'<img src="'+esc(logoUrl)+'" alt="" style="width:76px;height:76px;object-fit:cover;border-radius:50%;border:1px solid var(--border)">':'<div style="width:76px;height:76px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--border);font-size:30px">◯</div>')+
         '<h2 class="nx-profile-heading">МИНИЙ ПРОФАЙЛ</h2><p class="nx-market-muted">'+esc(name)+'</p><p class="nx-market-muted">'+esc(authData.user.email||"")+'</p></div>'+
         '<div class="nx-profile-accordion-content">'+
-        '<details class="nx-help-group" open><summary>Онлайн дэлгүүр</summary><div class="nx-help-items">'+
+        '<details class="nx-help-group" '+(profileOpenSection==="retail"?"open":"") + '><summary>Онлайн дэлгүүр</summary><div class="nx-help-items">'+
         (store?'<p class="nx-wholesale-status">'+esc(store.store_name)+' · '+(store.owner_type==="company"?"Компани":"Хувь хүн")+'</p>':'<p class="nx-market-muted">Онлайн дэлгүүрийн мэдээллээ бүртгүүлнэ үү.</p>')+
         '<button class="nx-market-btn" id="nx-unified-retail-store">'+(store?"Дэлгүүрийн мэдээлэл удирдах":"＋ Онлайн дэлгүүр нээх")+'</button>'+
         (store?'<button class="nx-market-btn" id="nx-unified-retail-publish">＋ Жижиглэнгийн бараа нийтлэх</button><button class="nx-market-btn secondary" id="nx-unified-retail-products">Миний жижиглэнгийн бараа</button><button class="nx-market-btn secondary" id="nx-unified-retail-orders">Надад ирсэн жижиглэнгийн захиалга</button><button class="nx-market-btn secondary" id="nx-unified-retail-fees">Жижиглэнгийн төлбөрийн түүх</button>':'')+
         '</div></details>'+
-        '<details class="nx-help-group"><summary>Бөөний нийлүүлэгч</summary><div class="nx-help-items">'+
+        '<details class="nx-help-group" '+(profileOpenSection==="wholesale"?"open":"") + '><summary>Бөөний нийлүүлэгч</summary><div class="nx-help-items">'+
         (supplierApproved?'<p class="nx-wholesale-status">✓ Нийлүүлэгчийн эрх баталгаажсан</p>':supplierPending?'<p class="nx-wholesale-status">⏳ Нийлүүлэгчийн хүсэлт админы хяналтад байна.</p>':supplier?.status==="rejected"?'<p class="nx-wholesale-status">✕ Нийлүүлэгчийн хүсэлт татгалзсан. Дахин илгээж болно.</p>':'<p class="nx-market-muted">Бөөний нийлүүлэгчээр бүртгүүлж, бөөний бараа нийлүүлэх боломжтой.</p>')+
         ((!supplier||supplier.status==="rejected")?'<button class="nx-market-btn" id="nx-unified-supplier-register">＋ Нийлүүлэгчээр бүртгүүлэх</button>':'')+
         (supplierApproved?'<button class="nx-market-btn" id="nx-unified-wholesale-store">Нийлүүлэгчийн мэдээлэл удирдах</button><button class="nx-market-btn" id="nx-unified-wholesale-publish">＋ Бөөний бараа нийтлэх</button><button class="nx-market-btn secondary" id="nx-unified-wholesale-products">Миний бөөний бараа</button><button class="nx-market-btn secondary" id="nx-unified-wholesale-incoming">Надад ирсэн бөөний захиалга</button>':'')+
         '<button class="nx-market-btn secondary" id="nx-unified-wholesale-orders">Миний бөөний захиалга</button><button class="nx-market-btn secondary" id="nx-unified-wholesale-fees">Бөөний төлбөрийн түүх</button><button class="nx-market-btn secondary" id="nx-unified-wholesale-notifications">Бөөний мэдэгдэл</button>'+
         '</div></details></div></section>';
-      const bind=(id,fn)=>{const el=document.getElementById(id);if(el)el.onclick=fn;};
+      const profileAccordions=host.querySelectorAll(".nx-profile-accordion-content > details");
+       profileAccordions.forEach((details,index)=>{
+         const section=index===0?"retail":"wholesale";
+         details.addEventListener("toggle",()=>{
+           if(details.open){
+             profileOpenSection=section;
+             profileAccordions.forEach(other=>{if(other!==details&&other.open)other.open=false;});
+           }else if(profileOpenSection===section){
+             profileOpenSection="none";
+           }
+         });
+       });
+       const bind=(id,fn)=>{const el=document.getElementById(id);if(el)el.onclick=fn;};
       bind("nx-unified-retail-store",()=>showStore(()=>openRetailProfile(backAction)));
       bind("nx-unified-retail-publish",showRetailPublish);
       bind("nx-unified-retail-products",showMyRetailProducts);
