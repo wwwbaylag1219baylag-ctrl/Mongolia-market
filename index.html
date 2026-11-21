@@ -4178,7 +4178,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       if(supplierRes.error)throw supplierRes.error;
       const store=storeRes.data,supplier=supplierRes.data;
       const name=store?.store_name||supplier?.name||authData.user.user_metadata?.full_name||authData.user.email||"Удирдлагын хэсэг";
-      const logoPath=store?.logo_path||store?.wholesale_logo_path||(store?.owner_type==="individual"?store?.personal_photo_path:"")||"";
+      const logoPath=store?.owner_type==="company"?(store?.logo_path||store?.wholesale_logo_path||""):(store?.personal_photo_path||"");
       const logoUrl=logoPath?(logoPath.startsWith("http")?logoPath:db.storage.from("market-store-logos").getPublicUrl(logoPath).data.publicUrl):"";
       const supplierApproved=supplier?.status==="approved";
       const supplierPending=supplier?.status==="pending";
@@ -5022,7 +5022,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       // Удирдлагын хэсэгтэй яг ижил дарааллаар: жижиглэнгийн лого, бөөний лого, хувь хүний зураг.
       const {data:profile,error:profileError}=await db.from("nexora_store_profiles").select("owner_type,logo_path,wholesale_logo_path,personal_photo_path").eq("user_id",auth.user.id).maybeSingle();
       if(profileError)throw profileError;
-      const path=profile?.logo_path||profile?.wholesale_logo_path||(profile?.owner_type==="individual"?profile?.personal_photo_path:"")||"";
+      const path=profile?.owner_type==="company"?(profile?.logo_path||profile?.wholesale_logo_path||""):(profile?.personal_photo_path||"");
       const url=path?(String(path).startsWith("http")?path:db.storage.from("market-store-logos").getPublicUrl(path).data.publicUrl):"";
       if(url){button.innerHTML='<img src="'+esc(url)+'" alt="Дэлгүүрийн лого">';}
       else{button.innerHTML='<span class="nx-temu-mark" aria-hidden="true">N</span>';}
