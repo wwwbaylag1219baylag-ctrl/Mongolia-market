@@ -256,7 +256,7 @@
      ["market_order_payment_requests","id,order_id,buyer_id,amount,transfer_reference,receipt_path,status,created_at","market_order_payment","pending_review"],
      ["wholesale_order_payment_requests","id,order_id,buyer_id,amount,transfer_reference,receipt_path,status,admin_note,created_at","wholesale_order_payment","pending_review"]
     ];
-    const loaded=await Promise.all(sources.map(async x=>{const {data,error}=await query(x[0],x[1],[["status","pending"]]);if(error)throw error;return {data:data||[],type:x[2]};}));
+    const loaded=await Promise.all(sources.map(async x=>{const {data,error}=await query(x[0],x[1],[["status",x[3]||"pending"]]);if(error)throw error;return {data:data||[],type:x[2]};}));
     const blocks=await Promise.all(loaded.map(x=>cards(x.data,x.type)));
     body.innerHTML='<h2 class="nx-admin-section-title">'+sections.commercePayments[0]+'</h2><p class="nx-admin-section-note">'+sections.commercePayments[1]+'</p>'+(loaded.every(x=>!x.data.length)?empty("Худалдааны төлбөрийн хүлээгдэж буй хүсэлт алга."):blocks.join(""));
     body.querySelectorAll("[data-review]").forEach(b=>b.onclick=()=>review(b.dataset.review,b.dataset.id,b.dataset.action));
