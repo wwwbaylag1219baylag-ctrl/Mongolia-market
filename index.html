@@ -5253,7 +5253,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   if(!window.supabase?.createClient){document.documentElement.classList.remove("nx-theme-pending");return;}
   const db=window.supabase.createClient(url,key);
   function apply(config){
-    const t={background:"#090909",panel:"#171717",text:"#f7f5ef",accent:"#d6ad55",button:"#d6ad55",button_text:"#090909",...(config||{})};
+    const t={background:"#090909",panel:"#171717",text:"#f7f5ef",accent:"#d6ad55",button:"#d6ad55",button_text:"#090909",retail_accent:"#f26722",...(config||{})};
     const style=document.getElementById("nx-public-theme");
     const css=`
       :root{
@@ -5306,6 +5306,16 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       #ads .nx-create-screen option{background:${t.panel}!important;color:${t.text}!important}
       #ads .nx-create-message{background:${t.panel}!important;border-color:${t.accent}88!important}
       #ads .nx-create-category{background:${t.panel}!important;border-color:${t.accent}66!important}
+      /* Худалдааны барааны хэсгийн улбар шар өнгө — админаас тусад нь удирдана */
+      #shop .nx-temu-mark{background:linear-gradient(145deg,${t.retail_accent} 0%,${t.retail_accent} 100%)!important;box-shadow:0 4px 10px ${t.retail_accent}40!important}
+      #shop .nx-temu-profile{border-color:${t.retail_accent}!important;color:${t.retail_accent}!important}
+      #shop .nx-temu-chip.active{border-color:${t.retail_accent}!important;background:${t.retail_accent}18!important;color:${t.retail_accent}!important}
+      #shop .nx-temu-hero{background:linear-gradient(112deg,${t.retail_accent} 0%,${t.retail_accent} 68%,${t.retail_accent} 100%)!important}
+      #shop .nx-temu-product-type{background:${t.retail_accent}18!important;color:${t.retail_accent}!important}
+      #shop .nx-temu-product-price,#shop .nx-temu-detail .nx-market-price{color:${t.retail_accent}!important}
+      #shop .nx-temu-product-action,#shop .nx-temu-detail .nx-market-btn:not(.secondary){background:${t.retail_accent}!important;border-color:${t.retail_accent}!important;color:#fff!important}
+      #shop .nx-temu-nav-item.active{color:${t.retail_accent}!important}
+
       #ads .nx-create-screen .nx-map-button,#ads .nx-create-screen [type="button"]{border-color:${t.accent}88}
       #ads .nx-create-screen [type="submit"]{background:${t.button}!important;color:${t.button_text}!important}
       `;
