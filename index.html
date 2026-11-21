@@ -4091,11 +4091,11 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     marketUser=authData.user;
     host.innerHTML='<button type="button" class="nx-market-btn secondary nx-market-back-arrow" id="nx-business-choice-back">‹ Буцах</button>'+
       '<h2 class="nexora-ad-heading">БИЗНЕСЭЭ БҮРТГҮҮЛЭХ</h2>'+
-      '<p class="nx-market-muted">Та ямар төрлийн худалдаа эрхлэх вэ? Сонгосон төрлийн бүртгэл, төлбөр, бараа болон захиалга тусдаа удирдагдана.</p>'+
+      '<p class="nx-market-muted">Та нэг NEXORA профайлаасаа онлайн дэлгүүр болон бөөний нийлүүлэгчийн чиглэлээ тохируулна. Барааны каталог, үнэ, захиалгын урсгал хоёр чиглэлд тусдаа байна.</p>'+
       '<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0">'+
       '<button type="button" id="nx-business-choice-retail" class="nx-admin-card" style="display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:10px;padding:16px;border:1px solid var(--border);border-radius:16px;background:var(--card);color:var(--text);min-height:190px;cursor:pointer"><span style="font-size:34px">🛍️</span><strong style="font-size:15px">ЖИЖИГЛЭН ХУДАЛДАА</strong><span class="nx-market-muted" style="font-size:12px">Онлайн дэлгүүр нээж бараагаа ширхэгээр худалдах</span><span style="font-size:11px;font-weight:700">B2C · Жижиглэнгийн дэлгүүр</span></button>'+
       '<button type="button" id="nx-business-choice-wholesale" class="nx-admin-card" style="display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:10px;padding:16px;border:1px solid var(--border);border-radius:16px;background:var(--card);color:var(--text);min-height:190px;cursor:pointer"><span style="font-size:34px">📦</span><strong style="font-size:15px">БӨӨНИЙ НИЙЛҮҮЛЭГЧ</strong><span class="nx-market-muted" style="font-size:12px">Бараагаа бөөний үнээр нийлүүлж захиалга авах</span><span style="font-size:11px;font-weight:700">B2B · Нийлүүлэгч</span></button>'+
-      '</div><p class="nx-market-muted" style="font-size:12px">Хоёр төрлийн худалдаа эрхэлдэг бол тус бүрээр нь бүртгүүлж болно.</p>';
+      '</div><p class="nx-market-muted" style="font-size:12px">Хоёр чиглэлээр ажилладаг бол нэг профайлаасаа хоёуланг нь удирдаарай.</p>';
     document.getElementById("nx-business-choice-back").onclick=backAction;
     document.getElementById("nx-business-choice-retail").onclick=()=>showStore(()=>showBusinessTypeChoice(backAction));
     document.getElementById("nx-business-choice-wholesale").onclick=()=>showSupplier(()=>showBusinessTypeChoice(backAction));
@@ -4214,6 +4214,13 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   }
   async function showStorePayment(store,settings,banks,backAction=loadProducts,pendingLogoPath=null,logoFee=0){
     const amount=store.owner_type==="company"?Number(settings.company_price):Number(settings.individual_price);
+    if(amount===0){
+      window.NEXORA_SHOP_BACK=()=>showStore(backAction);
+      const {error}=await db.rpc("nexora_activate_free_store",{p_store_id:store.id});
+      if(error){host.innerHTML='<p class="nx-market-muted">Үнэгүй дэлгүүрийн эрх идэвхжүүлэхэд алдаа гарлаа: '+esc(error.message)+'</p>';return;}
+      if(pendingLogoPath&&logoFee>0){await showRetailFeePayment({feeType:"logo",amount:logoFee,storeId:store.id,pendingLogoPath,backAction:()=>showStore(backAction)});return;}
+      await showStore(backAction);return;
+    }
     if(!banks?.length){host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-store-payment-back">‹ Буцах</button><h2 class="nexora-ad-heading">ДЭЛГҮҮРИЙН ТӨЛБӨР</h2><p class="nx-market-muted">Админ одоогоор төлбөр хүлээн авах идэвхтэй данс тохируулаагүй байна.</p>';document.getElementById("nx-store-payment-back").onclick=()=>showStore(backAction);return;}
     window.NEXORA_SHOP_BACK=()=>showStore(backAction);
     host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-store-payment-back">‹ Буцах</button><h2 class="nexora-ad-heading">ДЭЛГҮҮРИЙН САРЫН ЭРХИЙН ТӨЛБӨР</h2>'+
