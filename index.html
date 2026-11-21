@@ -5185,8 +5185,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     const themeMeta=document.querySelector('meta[name="theme-color"]');
     if(themeMeta)themeMeta.setAttribute("content",t.background);
   }
-  db.from("nexora_settings").select("admin_theme_config").eq("id",1).single()
-    .then(({data,error})=>{if(!error&&data?.admin_theme_config)apply(data.admin_theme_config);})
+  db.rpc("nexora_get_public_theme")
+    .then(({data,error})=>{if(!error&&data)apply(data);})
     .catch(err=>console.warn("NEXORA theme load:",err))
     .finally(()=>document.documentElement.classList.remove("nx-theme-pending"));
 })();
