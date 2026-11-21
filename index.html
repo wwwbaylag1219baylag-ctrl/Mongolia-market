@@ -4194,6 +4194,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         '<h2 class="nx-profile-heading">УДИРДЛАГЫН ХЭСЭГ</h2><p class="nx-market-muted">'+esc(name)+'</p><p class="nx-market-muted">'+esc(authData.user.email||"")+'</p></div>'+
         '<div class="nx-profile-accordion-content">'+
         '<button class="nx-market-btn" id="nx-unified-my-orders">📦 МИНИЙ НЭГДСЭН ЗАХИАЛГА</button>'+
+        '<button class="nx-market-btn secondary" id="nx-unified-incoming-orders">📥 НАДАД ИРСЭН НЭГДСЭН ЗАХИАЛГА</button>'+
         '<details class="nx-help-group" '+(profileOpenSection==="retail"?"open":"") + '><summary>Онлайн дэлгүүр</summary><div class="nx-help-items">'+
         (store?'<p class="nx-wholesale-status">'+esc(store.store_name)+' · '+(store.owner_type==="company"?"Компани":"Хувь хүн")+'</p>':'<p class="nx-market-muted">Онлайн дэлгүүрийн мэдээллээ бүртгүүлнэ үү.</p>')+
         '<button class="nx-market-btn" id="nx-unified-retail-store">'+(store?"Дэлгүүрийн мэдээлэл удирдах":"＋ Онлайн дэлгүүр нээх")+'</button>'+
@@ -4244,6 +4245,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
          }finally{avatarInput.disabled=false;avatarChoose.disabled=false;avatarInput.value="";}
        };
       bind("nx-unified-my-orders",showMyUnifiedOrders);
+      bind("nx-unified-incoming-orders",showMyUnifiedSellerOrders);
       bind("nx-unified-retail-store",()=>showStore(()=>openRetailProfile(backAction)));
       bind("nx-unified-retail-publish",showRetailPublish);
       bind("nx-unified-retail-products",showMyRetailProducts);
@@ -4566,6 +4568,62 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         host.innerHTML='<h2 class="nexora-ad-heading">✓ БӨӨНИЙ БАРАА ХЯНАЛТАД ИЛГЭЭГДЛЭЭ</h2><p class="nx-market-muted">Хураамж 0₮. Админ агуулгыг баталгаажуулсны дараа бөөний каталогт нийтлэгдэнэ.</p><button class="nx-market-btn nx-market-back-arrow" id="nx-wholesale-back" aria-label="Буцах" title="Буцах">‹</button>';document.getElementById("nx-wholesale-back").onclick=showMyWholesaleProducts;
       }catch(err){if(paths.length)await db.storage.from("market-product-images").remove(paths);if(productLogoPath)await db.storage.from("market-product-images").remove([productLogoPath]);msg.textContent="Алдаа: "+(err.message||err);btn.disabled=false;}
     };
+  }
+  async function showMyUnifiedSellerOrders(){
+    const backAction=()=>openRetailProfile();
+    window.NEXORA_SHOP_BACK=backAction;
+    startWholesaleNotificationWatch().catch(err=>console.warn("Мэдэгдлийн тохиргоо:",err));
+    const {data:auth,error:authError}=await db.auth.getUser();
+    if(authError||!auth?.user){host.innerHTML='<p class="nx-market-muted">Захиалга удирдахын тулд нэвтэрнэ үү.</p><button class="nx-market-btn" id="nx-unified-seller-back">Буцах</button>';document.getElementById("nx-unified-seller-back").onclick=backAction;return;}
+    host.innerHTML='<button class="nx-market-btn secondary" id="nx-unified-seller-back">‹ Профайл руу буцах</button><h2 class="nexora-ad-heading">НАДАД ИРСЭН НЭГДСЭН ЗАХИАЛГА</h2><p class="nx-market-muted">Жижиглэн болон бөөний захиалгуудыг нэг дороос удирдана.</p><p class="nx-market-muted">Ачаалж байна…</p>';
+    document.getElementById("nx-unified-seller-back").onclick=backAction;
+    try{
+      const [retailRes,wholesaleRes]=await Promise.all([
+        db.rpc("nexora_get_retail_seller_orders"),
+        db.from("wholesale_orders").select("id,buyer_id,items,total_amount,status,buyer_name,buyer_phone,delivery_address,note,created_at").eq("supplier_id",auth.user.id).order("created_at",{ascending:false}).limit(100)
+      ]);
+      if(retailRes.error)throw retailRes.error;if(wholesaleRes.error)throw wholesaleRes.error;
+      const retail=retailRes.data||[],wholesale=wholesaleRes.data||[];
+      const rows=[
+        ...retail.map(o=>({kind:"retail",id:o.order_id,created_at:o.created_at,status:o.status,total:o.seller_total,order:o})),
+        ...wholesale.map(o=>({kind:"wholesale",id:o.id,created_at:o.created_at,status:o.status,total:o.total_amount,order:o}))
+      ].sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
+      const retailStatus={pending_payment:"Төлбөр хүлээгдэж байна",payment_rejected:"Төлбөр баталгаажаагүй",processing:"Бэлтгэж байна",completed:"Дууссан",cancelled:"Цуцалсан"};
+      const wholesaleStatus={pending:"Шинэ захиалга",accepted:"Зөвшөөрсөн",rejected:"Татгалзсан",processing:"Бэлтгэж байна",completed:"Дууссан",cancelled:"Цуцалсан"};
+      const cards=rows.map(row=>{
+        const o=row.order,isRetail=row.kind==="retail";
+        const items=Array.isArray(o.items)?o.items:[];
+        const itemHtml=items.map(x=>'<div class="nx-admin-meta"><div><strong>'+esc(x.title||"Бараа")+'</strong></div><div>'+Number(x.quantity||0)+' ш × '+money(x.unit_price||0)+'</div></div>').join("");
+        let actions="";
+        if(isRetail){
+          if(o.status==="pending_payment"&&o.payment_status==="unpaid")actions='<button class="nx-market-btn" data-unified-retail-review="'+esc(row.id)+'" data-approve="true">ТӨЛБӨР ОРСНЫГ БАТАЛГААЖУУЛАХ</button><button class="nx-market-btn secondary" data-unified-retail-review="'+esc(row.id)+'" data-approve="false">ТӨЛБӨР ИРЭЭГҮЙ — ЦУЦЛАХ</button>';
+          if(o.status==="processing"&&o.payment_status==="paid")actions='<button class="nx-market-btn" data-unified-retail-complete="'+esc(row.id)+'">ЗАХИАЛГА ДУУСГАХ</button>';
+          if(o.delivery_latitude!=null&&o.delivery_longitude!=null)actions+='<button class="nx-market-btn secondary" data-unified-retail-map="'+esc(row.id)+'">📍 Хүргэлтийн байршил</button>';
+        }else{
+          if(o.status==="pending")actions='<button class="nx-market-btn" data-unified-wholesale-status="accepted" data-id="'+esc(row.id)+'">Зөвшөөрөх</button><button class="nx-market-btn secondary" data-unified-wholesale-status="rejected" data-id="'+esc(row.id)+'">Татгалзах</button>';
+          else if(o.status==="accepted")actions='<button class="nx-market-btn" data-unified-wholesale-status="processing" data-id="'+esc(row.id)+'">Бэлтгэж эхлэх</button>';
+          else if(o.status==="processing")actions='<button class="nx-market-btn" data-unified-wholesale-status="completed" data-id="'+esc(row.id)+'">Дуусгах</button>';
+          actions+='<button class="nx-market-btn secondary" data-unified-wholesale-detail="'+esc(row.id)+'">Захиалгын явц, дэлгэрэнгүй</button>';
+        }
+        return '<article class="nx-admin-card" style="margin:12px 0"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><h3>Захиалга #'+esc(String(row.id).slice(0,10))+'</h3><span class="nx-admin-status">'+(isRetail?"🛍️ Жижиглэн · ":"📦 Бөөний · ")+esc((isRetail?retailStatus:wholesaleStatus)[o.status]||o.status)+'</span></div>'+itemHtml+'<p class="nx-market-price">'+(isRetail?"Таны дэлгүүрийн дүн: ":"Захиалгын дүн: ")+money(row.total)+'</p><div class="nx-admin-meta"><div><strong>Захиалагч:</strong> '+esc(isRetail?o.recipient_name||"—":o.buyer_name||"—")+'</div><div><strong>Утас:</strong> '+esc(isRetail?o.delivery_phone||"—":o.buyer_phone||"—")+'</div><div><strong>Хаяг:</strong> '+esc(o.delivery_address||"—")+'</div><div><strong>Огноо:</strong> '+esc(row.created_at?new Date(row.created_at).toLocaleString("mn-MN"):"—")+'</div>'+(isRetail?'<div><strong>Төлбөр:</strong> '+esc(o.payment_status==="paid"?"Баталгаажсан":o.payment_status==="rejected"?"Баталгаажаагүй":"Хүлээгдэж байна")+'</div>':'')+'</div>'+actions+'</article>';
+      }).join("");
+      host.innerHTML='<button class="nx-market-btn secondary" id="nx-unified-seller-back">‹ Профайл руу буцах</button><h2 class="nexora-ad-heading">НАДАД ИРСЭН НЭГДСЭН ЗАХИАЛГА</h2><p class="nx-market-muted">Нийт '+rows.length+' захиалга · Жижиглэн '+retail.length+' · Бөөний '+wholesale.length+'</p>'+(cards||'<div class="nx-admin-empty">Одоогоор захиалга ирээгүй байна.</div>');
+      document.getElementById("nx-unified-seller-back").onclick=backAction;
+      host.querySelectorAll("[data-unified-retail-review]").forEach(btn=>btn.onclick=async()=>{
+        const approve=btn.dataset.approve==="true";
+        if(!confirm(approve?"Худалдан авагчаас төлбөр орсныг дансаараа шалгасан уу?":"Төлбөр ирээгүй тул захиалгыг цуцалж, барааны үлдэгдлийг буцаах уу?"))return;
+        btn.disabled=true;const {error}=await db.rpc("nexora_seller_review_market_order_payment",{p_order_id:btn.dataset.unifiedRetailReview,p_approve:approve});
+        if(error){showCartToast("Төлбөрийн шийдвэр хадгалж чадсангүй: "+error.message);btn.disabled=false;return;}await showMyUnifiedSellerOrders();
+      });
+      host.querySelectorAll("[data-unified-retail-complete]").forEach(btn=>btn.onclick=async()=>{btn.disabled=true;const {error}=await db.rpc("nexora_complete_market_seller_order",{p_order_id:btn.dataset.unifiedRetailComplete});if(error){showCartToast("Захиалга дуусгахад алдаа: "+error.message);btn.disabled=false;return;}await showMyUnifiedSellerOrders();});
+      host.querySelectorAll("[data-unified-retail-map]").forEach(btn=>btn.onclick=()=>{const o=retail.find(x=>String(x.order_id)===btn.dataset.unifiedRetailMap);if(o&&typeof window.NEXORA_OPEN_MAP_SCREEN==="function")window.NEXORA_OPEN_MAP_SCREEN(o.delivery_latitude,o.delivery_longitude,false);});
+      host.querySelectorAll("[data-unified-wholesale-status]").forEach(btn=>btn.onclick=async()=>{btn.disabled=true;const {error}=await db.from("wholesale_orders").update({status:btn.dataset.unifiedWholesaleStatus}).eq("id",btn.dataset.id).eq("supplier_id",auth.user.id);if(error){alert("Төлөв өөрчилж чадсангүй: "+error.message);btn.disabled=false;return;}await showMyUnifiedSellerOrders();});
+      host.querySelectorAll("[data-unified-wholesale-detail]").forEach(btn=>btn.onclick=()=>showWholesaleOrderDetail(btn.dataset.unifiedWholesaleDetail,showMyUnifiedSellerOrders));
+      if(wholesaleNotificationUserId)refreshWholesaleNotificationBadge(wholesaleNotificationUserId);
+    }catch(err){
+      host.innerHTML='<button class="nx-market-btn secondary" id="nx-unified-seller-back">Буцах</button><p class="nx-market-muted">Нэгдсэн захиалгууд ачаалахад алдаа: '+esc(err.message||err)+'</p>';
+      document.getElementById("nx-unified-seller-back").onclick=backAction;
+    }
   }
   async function showRetailSellerOrders(){
     window.NEXORA_SHOP_BACK=openRetailProfile;
