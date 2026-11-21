@@ -4984,8 +4984,10 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       (retailImageRes.data||[]).forEach(x=>{if(!retailImageMap.has(String(x.product_id)))retailImageMap.set(String(x.product_id),[]);retailImageMap.get(String(x.product_id)).push(x.image_path);});
       retailRows.forEach(p=>{if(!retailImageMap.has(String(p.id))&&p.image_path)retailImageMap.set(String(p.id),[p.image_path]);});
       const allPaths=[];
-      retailRows.forEach(p=>(retailImageMap.get(String(p.id))||[]).forEach(path=>allPaths.push({key:"retail|"+p.id+"|"+path,path})));\n      retailRows.forEach(p=>{if(p.product_logo_path)allPaths.push({key:"retail-logo|"+p.id+"|"+p.product_logo_path,path:p.product_logo_path});});
-      wholesaleRows.forEach(p=>(p.image_paths||[]).forEach(path=>allPaths.push({key:"wholesale|"+p.id+"|"+path,path})));\n      wholesaleRows.forEach(p=>{if(p.product_logo_path)allPaths.push({key:"wholesale-logo|"+p.id+"|"+p.product_logo_path,path:p.product_logo_path});});
+      retailRows.forEach(p=>(retailImageMap.get(String(p.id))||[]).forEach(path=>allPaths.push({key:"retail|"+p.id+"|"+path,path})));
+      retailRows.forEach(p=>{if(p.product_logo_path)allPaths.push({key:"retail-logo|"+p.id+"|"+p.product_logo_path,path:p.product_logo_path});});
+      wholesaleRows.forEach(p=>(p.image_paths||[]).forEach(path=>allPaths.push({key:"wholesale|"+p.id+"|"+path,path})));
+      wholesaleRows.forEach(p=>{if(p.product_logo_path)allPaths.push({key:"wholesale-logo|"+p.id+"|"+p.product_logo_path,path:p.product_logo_path});});
       const urlMap=new Map();
       if(allPaths.length){
         stage="барааны зураг";
