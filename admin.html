@@ -306,20 +306,14 @@
   try{
    if(type==="ad_payment")result=await db.rpc(action==="approve"?"admin_approve_payment_request":"admin_reject_payment_request",{p_request_id:id});
    else if(type==="free_ad")result=await db.rpc("admin_review_free_ad",{p_ad_id:id,p_approve:action==="approve"});
-   else if(type==="store_payment"){
-    const paymentId=String(id??"").trim();
-    if(!paymentId)throw new Error("Төлбөрийн хүсэлтийн ID хоосон байна.");
-    const {data:payment,error:lookupError}=await db.from("nexora_store_payments").select("id,status").eq("id",paymentId).maybeSingle();
-    if(lookupError)throw lookupError;
-    if(!payment)throw new Error("Дэлгүүрийн төлбөрийн хүсэлт олдсонгүй. Дахин ачаалаад оролдоно уу. ID: "+paymentId);
-    if(payment.status!=="pending")throw new Error("Энэ төлбөр өмнө нь шийдвэрлэгдсэн байна. Төлөв: "+payment.status);
-    result=action==="approve"?await db.rpc("nexora_approve_store_payment",{p_payment_id:payment.id}):await db.rpc("nexora_reject_store_payment",{p_payment_id:payment.id,p_note:"Админы шийдвэрээр татгалзсан"});
+   else if(["store_payment","retail_fee_payment","wholesale_fee_payment","supplier_registration_payment"].includes(type)){
+    const kindMap={store_payment:"store",retail_fee_payment:"retail_fee",wholesale_fee_payment:"wholesale_fee",supplier_registration_payment:"supplier_registration"};
+    const paymentId=String(id??"").trim();if(!paymentId)throw new Error("Төлбөрийн хүсэлтийн ID хоосон байна.");
+    const note=action==="approve"?null:(supplierRejectNote||"Төлбөрийн баримт баталгаажаагүй");
+    result=await db.rpc("nexora_review_commerce_payment",{p_payment_kind:kindMap[type],p_payment_id:paymentId,p_approve:action==="approve",p_note:note});
    }
    else if(type==="product")result=await db.rpc("nexora_review_market_retail_product",{p_product_id:id,p_approve:action==="approve"});
-   else if(type==="retail_fee_payment")result=await db.rpc("nexora_review_market_retail_fee_payment",{p_payment_id:id,p_approve:action==="approve",p_note:action==="approve"?null:"Төлбөрийн баримт баталгаажаагүй"});
    else if(type==="wholesale_product")result=await db.rpc("nexora_review_wholesale_product",{p_product_id:id,p_approve:action==="approve"});
-   else if(type==="wholesale_fee_payment")result=await db.rpc("nexora_review_wholesale_fee_payment",{p_payment_id:id,p_approve:action==="approve",p_note:action==="approve"?null:"Төлбөрийн баримт баталгаажаагүй"});
-   else if(type==="supplier_registration_payment")result=await db.rpc("nexora_review_supplier_registration_payment",{p_payment_id:id,p_approve:action==="approve",p_note:action==="approve"?null:supplierRejectNote});
    else if(type==="supplier")result=await db.from("market_suppliers").update({status:action==="approve"?"approved":"rejected"}).eq("id",id);
    if(result?.error)throw result.error;
    alert("Хүсэлтийг амжилттай шийдвэрлэлээ.");
