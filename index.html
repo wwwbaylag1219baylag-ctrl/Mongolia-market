@@ -4318,6 +4318,9 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       const pay=document.getElementById("nx-store-pay");if(pay)pay.onclick=()=>showStorePayment(store,settings,banks,backAction);
       host.querySelectorAll("[data-store-notice-read]").forEach(b=>b.onclick=async()=>{const {error}=await db.from("nexora_store_notifications").update({read_at:new Date().toISOString()}).eq("id",b.dataset.storeNoticeRead).eq("user_id",marketUser.id);if(error){alert("Мэдэгдэл шинэчлэхэд алдаа: "+error.message);return;}showStore(backAction);});
       const storeForm=document.getElementById("nx-store-form");
+       const ownerTypeSelect=storeForm.querySelector('[name="owner_type"]'),personalPhotoWrap=document.getElementById("nx-personal-photo-wrap");
+       const syncPersonalPhotoField=()=>{if(personalPhotoWrap)personalPhotoWrap.style.display=ownerTypeSelect?.value==="individual"?"block":"none";};
+       ownerTypeSelect?.addEventListener("change",syncPersonalPhotoField);syncPersonalPhotoField();
       storeForm.onsubmit=async e=>{
         e.preventDefault();const form=e.currentTarget,btn=form.querySelector('button[type="submit"]'),msg=document.getElementById("nx-store-msg");btn.disabled=true;
         let uploadedLogoPath=null,uploadedPersonalPhotoPath=null;
