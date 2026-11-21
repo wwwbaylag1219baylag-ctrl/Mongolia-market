@@ -5006,7 +5006,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       const owners=[...new Set([...retailRows,...wholesaleRows].map(x=>x.owner_id).filter(Boolean))];
       stage="дэлгүүрийн профайл болон зургийн мэдээлэл";
       const [profileRes,retailImageRes]=await Promise.all([
-        owners.length?wait(db.from("nexora_store_profiles").select("user_id,store_name,logo_path,wholesale_logo_path").in("user_id",owners),"Дэлгүүрийн профайл"):Promise.resolve({data:[],error:null}),
+        owners.length?wait(db.from("nexora_store_profiles").select("user_id,store_name").in("user_id",owners),"Дэлгүүрийн профайл"):Promise.resolve({data:[],error:null}),
         retailRows.length?wait(db.from("market_product_images").select("product_id,image_path,display_order").in("product_id",retailRows.map(x=>x.id)).order("display_order",{ascending:true}),"Жижиглэнгийн зураг"):Promise.resolve({data:[],error:null})
       ]);
       if(profileRes.error)throw profileRes.error;
@@ -5031,11 +5031,11 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       }
       const retailProducts=retailRows.map(p=>{
         const profile=profileMap.get(String(p.owner_id))||{},paths=retailImageMap.get(String(p.id))||[];
-        return {...p,_marketType:"retail",_storeName:profile.store_name||"Онлайн дэлгүүр",_storeLogo:profile.logo_path||"",_logoUrl:p.product_logo_path?urlMap.get("retail-logo|"+p.id+"|"+p.product_logo_path)||"": "",_images:paths.map(path=>({path,url:urlMap.get("retail|"+p.id+"|"+path)||""})).filter(x=>x.url)};
+        return {...p,_marketType:"retail",_storeName:profile.store_name||"Онлайн дэлгүүр",_logoUrl:p.product_logo_path?urlMap.get("retail-logo|"+p.id+"|"+p.product_logo_path)||"": "",_images:paths.map(path=>({path,url:urlMap.get("retail|"+p.id+"|"+path)||""})).filter(x=>x.url)};
       });
       const wholesaleProducts=wholesaleRows.map(p=>{
         const profile=profileMap.get(String(p.owner_id))||{},paths=p.image_paths||[];
-        return {...p,_marketType:"wholesale",_storeName:profile.store_name||"Нийлүүлэгч",_storeLogo:profile.wholesale_logo_path||profile.logo_path||"",_logoUrl:p.product_logo_path?urlMap.get("wholesale-logo|"+p.id+"|"+p.product_logo_path)||"": "",_images:paths.map(path=>({path,url:urlMap.get("wholesale|"+p.id+"|"+path)||""})).filter(x=>x.url)};
+        return {...p,_marketType:"wholesale",_storeName:profile.store_name||"Нийлүүлэгч",_logoUrl:p.product_logo_path?urlMap.get("wholesale-logo|"+p.id+"|"+p.product_logo_path)||"": "",_images:paths.map(path=>({path,url:urlMap.get("wholesale|"+p.id+"|"+path)||""})).filter(x=>x.url)};
       });
       products=[...retailProducts,...wholesaleProducts].sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
       marketUser=null;
