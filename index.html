@@ -6656,83 +6656,107 @@ button.nx-platform-back:focus-visible,
 #market-app .nx-catalog-topline #nx-wholesale-cart-back{flex:0 0 auto!important;margin:0!important}
 </style>
 
-<style id="NEXORA-SOFT-COLOR-PALETTE-2026">
-/* NEXORA: хурц неон өнгийг зөөлөн, намдуу завсрын палитраар нэгтгэв. */
+
+<style id="NEXORA-MULTI-PALETTE-2026">
+/* NEXORA: зар ба худалдааны платформд 2–5 палитрыг хэсэг тус бүрт зохицуулан хэрэглэв.
+   Барааны карт, зураг, үнэ болон барааны жагсаалтын одоогийн өнгийг зориуд өөрчлөхгүй. */
 :root{
-  --black:#151719!important;
-  --dark:#151719!important;
-  --panel:#22262a!important;
-  --panel-light:#292e33!important;
-  --gold:#bda77d!important;
-  --gold-light:#d2c2a1!important;
-  --white:#eeeae2!important;
-  --muted:#b8b4ab!important;
-  --border:#756b58!important;
+  --nx-blue-deep:#18263a; --nx-blue-mid:#344b65; --nx-silver:#9bafc0; --nx-silver-light:#d5dde4;
+  --nx-burgundy:#301d27; --nx-wine:#583442; --nx-rose:#b98788; --nx-rose-light:#d9b9a8;
+  --nx-coffee:#292522; --nx-coffee-mid:#51443b; --nx-bronze:#a88d75; --nx-bronze-light:#d4c1a8;
+  --nx-teal:#172d30; --nx-teal-mid:#285052; --nx-sage:#83a9a1; --nx-pale-gold:#d0c09a;
 }
-html,body,.screen,#ads,#shop,#nexora-admin-app{
-  background-color:#151719!important;color:#eeeae2!important;
+/* ЗАР — гүн цэнхэр үндсэн суурь, бургунди ангиллын өнгө, кофе бор форм, teal үйлдлийн товч */
+#ads{background:var(--nx-blue-deep)!important;color:var(--nx-silver-light)!important}
+#ads .topbar,#ads .page-header,#ads .nx-help-screen{
+  background:linear-gradient(135deg,var(--nx-blue-deep),#202f43)!important;
+  border-color:rgba(155,175,192,.42)!important;color:var(--nx-silver-light)!important;
 }
-#ads .topbar,#shop .topbar,.topbar,.bottom-nav,.nav-bar,.page-header{
-  border-color:rgba(189,167,125,.30)!important;
-}
-#market-app .nx-market-btn:not(.secondary),
-#market-app .nx-market-primary,
-#ads .nx-create-submit,#ads .nx-create-toggle{
-  background:#aa946d!important;border-color:#aa946d!important;color:#171716!important;
-  box-shadow:0 3px 12px rgba(170,148,109,.12)!important;
-}
-#market-app .nx-market-btn.secondary,
-#market-app .nx-market-input,#market-app .nx-market-select,#market-app .nx-market-textarea,
-#ads .nx-create-input,#ads .nx-create-textarea,#ads .nx-create-screen input,
-#ads .nx-create-screen select,#ads .nx-create-screen textarea{
-  background:#25292d!important;border-color:rgba(189,167,125,.48)!important;color:#eeeae2!important;
-}
-#market-app .nx-market-card,#market-app .nx-market-product-tile,
-#market-app .nx-market-category-choice,#ads .nexora-ad-category,
-#ads .nx-subcategory-item,#ads .nx-choice-card,#ads .nx-accordion-option{
-  background-color:#22262a!important;border-color:rgba(189,167,125,.38)!important;
-  box-shadow:0 5px 18px rgba(0,0,0,.18)!important;
-}
-#market-app .nx-market-price,#market-app .nexora-ad-heading,
 #ads .nexora-ad-heading,#ads .nx-screen-title,#ads .nx-create-title,
-#ads .nx-create-label,#ads .nx-category-path b{
-  color:#c7b38b!important;
+#ads .nx-help-title{color:var(--nx-silver-light)!important}
+#ads .page-content .nx-full-screen .nexora-ad-category,
+#ads .nx-subcategory-item,#ads .nx-choice-card,#ads .nx-accordion-section{
+  background:linear-gradient(145deg,var(--nx-burgundy),var(--nx-wine))!important;
+  border-color:rgba(185,135,136,.48)!important;
+  box-shadow:0 7px 18px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.04)!important;
 }
-/* Худалдааны нүүрний хурц цэнхрийг сааралдуу хөх, зөөлөн мөсөн цэнхэр болгов. */
-#shop,#market-app{background:#111b2a!important}
-#market-app .nx-nexora-blue-home{
-  background:radial-gradient(ellipse at 50% 0%,#263c54 0%,#17283d 50%,#101a2a 100%)!important;
+#ads .page-content .nx-full-screen .nexora-ad-category::before{
+  background:linear-gradient(90deg,transparent,var(--nx-rose),transparent)!important;
 }
+#ads .page-content .nx-full-screen .nexora-ad-category::after,
+#ads .nx-choice-arrow,#ads .nx-accordion-arrow{color:var(--nx-rose-light)!important}
+#ads .page-content .nx-full-screen .nexora-ad-icon,
+#ads .nx-choice-index{
+  background:linear-gradient(145deg,rgba(185,135,136,.24),rgba(185,135,136,.07))!important;
+  border-color:rgba(217,185,168,.42)!important;color:var(--nx-rose-light)!important;
+}
+#ads .page-content .nx-full-screen .nexora-ad-name,
+#ads .nx-choice-name,#ads .nx-accordion-tab .nx-choice-name{color:#f0e4e2!important}
+#ads .nx-create-screen,#ads .nx-create-form,#ads .nx-create-panel,
+#ads .nx-create-input,#ads .nx-create-textarea,#ads .nx-create-screen input,
+#ads .nx-create-screen select,#ads .nx-create-screen textarea,
+#ads .nx-help-search{
+  background-color:var(--nx-coffee)!important;
+  border-color:rgba(168,141,117,.58)!important;color:#eee5dc!important;
+}
+#ads .nx-create-label,#ads .nx-category-path b{color:var(--nx-bronze-light)!important}
+#ads .nx-create-submit,#ads .nx-create-toggle,#ads .nx-create-screen button[type="submit"]{
+  background:linear-gradient(135deg,var(--nx-teal-mid),var(--nx-teal))!important;
+  border:1px solid var(--nx-sage)!important;color:#e3efeb!important;
+}
+#ads .nx-accordion-option{
+  background:rgba(41,37,34,.88)!important;border-color:rgba(168,141,117,.35)!important;
+}
+/* ХУДАЛДАА — үндсэн толгой хэсэгт deep blue, навигацид burgundy, хайлт/формд coffee,
+   нэмэлт үйлдэлд teal. Барааны карт болон барааны grid-д хүрэхгүй. */
+#shop .nx-temu-header,#shop .nx-temu-brand,
 #market-app .nx-nexora-brand-header{
-  border-bottom:2px solid #7892a7!important;
-  box-shadow:0 4px 14px rgba(104,133,157,.16)!important;
+  background:linear-gradient(135deg,var(--nx-blue-deep),var(--nx-blue-mid))!important;
+  border-color:rgba(155,175,192,.52)!important;
 }
-#market-app .nx-nexora-wordmark span{color:#c4ad83!important}
-#market-app .nx-nexora-cart-mark{color:#8da6b8!important;filter:none!important}
+#shop .nx-temu-brand strong,#market-app .nx-nexora-wordmark,
+#market-app .nx-nexora-platform-title{color:var(--nx-silver-light)!important}
+#market-app .nx-nexora-wordmark span{color:var(--nx-bronze-light)!important}
+#shop .nx-temu-search-wrap,#shop .nx-temu-search,
+#market-app .nx-market-search-wrap{
+  background:var(--nx-coffee)!important;border-color:rgba(168,141,117,.55)!important;
+}
+#shop .nx-temu-search{color:#eee5dc!important}
+#shop .nx-temu-search::placeholder{color:#c2b3a6!important}
+#shop .nx-temu-category-rail .nx-temu-chip,
+#market-app .nx-market-tabs button,
+#market-app .nx-market-nav button{
+  background:linear-gradient(135deg,var(--nx-burgundy),var(--nx-wine))!important;
+  border-color:rgba(185,135,136,.45)!important;color:#f0e4e2!important;
+}
+#shop .nx-temu-category-rail .nx-temu-chip.active,
+#market-app .nx-market-tabs button.active,
+#market-app .nx-market-nav button.active{
+  background:linear-gradient(135deg,var(--nx-rose),var(--nx-rose-light))!important;
+  border-color:var(--nx-rose-light)!important;color:#241820!important;
+}
+#shop .nx-temu-profile,#market-app .nx-shop-zone-logo,
+#market-app .nx-wholesale-profile-entry{
+  border-color:var(--nx-silver)!important;background:var(--nx-blue-deep)!important;color:var(--nx-silver-light)!important;
+}
+#market-app .nx-nexora-blue-home{
+  background:radial-gradient(ellipse at 50% 0%,var(--nx-blue-mid),var(--nx-blue-deep) 65%,#111923 100%)!important;
+}
 #market-app .nx-nexora-card{
-  border:2px solid #7892a7!important;background:#26384b!important;
-  box-shadow:0 3px 13px rgba(75,104,130,.20)!important;
+  border-color:var(--nx-silver)!important;background:linear-gradient(145deg,var(--nx-blue-deep),var(--nx-blue-mid))!important;
+  box-shadow:0 4px 16px rgba(0,0,0,.22)!important;
 }
-#market-app .nx-nexora-card:after{
-  background:linear-gradient(90deg,transparent 0%,rgba(20,35,52,.08) 45%,#e5e9e8 68%,#dce4e6 100%)!important;
-}
-#market-app .nx-nexora-card .nx-nexora-card-copy{color:#263b50!important}
-#market-app .nx-nexora-card-copy .nx-nexora-card-icon{color:#66869f!important;filter:none!important}
+#market-app .nx-nexora-card-copy .nx-nexora-card-icon{color:var(--nx-sage)!important}
 #market-app .nx-nexora-card-copy strong{color:#263b50!important}
 #market-app .nx-nexora-card-copy small{color:#49647b!important}
-#market-app .nx-nexora-card-copy em{color:#66869f!important}
-#market-app .nx-shop-zone{border-color:rgba(120,146,167,.55)!important}
-#market-app .nx-shop-zone-logo,#market-app .nx-wholesale-profile-entry,
+#market-app .nx-nexora-card-copy em{color:var(--nx-teal-mid)!important}
+#market-app .nx-shop-zone{border-color:rgba(131,169,161,.58)!important}
+#market-app .nx-shop-zone-wholesale{background:linear-gradient(145deg,var(--nx-teal),var(--nx-teal-mid))!important}
+#market-app .nx-shop-zone-brand strong,#market-app .nx-shop-zone-prompt{color:#e0e9df!important}
+#market-app .nx-shop-zone-symbol{color:var(--nx-sage)!important}
 #market-app .nx-catalog-cart{
-  border-color:#7892a7!important;background:#25384b!important;color:#c4d0d8!important;
-  box-shadow:0 2px 9px rgba(80,112,140,.16)!important;
+  background:linear-gradient(135deg,var(--nx-teal-mid),var(--nx-teal))!important;
+  border-color:var(--nx-sage)!important;color:#e3efeb!important;box-shadow:none!important;
 }
-#market-app .nx-swipe-home-hint{color:#a9bac5!important}
-#market-app .nx-market-product-tile{border-color:rgba(120,146,167,.35)!important;background:#202d3a!important}
-#market-app .nx-market-category-choice.selected{
-  border-color:#9aafbd!important;background:#34495b!important;
-}
-#market-app .nx-market-back-arrow,#market-app #nx-cart-back,#market-app #nx-wholesale-cart-back{
-  border-color:#7892a7!important;color:#c4d0d8!important;
-}
+/* Барааны хэсгийн одоогийн карт, зураг, үнэ, grid өнгийг энд зориуд override хийгээгүй. */
 </style>
