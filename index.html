@@ -4996,12 +4996,14 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     const button=document.getElementById("nx-temu-profile");
     if(!button)return;
     try{
-      const {data:auth}=await db.auth.getUser();
-      if(!auth?.user)return;
-      const {data:profile}=await db.from("nexora_store_profiles").select("logo_path").eq("user_id",auth.user.id).maybeSingle();
-      // Жижиглэнгийн профайлд зөвхөн дэлгүүрийн лого харуулна. Барааны зураг болон хувийн avatar ашиглахгүй.
-      const path=profile?.logo_path||"";
-      const url=path?db.storage.from("market-store-logos").getPublicUrl(path).data.publicUrl:"";
+      const {data:auth,error:authError}=await db.auth.getUser();
+      if(authError)throw authError;
+      if(!auth?.user){button.innerHTML='<span class="nx-temu-mark" aria-hidden="true">N</span>';return;}
+      // Удирдлагын хэсэгт харагддаг дэлгүүрийн үндсэн/бөөний логоноос эхэлж ижил зургийг Профайлд харуулна.
+      const {data:profile,error:profileError}=await db.from("nexora_store_profiles").select("logo_path,wholesale_logo_path").eq("user_id",auth.user.id).maybeSingle();
+      if(profileError)throw profileError;
+      const path=profile?.logo_path||profile?.wholesale_logo_path||"";
+      const url=path?(String(path).startsWith("http")?path:db.storage.from("market-store-logos").getPublicUrl(path).data.publicUrl):"";
       if(url){button.innerHTML='<img src="'+esc(url)+'" alt="Дэлгүүрийн лого">';}
       else{button.innerHTML='<span class="nx-temu-mark" aria-hidden="true">N</span>';}
     }catch(error){console.warn("NEXORA профайлын зураг:",error);}
