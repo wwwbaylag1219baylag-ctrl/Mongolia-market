@@ -753,31 +753,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
               window.NEXORA_SHOP_PROFILE = null;
             }
 
-            // Профайл руу орох үед нэвтэрсэн хэрэглэгч админ эсэхийг шалгана.
-            // Админ бол тусдаа админ самбар руу шууд шилжинэ.
-            if (screenName === "profile") {
-              try {
-                const db = window.NEXORA_SUPABASE;
-                if (db) {
-                  const { data: sessionData } = await db.auth.getSession();
-                  const user = sessionData?.session?.user;
-                  if (user) {
-                    const { data: adminRow, error } = await db
-                      .from("nexora_admins")
-                      .select("user_id")
-                      .eq("user_id", user.id)
-                      .maybeSingle();
-                    if (!error && adminRow) {
-                      window.location.href = "./admin.html";
-                      return;
-                    }
-                  }
-                }
-              } catch (error) {
-                console.warn("NEXORA админ эрх шалгах үед алдаа гарлаа:", error);
-              }
-            }
-
+            // Профайл нь бүх хэрэглэгчид зориулсан үндсэн нэвтрэх/бүртгүүлэх хэсэг байна.
+            // Админ эрхтэй байсан ч профайл товчоор admin.html руу автоматаар шилжүүлэхгүй.
             if (screenName === currentScreen) {
               return;
             }
