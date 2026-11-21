@@ -4194,11 +4194,13 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     window.NEXORA_SHOP_PROFILE=openRetailProfile;
     window.NEXORA_SHOP_BACK=showRetailCatalog;
     window.NEXORA_SHOP_NEXT=()=>openRetailProfile(showRetailCatalog);
-    host.innerHTML='<section class="nx-profile-accordion-root" style="min-height:62vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px 18px">'+
-      '<div style="font-size:54px;color:#20b978;margin-bottom:14px">✓</div>'+
-      '<h2 class="nx-profile-heading" style="margin:0 0 12px">'+esc(message)+'</h2>'+
-      '<p class="nx-market-muted" style="font-size:16px;font-weight:700">ЗҮҮН ШУДАРНА УУ</p>'+
-      '<p class="nx-market-muted">Барааны хэсгээс зүүн тийш шудраад дэлгүүрийн удирдлагаа нээнэ үү.</p></section>';
+    host.innerHTML='<section class="nx-profile-accordion-root" style="min-height:72vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px 18px;gap:18px">'+
+      '<div style="font-size:62px;line-height:1;color:#20b978" aria-hidden="true">✓</div>'+
+      '<h2 class="nx-profile-heading" style="margin:0;font-size:clamp(23px,6vw,30px)">'+esc(message)+'</h2>'+
+      '<div role="alert" style="width:100%;max-width:520px;box-sizing:border-box;padding:24px 20px;border:2px solid #e7a52f;border-radius:22px;background:linear-gradient(145deg,#fff8e8,#fff0ce);color:#553600;box-shadow:0 10px 28px #9b6a241f">'+
+      '<div style="font-size:56px;line-height:1.1;margin-bottom:12px" aria-hidden="true">⬅</div>'+
+      '<strong style="display:block;font-size:clamp(20px,5.4vw,27px);line-height:1.35">Удирдлагын хэсэгт орохын тулд дэлгэцээ зүүн тийш шударна уу</strong>'+
+      '<p style="margin:12px 0 0;font-size:15px;line-height:1.5;color:#76551d">Барааны хэсэг дээрээ байгаад дэлгэцийг зүүн тийш шударна.</p></div></section>';
   }
   window.NEXORA_SHOP_AUTH_SUCCESS=showShopAuthSuccess;
 
