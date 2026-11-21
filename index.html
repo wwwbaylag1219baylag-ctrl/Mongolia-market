@@ -989,6 +989,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         Миний захиалгууд
       </button>
 
+      <button id="nexora-admin-open" type="button" style="display:none;width:100%;padding:13px;margin:0 0 10px;border:1px solid #d6ad55;border-radius:10px;background:#191919;color:#d6ad55;font-weight:700;">АДМИН УДИРДЛАГА</button>
       <button id="nexora-logout" type="button"
         style="width:100%;padding:14px;border:1px solid #d6ad55;
         border-radius:10px;background:#191919;color:#d6ad55;">
@@ -1036,6 +1037,18 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         avatarChange.textContent = "ЗУРАГ / ДЭЛГҮҮРИЙН ЛОГО СОЛИХ";
       }
     });
+
+    const adminOpenButton = document.getElementById("nexora-admin-open");
+    try {
+      const { data: adminRow, error: adminLookupError } = await db
+        .from("nexora_admins").select("user_id").eq("user_id", user.id).maybeSingle();
+      if (!adminLookupError && adminRow && adminOpenButton) {
+        adminOpenButton.style.display = "block";
+        adminOpenButton.addEventListener("click", () => { window.location.href = "./admin.html"; });
+      }
+    } catch (adminLookupError) {
+      console.warn("Админ эрх шалгахад алдаа:", adminLookupError);
+    }
 
     const logoutButton = document.getElementById("nexora-logout");
 
@@ -4571,7 +4584,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       };
       const wholesaleProfileButton=document.getElementById("nx-wholesale-profile-entry");
       if(wholesaleProfileButton){
-        wholesaleProfileButton.addEventListener("click",()=>window.NEXORA?.open("profile"));
+        wholesaleProfileButton.addEventListener("click",()=>openWholesaleProfile(showWholesaleCatalog));
         wholesaleProfileButton.setAttribute("aria-label","Нийлүүлэгчийн профайл нээх");
         db.auth.getUser().then(async({data,error})=>{if(error||!data?.user)return;const {data:profile}=await db.from("nexora_store_profiles").select("wholesale_logo_path").eq("user_id",data.user.id).maybeSingle();if(!profile?.wholesale_logo_path)return;const url=db.storage.from("market-store-logos").getPublicUrl(profile.wholesale_logo_path).data.publicUrl;const button=document.getElementById("nx-wholesale-profile-entry");if(button)button.innerHTML='<img src="'+esc(url)+'" alt="" style="width:30px;height:30px;object-fit:cover;border-radius:50%"> <span>Профайл</span><span aria-hidden="true">›</span>';}).catch(err=>console.warn("Нийлүүлэгчийн профайлын зураг:",err));
       }
@@ -4875,7 +4888,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     '</nav>';
     window.NEXORA_SHOP_BACK=()=>window.NEXORA?.open("home");
     window.NEXORA_SHOP_NEXT=null;
-    document.getElementById("nx-temu-profile").onclick=()=>window.NEXORA?.open("profile");
+    document.getElementById("nx-temu-profile").onclick=()=>openRetailProfile(showRetailCatalog);
     document.getElementById("nx-temu-home").onclick=()=>{retailActiveCategory=null;searchText="";const input=document.getElementById("nx-retail-search");if(input)input.value="";renderRetailCategories();host.querySelector(".nx-temu-page")?.scrollTo({top:0,behavior:"smooth"});};
     document.getElementById("nx-temu-categories").onclick=()=>host.querySelector("#nx-temu-category-rail")?.scrollIntoView({behavior:"smooth",block:"start"});
     document.getElementById("nx-temu-cart").onclick=showCart;
