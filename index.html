@@ -4260,6 +4260,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     const {data,error:authError}=await db.auth.getUser();
     if(authError||!data?.user){host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-supplier-back" aria-label="Буцах" title="Буцах">‹</button><p>Нийлүүлэгчийн бүртгэлд нэвтрэх шаардлагатай.</p>';document.getElementById("nx-supplier-back").onclick=backAction;return;}
     const user=data.user;
+    const {data:feeSettings,error:feeSettingsError}=await db.from("nexora_settings").select("supplier_individual_fee,supplier_company_fee").eq("id",1).single();
+    if(feeSettingsError){host.innerHTML='<p class="nx-market-muted">Нийлүүлэгчийн төлбөрийн тохиргоо уншихад алдаа: '+esc(feeSettingsError.message)+'</p>';return;}
     const {data:existing,error:existingError}=await db.from("market_suppliers").select("id,name,type,owner_type,status,register_no,phone,email,address,created_at").eq("owner_id",user.id).maybeSingle();
     if(existingError){host.innerHTML='<p>Мэдээлэл уншихад алдаа: '+esc(existingError.message)+'</p>';return;}
     let retrySupplierId=null,retryPayment=null;
@@ -4279,7 +4281,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     document.getElementById("nx-supplier-form").onsubmit=async e=>{
       e.preventDefault();
       const form=e.currentTarget,button=form.querySelector('button[type="submit"]'),v=Object.fromEntries(new FormData(form).entries());
-      const ownerType=v.owner_type,amount=ownerType==="company"?350000:150000;
+      const ownerType=v.owner_type,amount=ownerType==="company"?Number(feeSettings.supplier_company_fee):Number(feeSettings.supplier_individual_fee);
       if(!String(v.name||"").trim()||!String(v.register_no||"").trim()||!String(v.phone||"").trim()||!String(v.address||"").trim()){document.getElementById("nx-supplier-msg").textContent="Заавал бөглөх мэдээллээ бүрэн оруулна уу.";return;}
       button.disabled=true;button.textContent="ДАНСНЫ МЭДЭЭЛЭЛ АЧААЛЖ БАЙНА…";
       try{
