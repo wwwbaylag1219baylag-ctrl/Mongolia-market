@@ -289,3 +289,8 @@ $function$;
 
 revoke all on function public.nexora_activate_free_store(uuid) from public;
 grant execute on function public.nexora_activate_free_store(uuid) to authenticated;
+
+-- A single supplier record belongs to each NEXORA user profile.
+drop index if exists public.market_suppliers_owner_id_idx;
+create unique index if not exists market_suppliers_owner_id_key
+  on public.market_suppliers (owner_id);
