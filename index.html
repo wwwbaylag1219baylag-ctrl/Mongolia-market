@@ -4340,12 +4340,12 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
             const {data,error}=await db.from("nexora_store_profiles").insert(payload).select("id,store_name,owner_type").single();
             if(error)throw error;saved=data;
           }
-                    if(personalPhoto&&personalPhoto.size&&payload.owner_type==="individual"){
+          if(personalPhoto&&personalPhoto.size&&payload.owner_type==="individual"){
              const ext=personalPhoto.type==="image/png"?"png":personalPhoto.type==="image/webp"?"webp":"jpg",photoPath=marketUser.id+"/personal-profile-photos/"+crypto.randomUUID()+"."+ext;
              const {error:photoUploadError}=await db.storage.from("market-store-logos").upload(photoPath,personalPhoto,{upsert:false,contentType:personalPhoto.type,cacheControl:"31536000"});if(photoUploadError)throw photoUploadError;uploadedPersonalPhotoPath=photoPath;
              const {error:photoSaveError}=await db.from("nexora_store_profiles").update({personal_photo_path:photoPath}).eq("id",saved.id).eq("user_id",marketUser.id);if(photoSaveError)throw photoSaveError;
            }
-if(file&&file.size){
+          if(file&&file.size){
             const ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg",path=marketUser.id+"/retail-store-logos/"+Date.now()+"."+ext;
             const {error:uploadError}=await db.storage.from("market-store-logos").upload(path,file,{upsert:false,contentType:file.type,cacheControl:"31536000"});
             if(uploadError)throw uploadError;uploadedLogoPath=path;
