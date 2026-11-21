@@ -896,37 +896,10 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   }
 
   let currentMode = "login";
-  const AVATAR_CACHE_KEY = "nexora_profile_avatar_v1";
-
   function safe(value) {
     return String(value || "").replace(/[&<>"']/g, function (c) {
       return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
     });
-  }
-
-  function getCachedAvatar() {
-    try {
-      const value = localStorage.getItem(AVATAR_CACHE_KEY) || "";
-      return /^https:\/\//i.test(value) ? value : "";
-    } catch (_) { return ""; }
-  }
-
-  function cacheUserAvatar(user) {
-    const avatar = user?.user_metadata?.profile_avatar_url ||
-      user?.user_metadata?.avatar_url || user?.user_metadata?.picture ||
-      user?.user_metadata?.photo_url || "";
-    if (!avatar || !/^https:\/\//i.test(String(avatar))) return;
-    try { localStorage.setItem(AVATAR_CACHE_KEY, String(avatar)); } catch (_) {}
-  }
-
-  function avatarMarkup(user) {
-    const avatar = user?.user_metadata?.profile_avatar_url ||
-      user?.user_metadata?.avatar_url || user?.user_metadata?.picture ||
-      user?.user_metadata?.photo_url || getCachedAvatar();
-    if (avatar && /^https:\/\//i.test(String(avatar))) {
-      return '<img src="' + safe(avatar) + '" alt="Профайлын зураг" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
-    }
-    return '<svg viewBox="0 0 100 100" role="img" aria-label="Профайлын зураг" style="width:68%;height:68%;color:#d6ad55" fill="none" stroke="currentColor" stroke-width="5"><circle cx="50" cy="34" r="18"/><path d="M15 88c3-20 17-30 35-30s32 10 35 30"/></svg>';
   }
 
   function showMessage(message, isError) {
@@ -958,9 +931,6 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     currentMode = "choice";
     panel.innerHTML = `
       <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:22px 8px 12px;">
-        <div style="width:116px;height:116px;border-radius:50%;display:grid;place-items:center;overflow:hidden;background:#171717;border:3px solid #d6ad55;box-shadow:0 0 0 6px rgba(214,173,85,.10);margin:8px auto 14px;">
-          ${avatarMarkup(null)}
-        </div>
         <h2 style="margin:4px 0 8px;color:#f7f5ef;">НЭВТРЭХ / БҮРТГҮҮЛЭХ</h2>
         <p style="margin:0 0 24px;color:#aaa39a;">Дэлгүүр нээх, бөөний нийлүүлэгчээр бүртгүүлэх болон захиалгаа удирдахын тулд нэвтэрнэ үү.</p>
         <button type="button" data-mode="login" style="width:100%;padding:15px;border-radius:12px;border:0;background:#d6ad55;color:#090909;font-weight:800;">НЭВТРЭХ</button>
@@ -1005,8 +975,6 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       renderChoice();
       return;
     }
-    cacheUserAvatar(user);
-
      const name =
       user.user_metadata?.full_name || user.email || "Хэрэглэгч";
 
@@ -1042,47 +1010,6 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         Системээс гарах
       </button>
     `;
-
-     const avatarPicker = document.getElementById("nexora-profile-avatar-file");
-    const avatarChange = document.getElementById("nexora-profile-avatar-change");
-    avatarChange?.addEventListener("click", () => avatarPicker?.click());
-    avatarPicker?.addEventListener("change", async function () {
-      const file = avatarPicker.files?.[0];
-      if (!file) return;
-      if (!file.type.startsWith("image/")) {
-        alert("Зөвхөн зургийн файл сонгоно уу.");
-        avatarPicker.value = "";
-        return;
-      }
-      if (file.size > 5 * 1024 * 1024) {
-        alert("Зургийн хэмжээ 5MB-аас бага байх ёстой.");
-        avatarPicker.value = "";
-        return;
-      }
-      avatarChange.disabled = true;
-      avatarChange.textContent = "ЗУРГИЙГ ХАДГАЛЖ БАЙНА…";
-      try {
-        const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
-        const path = "profiles/" + user.id + "/avatar-" + Date.now() + "." + ext;
-        const { error: uploadError } = await db.storage.from("market-store-logos").upload(path, file, {
-          upsert: true, contentType: file.type, cacheControl: "3600"
-        });
-        if (uploadError) throw uploadError;
-        const { data: publicData } = db.storage.from("market-store-logos").getPublicUrl(path);
-        const avatarUrl = publicData?.publicUrl;
-        if (!avatarUrl) throw new Error("Зургийн холбоос үүссэнгүй.");
-        const { data: updated, error: updateError } = await db.auth.updateUser({
-          data: { profile_avatar_url: avatarUrl }
-        });
-        if (updateError) throw updateError;
-        cacheUserAvatar(updated.user || { user_metadata: { profile_avatar_url: avatarUrl } });
-        await renderUser(updated.user || user);
-      } catch (error) {
-        alert("Профайлын зураг хадгалахад алдаа гарлаа: " + (error.message || error));
-        avatarChange.disabled = false;
-        avatarChange.textContent = "ЗУРАГ / ДЭЛГҮҮРИЙН ЛОГО СОЛИХ";
-      }
-    });
 
     const adminOpenButton = document.getElementById("nexora-admin-open");
     try {
