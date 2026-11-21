@@ -938,6 +938,10 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       </div>`;
   }
 
+  // Худалдааны Барааны Профайл нээхэд зөвхөн нэвтрэх/бүртгүүлэх сонголтыг харуулна.
+  // Нэвтэрсэн хэрэглэгчийн ерөнхий дансны удирдлага болон админ товчийг энд харуулахгүй.
+  window.NEXORA_SHOP_AUTH_FORM = function(){ renderChoice(); };
+
   function renderForm(mode, notice = "", emailValue = "") {
     currentMode = mode;
     const registering = mode === "register";
@@ -4990,7 +4994,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     '</nav>';
     window.NEXORA_SHOP_BACK=()=>window.NEXORA?.open("home");
     window.NEXORA_SHOP_NEXT=()=>openRetailProfile(showRetailCatalog);
-    document.getElementById("nx-temu-profile").onclick=()=>window.NEXORA?.open("profile");
+    document.getElementById("nx-temu-profile").onclick=()=>{window.NEXORA_SHOP_AUTH_FORM?.();window.NEXORA?.open("profile");};
     document.getElementById("nx-temu-home").onclick=()=>{retailActiveCategory=null;searchText="";const input=document.getElementById("nx-retail-search");if(input)input.value="";renderRetailCategories();host.querySelector(".nx-temu-page")?.scrollTo({top:0,behavior:"smooth"});};
     document.getElementById("nx-temu-categories").onclick=()=>host.querySelector("#nx-temu-category-rail")?.scrollIntoView({behavior:"smooth",block:"start"});
     document.getElementById("nx-temu-cart").onclick=showCart;
