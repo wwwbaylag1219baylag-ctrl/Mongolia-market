@@ -5015,40 +5015,28 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   async function refreshTemuProfileImage(){
     const button=document.getElementById("nx-temu-profile");
     if(!button)return;
-    const fallback='./assets/nexora-logo.jpg';
     try{
-      const {data:auth,error:authError}=await db.auth.getUser();
-      if(authError)throw authError;
-      if(!auth?.user){if(button.isConnected)button.innerHTML='<img src="'+fallback+'" alt="NEXORA">';return;}
-      const [profileRes,supplierRes]=await Promise.all([
-        db.from("nexora_store_profiles").select("owner_type,logo_path,wholesale_logo_path,personal_photo_path").eq("user_id",auth.user.id).maybeSingle(),
-        db.from("market_suppliers").select("owner_type").eq("owner_id",auth.user.id).maybeSingle()
-      ]);
-      if(profileRes.error)throw profileRes.error;
-      if(supplierRes.error)throw supplierRes.error;
-      if(!button.isConnected)return;
-      const profile=profileRes.data||{};
-      const ownerType=profile.owner_type||supplierRes.data?.owner_type||"individual";
-      // Каталогын профайлд барааны зураг болон хэрэглэгчийн metadata зургийг ашиглахгүй.
-      // Дэлгүүр нээхдээ хадгалсан лого/хувийн зургийг л уншина.
-      const path=ownerType==="company"
-        ?(profile.logo_path||profile.wholesale_logo_path||"")
-        :(profile.logo_path||profile.personal_photo_path||"");
-      let url="";
-      if(path){
-        if(String(path).startsWith("http"))url=String(path);
-        else{
-          const storage=db.storage.from("market-store-logos");
-          const {data:signedData,error:signedError}=await storage.createSignedUrl(String(path).split("/").filter(Boolean).join("/"),3600);
-          if(!signedError&&signedData?.signedUrl)url=signedData.signedUrl;
-          if(!url)url=storage.getPublicUrl(String(path).split("/").filter(Boolean).join("/")).data?.publicUrl||"";
-        }
+      const {data:auth}=await db.auth.getUser();
+      if(!auth?.user){
+        button.innerHTML='<img src="./assets/nexora-logo.jpg" alt="NEXORA">';
+        return;
       }
-      if(!button.isConnected)return;
-      button.innerHTML='<img src="'+esc(url||fallback)+'" alt="'+(url?(ownerType==="company"?"Дэлгүүрийн лого":"Дэлгүүрийн зураг"):"NEXORA")+'" onerror="this.onerror=null;this.src=\'./assets/nexora-logo.jpg\'">';
+      const {data:profile,error}=await db.from("nexora_store_profiles").select("logo_path,personal_photo_path,owner_type").eq("user_id",auth.user.id).maybeSingle();
+      if(error)throw error;
+      const path=profile?.owner_type==="company"
+        ?(profile?.logo_path||"")
+        :(profile?.logo_path||profile?.personal_photo_path||"");
+      const url=path
+        ?(String(path).startsWith("http")?String(path):db.storage.from("market-store-logos").getPublicUrl(String(path).split("/").filter(Boolean).join("/")).data?.publicUrl||"")
+        :"";
+      if(button.isConnected){
+        button.innerHTML=url
+          ?'<img src="'+esc(url)+'" alt="Миний профайл">'
+          :'<img src="./assets/nexora-logo.jpg" alt="NEXORA">';
+      }
     }catch(error){
-      console.warn("NEXORA профайлын дэлгүүрийн зураг:",error);
-      if(button.isConnected)button.innerHTML='<img src="'+fallback+'" alt="NEXORA">';
+      console.warn("NEXORA профайлын зураг:",error);
+      if(button.isConnected)button.innerHTML='<img src="./assets/nexora-logo.jpg" alt="NEXORA">';
     }
   }
   function showRetailCatalog(){
