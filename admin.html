@@ -50,7 +50,7 @@
  const money=v=>Number(v||0).toLocaleString("mn-MN")+" ₮";
  const tabs=[
   ["overview","Тойм"],["ads","Үнэгүй зар"],["payments","Зарын төлбөр"],["products","Бараа"],
-  ["commercePayments","Худалдааны төлбөр"],["suppliers","Нийлүүлэгч"],["wholesaleProducts","Бөөний бараа"],
+  ["commercePayments","Худалдааны төлбөр"],["suppliers","Нийлүүлэгч"],
   ["pricing","Үнийн тохиргоо"],["theme","Платформын өнгө"]
  ];
  const sections={
@@ -59,7 +59,6 @@
   products:["Бараа бүтээгдэхүүн","Нийтлэх зөвшөөрөл хүлээж буй бараа"],
   commercePayments:["Худалдааны нэгдсэн төлбөр","Дэлгүүрийн эрх, нийлүүлэгчийн бүртгэл, жижиглэн болон бөөний бараа нийтлэх бүх төлбөрийг нэг жагсаалтаас хянана. Зар сурталчилгааны төлбөр тусдаа хэвээр."],
   suppliers:["Нийлүүлэгч","Бүртгэлтэй нийлүүлэгчдийн жагсаалт"],
-  wholesaleProducts:["Бөөний бараа","Хуучин бөөний барааны хүсэлт — нэг каталогт нэгтгэх шилжилтийн үед хянана."],
   pricing:["Үнийн тохиргоо","Зарын багц болон лого, бараа байршуулалтын суурь хураамжийг удирдах"],
   theme:["Платформын өнгөний тохиргоо","Админ самбарын харагдах өнгийг өөрчлөх"]
  };
@@ -236,6 +235,17 @@
     body.querySelectorAll("[data-open-tab]").forEach(b=>b.onclick=()=>{activeTab=b.dataset.openTab;loadTab();});
     return;
    }
+   if(activeTab==="products"){
+    const sources=[
+     ["market_products","id,title,category,price,owner_id,status,stock_quantity,min_order_quantity,created_at","product"],
+     ["wholesale_products","id,title,category,price,owner_id,status,stock_quantity,min_order_quantity,wholesale_price_tiers,created_at","wholesale_product"]
+    ];
+    const loaded=await Promise.all(sources.map(async x=>{const {data,error}=await query(x[0],x[1],[["status","pending"]]);if(error)throw error;return {data:data||[],type:x[2]};}));
+    const blocks=await Promise.all(loaded.map(x=>cards(x.data,x.type)));
+    body.innerHTML='<h2 class="nx-admin-section-title">Нэгдсэн барааны хяналт</h2><p class="nx-admin-section-note">Жижиглэн болон бөөний бараа нэг жагсаалтад. Зөвшөөрөх/татгалзах үйлдэл нь хуучин захиалгын холбоосыг хамгаалсан дотоод шалгалтаар хийгдэнэ.</p>'+(loaded.every(x=>!x.data.length)?empty("Хяналтад хүлээгдэж буй бараа алга."):blocks.join(""));
+    body.querySelectorAll("[data-review]").forEach(b=>b.onclick=()=>review(b.dataset.review,b.dataset.id,b.dataset.action));
+    return;
+   }
    if(activeTab==="commercePayments"){
     const sources=[
      ["market_retail_fee_payments","id,user_id,store_id,product_id,fee_type,amount,bank_name,account_number,account_holder,transfer_reference,receipt_path,status,admin_note,created_at","retail_fee_payment"],
@@ -252,7 +262,6 @@
    const cfg={
     ads:["classified_ads","id,title,category,price,status,package_type,package_days,package_amount,created_at",[["status","pending_review"]],"free_ad"],
     payments:["payment_requests","id,ad_id,user_id,amount,package_days,transfer_reference,receipt_path,status,created_at",[["status","pending_review"]],"ad_payment"],
-    products:["market_products","id,title,category,price,owner_id,status,stock_quantity,min_order_quantity,created_at",[["status","pending"]],"product"],
     wholesaleProducts:["wholesale_products","id,title,category,price,owner_id,status,stock_quantity,min_order_quantity,wholesale_price_tiers,created_at",[["status","pending"]],"wholesale_product"],
     stores:["nexora_store_payments","id,store_id,user_id,amount,bank_name,transfer_reference,receipt_path,status,created_at",[["status","pending"]],"store_payment"],
     suppliers:["market_suppliers","id,name,type,owner_type,register_no,phone,email,address,status,created_at",[],""],
