@@ -4024,7 +4024,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   async function openRetailProfile(backAction=showRetailCatalog){
     window.NEXORA_SHOP_PROFILE=openRetailProfile;
     window.NEXORA_SHOP_BACK=backAction;
-    window.NEXORA_SHOP_NEXT=backAction;
+    window.NEXORA_SHOP_NEXT=null;
     document.getElementById("shop")?.classList.add("nx-shop-profile-fullscreen");
     host.classList.add("nx-profile-fullscreen");
     host.innerHTML='<div class="nx-market-loading">Нэгдсэн профайл нээгдэж байна…</div>';
