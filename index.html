@@ -5266,10 +5266,16 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         --gold:${c.accent}!important;
         --gold-light:${c.accent}!important;
         --white:${c.text}!important;
-        --muted:${c.text}!important;
-        --border:${c.accent}66!important;
+        --muted:${c.muted}!important;
+        --border:${c.border}88!important;
+        --nx-header:${c.header}!important;--nx-secondary:${c.secondary}!important;--nx-icon:${c.icon}!important;--nx-input:${c.input}!important;
       }
       html,body,.screen{background:${c.background}!important;color:${c.text}!important}
+      .topbar,.page-header,#ads .topbar,#shop .topbar,#shop .nx-temu-header{background:${c.header}!important;border-color:${c.border}!important}
+      .bottom-nav,.nav-bar,#ads .nx-subcategory-item,#ads .nx-accordion-option,#shop .nx-temu-category-rail .nx-temu-chip{background:${c.secondary}!important;border-color:${c.border}!important}
+      .muted,.nx-market-muted,.nx-screen-subtitle,.nx-admin-subtitle{color:${c.muted}!important}
+      svg,.icon,.nx-choice-arrow,.nx-choice-index{color:${c.icon}!important}
+      input,select,textarea,#ads .nx-create-screen input,#ads .nx-create-screen select,#ads .nx-create-screen textarea{background:${c.input}!important;border-color:${c.border}!important}
       .topbar,.bottom-nav,.nav-bar,.page-header,.page-content,.content-panel,.welcome-panel,.auth-panel{color:${c.text}}
       .card,.panel,.welcome-panel,.auth-panel,.ad-card,.product-card,.profile-card,.category-card,.choice-card,.modal-content,.form-section,.listing-card{background:${c.panel}!important;color:${c.text}!important;border-color:${c.accent}66!important}
       h1,h2,h3,.logo,.section-title,.page-title,.gold-text,.price,.category-title{color:${c.accent}!important}
