@@ -5126,12 +5126,49 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   function renderRetailCategories(){
     const target=document.getElementById("nx-retail-categories"),rail=document.getElementById("nx-temu-category-rail");
     if(!target||!rail)return;
-    // Зөвхөн өгөгдлийн санд бүртгэлтэй, идэвхтэй бодит барааг харуулна. Жишээ зураг/хийсвэр бараа үүсгэхгүй.
+    // Бодит жижиглэнгийн бараа байхгүй ангилалд л захиалга үүсгэдэггүй жишээ зураг харуулна.
+    const demoProducts=[
+      ["Цамц, хувцас","Эрэгтэй цамц","photo-1521572163474-6864f9cf17ab"],
+      ["Цамц, хувцас","Эмэгтэй загварын хувцас","photo-1483985988355-763728e1935b"],
+      ["Гутал","Өдөр тутмын пүүз","photo-1542291026-7eec264c27ff"],
+      ["Цүнх","Аяллын үүргэвч","photo-1553062407-98eeb64c6a62"],
+      ["Цүнх","Эмэгтэй гар цүнх","photo-1584917865442-de89df76afd3"],
+      ["Цаг, гоёл","Бугуйн цаг","photo-1523275335684-37898b6baf30"],
+      ["Цаг, гоёл","Нарны шил","photo-1511499767150-a48a237f0083"],
+      ["Электрон бараа","Чихэвч","photo-1505740420928-5e560c06d30e"],
+      ["Электрон бараа","Зөөврийн компьютер","photo-1496181133206-80ce9b88a853"],
+      ["Электрон бараа","Таблет","photo-1544244015-0df4b3ffc6b0"],
+      ["Гар утас","Ухаалаг утас","photo-1511707171634-5f897ff02aa9"],
+      ["Гэр ахуй","Орчин үеийн сандал","photo-1503602642458-232111445657"],
+      ["Гэр ахуй","Зочны өрөөний буйдан","photo-1555041469-a586c61ea9bc"],
+      ["Гэр ахуй","Ширээний гэрэл","photo-1507473885765-e6ed057f782c"],
+      ["Гал тогоо","Гал тогооны хэрэгсэл","photo-1556911220-e15b29be8c8f"],
+      ["Гал тогоо","Кофе чанагч","photo-1495474472287-4d71bcdd2085"],
+      ["Гоо сайхан","Арьс арчилгааны бүтээгдэхүүн","photo-1608248543803-ba4f8c70ae0b"],
+      ["Гоо сайхан","Гоо сайхны хэрэгсэл","photo-1522335789203-aabd1fc54bc9"],
+      ["Хүнс","Шинэ жимс, ногоо","photo-1542838132-92c53300491e"],
+      ["Ундаа, хүнс","Кофе, цай","photo-1495474472287-4d71bcdd2085"],
+      ["Спорт","Унадаг дугуй","photo-1485965120184-e220f721d03e"],
+      ["Спорт","Фитнесийн хэрэгсэл","photo-1534438327276-14e5300c3a48"],
+      ["Фото, камер","Дижитал камер","photo-1516035069371-29a1b244cc32"],
+      ["Тоглоом","Хүүхдийн тоглоом","photo-1596461404969-9ae70f2830c1"],
+      ["Багаж хэрэгсэл","Гар багажны иж бүрдэл","photo-1530124566582-a618bc2615dc"],
+      ["Тавилга","Гэрийн интерьер","photo-1616486338812-3dadae4b4ace"],
+      ["Гэр ахуй","Гэрийн чимэглэл","photo-1600210492486-724fe5c67fb0"],
+      ["Хоол, хүнс","Хүнсний бүтээгдэхүүн","photo-1547592180-85f173990554"],
+      ["Хүүхдийн бараа","Хүүхдийн өрөө","photo-1503454537195-1dcabb73ffb9"],
+      ["Гэр ахуй","Ор дэрний хэрэглэл","photo-1631049307264-da0ec9d70304"],
+    ].filter(x=>!x[2].includes("placeholder")).map((x,i)=>({category:x[0],title:x[1],image:"https://images.unsplash.com/"+x[2]+"?auto=format&fit=crop&w=720&q=85",id:"demo-"+i,_isDemo:true}));
     const retailProducts=products.filter(p=>p._marketType==="retail");
+    // Ангиллын бичлэгийн том/жижиг үсэг, илүү зайг үл харгалзан бодит бараатай ангиллыг танина.
     const normalizeCategory=value=>String(value||"Бусад").trim().toLocaleLowerCase("mn").replace(/\\s+/g," ");
+    // Зураг нь амжилттай ачаалагдсан идэвхтэй бодит бараа байгаа үед л тухайн ангиллын жишээ зургийг солино.
+    const realCategoriesWithPhotos=new Set(retailProducts.filter(p=>(p._images||[]).some(image=>image?.url)).map(p=>normalizeCategory(p.category)));
+    const visibleDemos=demoProducts.filter(p=>!realCategoriesWithPhotos.has(normalizeCategory(p.category)));
+    const sourceProducts=[...retailProducts,...visibleDemos];
     const query=String(searchText||"").trim().toLocaleLowerCase("mn");
-    const allCategories=[...new Set(retailProducts.map(p=>p.category||"Бусад"))].sort((a,b)=>a.localeCompare(b,"mn"));
-    const filtered=retailProducts.filter(p=>
+    const allCategories=[...new Set(sourceProducts.map(p=>p.category||"Бусад"))].sort((a,b)=>a.localeCompare(b,"mn"));
+    const filtered=sourceProducts.filter(p=>
       (!retailActiveCategory||retailActiveCategory===p.category||(!p.category&&retailActiveCategory==="Бусад")) &&
       (!query||[p.title,p.category,p.description,p._storeName].some(v=>String(v||"").toLocaleLowerCase("mn").includes(query)))
     );
@@ -5142,14 +5179,21 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       renderRetailCategories();
     });
     const count=document.getElementById("nx-temu-product-count");
-    if(count)count.textContent=filtered.length+" бодит бараа";
+    if(count)count.textContent=filtered.filter(p=>p._isDemo).length+" жишээ · "+filtered.filter(p=>!p._isDemo).length+" бодит";
     if(!filtered.length){
-      target.innerHTML='<div class="nx-temu-empty" style="padding:28px 16px;text-align:center"><strong>Одоогоор нийтэлсэн бодит бараа алга.</strong><p>Бараа нийтлэгдэж, хяналтаар баталгаажсаны дараа энд харагдана.</p></div>';
+      target.innerHTML='<div class="nx-temu-empty">Тохирох бараа олдсонгүй. Хайлтаа өөрчилж үзээрэй.</div>';
       return;
     }
     target.innerHTML='<div class="nx-temu-products"></div>';
     const grid=target.querySelector(".nx-temu-products");
     filtered.forEach(p=>{
+      if(p._isDemo){
+        const card=document.createElement("article");
+        card.className="nx-temu-product nx-temu-demo-product";
+        card.innerHTML='<div class="nx-temu-demo-image-wrap"><img class="nx-temu-product-image" src="'+esc(p.image)+'" alt="'+esc(p.title)+'" loading="lazy"><span class="nx-temu-demo-label">ЖИШЭЭ ЗУРАГ</span></div><div class="nx-temu-product-info"><span class="nx-temu-product-type">'+esc(p.category)+'</span><span class="nx-temu-product-title">'+esc(p.title)+'</span><div class="nx-temu-product-store">Бодит бараа нийтлэгдэхэд энэ ангиллын жишээг солино</div></div><div class="nx-temu-demo-note">Танилцуулгын зураг · Захиалга авахгүй</div>';
+        grid.appendChild(card);
+        return;
+      }
       const wholesale=p._marketType==="wholesale";
       const image=p._images?.[0]?.url||"";
       const minQty=Math.max(1,Number(p.min_order_quantity||1));
