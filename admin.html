@@ -96,9 +96,10 @@
  async function cards(rows,type){
   if(!rows||!rows.length)return empty("Одоогоор хүлээгдэж буй хүсэлт алга.");
   const html=await Promise.all(rows.map(async r=>{
-   const title=r.title||r.store_name||r.name||r.supplier_name||(r.fee_type?(type==="retail_fee_payment"?(r.fee_type==="logo"?"Онлайн дэлгүүрийн логоны төлбөр":"Жижиглэнгийн бараа байршуулалтын төлбөр"):(r.fee_type==="logo"?"Нийлүүлэгчийн логоны төлбөр":"Бөөний бараа байршуулалтын төлбөр")):("Хүсэлт "+String(r.id||"").slice(0,8)));
+   const title=r.payment_purpose==="renewal"?"Нийлүүлэгчийн сарын эрх сунгах":r.title||r.store_name||r.name||r.supplier_name||(r.fee_type?(type==="retail_fee_payment"?(r.fee_type==="logo"?"Онлайн дэлгүүрийн логоны төлбөр":"Жижиглэнгийн бараа байршуулалтын төлбөр"):(r.fee_type==="logo"?"Нийлүүлэгчийн логоны төлбөр":"Бөөний бараа байршуулалтын төлбөр")):("Хүсэлт "+String(r.id||"").slice(0,8)));
    const details=[];
    if(r.owner_type)details.push(["Эзэмшигч",r.owner_type==="company"?"Байгууллага":r.owner_type==="individual"?"Хувь хүн":r.owner_type]);
+   if(r.payment_purpose)details.push(["Төлбөрийн зориулалт",r.payment_purpose==="renewal"?"Сарын эрх сунгалт":"Анхны бүртгэл"]);
    if(r.phone)details.push(["Утас",r.phone]);
    if(r.buyer_name)details.push(["Захиалагч",r.buyer_name]);
    if(r.buyer_id)details.push(["Худалдан авагчийн ID",String(r.buyer_id).slice(0,8)+"…"]);
@@ -250,7 +251,7 @@
     const sources=[
      ["market_retail_fee_payments","id,user_id,store_id,product_id,fee_type,amount,bank_name,account_number,account_holder,transfer_reference,receipt_path,status,admin_note,created_at","retail_fee_payment"],
      ["wholesale_supplier_fee_payments","id,user_id,supplier_id,store_id,fee_type,product_id,amount,bank_name,account_number,account_holder,transfer_reference,receipt_path,status,admin_note,created_at","wholesale_fee_payment"],
-     ["market_supplier_registration_payments","id,user_id,supplier_id,owner_type,supplier_name,phone,email,register_no,amount,bank_name,account_number,account_holder,transfer_reference,receipt_path,status,admin_note,created_at","supplier_registration_payment"],
+     ["market_supplier_registration_payments","id,user_id,supplier_id,owner_type,supplier_name,payment_purpose,phone,email,register_no,amount,bank_name,account_number,account_holder,transfer_reference,receipt_path,status,admin_note,created_at","supplier_registration_payment"],
      ["nexora_store_payments","id,store_id,user_id,amount,bank_name,transfer_reference,receipt_path,status,admin_note,created_at","store_payment"]
     ];
     const loaded=await Promise.all(sources.map(async x=>{const {data,error}=await query(x[0],x[1],[["status","pending"]]);if(error)throw error;return {data:data||[],type:x[2]};}));
@@ -299,7 +300,7 @@
   if(!confirm(action==="approve"?"Энэ хүсэлтийг зөвшөөрөх үү?":"Энэ хүсэлтээс татгалзах уу?"))return;
   let result, supplierRejectNote=null;
   if(type==="supplier_registration_payment"&&action==="reject"){
-   const entered=window.prompt("Нийлүүлэгчийн бүртгэлээс татгалзсан шалтгааныг оруулна уу:","Бүртгэлийн мэдээлэл шаардлага хангаагүй.");
+   const entered=window.prompt("Нийлүүлэгчийн сарын эрхийн төлбөрөөс татгалзсан шалтгааныг оруулна уу:","Бүртгэлийн мэдээлэл шаардлага хангаагүй.");
    if(entered===null)return;
    supplierRejectNote=entered.trim()||"Админы шийдвэрээр татгалзсан.";
   }
