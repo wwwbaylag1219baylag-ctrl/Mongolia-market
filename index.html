@@ -4178,12 +4178,12 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       if(supplierRes.error)throw supplierRes.error;
       const store=storeRes.data,supplier=supplierRes.data;
       const name=store?.store_name||supplier?.name||authData.user.user_metadata?.full_name||authData.user.email||"Удирдлагын хэсэг";
-      const logoPath=store?.owner_type==="company"?(store?.logo_path||store?.wholesale_logo_path||""):(store?.logo_path||store?.personal_photo_path||"");
+      const logoPath=store?.owner_type==="company"?(store?.logo_path||store?.wholesale_logo_path||""):(store?.personal_photo_path||"");
       const logoUrl=logoPath?(logoPath.startsWith("http")?logoPath:db.storage.from("market-store-logos").getPublicUrl(logoPath).data.publicUrl):"";
       const supplierApproved=supplier?.status==="approved";
       const supplierPending=supplier?.status==="pending";
       host.innerHTML='<section class="nx-profile-accordion-root"><div class="nx-profile-identity" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;margin:4px 0 18px">'+
-        '<img src="'+esc(logoUrl||"./assets/nexora-logo.jpg")+'" alt="'+(logoUrl?"Дэлгүүрийн зураг":"NEXORA")+'" style="width:190px;max-width:70vw;height:76px;object-fit:contain">'+
+        '<img src="./assets/nexora-logo.jpg" alt="NEXORA" style="width:190px;max-width:70vw;height:76px;object-fit:contain">'+
         '<h2 class="nx-profile-heading">УДИРДЛАГЫН ХЭСЭГ</h2><p class="nx-market-muted">'+esc(name)+'</p><p class="nx-market-muted">'+esc(authData.user.email||"")+'</p></div>'+
         '<div class="nx-profile-accordion-content">'+
         '<details class="nx-help-group" '+(profileOpenSection==="retail"?"open":"") + '><summary>Онлайн дэлгүүр</summary><div class="nx-help-items">'+
