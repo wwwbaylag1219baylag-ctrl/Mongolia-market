@@ -897,6 +897,11 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     }
   );
 
+  // Хуудаснаас гарахад түр нэвтрэлтийг ч цэвэрлэнэ (back/forward cache-ээс буцаж ирэхэд ч нэвтрээгүй байна).
+  window.addEventListener("pagehide", function () {
+    db.auth.signOut({ scope: "local" }).catch(function () {});
+  });
+
   const panel = document.getElementById("nexora-auth-panel");
 
   if (!panel) {
