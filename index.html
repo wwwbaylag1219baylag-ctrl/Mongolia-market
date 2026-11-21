@@ -4340,7 +4340,12 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
             const {data,error}=await db.from("nexora_store_profiles").insert(payload).select("id,store_name,owner_type").single();
             if(error)throw error;saved=data;
           }
-          if(file&&file.size){
+                    if(personalPhoto&&personalPhoto.size&&payload.owner_type==="individual"){
+             const ext=personalPhoto.type==="image/png"?"png":personalPhoto.type==="image/webp"?"webp":"jpg",photoPath=marketUser.id+"/personal-profile-photos/"+crypto.randomUUID()+"."+ext;
+             const {error:photoUploadError}=await db.storage.from("market-store-logos").upload(photoPath,personalPhoto,{upsert:false,contentType:personalPhoto.type,cacheControl:"31536000"});if(photoUploadError)throw photoUploadError;uploadedPersonalPhotoPath=photoPath;
+             const {error:photoSaveError}=await db.from("nexora_store_profiles").update({personal_photo_path:photoPath}).eq("id",saved.id).eq("user_id",marketUser.id);if(photoSaveError)throw photoSaveError;
+           }
+if(file&&file.size){
             const ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg",path=marketUser.id+"/retail-store-logos/"+Date.now()+"."+ext;
             const {error:uploadError}=await db.storage.from("market-store-logos").upload(path,file,{upsert:false,contentType:file.type,cacheControl:"31536000"});
             if(uploadError)throw uploadError;uploadedLogoPath=path;
@@ -4351,11 +4356,6 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
               if(updateError)throw updateError;
             }
           }
-          if(personalPhoto&&personalPhoto.size&&payload.owner_type==="individual"){
-             const ext=personalPhoto.type==="image/png"?"png":personalPhoto.type==="image/webp"?"webp":"jpg",photoPath=marketUser.id+"/personal-profile-photos/"+crypto.randomUUID()+"."+ext;
-             const {error:photoUploadError}=await db.storage.from("market-store-logos").upload(photoPath,personalPhoto,{upsert:false,contentType:personalPhoto.type,cacheControl:"31536000"});if(photoUploadError)throw photoUploadError;uploadedPersonalPhotoPath=photoPath;
-             const {error:photoSaveError}=await db.from("nexora_store_profiles").update({personal_photo_path:photoPath}).eq("id",saved.id).eq("user_id",marketUser.id);if(photoSaveError)throw photoSaveError;
-           }
            if(!store){await showStorePayment(saved,settings,banks,backAction,uploadedLogoPath,logoFee);return;}
           msg.textContent="✓ Дэлгүүрийн мэдээлэл хадгалагдлаа.";await showStore(backAction);
         }catch(err){if(uploadedLogoPath)await db.storage.from("market-store-logos").remove([uploadedLogoPath]).catch(()=>{});if(uploadedPersonalPhotoPath)await db.storage.from("market-store-logos").remove([uploadedPersonalPhotoPath]).catch(()=>{});msg.textContent="Алдаа: "+(err.message||err);btn.disabled=false;}
@@ -5012,7 +5012,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       // Удирдлагын хэсэгт харагддаг дэлгүүрийн үндсэн/бөөний логоноос эхэлж ижил зургийг Профайлд харуулна.
       const {data:profile,error:profileError}=await db.from("nexora_store_profiles").select("owner_type,logo_path,wholesale_logo_path,personal_photo_path").eq("user_id",auth.user.id).maybeSingle();
       if(profileError)throw profileError;
-      const path=profile?.logo_path||profile?.wholesale_logo_path||(profile?.owner_type==="individual"?profile?.personal_photo_path:"")||"";
+      const path=profile?.logo_path||(profile?.owner_type!=="company"?profile?.personal_photo_path:profile?.wholesale_logo_path)||"";
       const url=path?(String(path).startsWith("http")?path:db.storage.from("market-store-logos").getPublicUrl(path).data.publicUrl):"";
       if(url){button.innerHTML='<img src="'+esc(url)+'" alt="Дэлгүүрийн лого">';}
       else{button.innerHTML='<span class="nx-temu-mark" aria-hidden="true">N</span>';}
