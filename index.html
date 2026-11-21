@@ -4123,9 +4123,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     const {data:authData,error:authError}=await db.auth.getUser();
     const user=authData?.user;
     if(sessionError||authError||!sessionData?.session||!user||!user.email_confirmed_at){
-      await db.auth.signOut({scope:"local"}).catch(()=>{});
-      await window.NEXORA?.open("profile");
-      window.NEXORA_SHOP_AUTH_FORM?.();
+      // Нэвтрээгүй үед каталог дээр зүүн шудрахад нэвтрэх цонх автоматаар нээхгүй.
+      // Нэвтрэх/бүртгүүлэхийг зөвхөн хэрэглэгч Профайл дээр дарж эхлүүлнэ.
       window.NEXORA_SHOP_NEXT=null;
       return;
     }
