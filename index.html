@@ -5018,7 +5018,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     try{
       const {data:auth,error:authError}=await db.auth.getUser();
       if(authError)throw authError;
-      if(!auth?.user){button.innerHTML='<span class="nx-temu-mark" aria-hidden="true">N</span>';return;}
+      if(!auth?.user){button.innerHTML='<img src="./assets/nexora-logo.jpg" alt="NEXORA">';return;}
       const [profileRes,supplierRes]=await Promise.all([
         db.from("nexora_store_profiles").select("owner_type,logo_path,wholesale_logo_path,personal_photo_path").eq("user_id",auth.user.id).maybeSingle(),
         db.from("market_suppliers").select("owner_type").eq("owner_id",auth.user.id).maybeSingle()
@@ -5032,8 +5032,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         :(profile.personal_photo_path||auth.user.user_metadata?.avatar_url||auth.user.user_metadata?.picture||"");
       const url=path?(String(path).startsWith("http")?path:db.storage.from("market-store-logos").getPublicUrl(path).data.publicUrl):"";
       if(url){button.innerHTML='<img src="'+esc(url)+'" alt="'+(ownerType==="company"?"Дэлгүүрийн лого":"Хэрэглэгчийн зураг")+'">';}
-      else{button.innerHTML='<span class="nx-temu-mark" aria-hidden="true">N</span>';}
-    }catch(error){console.warn("NEXORA профайлын зураг:",error);}
+      else{button.innerHTML='<img src="./assets/nexora-logo.jpg" alt="NEXORA">';}
+    }catch(error){console.warn("NEXORA профайлын зураг:",error);button.innerHTML='<img src="./assets/nexora-logo.jpg" alt="NEXORA">';}
   }
   function showRetailCatalog(){
     host.classList.remove("nx-profile-fullscreen");
