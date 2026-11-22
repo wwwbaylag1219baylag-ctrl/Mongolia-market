@@ -4794,51 +4794,30 @@ textarea:disabled,
         const draft={name:String(v.name).trim(),owner_type:ownerType,type:v.type,register_no:String(v.register_no).trim(),phone:String(v.phone).trim(),email:String(v.email||"").trim(),address:String(v.address).trim()};
         // Төлбөрийн дэлгэцээс буцахад бүртгэлийн маягт руу буцна.
         window.NEXORA_SHOP_BACK = () => showSupplier(backAction);
-        host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-supplier-payment-back" aria-label="Буцах" title="Буцах">‹</button><h2 class="nexora-ad-heading">'+(isRenewal?"НИЙЛҮҮЛЭГЧИЙН ЭРХ СУНГАХ":"НИЙЛҮҮЛЭГЧИЙН САРЫН ЭРХ")+'</h2><section class="nx-admin-card"><p class="nx-market-muted">Эзэмшигчийн төрөл: '+(ownerType==="company"?"Компани":"Хувь хүн")+'</p><p class="nx-market-price">'+money(amount)+'</p><p class="nx-market-muted">Сарын суурь хураамж · '+Number(feeSettings.duration_days||30)+' хоног</p></section><h3>АДМИНЫ ДАНСНЫ СОНГОЛТ</h3><div id="nx-supplier-bank-list">'+banks.map((b,i)=>'<label class="nx-admin-card" data-supplier-bank-card style="display:flex;gap:12px;align-items:flex-start;margin:10px 0;cursor:pointer;transition:background .2s,color .2s"><input type="radio" name="supplier_bank" value="'+esc(b.id)+'" '+(i===0?"checked":"")+' style="margin-top:5px;accent-color:#168cff;flex:0 0 auto"><span style="min-width:0;color:#f0d28a"><strong>'+esc(b.bank_name)+'</strong><span data-supplier-bank-details style="display:none"><p class="nx-market-price">'+esc(b.account_number)+'</p><p class="nx-market-muted">'+esc(b.account_holder)+'</p></span><small style="display:block;margin-top:5px;color:#aaa39a">ЦЭНХЭР ДУГУЙГ УДААН ДАРЖ ДАНС ХАРАХ</small></span></label>').join("")+'</div><form id="nx-supplier-payment-form"><label>Гүйлгээний утга / лавлах дугаар *</label><input class="nx-market-input" name="transfer_reference" required maxlength="150"><label>Төлбөрийн баримт (JPG, PNG, WEBP, PDF · 8MB хүртэл) *</label><input class="nx-market-input" name="receipt" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required><button class="nx-market-btn" type="submit">ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭХ</button></form><p id="nx-supplier-payment-msg" class="nx-market-muted"></p>';
+        host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-supplier-payment-back" aria-label="Буцах" title="Буцах">‹</button><h2 class="nexora-ad-heading">'+(isRenewal?"НИЙЛҮҮЛЭГЧИЙН ЭРХ СУНГАХ":"НИЙЛҮҮЛЭГЧИЙН САРЫН ЭРХ")+'</h2><section class="nx-admin-card"><p class="nx-market-muted">Эзэмшигчийн төрөл: '+(ownerType==="company"?"Компани":"Хувь хүн")+'</p><p class="nx-market-price">'+money(amount)+'</p><p class="nx-market-muted">Сарын суурь хураамж · '+Number(feeSettings.duration_days||30)+' хоног</p></section><h3>БАНКАА СОНГООРОЙ</h3><div id="nx-supplier-bank-list" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0 16px">'+banks.map(b=>'<button type="button" data-supplier-bank-button data-bank-id="'+esc(b.id)+'" aria-pressed="false" style="min-width:0;padding:15px 10px;border:1px solid rgba(214,173,85,.55);border-radius:14px;background:#171717;color:#f0d28a;font-weight:800;font-size:15px;cursor:pointer">'+esc(b.bank_name)+'</button><input type="radio" name="supplier_bank" value="'+esc(b.id)+'" style="display:none">').join("")+'</div><section id="nx-supplier-bank-details" class="nx-admin-card" aria-live="polite" style="display:none;margin:0 0 16px;padding:18px;background:#f5f5f5;color:#171717;border:1px solid #d6ad55;border-radius:16px"><strong id="nx-supplier-bank-name" style="display:block;color:#171717;font-size:18px"></strong><p id="nx-supplier-bank-number" style="margin:10px 0 4px;color:#171717;font-size:23px;font-weight:800;letter-spacing:.4px"></p><p id="nx-supplier-bank-holder" style="margin:0;color:#444;font-size:16px"></p></section><form id="nx-supplier-payment-form"><label>Гүйлгээний утга / лавлах дугаар *</label><input class="nx-market-input" name="transfer_reference" required maxlength="150"><label>Төлбөрийн баримт (JPG, PNG, WEBP, PDF · 8MB хүртэл) *</label><input class="nx-market-input" name="receipt" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required><button class="nx-market-btn" type="submit">ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭХ</button></form><p id="nx-supplier-payment-msg" class="nx-market-muted"></p>';
         document.getElementById("nx-supplier-payment-back").onclick=()=>showSupplier(backAction);
-        // Банкны картыг бүхэлд нь удаан дарахад сонгож, цайруулан дансны мэдээллийг харуулна.
+        // Банкны нэртэй товчийг дарахад тухайн дансны мэдээллийг харуулж, төлбөрт сонгоно.
         const supplierBankList=document.getElementById("nx-supplier-bank-list");
-        supplierBankList.querySelectorAll("[data-supplier-bank-card]").forEach(card=>{
-          const radio=card.querySelector('input[name="supplier_bank"]');
-          let holdTimer=null;
-          const cancelHold=()=>{if(holdTimer)clearTimeout(holdTimer);holdTimer=null;};
-          card.style.transition="background-color .28s ease,color .28s ease,border-color .28s ease,box-shadow .28s ease";
-          card.style.userSelect="none";
-          card.style.webkitUserSelect="none";
-          const revealDetails=()=>{
-            if(!radio)return;
-            radio.checked=true;
-            radio.dispatchEvent(new Event("change",{bubbles:true}));
-            supplierBankList.querySelectorAll("[data-supplier-bank-card]").forEach(other=>{
-              other.style.background="#171717";
-              other.style.borderColor="rgba(214,173,85,.22)";
-              other.style.boxShadow="none";
-              const details=other.querySelector("[data-supplier-bank-details]");
-              if(details)details.style.display="none";
-              const text=other.querySelector("span");
-              if(text)text.style.color="#f0d28a";
+        const bankDetails=document.getElementById("nx-supplier-bank-details");
+        supplierBankList.querySelectorAll("[data-supplier-bank-button]").forEach(button=>{
+          button.addEventListener("click",()=>{
+            const bank=banks.find(item=>String(item.id)===button.dataset.bankId);
+            if(!bank)return;
+            supplierBankList.querySelectorAll("[data-supplier-bank-button]").forEach(other=>{
+              const active=other===button;
+              other.setAttribute("aria-pressed",String(active));
+              other.style.background=active?"#f5f5f5":"#171717";
+              other.style.color=active?"#171717":"#f0d28a";
+              other.style.borderColor=active?"#d6ad55":"rgba(214,173,85,.55)";
+              other.style.boxShadow=active?"0 5px 16px rgba(0,0,0,.12)":"none";
             });
-            card.style.background="#f5f5f5";
-            card.style.borderColor="#d6ad55";
-            card.style.boxShadow="0 6px 18px rgba(0,0,0,.12)";
-            const details=card.querySelector("[data-supplier-bank-details]");
-            if(details)details.style.display="block";
-            const text=card.querySelector("span");
-            if(text)text.style.color="#171717";
-          };
-          card.addEventListener("touchstart",event=>{
-            if(event.touches&&event.touches.length>1)return;
-            cancelHold();
-            holdTimer=setTimeout(revealDetails,550);
-          },{passive:true});
-          card.addEventListener("touchend",cancelHold,{passive:true});
-          card.addEventListener("touchcancel",cancelHold,{passive:true});
-          card.addEventListener("pointerdown",event=>{
-            if(event.pointerType==="mouse"&&event.button===0){cancelHold();holdTimer=setTimeout(revealDetails,550);}
+            const radio=supplierBankList.querySelector('input[name="supplier_bank"][value="'+CSS.escape(String(bank.id))+'"]');
+            if(radio)radio.checked=true;
+            document.getElementById("nx-supplier-bank-name").textContent=bank.bank_name||"";
+            document.getElementById("nx-supplier-bank-number").textContent=bank.account_number||"";
+            document.getElementById("nx-supplier-bank-holder").textContent=bank.account_holder||"";
+            bankDetails.style.display="block";
           });
-          card.addEventListener("pointerup",cancelHold);
-          card.addEventListener("pointercancel",cancelHold);
-          card.addEventListener("contextmenu",event=>event.preventDefault());
         });
         document.getElementById("nx-supplier-payment-form").onsubmit=async ev=>{
           ev.preventDefault();
