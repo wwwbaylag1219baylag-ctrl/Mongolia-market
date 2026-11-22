@@ -7258,13 +7258,13 @@ html,body{
 
 /* Бүх гурван хэсэг — харагдах товчны дарж болох талбайг нэмэх */
 #ads :is(button,[role="button"]),
-#shop :is(button,[role="button]),
-#market-app :is(button,[role="button]){
+#shop :is(button,[role="button"]),
+#market-app :is(button,[role="button"]){
   -webkit-tap-highlight-color:transparent;
 }
-#ads :is(button,[role="button]):disabled,
-#shop :is(button,[role="button]):disabled,
-#market-app :is(button,[role="button]):disabled{
+#ads :is(button,[role="button"]):disabled,
+#shop :is(button,[role="button"]):disabled,
+#market-app :is(button,[role="button"]):disabled{
   cursor:not-allowed;
   filter:saturate(.65);
 }
@@ -7281,7 +7281,7 @@ html,body{
 @media(prefers-reduced-motion:reduce){
   #ads :is(a,button,[role="button"]),
   #shop :is(a,button,[role="button"]),
-  #market-app :is(a,button,[role="button]){
+  #market-app :is(a,button,[role="button"]){
     scroll-behavior:auto!important;
     transition:none!important;
     animation:none!important;
