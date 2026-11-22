@@ -204,6 +204,15 @@
    .nx-theme-platform-preview .ads strong{color:${c.platform_ads_title}!important}.nx-theme-platform-preview .shop strong{color:${c.platform_shop_title}!important}
    .nx-theme-platform-preview .ads span{color:${c.platform_ads_icon}!important}.nx-theme-platform-preview .shop span{color:${c.platform_shop_icon}!important}
    .nx-admin-subtitle,.nx-admin-section-note,.nx-admin-meta{color:${c.muted}!important}
+   /* Нэгдсэн өнгө: админы бүх үйлдлийн товч ба холбоос товч */
+   #nexora-admin-app button:not(.nx-admin-tabs button):not([data-theme-preset]),#nexora-admin-app .nx-admin-home,#nexora-admin-app .nx-admin-login-submit{background:${c.button}!important;background-color:${c.button}!important;color:${c.button_text}!important;border-color:${c.border}!important;text-shadow:none!important}
+   #nexora-admin-app .nx-admin-tabs button{background:${c.secondary}!important;background-color:${c.secondary}!important;color:${c.text}!important;border-color:${c.border}!important}
+   #nexora-admin-app .nx-admin-tabs button.active{background:${c.button}!important;background-color:${c.button}!important;color:${c.button_text}!important}
+   #nexora-admin-app .nx-admin-back{background:${c.secondary}!important;background-color:${c.secondary}!important;color:${c.text}!important;border-color:${c.border}!important}
+   #nexora-admin-app .nx-admin-approve,#nexora-admin-app .nx-admin-reject,#nexora-admin-app .nx-admin-stat-link,#nexora-admin-app .nx-admin-refresh,#nexora-admin-app .nx-admin-logout{background:${c.button}!important;background-color:${c.button}!important;color:${c.button_text}!important;border-color:${c.border}!important}
+   #nexora-admin-app .nx-admin-card[data-theme-preset]{background:${c.panel}!important;color:${c.text}!important;border-color:${c.border}!important}
+   #nexora-admin-app .nx-admin-login-submit{background:${c.button}!important;color:${c.button_text}!important;border-color:${c.border}!important}
+   
    ${t.theme_finish==="glossy"?`.nx-admin-focusbar{background:linear-gradient(145deg,${mix(t.header,140)},${c.header} 55%,${mix(t.header,75)})!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 5px 18px rgba(100,0,15,.25)!important}#nexora-admin-app button,#nexora-admin-app .nx-admin-home,#nexora-admin-app .nx-admin-logout{background:linear-gradient(145deg,${mix(t.button,140)},${c.button} 55%,${mix(t.button,75)})!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 5px 14px rgba(80,0,0,.28)!important}#nexora-admin-app .nx-admin-card,#nexora-admin-app .nx-admin-stat{box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 7px 18px rgba(0,0,0,.2)!important}`:""}
   `;
  }
