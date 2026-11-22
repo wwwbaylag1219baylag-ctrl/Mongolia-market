@@ -530,6 +530,98 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   <link rel="dns-prefetch" href="//tile.openstreetmap.org">
   <link rel="preload" as="image" href="./assets/nexora-logo.jpg" fetchpriority="high">
 
+
+<style id="NEXORA-GLOBAL-RECESSED-FIELDS-2026">
+/* NEXORA — бүх хэсгийн мэдээлэл оруулах, тайлбар бичих талбарын гүн хонхойсон гадаргуу.
+   Зөвхөн харагдах байдлыг өөрчилнө; form/validation/upload/table logic-д хүрэхгүй. */
+:root{
+  --nx-field-recess-bg:#17191b;
+  --nx-field-recess-edge:rgba(214,173,85,.27);
+  --nx-field-recess-text:#f1eadc;
+  --nx-field-recess-accent:#d6ad55;
+}
+input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="image"]):not([type="file"]):not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+select,
+textarea,
+[contenteditable="true"],
+[role="textbox"],
+.form-control{
+  color:var(--nx-field-recess-text);
+  background-color:var(--nx-field-recess-bg);
+  background-image:linear-gradient(148deg,rgba(0,0,0,.34),rgba(255,255,255,.018) 52%,rgba(255,255,255,.045));
+  border:1px solid var(--nx-field-recess-edge);
+  border-top-color:rgba(0,0,0,.68);
+  border-left-color:rgba(0,0,0,.5);
+  box-shadow:inset 4px 5px 11px rgba(0,0,0,.48),
+             inset -1px -1px 3px rgba(255,255,255,.055),
+             0 1px 0 rgba(255,255,255,.035);
+  text-shadow:0 1px 0 rgba(255,255,255,.12),
+              0 -1px 1px rgba(0,0,0,.7);
+  caret-color:var(--nx-field-recess-accent);
+  transition:border-color .2s ease,box-shadow .2s ease,background-color .2s ease;
+}
+textarea,
+[contenteditable="true"],
+[role="textbox"]{
+  line-height:1.65;
+  padding:13px 15px;
+  border-radius:12px;
+  box-shadow:inset 5px 6px 14px rgba(0,0,0,.52),
+             inset -1px -1px 4px rgba(255,255,255,.05),
+             0 1px 0 rgba(255,255,255,.025);
+}
+input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="image"]):not([type="file"]):not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"])::placeholder,
+textarea::placeholder{
+  color:rgba(220,211,194,.48);
+  font-weight:450;
+  text-shadow:0 1px 1px rgba(0,0,0,.68);
+  opacity:1;
+}
+input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="image"]):not([type="file"]):not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):focus,
+select:focus,
+textarea:focus,
+[contenteditable="true"]:focus,
+[role="textbox"]:focus,
+.form-control:focus{
+  border-color:rgba(214,173,85,.76);
+  box-shadow:inset 5px 6px 15px rgba(0,0,0,.56),
+             inset -1px -1px 4px rgba(255,255,255,.055),
+             0 0 0 3px rgba(214,173,85,.12),
+             0 0 18px rgba(214,173,85,.085);
+  outline:none;
+}
+table input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+table select,
+table textarea{
+  border-radius:9px;
+  box-shadow:inset 3px 4px 9px rgba(0,0,0,.5),
+             inset -1px -1px 3px rgba(255,255,255,.045);
+}
+input:disabled,
+select:disabled,
+textarea:disabled,
+[contenteditable="false"]{
+  opacity:.72;
+  cursor:not-allowed;
+}
+@media(max-width:699px){
+  input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="image"]):not([type="file"]):not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+  select{
+    min-height:46px;
+  }
+  textarea,
+  [contenteditable="true"],
+  [role="textbox"]{
+    min-height:112px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  input,select,textarea,[contenteditable="true"],[role="textbox"],.form-control{
+    transition:none!important;
+  }
+}
+</style>
+
 </head>
 
 <body>
