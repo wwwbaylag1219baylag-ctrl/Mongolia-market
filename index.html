@@ -3829,7 +3829,7 @@ textarea:disabled,
             : "Таны зар сонгосон үндсэн болон дэд ангиллын зарын жагсаалтад нийтлэгдлээ."}
         </div>
         <button class="nx-create-submit" type="button"
-          data-nx-create-finish>ЗАРЫН ЖАГСААЛТ РУУ БУЦАХ</button>
+          data-nx-create-finish>ҮНДСЭН АНГИЛАЛ РУУ БУЦАХ</button>
       </div>
     `;
   }
@@ -3945,10 +3945,22 @@ textarea:disabled,
       return;
     }
 
-    if (target.closest("[data-nx-create-back]") ||
-        target.closest("[data-nx-create-finish]")) {
+    if (target.closest("[data-nx-create-back]")) {
       if (typeof window.NEXORA_AD_RELOAD === "function") {
         window.NEXORA_AD_RELOAD();
+      }
+      return;
+    }
+
+    if (target.closest("[data-nx-create-finish]")) {
+      pendingAd = null;
+      selectedPackage = null;
+      selectedBank = null;
+      createdAdId = null;
+      if (typeof window.NEXORA_AD_HOME === "function") {
+        window.NEXORA_AD_HOME();
+      } else if (typeof window.NEXORA_AD_BACK === "function") {
+        window.NEXORA_AD_BACK();
       }
       return;
     }
@@ -7722,7 +7734,7 @@ html,body{
     "ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭХ":["SUBMIT PAYMENT RECEIPT","提交付款凭证","ОТПРАВИТЬ КВИТАНЦИЮ","결제 영수증 제출","支払い証明を送信"],
     "ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭЛЭЭ":["PAYMENT RECEIPT SUBMITTED","付款凭证已提交","КВИТАНЦИЯ ОТПРАВЛЕНА","결제 영수증 제출 완료","支払い証明を送信しました"],
     "ТАНЫ ЗАР НИЙТЛЭГДЛЭЭ":["YOUR AD HAS BEEN POSTED","您的广告已发布","ВАШЕ ОБЪЯВЛЕНИЕ ОПУБЛИКОВАНО","광고가 게시되었습니다","広告が掲載されました"],
-    "ЗАРЫН ЖАГСААЛТ РУУ БУЦАХ":["BACK TO AD LIST","返回广告列表","ВЕРНУТЬСЯ К СПИСКУ ОБЪЯВЛЕНИЙ","광고 목록으로 돌아가기","広告一覧に戻る"],
+    "ҮНДСЭН АНГИЛАЛ РУУ БУЦАХ":["BACK TO MAIN CATEGORIES","返回主分类","ВЕРНУТЬСЯ К ОСНОВНЫМ КАТЕГОРИЯМ","기본 카테고리로 돌아가기","メインカテゴリーに戻る"],
     "Одтой талбаруудыг бүрэн бөглөнө үү.":["Please complete all required fields.","请填写所有必填字段。","Заполните все обязательные поля.","필수 항목을 모두 입력하세요.","必須項目をすべて入力してください。"],
             "Төлбөрийн баримтын файл сонгоно уу.":["Please select the payment receipt file.","请选择付款凭证文件。","Выберите файл платёжной квитанции.","결제 영수증 파일을 선택하세요.","支払い証明ファイルを選択してください。"],
     "Энгийн":["Basic","普通","Обычный","기본","通常"],
