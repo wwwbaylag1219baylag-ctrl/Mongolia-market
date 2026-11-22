@@ -9734,3 +9734,137 @@ body:has(#nx-retail-lightbox-close)>div:has(#nx-retail-lightbox-close) img{
   #ads .nx-create-screen textarea{transition:none!important}
 }
 </style>
+
+
+<style id="NEXORA-ADS-MARKET-STAGE12-2026">
+/* 12-р шат — ЗАР + ХУДАЛДАА: сагс, хүргэлтийн мэдээлэл, захиалгын алхмын өнгөлгөө.
+   Зөвхөн CSS; нийлүүлэгч/жижиглэнгийн тусдаа урсгал, тооцоолол, төлбөр ба захиалгын логикт хүрэхгүй. */
+
+/* Нэгдсэн сагсны үндсэн зохион байгуулалт */
+#market-app:has(#nx-cart-order){
+  width:100%;max-width:980px;margin-inline:auto;
+  padding:clamp(12px,3vw,24px);
+  padding-bottom:max(28px,env(safe-area-inset-bottom));
+}
+#market-app:has(#nx-cart-order)>h2{
+  margin:12px 0 18px!important;
+  font-size:clamp(21px,5vw,28px)!important;
+  line-height:1.25;letter-spacing:.015em;
+}
+#market-app:has(#nx-cart-order)>h3{
+  margin:20px 0 10px;padding:12px 14px;
+  border-radius:13px;border:1px solid rgba(214,173,85,.18);
+  background:rgba(214,173,85,.045);
+  font-size:clamp(14px,3.5vw,17px);font-weight:900;
+}
+#market-app:has(#nx-cart-order) #nx-cart-back{
+  min-width:46px;min-height:44px;padding:10px 16px;
+  border-radius:13px;-webkit-tap-highlight-color:transparent;
+}
+
+/* Хүргэлтийн маягтын шошго, талбарууд */
+#market-app:has(#nx-cart-order)>label{
+  display:block;margin:13px 0 6px;
+  font-size:12px;font-weight:800;letter-spacing:.015em;
+}
+#market-app:has(#nx-cart-order)>input.nx-market-input,
+#market-app:has(#nx-cart-order)>textarea.nx-market-input{
+  display:block;box-sizing:border-box;width:100%;max-width:100%;
+  min-height:48px;padding:12px 14px;margin:0 0 9px;
+  border-radius:13px;font-size:15px;line-height:1.5;
+  transition:box-shadow .18s ease,border-color .18s ease;
+}
+#market-app:has(#nx-cart-order)>textarea.nx-market-input{
+  min-height:82px;resize:vertical;
+}
+#market-app:has(#nx-cart-order)>input.nx-market-input:focus,
+#market-app:has(#nx-cart-order)>textarea.nx-market-input:focus{
+  outline:none;
+  box-shadow:0 0 0 3px rgba(214,173,85,.13),inset 0 1px 3px rgba(0,0,0,.08);
+}
+#market-app:has(#nx-cart-order) #nx-delivery-map{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;min-height:49px;margin:9px 0 7px;
+  border-radius:14px;font-weight:850;
+}
+#market-app:has(#nx-cart-order) #nx-delivery-map-label{
+  padding:10px 12px;margin:0 0 12px;
+  border:1px dashed rgba(214,173,85,.32);border-radius:12px;
+  line-height:1.5;overflow-wrap:anywhere;
+}
+#market-app:has(#nx-cart-order)>h3:last-of-type{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;margin-top:22px;padding:15px 16px;
+  font-size:clamp(17px,4vw,21px);
+}
+#market-app:has(#nx-cart-order) #nx-cart-order{
+  display:block;width:100%;min-height:54px;margin:12px 0 8px;
+  border-radius:15px;font-size:14px;font-weight:950;
+  letter-spacing:.025em;-webkit-tap-highlight-color:transparent;
+  box-shadow:0 8px 20px rgba(0,0,0,.13),inset 0 1px 0 rgba(255,255,255,.12);
+}
+#market-app:has(#nx-cart-order) #nx-cart-order:disabled{
+  opacity:.48;box-shadow:none;
+}
+#market-app:has(#nx-cart-order) #nx-market-msg{
+  min-height:20px;line-height:1.5;overflow-wrap:anywhere;
+}
+
+/* Захиалгын дэлгэрэнгүй/төлбөрийн маягтууд — өнгөний палитр удамшина */
+#market-app #nx-wholesale-order-form,
+#market-app #nx-retail-order-form,
+#market-app form[id*="order-form"]{
+  display:grid;grid-template-columns:minmax(0,1fr);
+  gap:9px;width:100%;max-width:760px;margin:14px auto;
+  padding:clamp(13px,3vw,22px);
+  border:1px solid rgba(214,173,85,.18);border-radius:19px;
+  box-shadow:0 12px 30px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.045);
+}
+#market-app #nx-wholesale-order-form label,
+#market-app #nx-retail-order-form label,
+#market-app form[id*="order-form"] label{
+  display:block;margin:5px 0 0;font-size:12px;font-weight:850;
+}
+#market-app #nx-wholesale-order-form input,
+#market-app #nx-wholesale-order-form select,
+#market-app #nx-wholesale-order-form textarea,
+#market-app #nx-retail-order-form input,
+#market-app #nx-retail-order-form select,
+#market-app #nx-retail-order-form textarea,
+#market-app form[id*="order-form"] input,
+#market-app form[id*="order-form"] select,
+#market-app form[id*="order-form"] textarea{
+  box-sizing:border-box;width:100%;max-width:100%;min-height:46px;
+  padding:11px 13px;border-radius:12px;font-size:15px;line-height:1.45;
+}
+#market-app #nx-wholesale-order-form button,
+#market-app #nx-retail-order-form button,
+#market-app form[id*="order-form"] button{
+  min-height:49px;border-radius:13px;font-weight:900;
+}
+
+/* Жижиг дэлгэц дээр хажуу тийш шахагдахгүй, safe-area зайтай */
+@media(max-width:699px){
+  #market-app:has(#nx-cart-order){padding:11px 10px!important}
+  #market-app:has(#nx-cart-order)>h3{margin-top:16px;padding:11px 12px}
+  #market-app:has(#nx-cart-order)>input.nx-market-input,
+  #market-app:has(#nx-cart-order)>textarea.nx-market-input{font-size:16px}
+  #market-app #nx-wholesale-order-form,
+  #market-app #nx-retail-order-form,
+  #market-app form[id*="order-form"]{padding:12px;border-radius:16px}
+}
+@media(max-width:360px){
+  #market-app:has(#nx-cart-order)>h2{font-size:20px!important}
+  #market-app:has(#nx-cart-order) #nx-cart-order{min-height:50px}
+}
+@media(hover:hover) and (pointer:fine){
+  #market-app:has(#nx-cart-order) #nx-delivery-map:hover,
+  #market-app:has(#nx-cart-order) #nx-cart-order:hover{
+    filter:brightness(1.06);transform:translateY(-1px);
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #market-app:has(#nx-cart-order)>input.nx-market-input,
+  #market-app:has(#nx-cart-order)>textarea.nx-market-input{transition:none!important}
+}
+</style>
