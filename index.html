@@ -1066,7 +1066,9 @@ textarea:disabled,
       auth: {
         // Дэлгүүрийн хэрэглэгчийн session-ийг админ самбарын session-ээс тусгаарлана.
         // Ингэснээр админ нэвтрэлт дэлгүүрийн профайлд автоматаар үйлчлэхгүй.
+        // Session нь зөвхөн одоогийн browser tab-д хадгалагдана.
         storageKey: "nexora-shop-auth",
+        storage: window.sessionStorage,
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true
