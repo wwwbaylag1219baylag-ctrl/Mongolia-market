@@ -10860,3 +10860,119 @@ body:has(#nx-retail-lightbox-close)>div:has(#nx-retail-lightbox-close) img{
   }
 }
 </style>
+
+
+<style id="NEXORA-ADS-MARKET-STAGE24-2026">
+/* 24-р шат — Premium Depth & Living Interface.
+   CSS-only visual layer. Үйлдэл, event, DOM бүтэц, өгөгдөл, auth,
+   төлбөр, захиалга болон navigation логикт хүрэхгүй. */
+
+/* Зарын картууд: гадаргуугийн гэрэл, гүн ба илүү цэгцтэй давхарга */
+#ads .nx-ad-card--visual{
+  position:relative;
+  isolation:isolate;
+  box-shadow:0 10px 28px rgba(0,0,0,.17),
+             inset 0 1px 0 rgba(255,255,255,.055);
+  transition:box-shadow .24s ease,border-color .24s ease,
+             background-color .24s ease;
+}
+#ads .nx-ad-card--visual::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  border-radius:inherit;
+  background:linear-gradient(145deg,rgba(255,255,255,.045),transparent 42%);
+  opacity:.72;
+}
+
+/* Жижиглэн барааны карт: зураг ба мэдээллийн хэсгийн ялгарал */
+#shop .nx-temu-product{
+  position:relative;
+  isolation:isolate;
+  box-shadow:0 8px 22px rgba(0,0,0,.12),
+             inset 0 1px 0 rgba(255,255,255,.045);
+  transition:box-shadow .24s ease,border-color .24s ease;
+}
+#shop .nx-temu-product::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  border-radius:inherit;
+  background:linear-gradient(155deg,rgba(255,255,255,.04),transparent 48%);
+}
+
+/* Бөөний бараа: хүрээний гэрэл ба гадаргуугийн тэнцвэр */
+#market-app .nx-market-grid>.nx-market-product-tile{
+  position:relative;
+  isolation:isolate;
+  box-shadow:0 9px 24px rgba(0,0,0,.16),
+             inset 0 1px 0 rgba(255,255,255,.05);
+  transition:box-shadow .24s ease,border-color .24s ease;
+}
+#market-app .nx-market-grid>.nx-market-product-tile::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  border-radius:inherit;
+  background:linear-gradient(150deg,rgba(214,173,85,.055),transparent 43%);
+}
+
+/* Хайлтын талбар болон ангиллын хэсэгт зөөлөн давхаргын мэдрэмж */
+#ads .nx-list-search,
+#shop .nx-temu-search-wrap,
+#market-app .nx-market-category-choice{
+  box-shadow:0 5px 16px rgba(0,0,0,.10),
+             inset 0 1px 0 rgba(255,255,255,.045);
+}
+#shop .nx-temu-search-wrap:focus-within,
+#ads .nx-list-search:focus{
+  box-shadow:0 0 0 3px rgba(214,173,85,.12),
+             0 9px 24px rgba(0,0,0,.16),
+             inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+/* Том дэлгэц дээр гүн мэдрэмжийг даруухан нэмэгдүүлнэ */
+@media(hover:hover) and (pointer:fine) and (min-width:700px){
+  #ads .nx-ad-card--visual:hover{
+    box-shadow:0 15px 34px rgba(0,0,0,.22),
+               inset 0 1px 0 rgba(255,255,255,.07);
+  }
+  #shop .nx-temu-product:hover,
+  #market-app .nx-market-grid>.nx-market-product-tile:hover{
+    box-shadow:0 14px 30px rgba(0,0,0,.2),
+               inset 0 1px 0 rgba(255,255,255,.07);
+  }
+}
+
+/* Нарийн дэлгэцэд сүүдрийг хөнгөн байлгаж, ачаалал ба давхцлыг багасгана */
+@media(max-width:699px){
+  #ads .nx-ad-card--visual,
+  #shop .nx-temu-product,
+  #market-app .nx-market-grid>.nx-market-product-tile{
+    box-shadow:0 6px 17px rgba(0,0,0,.13),
+               inset 0 1px 0 rgba(255,255,255,.04);
+  }
+}
+
+/* Хөдөлгөөн багасгах болон өндөр contrast тохиргоог хүндэтгэнэ */
+@media(prefers-reduced-motion:reduce){
+  #ads .nx-ad-card--visual,
+  #shop .nx-temu-product,
+  #market-app .nx-market-grid>.nx-market-product-tile{
+    transition:none!important;
+  }
+}
+@media(forced-colors:active){
+  #ads .nx-ad-card--visual,
+  #shop .nx-temu-product,
+  #market-app .nx-market-grid>.nx-market-product-tile{
+    box-shadow:none!important;
+  }
+}
+</style>
