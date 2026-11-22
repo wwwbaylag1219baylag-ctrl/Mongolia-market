@@ -7837,3 +7837,64 @@ button.nx-platform-back:focus-visible,
   color:#fff!important;
 }
 </style>
+
+
+<style id="NEXORA-DEPTH-MOTION-LAYER-2026">
+/* NEXORA depth layer: subtle spatial depth and responsive motion.
+   Visual-only enhancement. Existing markup, controls, and navigation remain unchanged. */
+#ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-grid,
+#ads .nx-job-sector-photo-grid{
+  perspective:1100px!important;
+  transform-style:preserve-3d!important;
+}
+#ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category{
+  transform-style:preserve-3d!important;
+  backface-visibility:hidden!important;
+  animation:nxDepthCardEnter .48s cubic-bezier(.2,.75,.25,1) both;
+}
+#ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category:nth-child(2){animation-delay:.045s}
+#ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category:nth-child(3){animation-delay:.09s}
+#ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category:nth-child(4){animation-delay:.135s}
+#ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category:nth-child(5){animation-delay:.18s}
+#ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category:nth-child(6){animation-delay:.225s}
+#ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category:nth-child(7){animation-delay:.27s}
+#ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category:nth-child(8){animation-delay:.315s}
+@keyframes nxDepthCardEnter{
+  from{opacity:0;transform:translate3d(0,12px,-18px) scale(.985)}
+  to{opacity:1;transform:translate3d(0,0,0) scale(1)}
+}
+@media(hover:hover) and (pointer:fine){
+  #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category:hover{
+    transform:translateY(-4px) rotateX(1.2deg) rotateY(-1deg)!important;
+    border-color:rgba(235,205,145,.72)!important;
+    box-shadow:0 18px 34px rgba(0,0,0,.34),0 0 0 1px rgba(230,189,98,.12)!important;
+  }
+  #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category:hover .nexora-ad-photo-wrap img{
+    transform:scale(1.065)!important;
+  }
+  #ads .nx-job-sector-photo-grid .nx-job-photo-card:hover{
+    transform:translateY(-3px) rotateX(1deg)!important;
+    box-shadow:0 18px 34px rgba(0,0,0,.32),0 0 0 1px rgba(230,189,98,.12)!important;
+  }
+}
+#ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category:active,
+#ads .nx-job-sector-photo-grid .nx-job-photo-card:active{
+  transform:scale(.975)!important;
+  transition-duration:.12s!important;
+}
+#ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category:focus-visible,
+#ads .nx-job-sector-photo-grid .nx-job-photo-card:focus-visible{
+  outline:2px solid #e6bd62!important;
+  outline-offset:3px!important;
+}
+@media(prefers-reduced-motion:reduce){
+  #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category{
+    animation:none!important;transition:none!important;
+  }
+  #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category .nexora-ad-photo-wrap img,
+  #ads .nx-job-sector-photo-grid .nx-job-photo-card,
+  #ads .nx-job-sector-photo-grid .nx-job-sector-photo{
+    transition:none!important;
+  }
+}
+</style>
