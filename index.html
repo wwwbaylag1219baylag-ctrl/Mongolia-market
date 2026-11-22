@@ -11443,3 +11443,106 @@ body:has(#nx-retail-lightbox-close)>div:has(#nx-retail-lightbox-close) img{
   }
 }
 </style>
+
+
+<style id="NEXORA-ADS-MARKET-STAGE29-2026">
+/* 29-р шат — Category Navigation Polish.
+   CSS-only visual refinement; category data and selection behavior remain unchanged. */
+
+/* ЗАР ангилал болон дэд ангиллын картууд */
+#ads .nexora-ad-category,
+#ads .nx-subcategory-item{
+  -webkit-tap-highlight-color:transparent;
+  transform-origin:center;
+  transition:transform .2s ease,box-shadow .2s ease,
+             border-color .2s ease,filter .2s ease;
+}
+#ads .nexora-ad-category{
+  box-shadow:0 8px 22px rgba(0,0,0,.2),
+             inset 0 1px 0 rgba(255,255,255,.09);
+}
+#ads .nx-subcategory-item{
+  box-shadow:0 3px 11px rgba(0,0,0,.12),
+             inset 0 1px 0 rgba(255,255,255,.07);
+}
+#ads .nx-subcategory-item.active,
+#ads .nx-subcategory-item[aria-selected="true"]{
+  border-color:rgba(214,173,85,.72)!important;
+  box-shadow:0 0 0 1px rgba(214,173,85,.13),
+             0 6px 17px rgba(0,0,0,.17);
+}
+
+/* Жижиглэн ангиллын чипүүд: сонгогдсон төлөв илүү тод */
+#shop .nx-temu-category-rail{
+  scroll-padding-inline:14px;
+  overscroll-behavior-x:contain;
+}
+#shop .nx-temu-chip{
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .18s ease,box-shadow .18s ease,
+             border-color .18s ease,background-color .18s ease;
+}
+#shop .nx-temu-chip.active{
+  box-shadow:0 3px 10px rgba(232,91,24,.13),
+             inset 0 1px 0 rgba(255,255,255,.7);
+}
+
+/* Бөөний ангиллын сонголтууд */
+#market-app .nx-market-category-choice{
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .2s ease,box-shadow .2s ease,
+             border-color .2s ease,filter .2s ease;
+}
+#market-app .nx-market-category-choice.active,
+#market-app .nx-market-category-choice[aria-selected="true"]{
+  border-color:rgba(214,173,85,.72)!important;
+  box-shadow:0 0 0 1px rgba(214,173,85,.12),
+             0 8px 20px rgba(0,0,0,.2);
+}
+
+/* Зөвхөн хулганатай төхөөрөмж дээр зөөлөн hover */
+@media(hover:hover) and (pointer:fine){
+  #ads .nexora-ad-category:hover,
+  #ads .nx-subcategory-item:hover,
+  #shop .nx-temu-chip:hover,
+  #market-app .nx-market-category-choice:hover{
+    transform:translateY(-2px);
+    filter:brightness(1.045);
+  }
+}
+
+/* Keyboard-аар удирдах үед харагдах focus хүрээ */
+#ads .nexora-ad-category:focus-visible,
+#ads .nx-subcategory-item:focus-visible,
+#shop .nx-temu-chip:focus-visible,
+#market-app .nx-market-category-choice:focus-visible{
+  outline:2px solid rgba(214,173,85,.88);
+  outline-offset:3px;
+}
+
+/* Гар утсанд ангиллын мөрийг гүйлгэхэд зөөлөн мэдрэмжтэй */
+@media(max-width:699px){
+  #shop .nx-temu-category-rail{
+    scroll-behavior:smooth;
+    -webkit-overflow-scrolling:touch;
+  }
+  #ads .nexora-ad-category,
+  #ads .nx-subcategory-item,
+  #market-app .nx-market-category-choice{
+    transition:box-shadow .18s ease,border-color .18s ease,
+               filter .18s ease;
+  }
+}
+
+/* Хөдөлгөөн багасгах тохиргоог хүндэтгэнэ */
+@media(prefers-reduced-motion:reduce){
+  #ads .nexora-ad-category,
+  #ads .nx-subcategory-item,
+  #shop .nx-temu-chip,
+  #market-app .nx-market-category-choice,
+  #shop .nx-temu-category-rail{
+    transition:none!important;
+    scroll-behavior:auto!important;
+  }
+}
+</style>
