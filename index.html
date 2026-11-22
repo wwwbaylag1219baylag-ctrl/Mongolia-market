@@ -688,6 +688,14 @@ textarea:disabled,
   box-shadow:inset 0 2px 6px rgba(0,0,0,.35)!important;
 }
 </style>
+<style id="NEXORA-MULTILANGUAGE-SELECTOR-2026">
+.nx-language-wrap{display:flex;align-items:center;gap:7px;min-width:0}
+.nx-language-label{font-size:17px;line-height:1;flex:0 0 auto}
+.nx-language-select{width:auto;max-width:150px;min-width:118px;min-height:40px;padding:8px 28px 8px 10px;border:1px solid rgba(214,173,85,.48);border-radius:11px;background:linear-gradient(145deg,#24211a,#111);color:#f0d28a;font:700 12px inherit;box-shadow:inset 0 2px 5px rgba(0,0,0,.55),0 3px 10px rgba(0,0,0,.2);outline:none}
+.nx-language-select:focus{border-color:#e4bf70;box-shadow:0 0 0 3px rgba(214,173,85,.14),inset 0 2px 5px rgba(0,0,0,.5)}
+.nx-language-select option{background:#171717;color:#f7f5ef}
+@media(max-width:380px){.nx-language-select{min-width:106px;max-width:132px;font-size:11px;padding-left:7px}}
+</style>
 </head>
 
 <body>
@@ -698,11 +706,11 @@ textarea:disabled,
     <section id="home" class="screen active">
 
       <header class="topbar">
-        <div class="logo"><img class="nexora-logo-img" src="./assets/nexora-logo.jpg" alt="NEXORA — Зар • Худалдаа • Боломж"></div>
+        <div class="nx-language-wrap"><label class="nx-language-label" for="nx-language-select">🌐</label><select id="nx-language-select" class="nx-language-select" aria-label="Хэл сонгох"><option value="mn">🇲🇳 Монгол</option><option value="en">🇬🇧 English</option><option value="zh">🇨🇳 中文</option><option value="ru">🇷🇺 Русский</option><option value="ko">🇰🇷 한국어</option><option value="ja">🇯🇵 日本語</option></select></div>
 
         <div style="display:flex;align-items:center;gap:8px">
-          <button class="profile-button" type="button" onclick="NEXORA.open('help')">❔ Тусламж</button>
-          <button class="profile-button" type="button" onclick="window.location.href='./admin.html'" aria-label="Админ удирдлага">⚙ Админ</button>
+          <button class="profile-button" type="button" onclick="NEXORA.open('help')" data-i18n="help">❔ Тусламж</button>
+          <button class="profile-button" type="button" onclick="window.location.href='./admin.html'" aria-label="Админ удирдлага" data-i18n="admin">⚙ Админ</button>
         </div>
       </header>
 
@@ -715,7 +723,7 @@ textarea:disabled,
             MONGOLIA MARKETPLACE
           </div>
 
-          <p class="hero-description">
+          <p class="hero-description" data-i18n="heroDescription">
             Монголын зар болон худалдааны нэгдсэн платформ
           </p>
         </div>
@@ -729,11 +737,11 @@ textarea:disabled,
 
             <span class="platform-icon">▣</span>
 
-            <span class="platform-title">
+            <span class="platform-title" data-i18n="adsTitle">
               ЗАРЫН ПЛАТФОРМ
             </span>
 
-            <span class="platform-description">
+            <span class="platform-description" data-i18n="adsDescription">
               Зар хайх, зар үзэх, өөрийн зараа нийтлэх
               нэгдсэн орчин.
             </span>
@@ -747,8 +755,8 @@ textarea:disabled,
             type="button"
             onclick="NEXORA.open('shop')">
             <span class="platform-icon">🛍️</span>
-            <span class="platform-title">ХУДАЛДААНЫ ПЛАТФОРМ</span>
-            <span class="platform-description">
+            <span class="platform-title" data-i18n="shopTitle">ХУДАЛДААНЫ ПЛАТФОРМ</span>
+            <span class="platform-description" data-i18n="shopDescription">
               Жижиглэн болон бөөний барааг нэг дороос хайж, захиалах нэгдсэн худалдаа.
             </span>
           </button>
