@@ -8509,3 +8509,208 @@ button.nx-platform-back:focus-visible,
   }
 }
 </style>
+
+
+<style id="NEXORA-DISCOVERY-EXPERIENCE-STAGE-8-2026">
+/* 8-р шат: ЗАР + ХУДАЛДАА — хайлт, ангиллын сонголт, барааны картын нэгдсэн хэрэглээний өнгөлгөө.
+   Зөвхөн CSS; өгөгдөл, төлбөр, товчийн handler, навигаци болон өнгөний палитрт хүрэхгүй. */
+
+/* ЗАР — жагсаалтын гарчиг, хайлт, картууд */
+#ads .nx-list-screen{
+  padding:clamp(14px,3.8vw,22px)!important;
+  padding-bottom:max(28px,env(safe-area-inset-bottom))!important;
+}
+#ads .nx-list-header{
+  gap:13px;
+  margin-bottom:17px!important;
+}
+#ads .nx-list-back{
+  flex:0 0 44px;
+  width:44px;height:44px;
+  display:grid;place-items:center;
+  padding:0!important;
+  border:1px solid rgba(214,173,85,.24)!important;
+  border-radius:14px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(0,0,0,.12))!important;
+  box-shadow:0 5px 14px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.09);
+  transition:transform .2s ease,filter .2s ease;
+}
+#ads .nx-list-title{
+  letter-spacing:.01em;
+  text-shadow:0 3px 12px rgba(0,0,0,.25);
+}
+#ads .nx-list-search{
+  min-height:50px!important;
+  padding:13px 16px!important;
+  border-radius:16px!important;
+  border:1px solid rgba(214,173,85,.34)!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(0,0,0,.16)),#191919!important;
+  box-shadow:0 7px 18px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.06)!important;
+  transition:border-color .2s ease,box-shadow .2s ease;
+}
+#ads .nx-list-search:focus{
+  border-color:rgba(214,173,85,.78)!important;
+  box-shadow:0 0 0 3px rgba(214,173,85,.10),0 8px 20px rgba(0,0,0,.2)!important;
+}
+#ads .nx-ad-card-grid{
+  gap:14px!important;
+  align-items:stretch;
+}
+#ads .nx-ad-card--visual{
+  border-radius:20px!important;
+  box-shadow:0 10px 25px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.07)!important;
+  contain:layout paint;
+}
+#ads .nx-ad-card-media{
+  aspect-ratio:5/4;
+  isolation:isolate;
+}
+#ads .nx-ad-card-image{
+  transition:transform .55s cubic-bezier(.2,.72,.22,1),filter .35s ease;
+}
+#ads .nx-ad-card-body{
+  padding:14px 15px 13px!important;
+}
+#ads .nx-ad-card--visual .nx-ad-card-title{
+  line-height:1.38!important;
+  letter-spacing:.005em;
+}
+#ads .nx-ad-card-description{
+  line-height:1.5!important;
+}
+#ads .nx-ad-card-meta{
+  gap:8px!important;
+  flex-wrap:wrap;
+}
+#ads .nx-ad-card-more{
+  margin-top:10px!important;
+  padding-top:10px!important;
+  border-top:1px solid rgba(214,173,85,.14);
+}
+#ads .nx-ad-card-open-hint{
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+#ads .nx-list-message{
+  border:1px solid rgba(214,173,85,.20);
+  border-radius:17px!important;
+  padding:20px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(0,0,0,.12)),#191919!important;
+  line-height:1.65;
+}
+
+/* ХУДАЛДАА — жижиглэн хайлт ба ангиллын мөр; анхны цайвар палитрыг хадгална */
+#shop .nx-temu-search-wrap{
+  min-height:50px!important;
+  margin:12px 14px 10px!important;
+  padding-inline:15px!important;
+  border-radius:17px!important;
+  box-shadow:0 7px 18px rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.9)!important;
+  transition:box-shadow .22s ease,border-color .22s ease,transform .22s ease;
+}
+#shop .nx-temu-search-wrap:focus-within{
+  border-color:#e7a16f!important;
+  box-shadow:0 0 0 3px rgba(243,107,37,.09),0 9px 20px rgba(0,0,0,.12)!important;
+}
+#shop .nx-temu-search{
+  min-height:46px!important;
+  font-size:14px!important;
+}
+#shop .nx-temu-category-rail{
+  gap:9px!important;
+  padding:5px 14px 13px!important;
+  scroll-snap-type:x proximity;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
+}
+#shop .nx-temu-chip{
+  min-height:38px!important;
+  padding:9px 15px!important;
+  border-radius:999px!important;
+  box-shadow:0 3px 9px rgba(0,0,0,.055),inset 0 1px 0 rgba(255,255,255,.9);
+  scroll-snap-align:start;
+  transition:transform .2s ease,box-shadow .2s ease!important;
+}
+#shop .nx-temu-chip.active{
+  box-shadow:0 5px 13px rgba(232,91,24,.13),inset 0 1px 0 rgba(255,255,255,.7)!important;
+}
+#shop .nx-temu-hero{
+  border-radius:20px!important;
+  box-shadow:0 12px 25px rgba(0,0,0,.13),inset 0 1px 0 rgba(255,255,255,.2)!important;
+}
+#shop .nx-temu-section-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:15px 14px 9px!important;
+  letter-spacing:.035em;
+}
+#shop .nx-temu-bottom-nav{
+  box-shadow:0 -7px 22px rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.75)!important;
+  padding-bottom:max(7px,env(safe-area-inset-bottom))!important;
+}
+
+/* БӨӨНИЙ + жижиглэнгийн каталог — дээд мөр, ангиллын товч, хэвтээ бүтээгдэхүүний карт */
+#market-app .nx-catalog-topline{
+  min-height:48px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:5px 2px 11px;
+}
+#market-app .nx-catalog-cart{
+  min-width:46px!important;
+  min-height:44px!important;
+  border-radius:14px!important;
+  box-shadow:0 6px 15px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.12)!important;
+}
+#market-app .nx-market-category-choice,
+#market-app .nx-market-tabs button,
+#market-app .nx-market-nav button{
+  min-height:42px;
+  border-radius:13px!important;
+  -webkit-tap-highlight-color:transparent;
+}
+#market-app .nx-market-grid>.nx-market-product-tile{
+  scroll-snap-align:start;
+}
+#market-app .nx-market-grid>.nx-market-product-tile h3{
+  overflow-wrap:anywhere;
+}
+#market-app .nx-market-grid>.nx-market-product-tile .nx-market-btn{
+  min-height:44px!important;
+}
+@media(hover:hover) and (min-width:700px){
+  #ads .nx-ad-card--visual:hover{
+    transform:translateY(-4px);
+    border-color:rgba(214,173,85,.62)!important;
+    box-shadow:0 17px 34px rgba(0,0,0,.30)!important;
+  }
+  #ads .nx-ad-card--visual:hover .nx-ad-card-image{
+    transform:scale(1.045);
+    filter:saturate(1.06);
+  }
+  #ads .nx-list-back:hover{transform:translateY(-2px);filter:brightness(1.1)}
+  #shop .nx-temu-chip:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.10)}
+}
+@media(max-width:699px){
+  #ads .nx-ad-card-grid{grid-template-columns:minmax(0,1fr)!important}
+  #ads .nx-ad-card--visual{border-radius:18px!important}
+  #ads .nx-ad-card-media{aspect-ratio:5/4}
+  #shop .nx-temu-search-wrap{margin-inline:12px!important}
+  #shop .nx-temu-category-rail{padding-inline:12px!important}
+}
+@media(min-width:700px){
+  #ads .nx-list-screen{max-width:1120px;margin-inline:auto}
+  #ads .nx-ad-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #ads .nx-ad-card-media{aspect-ratio:16/10}
+}
+@media(prefers-reduced-motion:reduce){
+  #ads .nx-list-back,#ads .nx-ad-card--visual,#ads .nx-ad-card-image,
+  #shop .nx-temu-search-wrap,#shop .nx-temu-chip{
+    transition:none!important;transform:none!important;filter:none!important;
+  }
+}
+</style>
