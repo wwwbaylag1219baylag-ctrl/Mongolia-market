@@ -6786,7 +6786,7 @@ html,body{
   border:1px solid rgba(190,198,207,.34);
   border-radius:18px;
   background:#18202b;
-  box-shadow:0 8px 22px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.12);
+  box-shadow:0 7px 18px rgba(0,0,0,.24);
   text-align:left;
   transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
 }
@@ -6813,8 +6813,9 @@ html,body{
   object-fit:cover;
   object-position:center;
   opacity:1;
+  filter:brightness(.94) saturate(.97) contrast(1.02);
   transform:scale(1.01);
-  transition:transform .35s ease;
+  transition:transform .35s ease,filter .35s ease;
 }
 #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category::before{
   content:"";
@@ -6869,8 +6870,8 @@ html,body{
   font-weight:800;
   letter-spacing:.35px;
   text-shadow:0 1px 4px rgba(0,0,0,.8);
-  backdrop-filter:blur(7px);
-  -webkit-backdrop-filter:blur(7px);
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
 }
 #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category:active,
 #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category.selected{
