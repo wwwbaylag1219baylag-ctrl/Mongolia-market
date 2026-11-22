@@ -3503,10 +3503,9 @@ textarea:disabled,
 
   async function showPackages() {
     try {
-      const {data:settings,error:settingsError}=await db.from("nexora_settings").select("ad_package_config").eq("id",1).single();
+      const {data:config,error:settingsError}=await db.rpc("nexora_public_ad_package_config");
       if(settingsError)throw settingsError;
-      const config=settings?.ad_package_config||{};
-      packages.forEach(p=>{const v=config[p.type]||{};p.days=Number(v.days??p.days);p.amount=Number(v.amount??p.amount);});
+      packages.forEach(p=>{const v=config?.[p.type]||{};p.days=Number(v.days??p.days);p.amount=Number(v.amount??p.amount);});
       // Энгийн багц ч төлбөртэй: бүх зар төлбөр баталгаажсаны дараа нийтлэгдэнэ.
     } catch(error) {
       message("Зарын багцын үнийг ачаалж чадсангүй: "+error.message,true);
