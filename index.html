@@ -7951,3 +7951,106 @@ button.nx-platform-back:focus-visible,
   }
 }
 </style>
+
+
+<style id="NEXORA-MOBILE-FIRST-TOUCH-POLISH-2026">
+/* Stage 3 — mobile-first refinement for the Ads experience.
+   Scoped to #ads only; preserves existing navigation, forms and commerce flows. */
+@media(max-width:699px){
+  #ads,
+  #ads .page-content{
+    max-width:100%;
+    overflow-x:hidden!important;
+  }
+  #ads>.page-content{
+    padding-top:env(safe-area-inset-top,0px)!important;
+    padding-bottom:env(safe-area-inset-bottom,0px)!important;
+    scroll-padding-top:12px;
+    scroll-padding-bottom:calc(18px + env(safe-area-inset-bottom,0px));
+    -webkit-overflow-scrolling:touch;
+  }
+  #ads .page-content .nx-full-screen{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    padding-left:clamp(10px,3.2vw,16px)!important;
+    padding-right:clamp(10px,3.2vw,16px)!important;
+    padding-bottom:calc(22px + env(safe-area-inset-bottom,0px))!important;
+  }
+  /* 8 үндсэн зурагт ангилал: жижиг утсанд ч хоёр багана, тасралтгүй харагдана. */
+  #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-grid{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:clamp(8px,2.6vw,12px)!important;
+    padding-left:0!important;
+    padding-right:0!important;
+  }
+  #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category{
+    width:100%!important;
+    min-width:0!important;
+    min-height:clamp(136px,39vw,190px)!important;
+    border-radius:clamp(13px,4vw,18px)!important;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
+  }
+  /* Зурагтай дэд ангилал болон ажлын чиглэлийн картууд. */
+  #ads .page-content .nx-full-screen .nx-subcategory-list{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    gap:10px!important;
+  }
+  #ads .page-content .nx-full-screen .nx-choice-card{
+    min-width:0!important;
+    max-width:100%;
+    min-height:112px;
+    box-sizing:border-box!important;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
+  }
+  #ads .page-content .nx-full-screen .nx-job-photo-card{
+    min-height:clamp(128px,37vw,174px)!important;
+    border-radius:15px!important;
+  }
+  #ads .page-content .nx-full-screen .nx-job-sector-photo{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  }
+  /* Автомашины маркуудын лого карт утасны өргөнд уян хатан таарна. */
+  #ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-car-brand-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:10px!important;
+    margin:10px auto!important;
+  }
+  #ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-car-brand-card{
+    min-height:clamp(138px,40vw,166px)!important;
+    padding:12px 8px 11px!important;
+    border-radius:15px!important;
+  }
+  #ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-car-brand-card .nx-car-brand-logo{
+    height:clamp(48px,15vw,62px)!important;
+    width:min(80%,132px)!important;
+  }
+  #ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-car-brand-card .nx-choice-name{
+    font-size:clamp(12px,3.5vw,14px)!important;
+    overflow-wrap:anywhere;
+  }
+}
+@media(max-width:380px){
+  #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-grid{gap:8px!important}
+  #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category{
+    min-height:clamp(132px,40vw,154px)!important;
+  }
+  #ads .page-content .nx-full-screen .nx-subcategory-list{gap:8px!important}
+  #ads .page-content .nx-full-screen .nx-choice-card{min-height:104px}
+  #ads .page-content .nx-full-screen .nx-job-photo-card{min-height:128px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-category,
+  #ads .page-content .nx-full-screen .nx-choice-card{
+    scroll-behavior:auto!important;
+    transition:none!important;
+  }
+}
+</style>
