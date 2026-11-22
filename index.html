@@ -10065,3 +10065,113 @@ body:has(#nx-retail-lightbox-close)>div:has(#nx-retail-lightbox-close) img{
   }
 }
 </style>
+
+
+<style id="NEXORA-ADS-MARKET-STAGE15-2026">
+/* 15-р шат — ЗАР + ХУДАЛДАА: зураг, бичвэрийн харьцаа ба grid-ийн responsive өнгөлгөө.
+   Зөвхөн CSS; зураг сонгох/солих, бүтээгдэхүүний өгөгдөл, үнэ, товч ба навигацийн логикт хүрэхгүй. */
+
+/* ЗАР — жагсаалтын зураг бүр ижил хэмнэлтэй, тайрагдалт нь тогтвортой */
+#ads .nx-ad-card-grid{
+  align-items:stretch;
+  grid-auto-rows:1fr;
+}
+#ads .nx-ad-card--visual{
+  display:flex;flex-direction:column;min-width:0;height:100%;
+  overflow:hidden;contain:layout paint;
+}
+#ads .nx-ad-card--visual .nx-ad-card-media{
+  position:relative;flex:0 0 auto;min-width:0;
+  overflow:hidden;isolation:isolate;
+}
+#ads .nx-ad-card--visual .nx-ad-card-image{
+  display:block;width:100%;height:100%;min-width:0;
+  object-fit:cover;object-position:center;
+}
+#ads .nx-ad-card--visual .nx-ad-card-body{
+  display:flex;flex:1 1 auto;flex-direction:column;
+  align-items:stretch;min-width:0;gap:5px;
+}
+#ads .nx-ad-card--visual .nx-ad-card-title{
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+  overflow:hidden;overflow-wrap:anywhere;line-height:1.42;
+}
+#ads .nx-ad-card--visual .nx-ad-card-description{
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;
+  overflow:hidden;overflow-wrap:anywhere;line-height:1.5;
+}
+#ads .nx-ad-card--visual .nx-ad-card-price{
+  margin-top:auto;padding-top:7px;overflow-wrap:anywhere;
+  font-variant-numeric:tabular-nums;
+}
+#ads .nx-ad-card--visual .nx-ad-card-meta{
+  align-items:center;row-gap:6px;min-width:0;
+}
+#ads .nx-ad-card--visual .nx-ad-card-meta>*{
+  min-width:0;overflow-wrap:anywhere;
+}
+
+/* ХУДАЛДАА — жижиглэн, бөөний барааны картын зураг/гарчгийн жигд харьцаа */
+#market-app .nx-temu-products>.nx-temu-product,
+#market-app .nx-market-grid>.nx-market-product-tile{
+  display:flex;flex-direction:column;min-width:0;height:100%;
+  overflow:hidden;contain:layout paint;
+}
+#market-app .nx-temu-products>.nx-temu-product img,
+#market-app .nx-market-grid>.nx-market-product-tile img{
+  max-width:100%;min-width:0;
+}
+#market-app .nx-temu-products>.nx-temu-product :is(h3,h4,.nx-temu-product-title),
+#market-app .nx-market-grid>.nx-market-product-tile :is(h3,h4,.nx-market-product-title){
+  min-width:0;overflow-wrap:anywhere;line-height:1.4;
+}
+#market-app .nx-temu-products>.nx-temu-product :is(.nx-temu-price,.nx-market-price),
+#market-app .nx-market-grid>.nx-market-product-tile :is(.nx-temu-price,.nx-market-price){
+  font-variant-numeric:tabular-nums;overflow-wrap:anywhere;
+}
+#market-app .nx-temu-products>.nx-temu-product :is(button,a),
+#market-app .nx-market-grid>.nx-market-product-tile :is(button,a){
+  max-width:100%;overflow-wrap:anywhere;
+}
+
+/* Урт монгол нэр, үнэ, утасны дугаар картын өргөнийг эвдэхгүй */
+#ads .nx-ad-card--visual,
+#market-app .nx-temu-products>.nx-temu-product,
+#market-app .nx-market-grid>.nx-market-product-tile{
+  overflow-wrap:anywhere;word-break:normal;
+}
+#ads .nx-ad-card--visual :is(.nx-ad-card-title,.nx-ad-card-description,.nx-ad-card-price),
+#market-app .nx-temu-products>.nx-temu-product :is(h3,h4,p,span),
+#market-app .nx-market-grid>.nx-market-product-tile :is(h3,h4,p,span){
+  min-width:0;max-width:100%;
+}
+
+/* Tablet/desktop: картуудын хоорондын зайг дэлгэцийн өргөнтэй уялдуулна */
+@media(min-width:700px){
+  #ads .nx-ad-card-grid{gap:clamp(12px,1.8vw,22px)}
+  #market-app .nx-temu-products,
+  #market-app .nx-market-grid{gap:clamp(12px,1.6vw,20px)}
+}
+@media(max-width:699px){
+  #ads .nx-ad-card-grid{gap:11px}
+  #ads .nx-ad-card--visual .nx-ad-card-body{padding:11px}
+  #ads .nx-ad-card--visual .nx-ad-card-title{font-size:14px;line-height:1.4}
+  #ads .nx-ad-card--visual .nx-ad-card-description{font-size:12px;line-height:1.45}
+  #market-app .nx-temu-products>.nx-temu-product,
+  #market-app .nx-market-grid>.nx-market-product-tile{min-height:0}
+}
+@media(max-width:360px){
+  #ads .nx-ad-card-grid{gap:8px}
+  #ads .nx-ad-card--visual .nx-ad-card-body{padding:9px}
+  #ads .nx-ad-card--visual .nx-ad-card-title{font-size:13px}
+  #market-app .nx-temu-products,
+  #market-app .nx-market-grid{column-gap:8px;row-gap:10px}
+}
+@media(prefers-reduced-motion:reduce){
+  #ads .nx-ad-card--visual,
+  #market-app .nx-temu-products>.nx-temu-product,
+  #market-app .nx-market-grid>.nx-market-product-tile{
+    scroll-behavior:auto;
+  }
+}
+</style>
