@@ -7874,6 +7874,74 @@ html,body{
 })();
 </script>
 
+<script id="NEXORA-COMMERCE-I18N-2026">
+(function(){
+"use strict";
+var select=document.getElementById("nx-language-select");if(!select)return;
+var rows={
+"Бүгд":["All","全部","Все","전체","すべて"],
+"Цамц, хувцас":["Clothing","服装","Одежда","의류","衣類"],
+"Гутал":["Shoes","鞋类","Обувь","신발","靴"],
+"Цүнх":["Bags","包袋","Сумки","가방","バッグ"],
+"Цаг, гоёл":["Watches & accessories","手表与配饰","Часы и аксессуары","시계 및 액세서리","時計・アクセサリー"],
+"Электрон бараа":["Electronics","电子产品","Электроника","전자제품","電子機器"],
+"Гар утас":["Mobile phones","手机","Мобильные телефоны","휴대전화","携帯電話"],
+"Гэр ахуй":["Home & living","家居生活","Товары для дома","홈 & 리빙","ホーム・生活"],
+"Гал тогоо":["Kitchen","厨房用品","Кухня","주방","キッチン"],
+"Гоо сайхан":["Beauty","美容","Красота","뷰티","美容"],
+"Хүнс":["Food","食品","Продукты","식품","食品"],
+"Ундаа, хүнс":["Food & beverages","食品与饮料","Еда и напитки","식품 및 음료","食品・飲料"],
+"Спорт":["Sports","运动","Спорт","스포츠","スポーツ"],
+"Фото, камер":["Photo & cameras","摄影与相机","Фото и камеры","사진 및 카메라","写真・カメラ"],
+"Тоглоом":["Toys","玩具","Игрушки","장난감","おもちゃ"],
+"Багаж хэрэгсэл":["Tools","工具","Инструменты","공구","工具"],
+"Тавилга":["Furniture","家具","Мебель","가구","家具"],
+"Хүүхдийн бараа":["Baby & kids","母婴用品","Детские товары","유아·아동용품","ベビー・キッズ用品"],
+"Худалдаа нэг дороос":["Everything for shopping","一站式购物","Покупки в одном месте","한곳에서 쇼핑","まとめてショッピング"],
+"Жижиглэн болон бөөний барааг нэг каталогоос хайж сонгоорой.":["Browse retail and wholesale products in one catalog.","在一个目录中浏览零售和批发商品。","Ищите розничные и оптовые товары в одном каталоге.","하나의 카탈로그에서 소매 및 도매 상품을 찾아보세요.","小売・卸売商品を1つのカタログで探せます。"],
+"ТАНД САНАЛ БОЛГОХ":["RECOMMENDED FOR YOU","为您推荐","РЕКОМЕНДУЕМ ВАМ","추천 상품","おすすめ商品"],
+"Бараа хайх, дэлгүүр хайх…":["Search products or stores…","搜索商品或店铺…","Поиск товаров или магазинов…","상품 또는 매장 검색…","商品・店舗を検索…"],
+"Нүүр":["Home","首页","Главная","홈","ホーム"],
+"Ангилал":["Categories","分类","Категории","카테고리","カテゴリー"],
+"Сагс":["Cart","购物车","Корзина","장바구니","カート"],
+"ЖИШЭЭ ЗУРАГ":["SAMPLE IMAGE","示例图片","ПРИМЕР ИЗОБРАЖЕНИЯ","샘플 이미지","サンプル画像"],
+"Тохирох бараа олдсонгүй. Хайлтаа өөрчилж үзээрэй.":["No matching products. Try another search.","未找到匹配商品，请尝试其他搜索。","Подходящие товары не найдены. Измените запрос.","일치하는 상품이 없습니다. 검색어를 바꿔 보세요.","該当する商品がありません。検索語を変えてください。"],
+"ЖИЖИГЛЭН":["RETAIL","零售","РОЗНИЦА","소매","小売"],
+"БӨӨНИЙ ҮНЭ":["WHOLESALE","批发价","ОПТОВАЯ ЦЕНА","도매가","卸売価格"],
+"Бөөний захиалах":["Order wholesale","批发订购","Заказать оптом","도매 주문","卸売注文"],
+"Сагслах":["Add to cart","加入购物车","В корзину","장바구니 담기","カートに追加"],
+"Зураггүй":["No image","暂无图片","Нет изображения","이미지 없음","画像なし"],
+"МИНИЙ НЭГДСЭН САГС":["MY UNIFIED CART","我的统一购物车","МОЯ ОБЩАЯ КОРЗИНА","통합 장바구니","統合カート"],
+"Сагс хоосон байна.":["Your cart is empty.","购物车为空。","Корзина пуста.","장바구니가 비어 있습니다.","カートは空です。"],
+"ХҮРГҮҮЛЭХ МЭДЭЭЛЭЛ":["DELIVERY INFORMATION","配送信息","ИНФОРМАЦИЯ О ДОСТАВКЕ","배송 정보","配送情報"],
+"Хүлээн авагчийн нэр *":["Recipient name *","收件人姓名 *","Имя получателя *","받는 사람 이름 *","受取人名 *"],
+"Утасны дугаар *":["Phone number *","电话号码 *","Номер телефона *","전화번호 *","電話番号 *"],
+"Хаягийн дэлгэрэнгүй":["Delivery address details","详细地址","Подробный адрес","상세 주소","住所の詳細"],
+"📍 Газрын зураг дээр байршил тэмдэглэх":["📍 Mark location on map","📍 在地图上标记位置","📍 Отметить место на карте","📍 지도에 위치 표시","📍 地図上で場所を指定"],
+"Хүргэлтийн нэмэлт тайлбар":["Additional delivery notes","配送补充说明","Дополнительные сведения о доставке","배송 추가 요청","配送に関する補足"],
+"НЭГДСЭН ЗАХИАЛГА ӨГӨХ":["PLACE UNIFIED ORDER","提交统一订单","ОФОРМИТЬ ОБЩИЙ ЗАКАЗ","통합 주문하기","まとめて注文"],
+"МИНИЙ НЭГДСЭН ЗАХИАЛГА":["MY ORDERS","我的订单","МОИ ЗАКАЗЫ","내 주문","注文履歴"],
+"Жижиглэн болон бөөний бүх захиалга нэг дор.":["All retail and wholesale orders in one place.","所有零售和批发订单集中显示。","Все розничные и оптовые заказы в одном месте.","소매 및 도매 주문을 한곳에서 확인하세요.","小売・卸売の注文をまとめて確認できます。"],
+"БӨӨНИЙ ҮНИЙН ШАТЛАЛ":["WHOLESALE PRICE TIERS","批发价格阶梯","ОПТОВЫЕ ЦЕНОВЫЕ УРОВНИ","도매 가격 구간","卸売価格帯"],
+"БӨӨНИЙ ЗАХИАЛГА ӨГӨХ":["PLACE WHOLESALE ORDER","提交批发订单","ОФОРМИТЬ ОПТОВЫЙ ЗАКАЗ","도매 주문하기","卸売注文する"],
+"Жижиглэн худалдаа":["Retail","零售","Розничная торговля","소매","小売"],
+"Бөөний худалдаа":["Wholesale","批发","Оптовая торговля","도매","卸売"],
+"Төлбөр хүлээгдэж байна":["Payment pending","待付款","Ожидает оплаты","결제 대기 중","支払い待ち"],
+"Бэлтгэж байна":["Preparing","准备中","Готовится","준비 중","準備中"],
+"Дууссан":["Completed","已完成","Завершён","완료","完了"],
+"Цуцалсан":["Cancelled","已取消","Отменён","취소됨","キャンセル"],
+"Зөвшөөрсөн":["Accepted","已接受","Принят","승인됨","承認済み"],
+"Татгалзсан":["Rejected","已拒绝","Отклонён","거부됨","拒否"],
+"Одоогоор захиалга алга байна.":["There are no orders yet.","目前没有订单。","Пока нет заказов.","아직 주문이 없습니다.","注文はまだありません。"]
+};
+var reverse={};Object.keys(rows).forEach(function(k){reverse[k]=k;rows[k].forEach(function(v){reverse[v]=k;});});
+var ix={mn:0,en:1,zh:2,ru:3,ko:4,ja:5};
+function translate(value,lang){var t=String(value||"").trim(),k=reverse[t];if(!k)return value;return lang==="mn"?k:(rows[k][ix[lang]-1]||value);}
+function apply(root,lang){if(!root)return;var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),n;while((n=w.nextNode())){if(!n.nodeValue||!n.nodeValue.trim())continue;var v=translate(n.nodeValue,lang);if(v!==n.nodeValue)n.nodeValue=v;}root.querySelectorAll("input,textarea,button,[title],[aria-label],[alt]").forEach(function(el){["placeholder","title","aria-label","alt"].forEach(function(a){if(el.hasAttribute(a)){var old=el.getAttribute(a),v=translate(old,lang);if(v!==old)el.setAttribute(a,v);}});});}
+var current="mn",busy=false;function refresh(){current=ix[select.value]!=null?select.value:"mn";busy=true;apply(document.getElementById("shop"),current);busy=false;}
+select.addEventListener("change",refresh);var shop=document.getElementById("shop");if(shop)new MutationObserver(function(){if(!busy)apply(shop,current);}).observe(shop,{childList:true,subtree:true});refresh();
+})();
+</script>
 </body>
 
 <style id="NEXORA-RETAIL-PLATFORM-HEADER-BACK-ARROW-2026">
