@@ -11341,3 +11341,105 @@ body:has(#nx-retail-lightbox-close)>div:has(#nx-retail-lightbox-close) img{
   }
 }
 </style>
+
+
+<style id="NEXORA-ADS-MARKET-STAGE28-2026">
+/* 28-р шат — Product Showcase Finish.
+   CSS-only: барааны зураг, карт, үнэ, текстийн визуал өнгөлгөө. */
+
+/* ЗАР: зураг илүү цэвэр, картын мэдээлэл илүү уншигдахуйц */
+#ads .nx-ad-card--visual{
+  isolation:isolate;
+  background:linear-gradient(155deg,rgba(255,255,255,.075),rgba(0,0,0,.2))!important;
+}
+#ads .nx-ad-card-media{
+  background:linear-gradient(135deg,#242424,#111);
+}
+#ads .nx-ad-card-image{
+  backface-visibility:hidden;
+}
+#ads .nx-ad-card-price{
+  letter-spacing:-.025em;
+  text-shadow:0 1px 10px rgba(214,173,85,.10);
+  font-variant-numeric:tabular-nums;
+}
+#ads .nx-ad-card-title{
+  letter-spacing:-.012em;
+}
+#ads .nx-ad-card-meta{
+  align-items:center;
+}
+
+/* Жижиглэн: цагаан барааны картын гадаргуу ба зурагны хүрээ */
+#shop .nx-temu-product{
+  position:relative;
+  isolation:isolate;
+  border-color:rgba(30,30,30,.075);
+  box-shadow:0 3px 12px rgba(0,0,0,.055),
+             0 1px 2px rgba(0,0,0,.035),
+             inset 0 1px 0 rgba(255,255,255,.9);
+  transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;
+}
+#shop .nx-temu-product-image,
+#shop .nx-temu-product-no-image{
+  backface-visibility:hidden;
+}
+#shop .nx-temu-product-info{
+  background:linear-gradient(180deg,#fff 0%,#fdfdfd 100%);
+}
+#shop .nx-temu-product-title{
+  letter-spacing:-.01em;
+}
+#shop .nx-temu-product-price{
+  letter-spacing:-.025em;
+  font-variant-numeric:tabular-nums;
+}
+
+/* Бөөний: барааны картын ирмэг, доторх зайг илүү нарийн тодруулах */
+#market-app .nx-market-product-tile{
+  overflow:hidden;
+  border-color:rgba(214,173,85,.2)!important;
+  box-shadow:0 7px 20px rgba(0,0,0,.19),
+             inset 0 1px 0 rgba(255,255,255,.07);
+  transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;
+}
+
+/* Хулганатай төхөөрөмж дээр л зөөлөн өргөгдөх хөдөлгөөн */
+@media(hover:hover) and (pointer:fine){
+  #ads .nx-ad-card--visual:hover,
+  #shop .nx-temu-product:hover,
+  #market-app .nx-market-product-tile:hover{
+    transform:translateY(-3px);
+    box-shadow:0 13px 27px rgba(0,0,0,.22),
+               0 0 0 1px rgba(214,173,85,.12);
+    border-color:rgba(214,173,85,.38)!important;
+  }
+  #ads .nx-ad-card--visual:hover .nx-ad-card-image,
+  #shop .nx-temu-product:hover .nx-temu-product-image{
+    transform:scale(1.025);
+  }
+}
+
+/* Гар утасны картууд: хуруунд эвтэйхэн, хөдөлгөөн хэтрэхгүй */
+@media(max-width:699px){
+  #ads .nx-ad-card--visual,
+  #shop .nx-temu-product,
+  #market-app .nx-market-product-tile{
+    -webkit-tap-highlight-color:transparent;
+  }
+  #ads .nx-ad-card-body{
+    gap:7px;
+  }
+}
+
+/* Хөдөлгөөн багасгах системийн тохиргоог дагана */
+@media(prefers-reduced-motion:reduce){
+  #ads .nx-ad-card--visual,
+  #shop .nx-temu-product,
+  #market-app .nx-market-product-tile,
+  #ads .nx-ad-card-image,
+  #shop .nx-temu-product-image{
+    transition:none!important;
+  }
+}
+</style>
