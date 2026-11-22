@@ -664,6 +664,30 @@ textarea:disabled,
 }
 </style>
 
+<style id="NEXORA-ADS-CREATE-BACK-BUTTON-2026">
+#ads .nx-create-screen .nx-create-exit{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  width:100%!important;
+  min-height:46px!important;
+  margin:0 0 12px!important;
+  padding:10px 14px!important;
+  border:1px solid rgba(214,173,85,.72)!important;
+  border-radius:11px!important;
+  background:linear-gradient(135deg,#292316,#171717)!important;
+  color:#f0d28a!important;
+  font-size:15px!important;
+  font-weight:850!important;
+  text-align:left!important;
+  box-shadow:0 4px 13px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.07)!important;
+  cursor:pointer!important;
+}
+#ads .nx-create-screen .nx-create-exit:active{
+  transform:translateY(1px);
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.35)!important;
+}
+</style>
 </head>
 
 <body>
@@ -3410,6 +3434,7 @@ textarea:disabled,
 
     content.innerHTML = `
       <div class="nx-create-screen">
+        <button class="nx-create-exit" type="button" data-nx-create-exit>‹ Буцах</button>
         <button class="nx-create-collapse" type="button" data-nx-create-collapse>⌄ ХУМИХ</button>
         <div class="nx-create-title">ШИНЭ ЗАР НИЙТЛҮҮЛЭХ</div>
 
@@ -3951,7 +3976,7 @@ textarea:disabled,
   content.addEventListener("click", async function (event) {
     const target = event.target;
 
-    if (target.closest("[data-nx-create-collapse]")) {
+    if (target.closest("[data-nx-create-collapse]") || target.closest("[data-nx-create-exit]")) {
       const form = document.getElementById("nx-create-ad-form");
       if (form) {
         const values = new FormData(form);
