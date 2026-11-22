@@ -9868,3 +9868,101 @@ body:has(#nx-retail-lightbox-close)>div:has(#nx-retail-lightbox-close) img{
   #market-app:has(#nx-cart-order)>textarea.nx-market-input{transition:none!important}
 }
 </style>
+
+
+<style id="NEXORA-ADS-MARKET-STAGE13-2026">
+/* 13-р шат — ЗАР + ХУДАЛДАА: ачаалалт, хоосон төлөв, мэдэгдлийн UX өнгөлгөө.
+   Зөвхөн CSS; төлөвийн текст, хүсэлт, захиалга, жагсаалт болон өнгөний үндсэн палитрт хүрэхгүй. */
+
+/* ЗАР — ачаалж буй болон хоосон жагсаалтын мэдээллийг төвлөрүүлж уншихад хялбар болгоно */
+#ads .nx-list-screen #nx-ad-results{
+  min-width:0;width:100%;padding-bottom:max(18px,env(safe-area-inset-bottom));
+}
+#ads .nx-list-screen .nx-list-message,
+#ads .nx-full-screen .nx-list-message{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:9px;min-height:clamp(132px,24vh,210px);
+  margin:14px 0;padding:clamp(20px,5vw,30px);
+  border-radius:19px;border:1px solid rgba(214,173,85,.24);
+  background:radial-gradient(ellipse at 50% 0%,rgba(214,173,85,.075),transparent 68%),#191919;
+  box-shadow:0 12px 28px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.045);
+  font-size:14px;font-weight:650;line-height:1.75;
+  text-wrap:pretty;
+}
+#ads .nx-list-screen .nx-list-message::before,
+#ads .nx-full-screen .nx-list-message::before{
+  content:"";display:block;width:34px;height:3px;flex:0 0 auto;
+  border-radius:99px;background:linear-gradient(90deg,transparent,#d6ad55,transparent);
+  opacity:.9;
+}
+#ads .nx-list-screen #nx-ad-results:empty{min-height:120px}
+#ads .nx-list-screen #nx-ad-results .nx-ad-card-grid{padding-bottom:12px}
+#ads .nx-list-screen .nx-list-search:focus-within{
+  box-shadow:0 0 0 3px rgba(214,173,85,.12);
+}
+
+/* ХУДАЛДАА — сагсны захиалгын баталгаажуулалт/алдааны мэдэгдлийн уншигдах байдал */
+#market-app:has(#nx-cart-order) #nx-market-msg{
+  display:block;box-sizing:border-box;width:100%;
+  min-height:0;margin:8px 0 4px;padding:0;
+  border-radius:13px;overflow-wrap:anywhere;line-height:1.6;
+  font-size:13px;font-weight:750;
+  transition:padding .18s ease,background-color .18s ease,border-color .18s ease;
+}
+#market-app:has(#nx-cart-order) #nx-market-msg:not(:empty){
+  min-height:42px;padding:10px 12px;
+  border:1px solid rgba(214,173,85,.22);
+  background:rgba(214,173,85,.055);
+}
+#market-app:has(#nx-cart-order) #nx-delivery-map-label{
+  min-height:42px;display:flex;align-items:center;
+  font-size:12px;line-height:1.55;
+}
+#market-app:has(#nx-cart-order) #nx-delivery-map-label:not(:empty){
+  overflow-wrap:anywhere;
+}
+
+/* Барааны ангилал болон сагсанд бараа байхгүй үеийн төлөв */
+#market-app .nx-empty-info{
+  box-sizing:border-box;display:block;width:100%;
+  margin:14px 0;padding:clamp(18px,4vw,26px);
+  border:1px dashed rgba(214,173,85,.25);border-radius:17px;
+  background:linear-gradient(145deg,rgba(214,173,85,.045),rgba(255,255,255,.012));
+  text-align:center;line-height:1.7;overflow-wrap:anywhere;
+}
+#market-app .nx-empty-info:empty{display:none}
+#market-app .nx-cart-product-card{min-width:0}
+#market-app .nx-cart-product-content{min-width:0}
+
+/* Хоёр хэсэгт ашиглагддаг мэдэгдлийн семантик төлөвүүд — өнгийг тухайн дэлгэцээс өвлөнө */
+#ads [role="status"],#ads [role="alert"],
+#market-app [role="status"],#market-app [role="alert"]{
+  max-width:100%;overflow-wrap:anywhere;line-height:1.6;
+}
+#ads [role="status"],#market-app [role="status"]{
+  border-radius:12px;
+}
+#ads [role="alert"],#market-app [role="alert"]{
+  border-radius:12px;
+}
+
+/* Touch болон жижиг дэлгэцийн нарийн тохируулга */
+@media(max-width:699px){
+  #ads .nx-list-screen .nx-list-message,
+  #ads .nx-full-screen .nx-list-message{
+    min-height:122px;margin:11px 0;padding:19px 15px;border-radius:16px;
+    font-size:13px;
+  }
+  #market-app:has(#nx-cart-order) #nx-market-msg:not(:empty){
+    padding:10px 11px;font-size:13px;
+  }
+  #market-app .nx-empty-info{margin:10px 0;padding:17px 13px}
+}
+@media(max-width:360px){
+  #ads .nx-list-screen .nx-list-message,
+  #ads .nx-full-screen .nx-list-message{min-height:110px;padding:16px 12px}
+}
+@media(prefers-reduced-motion:reduce){
+  #market-app:has(#nx-cart-order) #nx-market-msg{transition:none!important}
+}
+</style>
