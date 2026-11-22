@@ -3368,7 +3368,7 @@ textarea:disabled,
 
   const packages = [
     { type: "basic", name: "Энгийн", days: 7, amount: 5000 },
-    { type: "featured", name: "Онцгой", days: 7, amount: 10000 },
+    { type: "featured", name: "Онцгой", days: 7, amount: 8000 },
     { type: "vip", name: "VIP", days: 14, amount: 15000 },
     { type: "premium", name: "Premium", days: 14, amount: 20000 }
   ];
@@ -3526,11 +3526,8 @@ textarea:disabled,
       const {data:settings,error:settingsError}=await db.from("nexora_settings").select("ad_package_config").eq("id",1).single();
       if(settingsError)throw settingsError;
       const config=settings?.ad_package_config||{};
-      const basic=config.basic||{amount:0,days:7,free_limit:1};
-      const {count,error:countError}=await db.from("classified_ads").select("id",{count:"exact",head:true}).eq("owner_id",user.id).eq("package_type","basic");
-      if(countError)throw countError;
       packages.forEach(p=>{const v=config[p.type]||{};p.days=Number(v.days??p.days);p.amount=Number(v.amount??p.amount);});
-      packages.find(p=>p.type==="basic").amount=(count||0)<Number(basic.free_limit??1)?0:Number(basic.amount??0);
+      // Энгийн багц ч төлбөртэй: бүх зар төлбөр баталгаажсаны дараа нийтлэгдэнэ.
     } catch(error) {
       message("Зарын багцын үнийг ачаалж чадсангүй: "+error.message,true);
       return;
