@@ -1976,7 +1976,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     };
     const isJobCategory = Number(category.number) === 3;
     content.innerHTML = '<div class="nx-full-screen" data-nx-stage="groups">' +
-      '<div class="nx-subcategory-list nx-category-card-list nx-job-sector-grid' + (isJobCategory ? ' nx-job-sector-photo-grid' : '') + '">' +
+      '<div class="nx-subcategory-list nx-category-card-list nx-job-sector-grid nx-job-sector-photo-grid">' +
       groups.map((group, index) => {
         const photo = jobSectorPhotos[group] || category.image;
         return '<button type="button" class="nx-subcategory-item nx-choice-card nx-job-photo-card" data-nx-group="' + index + '" aria-pressed="false">' +
