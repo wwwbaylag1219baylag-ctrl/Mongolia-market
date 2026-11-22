@@ -3475,8 +3475,8 @@ textarea:disabled,
           <button type="button" id="nx-open-map-picker" class="nx-create-input" style="text-align:left;cursor:pointer;">⌖ Газрын зураг нээж байршил сонгох</button>
           <div id="nx-map-selected-label" style="font-size:12px;color:#d6ad55;margin:0 0 14px;">${data.latitude && data.longitude ? "Байршил сонгогдсон ✓" : "Байршил сонгоогүй байна"}</div>
 
-          <label class="nx-create-label">Зарын зураг (6 хүртэл)</label>
-          <input id="nx-ad-images" type="file" accept="image/jpeg,image/png,image/webp" multiple required style="width:100%;padding:14px 0;color:white;">
+          <label class="nx-create-label">Зарын зураг (заавал биш — хүссэн тоогоороо)</label>
+          <input id="nx-ad-images" type="file" accept="image/jpeg,image/png,image/webp" multiple style="width:100%;padding:14px 0;color:white;">
 
           <div id="nx-ad-image-preview" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0;"></div>
           <div id="nx-flow-message" class="nx-create-message"></div>
@@ -3863,15 +3863,6 @@ textarea:disabled,
       message("Үнийг зөв бичнэ үү. Жишээ: 200 сая, 500 мянга.", true);
       return;
     }
-    if (files.length < 1) {
-      message("Хамгийн багадаа 1 зураг оруулна уу.", true);
-      return;
-    }
-    if (files.length > 6) {
-      message("6 хүртэл зураг сонгоно уу.", true);
-      return;
-    }
-
     pendingAd = {
       title: title,
       description: description,
@@ -3904,12 +3895,6 @@ textarea:disabled,
     const files = Array.from(event.target.files || []);
     const preview = document.getElementById("nx-ad-image-preview");
     preview.innerHTML = "";
-
-    if (files.length > 6) {
-      message("6 хүртэл зураг сонгоно уу.", true);
-      event.target.value = "";
-      return;
-    }
 
     for (const file of files) {
       if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) ||
@@ -7729,7 +7714,7 @@ html,body{
     "Холбоо барих утас *":["Contact phone *","联系电话 *","Контактный телефон *","연락처 전화번호 *","連絡先電話番号 *"],
     "Байршил (газрын зураг дээр сонгоно)":["Location (select on map)","位置（在地图上选择）","Местоположение (выберите на карте)","위치 (지도에서 선택)","場所（地図で選択）"],
     "⌖ Газрын зураг нээж байршил сонгох":["⌖ Open map and select location","⌖ 打开地图并选择位置","⌖ Открыть карту и выбрать место","⌖ 지도를 열고 위치 선택","⌖ 地図を開いて場所を選択"],
-    "Зарын зураг (6 хүртэл)":["Ad images (up to 6)","广告图片（最多6张）","Фотографии объявления (до 6)","광고 이미지 (최대 6장)","広告画像（最大6枚）"],
+    "Зарын зураг (заавал биш — хүссэн тоогоороо)":["Ad images (optional — any number)","广告图片（可选，数量不限）","Фотографии объявления (необязательно, без ограничения количества)","광고 이미지 (선택 사항 — 개수 제한 없음)","広告画像（任意・枚数制限なし）"],
     "ҮРГЭЛЖЛҮҮЛЭХ":["CONTINUE","继续","ПРОДОЛЖИТЬ","계속","続行"],
     "БАНК СОНГОХ":["SELECT BANK","选择银行","ВЫБЕРИТЕ БАНК","은행 선택","銀行を選択"],
     "ШИЛЖҮҮЛГИЙН БАРИМТ":["TRANSFER RECEIPT","转账凭证","КВИТАНЦИЯ О ПЕРЕВОДЕ","송금 영수증","振込明細"],
@@ -7739,9 +7724,7 @@ html,body{
     "ТАНЫ ЗАР НИЙТЛЭГДЛЭЭ":["YOUR AD HAS BEEN POSTED","您的广告已发布","ВАШЕ ОБЪЯВЛЕНИЕ ОПУБЛИКОВАНО","광고가 게시되었습니다","広告が掲載されました"],
     "ЗАРЫН ЖАГСААЛТ РУУ БУЦАХ":["BACK TO AD LIST","返回广告列表","ВЕРНУТЬСЯ К СПИСКУ ОБЪЯВЛЕНИЙ","광고 목록으로 돌아가기","広告一覧に戻る"],
     "Одтой талбаруудыг бүрэн бөглөнө үү.":["Please complete all required fields.","请填写所有必填字段。","Заполните все обязательные поля.","필수 항목을 모두 입력하세요.","必須項目をすべて入力してください。"],
-    "Хамгийн багадаа 1 зураг оруулна уу.":["Please upload at least 1 image.","请至少上传1张图片。","Загрузите хотя бы 1 изображение.","이미지를 최소 1장 업로드하세요.","画像を1枚以上アップロードしてください。"],
-    "6 хүртэл зураг сонгоно уу.":["Select up to 6 images.","最多选择6张图片。","Выберите не более 6 изображений.","이미지는 최대 6장까지 선택하세요.","画像は最大6枚まで選択してください。"],
-    "Төлбөрийн баримтын файл сонгоно уу.":["Please select the payment receipt file.","请选择付款凭证文件。","Выберите файл платёжной квитанции.","결제 영수증 파일을 선택하세요.","支払い証明ファイルを選択してください。"],
+            "Төлбөрийн баримтын файл сонгоно уу.":["Please select the payment receipt file.","请选择付款凭证文件。","Выберите файл платёжной квитанции.","결제 영수증 파일을 선택하세요.","支払い証明ファイルを選択してください。"],
     "Энгийн":["Basic","普通","Обычный","기본","通常"],
     "Онцгой":["Featured","精选","Особый","추천","おすすめ"],
     "VIP":["VIP","VIP","VIP","VIP","VIP"],
