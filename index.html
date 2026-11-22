@@ -5806,7 +5806,55 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       .platform-card:hover,.card:hover,.panel:hover,.category-card:hover,.choice-card:hover,#ads .nx-subcategory-item:hover,#shop .nx-choice-card:hover{
         filter:brightness(1.045);box-shadow:inset 0 1px 0 rgba(255,255,255,.24),0 12px 29px rgba(0,0,0,.28)!important;
       }
-      button,.primary-button,.btn-primary,.publish-button,.action-primary,.auth-submit,#shop .nx-market-btn:not(.secondary),#ads .nx-create-submit{background-image:linear-gradient(145deg,rgba(255,255,255,.24),rgba(255,255,255,.04) 48%,rgba(0,0,0,.12))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 5px 14px rgba(0,0,0,.24)!important;transition:filter .2s ease,transform .2s ease,box-shadow .2s ease}
+      /* Бодитоор товойсон 3D гадаргуу: үндсэн платформын таб, ангилал, карт, сагслах үйлдэл */
+      .platform-card,#ads .nexora-ad-category,#ads .nx-subcategory-item,#ads .nx-choice-card,
+      #ads .nx-accordion-section,#ads .nx-accordion-tab,#ads .nx-accordion-option,
+      #shop .nx-choice-card,#shop .nx-temu-category-rail .nx-temu-chip,
+      #market-app .nx-market-tabs button,#market-app .nx-market-nav button,
+      #market-app .nx-market-category-choice,#market-app .nx-catalog-cart,
+      #market-app .nx-market-product-tile,#market-app .nx-market-product-tile [data-retail-add],
+      #market-app .nx-market-product-tile>button:not(.nx-market-back-arrow),
+      #shop .nx-market-btn,#shop .nx-temu-product-action,
+      #ads .nx-create-toggle,#ads .nx-create-open,#ads .nx-create-submit{
+        position:relative;
+        border-top-color:${c.text}88!important;
+        box-shadow:inset 0 2px 0 rgba(255,255,255,.28),inset 0 -2px 0 rgba(0,0,0,.18),
+          0 3px 0 ${c.accent}55,0 8px 17px rgba(0,0,0,.28),0 0 13px ${c.accent}22!important;
+        transform:translateY(-2px);
+        transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .18s ease,filter .18s ease!important;
+        -webkit-tap-highlight-color:transparent;
+      }
+      .platform-card:active,#ads .nexora-ad-category:active,#ads .nx-subcategory-item:active,
+      #ads .nx-choice-card:active,#ads .nx-accordion-option:active,
+      #shop .nx-choice-card:active,#shop .nx-temu-category-rail .nx-temu-chip:active,
+      #market-app .nx-market-tabs button:active,#market-app .nx-market-nav button:active,
+      #market-app .nx-market-category-choice:active,#market-app .nx-catalog-cart:active,
+      #market-app .nx-market-product-tile [data-retail-add]:active,
+      #market-app .nx-market-product-tile>button:active,
+      #shop .nx-market-btn:active,#shop .nx-temu-product-action:active,
+      #ads .nx-create-toggle:active,#ads .nx-create-open:active,#ads .nx-create-submit:active{
+        transform:translateY(1px) scale(.985)!important;
+        box-shadow:inset 0 2px 5px rgba(0,0,0,.22),0 1px 0 ${c.accent}44,0 3px 7px rgba(0,0,0,.24)!important;
+        filter:brightness(1.08);
+      }
+      .platform-card[aria-pressed="true"],.platform-card.active,
+      #ads .nexora-ad-category.selected,#ads .nx-subcategory-item[aria-expanded="true"],
+      #market-app .nx-market-tabs button.active,#market-app .nx-market-nav button.active,
+      #shop .nx-temu-category-rail .nx-temu-chip.active{
+        box-shadow:inset 0 2px 0 rgba(255,255,255,.32),inset 0 -2px 0 rgba(0,0,0,.16),
+          0 4px 0 ${c.accent}66,0 10px 22px rgba(0,0,0,.30),0 0 18px ${c.accent}44!important;
+      }
+      #market-app .nx-market-product-tile{
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 4px 0 ${c.accent}44,
+          0 10px 22px rgba(0,0,0,.30)!important;
+        transition:transform .2s ease,box-shadow .2s ease!important;
+      }
+      #market-app .nx-market-product-tile [data-retail-add],
+      #market-app .nx-market-product-tile>button:not(.nx-market-back-arrow){
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.34),0 3px 0 ${c.accent}66,
+          0 7px 14px rgba(0,0,0,.32)!important;
+      }
+      button,.primary-button,.btn-primary,.publish-button,.action-primary,.auth-submit,#shop .nx-market-btn:not(.secondary),#ads .nx-create-submit{background-image:linear-gradient(145deg,rgba(255,255,255,.24),rgba(255,255,255,.04) 48%,rgba(0,0,0,.12))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 5px 14px rgba(0,0,0,.24)!important;transition:filter .2s ease,transform .2s ease,box-shadow .2s ease!important}
       .topbar,.page-header,.bottom-nav,.nav-bar{background-image:linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.035) 46%,rgba(0,0,0,.14))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.20),0 7px 22px rgba(0,0,0,.25)!important;backdrop-filter:blur(12px) saturate(1.16)}
       /* Карт цэс, толгой дэвсгэр болон платформын табууд — админы сонгосон суурь өнгөн дээр гялгар гэрэл */
       #ads .topbar,#ads .page-header,#ads .nx-help-screen,#shop .nx-temu-header,#market-app .nx-nexora-brand-header{
