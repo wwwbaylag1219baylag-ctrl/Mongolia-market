@@ -7209,6 +7209,87 @@ html,body{
 }
 </style>
 
+
+<style id="NEXORA-ADS-MARKET-STAGE19-2026">
+/* 19-р шат — удирдлагын мэдрэмж ба хүртээмж.
+   CSS-only: JS, event, өгөгдөл, үнэ, төлбөр, захиалгын урсгалд өөрчлөлт оруулахгүй. */
+
+/* ЗАР — хайлт, ангилал, дэлгэрэнгүй зураг болон үйлдлийн фокус */
+#ads :is(a,button,[role="button"],input,select,textarea,[tabindex]):focus-visible{
+  outline:2px solid rgba(214,173,85,.95);
+  outline-offset:3px;
+  box-shadow:0 0 0 4px rgba(214,173,85,.16);
+}
+#ads .nx-ad-card--visual :is(a,button){-webkit-tap-highlight-color:transparent}
+#ads .nx-ad-card--visual :is(a,button):active{filter:brightness(1.06)}
+#ads #nx-ad-detail-images img{touch-action:pan-y;}
+
+/* ЖИЖИГЛЭН — товч, ангиллын чип, хайлтын талбар */
+#shop :is(a,button,[role="button"],input,select,textarea,[tabindex]):focus-visible{
+  outline:2px solid currentColor;
+  outline-offset:3px;
+  box-shadow:0 0 0 4px rgba(0,0,0,.09);
+}
+#shop .nx-temu-chip,
+#shop .nx-temu-product :is(a,button){
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+#shop .nx-temu-chip:active,
+#shop .nx-temu-product :is(a,button):active{
+  filter:brightness(.96);
+}
+
+/* БӨӨНИЙ — ангиллын сонголт, захиалгын товч, талбарууд */
+#market-app :is(a,button,[role="button"],input,select,textarea,[tabindex]):focus-visible{
+  outline:2px solid rgba(214,173,85,.98);
+  outline-offset:3px;
+  box-shadow:0 0 0 4px rgba(214,173,85,.15);
+}
+#market-app .nx-market-btn,
+#market-app .nx-market-category-choice{
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+#market-app .nx-market-btn:active,
+#market-app .nx-market-category-choice:active{
+  filter:brightness(1.07);
+}
+
+/* Бүх гурван хэсэг — харагдах товчны дарж болох талбайг нэмэх */
+#ads :is(button,[role="button"]),
+#shop :is(button,[role="button]),
+#market-app :is(button,[role="button]){
+  -webkit-tap-highlight-color:transparent;
+}
+#ads :is(button,[role="button]):disabled,
+#shop :is(button,[role="button]):disabled,
+#market-app :is(button,[role="button]):disabled{
+  cursor:not-allowed;
+  filter:saturate(.65);
+}
+
+/* Hover нь зөвхөн хулганатай төхөөрөмж дээр ажиллана */
+@media(hover:hover) and (pointer:fine){
+  #ads .nx-ad-card--visual :is(a,button):hover{filter:brightness(1.045)}
+  #shop .nx-temu-chip:hover{filter:brightness(1.035)}
+  #shop .nx-temu-product :is(a,button):hover{filter:brightness(1.04)}
+  #market-app .nx-market-btn:hover{filter:brightness(1.06)}
+}
+
+/* Хөдөлгөөн багасгах тохиргоог хүндэтгэнэ */
+@media(prefers-reduced-motion:reduce){
+  #ads :is(a,button,[role="button"]),
+  #shop :is(a,button,[role="button"]),
+  #market-app :is(a,button,[role="button]){
+    scroll-behavior:auto!important;
+    transition:none!important;
+    animation:none!important;
+    transform:none!important;
+  }
+}
+</style>
+
 </body>
 
 <style id="NEXORA-RETAIL-PLATFORM-HEADER-BACK-ARROW-2026">
