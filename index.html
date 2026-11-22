@@ -3501,28 +3501,8 @@ textarea:disabled,
     });
   }
 
-  // Зар нийтлэхэд Профайл нээлгэхгүй: өмнөх хэрэглэгчийн сессийг ашиглах эсвэл зочин сесс үүсгэнэ.
-  async function ensureAdPostingUser() {
-    const current = await db.auth.getSession();
-    if (current.error) throw current.error;
-    if (current.data.session?.user) return current.data.session.user;
-    const guest = await db.auth.signInAnonymously({
-      options: { data: { nexora_guest_purpose: "classified_ad_posting" } }
-    });
-    if (guest.error) {
-      const detail = String(guest.error.message || "");
-      if (/anonymous|disabled|not enabled|signup/i.test(detail)) {
-        throw new Error("Зар нийтлэх зочин горим Supabase тохиргоонд идэвхгүй байна. Anonymous sign-ins тохиргоог идэвхжүүлнэ үү.");
-      }
-      throw guest.error;
-    }
-    if (!guest.data?.user) throw new Error("Зочин сесс үүссэнгүй. Дахин оролдоно уу.");
-    return guest.data.user;
-  }
-
   async function showPackages() {
     try {
-      const user = await ensureAdPostingUser();
       const {data:settings,error:settingsError}=await db.from("nexora_settings").select("ad_package_config").eq("id",1).single();
       if(settingsError)throw settingsError;
       const config=settings?.ad_package_config||{};
@@ -3577,7 +3557,7 @@ textarea:disabled,
 
       const name = Date.now() + "_" + i + "_" +
         file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-      const path = userId + "/" + adId + "/" + name;
+      const path = "public/" + adId + "/" + name;
 
       const uploaded = await db.storage.from("classified-images")
         .upload(path, file, {
@@ -3591,7 +3571,7 @@ textarea:disabled,
       paths.push(path);
       rows.push({
         ad_id: adId,
-        owner_id: userId,
+        owner_id: null,
         image_path: path,
         display_order: i
       });
@@ -3607,16 +3587,25 @@ textarea:disabled,
   }
 
   async function createAd(packageInfo) {
-    const user = await ensureAdPostingUser();
-
     const selection = window.NEXORA_AD_SELECTION;
     if (!selection) throw new Error("Зарын ангилал олдсонгүй.");
+    if (!Number.isFinite(Number(packageInfo.amount)) || Number(packageInfo.amount) <= 0) {
+      throw new Error("Зарын багц төлбөртэй байх ёстой. Үнийн тохиргоог шалгана уу.");
+    }
 
+    const adId = window.crypto && typeof window.crypto.randomUUID === "function"
+      ? window.crypto.randomUUID()
+      : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (ch) {
+          const r = Math.random() * 16 | 0;
+          return (ch === "x" ? r : (r & 3 | 8)).toString(16);
+        });
     const expires = new Date();
     expires.setDate(expires.getDate() + packageInfo.days);
+    createdAdId = adId;
 
     const result = await db.from("classified_ads").insert({
-      owner_id: user.id,
+      id: adId,
+      owner_id: null,
       title: pendingAd.title,
       category: selection.category,
       subcategory: selection.subcategory,
@@ -3625,23 +3614,22 @@ textarea:disabled,
       phone: pendingAd.phone,
       latitude: pendingAd.latitude,
       longitude: pendingAd.longitude,
-      // Үнэгүй энгийн зар админы хяналтад орно; төлбөртэй багц төлбөр хүлээнэ.
-      status: packageInfo.amount === 0 ? "pending_review" : "pending_payment",
+      status: "pending_payment",
       package_type: packageInfo.type,
       package_days: packageInfo.days,
       package_amount: packageInfo.amount,
       expires_at: expires.toISOString()
-    }).select("id").single();
+    });
 
-    if (result.error) throw result.error;
-
-    createdAdId = result.data.id;
-
-    if (pendingAd.files.length) {
-      await uploadAdImages(createdAdId, user.id, pendingAd.files);
+    if (result.error) {
+      createdAdId = null;
+      throw result.error;
     }
 
-    return user;
+    if (pendingAd.files.length) {
+      await uploadAdImages(createdAdId, null, pendingAd.files);
+    }
+    return null;
   }
 
   async function showBanks() {
@@ -3786,10 +3774,8 @@ textarea:disabled,
     button.textContent = "ИЛГЭЭЖ БАЙНА...";
 
     try {
-      const user = await ensureAdPostingUser();
-
       const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-      const path = user.id + "/" + createdAdId + "/" +
+      const path = "public/" + createdAdId + "/" +
         Date.now() + "_" + safeName;
 
       const upload = await db.storage.from("payment-receipts")
@@ -3802,7 +3788,7 @@ textarea:disabled,
 
       const inserted = await db.from("payment_requests").insert({
         ad_id: createdAdId,
-        user_id: user.id,
+        user_id: null,
         bank_account_id: selectedBank.id,
         package_days: selectedPackage.days,
         amount: selectedPackage.amount,
@@ -3905,12 +3891,7 @@ textarea:disabled,
       subcategory: subcategory
     };
 
-    try {
-      await ensureAdPostingUser();
-      showPackages();
-    } catch (error) {
-      message("Зар нийтлэхэд бэлэн болгож чадсангүй: " + error.message, true);
-    }
+    showPackages();
   }
 
   content.addEventListener("submit", function (event) {
@@ -4005,11 +3986,7 @@ textarea:disabled,
 
       try {
         await createAd(selectedPackage);
-        if (selectedPackage.amount === 0) {
-          showComplete(false);
-        } else {
-          await showBanks();
-        }
+        await showBanks();
       } catch (error) {
         message("Зар үүсгэхэд алдаа гарлаа: " + error.message, true);
         packageButton.disabled = false;
