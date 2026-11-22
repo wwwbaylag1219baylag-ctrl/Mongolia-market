@@ -11248,3 +11248,96 @@ body:has(#nx-retail-lightbox-close)>div:has(#nx-retail-lightbox-close) img{
   }
 }
 </style>
+
+
+<style id="NEXORA-ADS-MARKET-STAGE27-2026">
+/* 27-р шат — Signature Header & Section Rhythm.
+   CSS-only visual refinement. Layout flow, navigation, event and data logic untouched. */
+
+/* Үндсэн дэлгэцийн дээд хэсэг: NEXORA-ийн premium өнгөний зөөлөн тусгал */
+.topbar{
+  background:linear-gradient(110deg,rgba(255,255,255,.025),transparent 48%),var(--dark);
+  border-bottom-color:rgba(214,173,85,.22);
+  box-shadow:0 7px 22px rgba(0,0,0,.13),
+             inset 0 -1px 0 rgba(255,255,255,.025);
+}
+.topbar .logo,
+.topbar .nexora-logo-img{
+  filter:drop-shadow(0 2px 8px rgba(214,173,85,.10));
+}
+.topbar .profile-button,
+.topbar .back-button{
+  box-shadow:0 4px 13px rgba(0,0,0,.16),
+             inset 0 1px 0 rgba(255,255,255,.055);
+  transition:box-shadow .2s ease,border-color .2s ease,filter .2s ease;
+}
+
+/* ЗАР, жижиглэн, бөөний хэсгийн гарчгийн визуал хэмнэл */
+#ads .nx-list-title,
+#shop .nx-temu-section-head,
+#market-app .nx-market-category-head{
+  position:relative;
+}
+#ads .nx-list-title{
+  text-shadow:0 2px 12px rgba(0,0,0,.3),
+              0 0 16px rgba(214,173,85,.08);
+}
+#shop .nx-temu-section-head{
+  padding-bottom:13px;
+  border-bottom:1px solid rgba(214,173,85,.18);
+}
+#shop .nx-temu-section-head strong{
+  letter-spacing:-.012em;
+}
+#shop .nx-temu-section-head span{
+  letter-spacing:.025em;
+}
+#market-app .nx-market-category-head{
+  padding-bottom:13px;
+  border-bottom:1px solid rgba(214,173,85,.18);
+}
+#market-app .nx-market-category-head h2{
+  letter-spacing:-.012em;
+}
+
+/* Ангиллын мөр болон барааны жагсаалт хоорондын харааны амьсгаа */
+#shop .nx-temu-category-rail{
+  scroll-margin-inline:12px;
+}
+#ads .nx-ad-card-grid{
+  align-items:stretch;
+}
+#shop .nx-temu-products{
+  align-items:stretch;
+}
+
+/* Товч болон дээд удирдлагын жижиг hover гэрэл — зөвхөн хулганатай төхөөрөмж */
+@media(hover:hover) and (pointer:fine){
+  .topbar .profile-button:hover,
+  .topbar .back-button:hover{
+    border-color:rgba(214,173,85,.48);
+    box-shadow:0 7px 18px rgba(0,0,0,.2),
+               0 0 0 2px rgba(214,173,85,.07);
+  }
+}
+
+/* Гар утсанд толгой хэсгийг хэт өндөр/хүнд болгохгүй */
+@media(max-width:699px){
+  .topbar{
+    box-shadow:0 5px 16px rgba(0,0,0,.12),
+               inset 0 -1px 0 rgba(255,255,255,.02);
+  }
+  #shop .nx-temu-section-head,
+  #market-app .nx-market-category-head{
+    padding-bottom:11px;
+  }
+}
+
+/* Хөдөлгөөн багасгах тохиргоог хүндэтгэнэ */
+@media(prefers-reduced-motion:reduce){
+  .topbar .profile-button,
+  .topbar .back-button{
+    transition:none!important;
+  }
+}
+</style>
