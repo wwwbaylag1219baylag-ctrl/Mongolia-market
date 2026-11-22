@@ -11546,3 +11546,150 @@ body:has(#nx-retail-lightbox-close)>div:has(#nx-retail-lightbox-close) img{
   }
 }
 </style>
+
+
+<style id="NEXORA-ADS-MARKET-STAGE30-2026">
+/* 30-р шат — Unified NEXORA Brand Finish.
+   CSS-only polish across shared surfaces; no markup, data, or interaction changes. */
+
+/* Нэгдсэн үндсэн гадаргуу */
+.welcome-panel,
+.content-panel,
+.info-panel,
+.settings-panel,
+.dashboard-card,
+.stat-card,
+.summary-card,
+.notice-card,
+.empty-state{
+  border-color:rgba(214,173,85,.18);
+  box-shadow:0 8px 24px rgba(0,0,0,.16),
+             inset 0 1px 0 rgba(255,255,255,.045);
+}
+.welcome-panel,
+.content-panel,
+.info-panel,
+.settings-panel,
+.dashboard-card,
+.stat-card,
+.summary-card,
+.notice-card{
+  background-image:linear-gradient(145deg,rgba(255,255,255,.035),transparent 58%);
+}
+
+/* Гарчиг ба тайлбарын нэгдсэн typography */
+.nx-screen-title{
+  letter-spacing:-.018em;
+  text-shadow:0 2px 12px rgba(214,173,85,.09);
+}
+.nx-screen-subtitle,
+.nx-admin-subtitle{
+  line-height:1.65;
+  text-wrap:pretty;
+}
+.page-content{
+  text-rendering:optimizeLegibility;
+}
+
+/* Навигацийн доод хэсэг: тод зааг, цэвэр гадаргуу */
+.bottom-nav,
+.nav-bar{
+  border-top:1px solid rgba(214,173,85,.18);
+  box-shadow:0 -6px 22px rgba(0,0,0,.14),
+             inset 0 1px 0 rgba(255,255,255,.035);
+  -webkit-backdrop-filter:blur(14px) saturate(1.12);
+  backdrop-filter:blur(14px) saturate(1.12);
+}
+
+/* Туслах, анхааруулга, хоосон төлөвийн текст */
+.empty-state{
+  border-radius:16px;
+  background-image:linear-gradient(145deg,rgba(255,255,255,.045),rgba(0,0,0,.08));
+}
+.muted,
+.nx-market-muted,
+.nx-screen-subtitle,
+.nx-admin-subtitle{
+  text-wrap:pretty;
+}
+
+/* Админ самбарын хайлт болон бусад талбарын focus харагдац */
+#nexora-admin-app .nx-admin-search:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible{
+  outline:2px solid rgba(214,173,85,.58);
+  outline-offset:2px;
+}
+
+/* Desktop hover: гадаргуу бага зэрэг гэрэлтэнэ */
+@media(hover:hover) and (pointer:fine){
+  .welcome-panel,
+  .content-panel,
+  .info-panel,
+  .settings-panel,
+  .dashboard-card,
+  .stat-card,
+  .summary-card,
+  .notice-card{
+    transition:border-color .2s ease,box-shadow .2s ease;
+  }
+  .welcome-panel:hover,
+  .content-panel:hover,
+  .info-panel:hover,
+  .settings-panel:hover,
+  .dashboard-card:hover,
+  .stat-card:hover,
+  .summary-card:hover,
+  .notice-card:hover{
+    border-color:rgba(214,173,85,.28);
+    box-shadow:0 11px 28px rgba(0,0,0,.19),
+               inset 0 1px 0 rgba(255,255,255,.055);
+  }
+}
+
+/* Гар утас: сүүдрийг хөнгөн, контентыг уншихад цэвэр байлгана */
+@media(max-width:699px){
+  .welcome-panel,
+  .content-panel,
+  .info-panel,
+  .settings-panel,
+  .dashboard-card,
+  .stat-card,
+  .summary-card,
+  .notice-card{
+    box-shadow:0 5px 16px rgba(0,0,0,.14),
+               inset 0 1px 0 rgba(255,255,255,.035);
+  }
+  .nx-screen-title{
+    text-wrap:balance;
+  }
+}
+
+/* Хөдөлгөөн багасгах болон өндөр контрастын тохиргоог хүндэтгэнэ */
+@media(prefers-reduced-motion:reduce){
+  .welcome-panel,
+  .content-panel,
+  .info-panel,
+  .settings-panel,
+  .dashboard-card,
+  .stat-card,
+  .summary-card,
+  .notice-card{
+    transition:none!important;
+  }
+}
+@media(forced-colors:active){
+  .welcome-panel,
+  .content-panel,
+  .info-panel,
+  .settings-panel,
+  .dashboard-card,
+  .stat-card,
+  .summary-card,
+  .notice-card,
+  .empty-state{
+    border:1px solid CanvasText;
+  }
+}
+</style>
