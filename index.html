@@ -1995,6 +1995,13 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     selectedItem = null;
 
     const items = subcategories[currentCategory.number][group];
+    const isCarBrandList = Number(currentCategory.number) === 1 && group === "Автомашин";
+    const carBrandSlugs = {
+      "Toyota":"toyota","Lexus":"lexus","Hyundai":"hyundai","Kia":"kia","Honda":"honda",
+      "Nissan":"nissan","Mazda":"mazda","Mitsubishi":"mitsubishi","Subaru":"subaru","Suzuki":"suzuki",
+      "Mercedes-Benz":"mercedesbenz","BMW":"bmw","Audi":"audi","Volkswagen":"volkswagen",
+      "Porsche":"porsche","Land Rover":"landrover"
+    };
 
     content.innerHTML = `
       <div class="nx-full-screen" data-nx-stage="items">
@@ -2008,16 +2015,19 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
           Та <strong>${group}</strong> чиглэлд байна. Мэргэжлээ сонгоно уу.
         </div>
 
-        <div class="nx-subcategory-list nx-category-card-list">
-          ${items.map((item, index) => `
+        <div class="nx-subcategory-list nx-category-card-list ${isCarBrandList ? "nx-car-brand-grid" : ""}">
+          ${items.map((item, index) => {
+            const brandSlug = carBrandSlugs[item];
+            return `
             <button type="button"
-              class="nx-subcategory-item nx-choice-card"
+              class="nx-subcategory-item nx-choice-card ${isCarBrandList ? "nx-car-brand-card" : ""}"
               data-nx-item="${index}">
+              ${isCarBrandList && brandSlug ? `<img class="nx-car-brand-logo" src="https://cdn.simpleicons.org/${brandSlug}" alt="${item} лого" loading="lazy" decoding="async" onerror="this.style.display='none'">` : ""}
               <span class="nx-choice-index">${String(index+1).padStart(2,"0")}</span>
               <span class="nx-choice-name">${item}</span>
-              <span class="nx-choice-arrow">›</span>
-            </button>
-          `).join("")}
+              ${isCarBrandList ? "" : '<span class="nx-choice-arrow">›</span>'}
+            </button>`;
+          }).join("")}
         </div>
       </div>
     `;
@@ -6876,6 +6886,40 @@ html,body{
 }
 </style>
 
+
+<style id="NEXORA-CAR-BRAND-LOGO-CARDS-2026">
+/* Автомашины марк: жинхэнэ брэндийн SVG лого картын төв хэсгийг дүүргэнэ. */
+#ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-car-brand-grid{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:12px!important;width:100%;max-width:900px;margin:12px auto!important;
+}
+#ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-car-brand-card{
+  position:relative!important;isolation:isolate;overflow:hidden!important;
+  box-sizing:border-box!important;min-width:0!important;min-height:132px!important;
+  padding:14px 10px 12px!important;display:flex!important;flex-direction:column!important;
+  align-items:center!important;justify-content:center!important;gap:8px!important;
+  border:1px solid rgba(214,173,85,.34)!important;border-radius:17px!important;
+  background:radial-gradient(ellipse at 50% 32%,rgba(255,255,255,.12),transparent 67%),linear-gradient(145deg,#20252b,#101419)!important;
+  box-shadow:0 8px 20px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.08)!important;
+}
+#ads .page-content .nx-car-brand-card .nx-car-brand-logo{
+  display:block!important;width:min(88%,150px)!important;height:68px!important;
+  max-width:100%!important;object-fit:contain!important;object-position:center!important;
+  filter:drop-shadow(0 3px 5px rgba(0,0,0,.34));margin:0 auto!important;
+}
+#ads .page-content .nx-car-brand-card .nx-choice-name{
+  position:relative;z-index:1;display:block!important;width:100%;text-align:center!important;
+  font-size:13px!important;font-weight:850!important;line-height:1.2!important;
+  color:#f4f6f8!important;text-shadow:0 2px 5px #000!important;
+}
+#ads .page-content .nx-car-brand-card .nx-choice-index{position:absolute!important;top:7px!important;right:9px!important;z-index:2;flex:0 0 auto!important;font-size:9px!important;opacity:.58}
+#ads .page-content .nx-car-brand-card:active{transform:scale(.975);border-color:#e0bd70!important}
+@media(min-width:700px){
+ #ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-car-brand-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+ #ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-car-brand-card{min-height:150px!important}
+ #ads .page-content .nx-car-brand-card .nx-car-brand-logo{height:82px!important}
+}
+</style>
 </body>
 
 <style id="NEXORA-RETAIL-PLATFORM-HEADER-BACK-ARROW-2026">
