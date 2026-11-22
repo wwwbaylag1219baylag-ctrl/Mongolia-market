@@ -96,8 +96,18 @@
  async function cards(rows,type){
   if(!rows||!rows.length)return empty("Одоогоор хүлээгдэж буй хүсэлт алга.");
   const html=await Promise.all(rows.map(async r=>{
-   const title=type==="wholesale_order_payment"?"Бөөний захиалгын төлбөрийн баримт":r.payment_purpose==="renewal"?"Нийлүүлэгчийн сарын эрх сунгах":r.title||r.store_name||r.name||r.supplier_name||(r.fee_type?(type==="retail_fee_payment"?(r.fee_type==="logo"?"Онлайн дэлгүүрийн логоны төлбөр":"Жижиглэнгийн бараа байршуулалтын төлбөр"):(r.fee_type==="logo"?"Нийлүүлэгчийн логоны төлбөр":"Бөөний бараа байршуулалтын төлбөр")):("Хүсэлт "+String(r.id||"").slice(0,8)));
+   const ad=type==="ad_payment"?(Array.isArray(r.classified_ads)?r.classified_ads[0]:r.classified_ads):null;
+   const title=type==="ad_payment"&&ad?("Зарын төлбөр · "+(ad.title||"Гарчиггүй зар")):type==="wholesale_order_payment"?"Бөөний захиалгын төлбөрийн баримт":r.payment_purpose==="renewal"?"Нийлүүлэгчийн сарын эрх сунгах":r.title||r.store_name||r.name||r.supplier_name||(r.fee_type?(type==="retail_fee_payment"?(r.fee_type==="logo"?"Онлайн дэлгүүрийн логоны төлбөр":"Жижиглэнгийн бараа байршуулалтын төлбөр"):(r.fee_type==="logo"?"Нийлүүлэгчийн логоны төлбөр":"Бөөний бараа байршуулалтын төлбөр")):("Хүсэлт "+String(r.id||"").slice(0,8)));
    const details=[];
+   if(ad){
+    if(ad.category)details.push(["Зарын ангилал",ad.category]);
+    if(ad.subcategory)details.push(["Дэд ангилал",ad.subcategory]);
+    if(ad.description)details.push(["Зарын тайлбар",ad.description]);
+    if(ad.phone)details.push(["Зар нийтлэгчийн утас",ad.phone]);
+    if(ad.price!==null&&ad.price!==undefined)details.push(["Зарын үнэ",money(ad.price)]);
+    if(ad.package_type)details.push(["Сонгосон багц",ad.package_type]);
+    if(ad.package_days)details.push(["Нийтлэх хугацаа",ad.package_days+" хоног"]);
+   }
    if(r.owner_type)details.push(["Эзэмшигч",r.owner_type==="company"?"Байгууллага":r.owner_type==="individual"?"Хувь хүн":r.owner_type]);
    if(r.duration_days)details.push(["Эрхийн хугацаа",r.duration_days+" хоног"]);
    if(r.bank_accounts)details.push(["Төлбөр хүлээн авах данс",r.bank_accounts.bank_name+" · "+r.bank_accounts.account_number+" · "+r.bank_accounts.account_holder]);
@@ -128,6 +138,16 @@
    if(r.register_no)details.push(["Регистр",r.register_no]);
    if(r.ad_id)details.push(["Зарын дугаар",String(r.ad_id).slice(0,12)]);
    if(r.order_id)details.push(["Захиалгын дугаар",String(r.order_id).slice(0,12)]);
+   let adPreviewHtml="";
+   if(ad){
+    const imageRows=Array.isArray(ad.ad_images)?ad.ad_images.slice().sort((a,b)=>Number(a.display_order||0)-Number(b.display_order||0)): [];
+    const imageUrls=await Promise.all(imageRows.map(async im=>{
+     const {data}=await db.storage.from("classified-images").createSignedUrl(im.image_path,1800);
+     return data?.signedUrl||"";
+    }));
+    const visibleImages=imageUrls.filter(Boolean);
+    adPreviewHtml='<section style="margin:12px 0;padding:12px;border:1px solid rgba(214,173,85,.2);border-radius:10px;background:#101010"><strong style="color:#e8c778">Зарын зураг ('+visibleImages.length+')</strong>'+(visibleImages.length?'<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:9px">'+visibleImages.map(url=>'<a href="'+esc(url)+'" target="_blank" rel="noopener"><img src="'+esc(url)+'" alt="Зарын зураг" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px"></a>').join("")+'</div>':'<div class="nx-market-muted" style="margin-top:8px">Зургийг ачаалж чадсангүй.</div>')+'</section>';
+   }
    let receiptHtml="";
    if(r.receipt_path){
     const {data,error}=await db.storage.from("payment-receipts").createSignedUrl(r.receipt_path,1800);
@@ -141,7 +161,7 @@
    return '<article class="nx-admin-card"><h3>'+esc(title)+'</h3>'+priceHtml+
     '<span class="nx-admin-status">'+esc(status)+'</span>'+
     '<div class="nx-admin-meta">'+meta+'<div><strong>Огноо:</strong> '+esc(created)+'</div></div>'+
-    receiptHtml+'<div class="nx-admin-actions">'+(type?'<button type="button" class="nx-admin-approve" data-review="'+type+'" data-id="'+esc(r.id)+'" data-action="approve">✓ Зөвшөөрөх</button><button type="button" class="nx-admin-reject" data-review="'+type+'" data-id="'+esc(r.id)+'" data-action="reject">✕ Татгалзах</button>':"")+'</div></article>';
+    adPreviewHtml+receiptHtml+'<div class="nx-admin-actions">'+(type?'<button type="button" class="nx-admin-approve" data-review="'+type+'" data-id="'+esc(r.id)+'" data-action="approve">✓ Зөвшөөрөх</button><button type="button" class="nx-admin-reject" data-review="'+type+'" data-id="'+esc(r.id)+'" data-action="reject">✕ Татгалзах</button>':"")+'</div></article>';
   }));
   return '<div class="nx-admin-list">'+html.join("")+'</div>';
  }
@@ -277,7 +297,7 @@
    }
    const cfg={
     ads:["classified_ads","id,title,category,price,status,package_type,package_days,package_amount,created_at",[["status","pending_review"]],"free_ad"],
-    payments:["payment_requests","id,ad_id,user_id,amount,package_days,transfer_reference,receipt_path,status,created_at",[["status","pending_review"]],"ad_payment"],
+    payments:["payment_requests","id,ad_id,user_id,amount,package_days,transfer_reference,receipt_path,status,created_at,classified_ads(id,title,category,subcategory,description,price,phone,package_type,package_days,package_amount,latitude,longitude,ad_images(image_path,display_order))",[["status","pending_review"]],"ad_payment"],
     wholesaleProducts:["wholesale_products","id,title,category,price,owner_id,status,stock_quantity,min_order_quantity,wholesale_price_tiers,created_at",[["status","pending"]],"wholesale_product"],
     stores:["nexora_store_payments","id,store_id,user_id,amount,bank_name,transfer_reference,receipt_path,status,created_at",[["status","pending"]],"store_payment"],
     suppliers:["market_suppliers","id,name,type,owner_type,register_no,phone,email,address,status,created_at",[],""],
