@@ -3444,41 +3444,62 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 
     let bankHoldTimer = null;
     let holdTarget = null;
+    let bankHoldOpened = false;
     function cancelBankHold() {
       if (bankHoldTimer) clearTimeout(bankHoldTimer);
       bankHoldTimer = null;
       holdTarget = null;
     }
+    function revealBank(button) {
+      const bank = (window.NEXORA_BANK_CACHE || []).find(function (b) {
+        return String(b.id) === button.dataset.bankId;
+      });
+      if (!bank) return;
+      selectedBank = bank;
+      document.getElementById("nx-selected-bank-name").textContent = bank.bank_name || "";
+      document.getElementById("nx-selected-bank-number").textContent = bank.account_number || "";
+      document.getElementById("nx-selected-bank-holder").textContent = bank.account_holder || "";
+      document.getElementById("nx-selected-bank-info").hidden = false;
+      list.querySelectorAll("[data-bank-id]").forEach(function (item) {
+        item.style.background = "#171717";
+        item.style.color = "#f3d58d";
+      });
+      button.style.background = "#f5f5f5";
+      button.style.color = "#171717";
+      button.style.borderColor = "#d6ad55";
+      bankHoldOpened = true;
+    }
     list.querySelectorAll("[data-bank-id]").forEach(function (button) {
-      button.style.touchAction = "none";
-      button.addEventListener("pointerdown", function (event) {
-        if (event.pointerType === "mouse" && event.button !== 0) return;
+      button.style.touchAction = "manipulation";
+      button.addEventListener("touchstart", function (event) {
         cancelBankHold();
         holdTarget = button;
-        try { button.setPointerCapture(event.pointerId); } catch (_) {}
+        bankHoldOpened = false;
         bankHoldTimer = setTimeout(function () {
-          const bank = (window.NEXORA_BANK_CACHE || []).find(function (b) {
-            return String(b.id) === button.dataset.bankId;
-          });
-          if (!bank) return;
-          selectedBank = bank;
-          document.getElementById("nx-selected-bank-name").textContent = bank.bank_name || "";
-          document.getElementById("nx-selected-bank-number").textContent = bank.account_number || "";
-          document.getElementById("nx-selected-bank-holder").textContent = bank.account_holder || "";
-          document.getElementById("nx-selected-bank-info").hidden = false;
-          button.style.background = "#f5f5f5";
-          button.style.color = "#171717";
-          button.style.borderColor = "#d6ad55";
+          revealBank(button);
           bankHoldTimer = null;
-        }, 550);
+        }, 500);
+      }, { passive: true });
+      button.addEventListener("touchend", function () {
+        const opened = bankHoldOpened;
+        cancelBankHold();
+        if (opened) bankHoldOpened = false;
+      }, { passive: true });
+      button.addEventListener("touchcancel", cancelBankHold, { passive: true });
+      button.addEventListener("pointerdown", function (event) {
+        if (event.pointerType !== "mouse" || event.button !== 0) return;
+        cancelBankHold();
+        holdTarget = button;
+        bankHoldTimer = setTimeout(function () {
+          revealBank(button);
+          bankHoldTimer = null;
+        }, 500);
       });
       button.addEventListener("pointerup", cancelBankHold);
       button.addEventListener("pointercancel", cancelBankHold);
-      button.addEventListener("lostpointercapture", cancelBankHold);
       button.addEventListener("contextmenu", function (event) { event.preventDefault(); });
     });
-    window.addEventListener("pointerup", cancelBankHold);
-    window.addEventListener("pointercancel", cancelBankHold);
+
   }
 
   function showReceiptForm() {
