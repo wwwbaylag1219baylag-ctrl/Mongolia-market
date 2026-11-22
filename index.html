@@ -1064,19 +1064,14 @@ textarea:disabled,
     SUPABASE_KEY,
     {
       auth: {
-        // Нэвтрэлтийг зөвхөн тухайн хуудасны санах ойд хадгална.
-        // Хуудсыг хааж дахин нээхэд хэрэглэгч дахин нэвтэрнэ.
-        persistSession: false,
+        // Нэвтрэлтийг хуудсуудын хооронд хадгална. Админ самбар тусдаа хуудас тул
+        // session хадгалагдахгүй бол хуучин админ дахин нэвтрэх шаардлагатай болно.
+        persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true
       }
     }
   );
-
-  // Хуудаснаас гарахад түр нэвтрэлтийг ч цэвэрлэнэ (back/forward cache-ээс буцаж ирэхэд ч нэвтрээгүй байна).
-  window.addEventListener("pagehide", function () {
-    db.auth.signOut({ scope: "local" }).catch(function () {});
-  });
 
   const panel = document.getElementById("nexora-auth-panel");
 
