@@ -8054,3 +8054,59 @@ button.nx-platform-back:focus-visible,
   }
 }
 </style>
+
+
+<style id="NEXORA-STAGE-TRANSITIONS-2026">
+/* Stage 4 — cinematic screen-to-screen arrival.
+   CSS-only and isolated to Ads screens; no navigation or application state is modified. */
+@keyframes nxStageArrival{
+  0%{opacity:0;transform:translate3d(0,13px,0) scale(.992);filter:blur(2px)}
+  72%{opacity:1;filter:blur(0)}
+  100%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
+}
+#ads .page-content .nx-full-screen{
+  animation:nxStageArrival .38s cubic-bezier(.2,.72,.22,1) both;
+  transform-origin:50% 45%;
+  backface-visibility:hidden;
+}
+#ads .page-content .nx-list-screen{
+  animation:nxStageArrival .34s cubic-bezier(.2,.72,.22,1) both;
+  backface-visibility:hidden;
+}
+#ads .page-content .nx-full-screen .nx-screen-title,
+#ads .page-content .nx-full-screen .nx-category-heading{
+  animation:nxStageHeading .42s cubic-bezier(.2,.72,.22,1) both;
+}
+@keyframes nxStageHeading{
+  from{opacity:0;transform:translate3d(0,7px,0)}
+  to{opacity:1;transform:translate3d(0,0,0)}
+}
+/* Гар утсанд шилжилтийг богино, хөнгөн байлгана. */
+@media(max-width:699px){
+  #ads .page-content .nx-full-screen{animation-duration:.30s}
+  #ads .page-content .nx-list-screen{animation-duration:.28s}
+  #ads .page-content .nx-full-screen .nx-screen-title,
+  #ads .page-content .nx-full-screen .nx-category-heading{animation-duration:.32s}
+  #ads .page-content .nx-full-screen .nx-subcategory-item,
+  #ads .page-content .nx-full-screen .nx-choice-card{
+    -webkit-tap-highlight-color:transparent;
+  }
+  #ads .page-content .nx-full-screen .nx-subcategory-item:active,
+  #ads .page-content .nx-full-screen .nx-choice-card:active{
+    filter:brightness(1.08);
+  }
+}
+@media(min-width:700px){
+  #ads .page-content .nx-full-screen{transform-origin:50% 38%}
+}
+@media(prefers-reduced-motion:reduce){
+  #ads .page-content .nx-full-screen,
+  #ads .page-content .nx-list-screen,
+  #ads .page-content .nx-full-screen .nx-screen-title,
+  #ads .page-content .nx-full-screen .nx-category-heading{
+    animation:none!important;
+    filter:none!important;
+    transform:none!important;
+  }
+}
+</style>
