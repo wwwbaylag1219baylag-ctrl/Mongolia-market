@@ -369,7 +369,7 @@
   }
   async function init(){
    root.innerHTML='<div class="nx-admin-loading">Админ эрх шалгаж байна…</div>';
-   try{const {data,error}=await db.auth.getUser();if(error)throw error;if(!data.user){renderLogin();return;}
+   try{const {data:sessionData,error:sessionError}=await db.auth.getSession();if(sessionError)throw sessionError;if(!sessionData?.session){renderLogin();return;}const {data,error}=await db.auth.getUser();if(error)throw error;if(!data.user){renderLogin();return;}
     const {data:themeRow}=await db.from("nexora_settings").select("admin_theme_config").eq("id",1).maybeSingle();if(themeRow?.admin_theme_config)applyAdminTheme(themeRow.admin_theme_config);
     if(!(await adminCheck())){root.innerHTML='<section class="nx-admin-login"><h1>ХАНДАХ ЭРХГҮЙ</h1><p>Энэ бүртгэлд NEXORA админы эрх олгогдоогүй байна.</p><button class="nx-admin-login-submit" id="nx-admin-denied-logout" type="button">Өөр бүртгэлээр нэвтрэх</button><a href="./index.html">Хэрэглэгчийн сайт руу буцах</a></section>';document.getElementById("nx-admin-denied-logout").onclick=async()=>{await db.auth.signOut();renderLogin();};return;}
     loadTab();
