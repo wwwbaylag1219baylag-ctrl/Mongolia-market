@@ -7898,3 +7898,56 @@ button.nx-platform-back:focus-visible,
   }
 }
 </style>
+
+
+<style id="NEXORA-IMMERSIVE-CARD-EXPERIENCE-2026">
+/* Immersive layer 2: reveal category choices cleanly and add restrained tactile feedback.
+   No event handlers, data attributes, navigation, or business logic are changed. */
+@keyframes nxImmersiveReveal{
+  from{opacity:.35;filter:blur(2px)}
+  to{opacity:1;filter:blur(0)}
+}
+#ads .page-content .nx-full-screen[data-nx-stage="groups"] .nx-choice-card,
+#ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-choice-card{
+  animation:nxImmersiveReveal .42s ease-out both;
+}
+#ads .page-content .nx-full-screen[data-nx-stage="groups"] .nx-choice-card:nth-child(2),
+#ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-choice-card:nth-child(2){animation-delay:.035s}
+#ads .page-content .nx-full-screen[data-nx-stage="groups"] .nx-choice-card:nth-child(3),
+#ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-choice-card:nth-child(3){animation-delay:.07s}
+#ads .page-content .nx-full-screen[data-nx-stage="groups"] .nx-choice-card:nth-child(4),
+#ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-choice-card:nth-child(4){animation-delay:.105s}
+#ads .page-content .nx-full-screen[data-nx-stage="groups"] .nx-choice-card:nth-child(5),
+#ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-choice-card:nth-child(5){animation-delay:.14s}
+#ads .page-content .nx-full-screen[data-nx-stage="groups"] .nx-choice-card:nth-child(6),
+#ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-choice-card:nth-child(6){animation-delay:.175s}
+#ads .page-content .nx-full-screen[data-nx-stage="groups"] .nx-choice-card:nth-child(7),
+#ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-choice-card:nth-child(7){animation-delay:.21s}
+#ads .page-content .nx-full-screen[data-nx-stage="groups"] .nx-choice-card:nth-child(8),
+#ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-choice-card:nth-child(8){animation-delay:.245s}
+@media(hover:hover) and (pointer:fine){
+  #ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-car-brand-card:hover{
+    transform:translateY(-4px) scale(1.012)!important;
+    border-color:rgba(230,189,98,.82)!important;
+    box-shadow:0 17px 32px rgba(0,0,0,.38),0 0 18px rgba(230,189,98,.16)!important;
+  }
+  #ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-car-brand-card:hover .nx-car-brand-photo{
+    transform:scale(1.075)!important;
+  }
+  #ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-car-brand-card,
+  #ads .page-content .nx-full-screen[data-nx-stage="groups"] .nx-job-photo-card{
+    transition:transform .24s ease,border-color .24s ease,box-shadow .24s ease!important;
+  }
+}
+#ads .page-content .nx-full-screen[data-nx-stage="groups"] .nx-choice-card.selected,
+#ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-choice-card.selected{
+  border-color:#e6bd62!important;
+  box-shadow:0 0 0 1px rgba(230,189,98,.28),0 8px 22px rgba(0,0,0,.28)!important;
+}
+@media(prefers-reduced-motion:reduce){
+  #ads .page-content .nx-full-screen[data-nx-stage="groups"] .nx-choice-card,
+  #ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-choice-card{
+    animation:none!important;
+  }
+}
+</style>
