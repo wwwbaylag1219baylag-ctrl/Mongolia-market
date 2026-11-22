@@ -10976,3 +10976,149 @@ body:has(#nx-retail-lightbox-close)>div:has(#nx-retail-lightbox-close) img{
   }
 }
 </style>
+
+
+<style id="NEXORA-ADS-MARKET-STAGE25-2026">
+/* 25-р шат — Smart Touch & Premium Forms.
+   CSS-only: form submit, upload, validation, event болон өгөгдлийн логикт хүрэхгүй. */
+
+/* Оролтын талбарууд: цэвэр гадаргуу, зөөлөн хүрээний шилжилт */
+#ads input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+#ads textarea,
+#ads select,
+#shop input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+#shop textarea,
+#shop select,
+#market-app input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+#market-app textarea,
+#market-app select{
+  transition:border-color .2s ease,box-shadow .2s ease,
+             background-color .2s ease,filter .2s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+#ads input:focus-visible,
+#ads textarea:focus-visible,
+#ads select:focus-visible,
+#shop input:focus-visible,
+#shop textarea:focus-visible,
+#shop select:focus-visible,
+#market-app input:focus-visible,
+#market-app textarea:focus-visible,
+#market-app select:focus-visible{
+  outline:2px solid rgba(214,173,85,.72);
+  outline-offset:2px;
+}
+#ads input:focus,
+#ads textarea:focus,
+#ads select:focus,
+#shop input:focus,
+#shop textarea:focus,
+#shop select:focus,
+#market-app input:focus,
+#market-app textarea:focus,
+#market-app select:focus{
+  border-color:rgba(214,173,85,.72);
+  box-shadow:0 0 0 3px rgba(214,173,85,.11),
+             0 7px 18px rgba(0,0,0,.11);
+}
+
+/* Placeholder ба сонголтын текст: уншихад тайван, ялгаралтай */
+#ads input::placeholder,
+#ads textarea::placeholder,
+#shop input::placeholder,
+#shop textarea::placeholder,
+#market-app input::placeholder,
+#market-app textarea::placeholder{
+  opacity:.64;
+  transition:opacity .18s ease;
+}
+#ads input:focus::placeholder,
+#ads textarea:focus::placeholder,
+#shop input:focus::placeholder,
+#shop textarea:focus::placeholder,
+#market-app input:focus::placeholder,
+#market-app textarea:focus::placeholder{
+  opacity:.42;
+}
+
+/* Файл сонгох товчны харагдах байдлыг сайжруулна; upload ажиллагаа хэвээр */
+#ads input[type="file"],
+#shop input[type="file"],
+#market-app input[type="file"]{
+  max-width:100%;
+  cursor:pointer;
+}
+#ads input[type="file"]::file-selector-button,
+#shop input[type="file"]::file-selector-button,
+#market-app input[type="file"]::file-selector-button{
+  min-height:38px;
+  margin:0 10px 0 0;
+  padding:8px 13px;
+  border:1px solid rgba(214,173,85,.32);
+  border-radius:10px;
+  background:rgba(214,173,85,.10);
+  color:inherit;
+  font:inherit;
+  cursor:pointer;
+  transition:background-color .18s ease,border-color .18s ease,
+             transform .18s ease;
+}
+#ads input[type="file"]::file-selector-button:active,
+#shop input[type="file"]::file-selector-button:active,
+#market-app input[type="file"]::file-selector-button:active{
+  transform:scale(.97);
+}
+
+/* Checkbox болон radio: системийн ажиллагааг хэвээр хадгалж, өнгийг уялдуулна */
+#ads input[type="checkbox"],
+#ads input[type="radio"],
+#shop input[type="checkbox"],
+#shop input[type="radio"],
+#market-app input[type="checkbox"],
+#market-app input[type="radio"]{
+  accent-color:#c9a24f;
+  cursor:pointer;
+}
+#ads label,
+#shop label,
+#market-app label{
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* Утасны форм: хэвтээ шахалт, тасралтыг багасгана */
+@media(max-width:699px){
+  #ads input:not([type="checkbox"]):not([type="radio"]),
+  #ads textarea,#ads select,
+  #shop input:not([type="checkbox"]):not([type="radio"]),
+  #shop textarea,#shop select,
+  #market-app input:not([type="checkbox"]):not([type="radio"]),
+  #market-app textarea,#market-app select{
+    max-width:100%;
+    box-sizing:border-box;
+  }
+  #ads input[type="file"]::file-selector-button,
+  #shop input[type="file"]::file-selector-button,
+  #market-app input[type="file"]::file-selector-button{
+    min-height:42px;
+  }
+}
+
+/* Хөдөлгөөн багасгах болон өндөр contrast тохиргоог хүндэтгэнэ */
+@media(prefers-reduced-motion:reduce){
+  #ads input,#ads textarea,#ads select,
+  #shop input,#shop textarea,#shop select,
+  #market-app input,#market-app textarea,#market-app select,
+  #ads input[type="file"]::file-selector-button,
+  #shop input[type="file"]::file-selector-button,
+  #market-app input[type="file"]::file-selector-button{
+    transition:none!important;
+  }
+}
+@media(forced-colors:active){
+  #ads input:focus,#ads textarea:focus,#ads select:focus,
+  #shop input:focus,#shop textarea:focus,#shop select:focus,
+  #market-app input:focus,#market-app textarea:focus,#market-app select:focus{
+    outline:2px solid Highlight;
+  }
+}
+</style>
