@@ -8010,6 +8010,50 @@ select.addEventListener("change",refresh);
 refresh();
 })();
 </script>
+
+<style id="NEXORA-ADS-MOBILE-FORM-SCROLL-FIX-2026">
+/* Зар нийтлэх бүх алхмыг утасны viewport дотор тусдаа гүйлгэдэг болгоно.
+   Гар нээгдэхэд төлбөрийн маягтын доод хэсэг дэлгэцийн цаана үлдэхгүй. */
+#ads.screen.active{
+  height:100vh!important;
+  height:100dvh!important;
+  min-height:100vh!important;
+  min-height:100dvh!important;
+  overflow:hidden!important;
+}
+#ads .page-content{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  height:auto!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  overscroll-behavior-y:contain;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-y;
+  padding-bottom:calc(36px + env(safe-area-inset-bottom))!important;
+  scroll-padding-bottom:calc(36px + env(safe-area-inset-bottom));
+}
+#ads .footer{flex:0 0 auto!important}
+#ads .nx-create-screen{
+  min-height:0!important;
+  height:auto!important;
+  overflow:visible!important;
+  padding-bottom:calc(28px + env(safe-area-inset-bottom))!important;
+}
+#ads #nx-receipt-form{
+  display:block!important;
+  width:100%!important;
+  padding-bottom:calc(24px + env(safe-area-inset-bottom))!important;
+}
+#ads #nx-receipt-form .nx-create-submit{
+  margin-bottom:10px!important;
+}
+@media(max-width:700px){
+  #ads .page-content{scrollbar-width:none}
+  #ads .page-content::-webkit-scrollbar{display:none}
+}
+</style>
+
 </body>
 
 <style id="NEXORA-RETAIL-PLATFORM-HEADER-BACK-ARROW-2026">
