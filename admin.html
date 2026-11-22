@@ -63,11 +63,10 @@
   theme:["Платформын өнгөний тохиргоо","Админ самбарын харагдах өнгийг өөрчлөх"]
  };
  const statusNames={pending:"Хүлээгдэж байна",pending_review:"Хяналтад",approved:"Зөвшөөрсөн",active:"Идэвхтэй",rejected:"Татгалзсан",pending_payment:"Төлбөр хүлээгдэж байна",paid:"Төлөгдсөн",unpaid:"Төлөгдөөгүй",processing:"Боловсруулж байна",completed:"Дууссан",cancelled:"Цуцалсан"};
- async function adminCheck(){
-  const {data,error}=await db.auth.getUser();
-  if(error||!data.user)return false;
-  const {data:row,error:e}=await db.from("nexora_admins").select("user_id").eq("user_id",data.user.id).maybeSingle();
-  if(e)throw e;
+ async function adminCheck(user){
+  if(!user?.id)return false;
+  const {data:row,error}=await db.from("nexora_admins").select("user_id").eq("user_id",user.id).maybeSingle();
+  if(error)throw error;
   return !!row;
  }
  function shell(body){
@@ -365,15 +364,21 @@
  }
  function renderLogin(message="",isError=false){
    root.innerHTML='<section class="nx-admin-login"><h1>АДМИН НЭВТРЭХ</h1><p>Зөвхөн NEXORA админы эрхтэй бүртгэлээр нэвтэрнэ үү.</p><form id="nx-admin-login-form"><label for="nx-admin-email">И-мэйл</label><input id="nx-admin-email" name="email" type="email" autocomplete="username" required><label for="nx-admin-password">Нууц үг</label><input id="nx-admin-password" name="password" type="password" autocomplete="current-password" required><p id="nx-admin-login-message" class="'+(isError?'is-error':'')+'">'+esc(message)+'</p><button class="nx-admin-login-submit" type="submit">Нэвтрэх</button></form><a href="./index.html">← Хэрэглэгчийн сайт руу буцах</a></section>';
-   document.getElementById("nx-admin-login-form").onsubmit=async e=>{e.preventDefault();const form=e.currentTarget,button=form.querySelector("button[type=submit]"),v=Object.fromEntries(new FormData(form).entries());button.disabled=true;button.textContent="Шалгаж байна…";const {error}=await db.auth.signInWithPassword({email:String(v.email).trim(),password:v.password});if(error){renderLogin(error.message,true);return;}await init();};
+   document.getElementById("nx-admin-login-form").onsubmit=async e=>{e.preventDefault();const form=e.currentTarget,button=form.querySelector("button[type=submit]"),v=Object.fromEntries(new FormData(form).entries());button.disabled=true;button.textContent="Шалгаж байна…";try{const {data,error}=await db.auth.signInWithPassword({email:String(v.email).trim(),password:v.password});if(error)throw error;if(!data?.session||!data?.user)throw new Error("Нэвтрэх session үүссэнгүй. Дахин оролдоно уу.");await init();}catch(error){renderLogin(error?.message||"Нэвтрэхэд алдаа гарлаа.",true);}};
   }
   async function init(){
    root.innerHTML='<div class="nx-admin-loading">Админ эрх шалгаж байна…</div>';
-   try{const {data:sessionData,error:sessionError}=await db.auth.getSession();if(sessionError)throw sessionError;if(!sessionData?.session){renderLogin();return;}const {data,error}=await db.auth.getUser();if(error)throw error;if(!data.user){renderLogin();return;}
+   try{
+    const {data:sessionData,error:sessionError}=await db.auth.getSession();
+    if(sessionError)throw sessionError;
+    if(!sessionData?.session){renderLogin();return;}
+    const {data,error}=await db.auth.getUser();
+    if(error){if(/auth session missing/i.test(error.message||"")){await db.auth.signOut({scope:"local"});renderLogin("Session хугацаа дууссан байна. Дахин нэвтэрнэ үү.",true);return;}throw error;}
+    if(!data?.user){renderLogin();return;}
     const {data:themeRow}=await db.from("nexora_settings").select("admin_theme_config").eq("id",1).maybeSingle();if(themeRow?.admin_theme_config)applyAdminTheme(themeRow.admin_theme_config);
-    if(!(await adminCheck())){root.innerHTML='<section class="nx-admin-login"><h1>ХАНДАХ ЭРХГҮЙ</h1><p>Энэ бүртгэлд NEXORA админы эрх олгогдоогүй байна.</p><button class="nx-admin-login-submit" id="nx-admin-denied-logout" type="button">Өөр бүртгэлээр нэвтрэх</button><a href="./index.html">Хэрэглэгчийн сайт руу буцах</a></section>';document.getElementById("nx-admin-denied-logout").onclick=async()=>{await db.auth.signOut();renderLogin();};return;}
+    if(!(await adminCheck(data.user))){root.innerHTML='<section class="nx-admin-login"><h1>ХАНДАХ ЭРХГҮЙ</h1><p>Энэ бүртгэлд NEXORA админы эрх олгогдоогүй байна.</p><button class="nx-admin-login-submit" id="nx-admin-denied-logout" type="button">Өөр бүртгэлээр нэвтрэх</button><a href="./index.html">Хэрэглэгчийн сайт руу буцах</a></section>';document.getElementById("nx-admin-denied-logout").onclick=async()=>{await db.auth.signOut();renderLogin();};return;}
     loadTab();
-   }catch(e){root.innerHTML='<div class="nx-admin-error">Админ эрх шалгахад алдаа гарлаа: '+esc(e?.message||e)+'</div>';}
+   }catch(e){if(/auth session missing/i.test(e?.message||"")){await db.auth.signOut({scope:"local"});renderLogin("Session олдсонгүй. Админ эрхтэй бүртгэлээр дахин нэвтэрнэ үү.",true);return;}root.innerHTML='<div class="nx-admin-error">Админ эрх шалгахад алдаа гарлаа: '+esc(e?.message||e)+'</div>';}
   }
   init();
 })();</script></body></html>
