@@ -4176,6 +4176,8 @@ textarea:disabled,
   }, {passive:true});
   if(!db){host.innerHTML='<div class="nx-market-error">Худалдааны системтэй холбогдож чадсангүй. Интернэт холболтоо шалгаад хуудсыг дахин ачаална уу.</div>';console.error("NEXORA marketplace: Supabase client unavailable");return;}
   let products=[],cart=[],wholesaleCart=[],marketUser=null,searchText="",productViewStates={},productApprovalChannel=null,productApprovalPoll=null,wholesaleNotificationChannel=null,wholesaleNotificationUserId=null;
+  // Энэ хуудас нээгдсэнээс хойш хэрэглэгч нэвтрэх үйлдлийг өөрөө хийсэн эсэхийг санана.
+  let shopAuthExplicitlyCompleted=false;
   let profileOpenSection="retail"; // Нэгдсэн профайлаас буцаж ороход хамгийн сүүлд дэлгэсэн accordion-ийг сэргээнэ.
   let retailActiveCategory=null,retailPendingCategory=null;
   // This app runs in its own IIFE; keep its display helpers local.
@@ -4415,7 +4417,7 @@ textarea:disabled,
     const {data:sessionData,error:sessionError}=await db.auth.getSession();
     const {data:authData,error:authError}=await db.auth.getUser();
     const user=authData?.user;
-    if(sessionError||authError||!sessionData?.session||!user||!user.email_confirmed_at){
+    if(!shopAuthExplicitlyCompleted||sessionError||authError||!sessionData?.session||!user||!user.email_confirmed_at){
       // Нэвтрээгүй үед каталог дээр зүүн шудрахад нэвтрэх цонх автоматаар нээхгүй.
       // Нэвтрэх/бүртгүүлэхийг зөвхөн хэрэглэгч Профайл дээр дарж эхлүүлнэ.
       window.NEXORA_SHOP_NEXT=null;
@@ -4435,6 +4437,8 @@ textarea:disabled,
       window.NEXORA_SHOP_NEXT=null;
       return;
     }
+    // Зөвхөн хэрэглэгч нэвтрэх/бүртгүүлэх үйлдлээ өөрөө амжилттай хийсний дараа профайл нээнэ.
+    shopAuthExplicitlyCompleted=true;
     retailManagementSwipeLocked=false;
     await window.NEXORA?.open("shop");
     document.getElementById("shop")?.classList.add("nx-shop-profile-fullscreen");
@@ -4458,6 +4462,11 @@ textarea:disabled,
     window.NEXORA_SHOP_NEXT=null;
     document.getElementById("shop")?.classList.add("nx-shop-profile-fullscreen");
     host.classList.add("nx-profile-fullscreen");
+    if(!shopAuthExplicitlyCompleted){
+      await window.NEXORA?.open("profile");
+      window.NEXORA_SHOP_AUTH_FORM?.();
+      return;
+    }
     host.innerHTML='<div class="nx-market-loading">Нэгдсэн профайл нээгдэж байна…</div>';
     try{
       const {data:sessionData,error:sessionError}=await db.auth.getSession();
@@ -5531,7 +5540,12 @@ textarea:disabled,
     '</nav>';
     window.NEXORA_SHOP_BACK=()=>window.NEXORA?.open("home");
     window.NEXORA_SHOP_NEXT=retailManagementSwipeLocked?null:()=>enterShopManagement(showRetailCatalog);
-    document.getElementById("nx-temu-profile").onclick=async()=>{const {data:sessionData,error:sessionError}=await db.auth.getSession();const {data:authData,error:authError}=await db.auth.getUser();if(!sessionError&&!authError&&sessionData?.session&&authData?.user?.email_confirmed_at){await openRetailProfile(showRetailCatalog);return;}window.NEXORA_SHOP_AUTH_FORM?.();await window.NEXORA?.open("profile");};
+    document.getElementById("nx-temu-profile").onclick=async()=>{
+      // Хадгалагдсан хуучин session байсан ч Профайл товшиход нэвтрэх/бүртгүүлэх дэлгэц заавал гарна.
+      window.NEXORA_SHOP_NEXT=null;
+      await window.NEXORA?.open("profile");
+      window.NEXORA_SHOP_AUTH_FORM?.();
+    };
     refreshTemuProfileImage();
     document.getElementById("nx-temu-home").onclick=()=>{retailActiveCategory=null;searchText="";const input=document.getElementById("nx-retail-search");if(input)input.value="";renderRetailCategories();host.querySelector(".nx-temu-page")?.scrollTo({top:0,behavior:"smooth"});};
     document.getElementById("nx-temu-categories").onclick=()=>host.querySelector("#nx-temu-category-rail")?.scrollIntoView({behavior:"smooth",block:"start"});
