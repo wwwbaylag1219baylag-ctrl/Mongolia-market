@@ -9302,3 +9302,126 @@ button.nx-platform-back:focus-visible,
   }
 }
 </style>
+
+
+<style id="NEXORA-ADS-MARKET-STAGE9-2026">
+/* 9-р шат: нүүрний АДМИН/ТУСЛАМЖ болон ЗАР НИЙТЛЭХ товчны нэгдсэн tactile дизайн.
+   Зөвхөн CSS; товчны onclick, эрхийн шалгалт, зар нийтлэх урсгал болон худалдааны өнгөнд хүрэхгүй. */
+
+/* НҮҮР — тусламж ба админы товч */
+#home>.topbar{
+  gap:clamp(7px,2vw,14px);
+  padding:clamp(9px,2.6vw,14px) clamp(10px,3.5vw,18px);
+}
+#home>.topbar>.logo{min-width:0}
+#home>.topbar>div:last-child{
+  display:flex;align-items:center;justify-content:flex-end;
+  gap:clamp(5px,1.8vw,9px);flex:0 0 auto;min-width:0;
+}
+#home>.topbar .profile-button{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-height:42px;padding:9px clamp(9px,2.5vw,14px);
+  border:1px solid color-mix(in srgb,var(--gold,#d6ad55) 48%,transparent);
+  border-radius:14px;
+  background:linear-gradient(145deg,color-mix(in srgb,var(--panel-light,#222) 92%,white 8%),var(--panel,#191919));
+  color:var(--gold-light,#f0d28a);
+  font-size:clamp(10px,2.7vw,13px);font-weight:800;line-height:1.1;
+  white-space:nowrap;-webkit-tap-highlight-color:transparent;
+  box-shadow:0 5px 13px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.08);
+  transition:transform .18s ease,box-shadow .18s ease,filter .18s ease,border-color .18s ease;
+}
+#home>.topbar .profile-button[onclick="NEXORA.open('help')"]{
+  border-color:rgba(155,175,192,.48);
+  color:var(--nx-silver-light,#d5dde4);
+}
+#home>.topbar .profile-button[aria-label="Админ удирдлага"]{
+  border-color:color-mix(in srgb,var(--gold,#d6ad55) 62%,transparent);
+  background:linear-gradient(145deg,color-mix(in srgb,var(--gold,#d6ad55) 17%,var(--panel,#191919)),var(--panel,#191919));
+}
+#home>.topbar .profile-button:focus-visible,
+#help .nx-help-back:focus-visible,
+#ads .nx-create-toggle:focus-visible{
+  outline:3px solid color-mix(in srgb,var(--gold,#d6ad55) 42%,transparent);
+  outline-offset:3px;
+}
+#home>.topbar .profile-button:active{
+  transform:scale(.96);filter:brightness(1.12);
+  box-shadow:0 2px 7px rgba(0,0,0,.22);
+}
+
+/* ТУСЛАМЖ — буцах товчийг үндсэн товчны хэлбэртэй ижилсүүлэх */
+#help .nx-help-head{gap:clamp(10px,2.5vw,16px)}
+#help .nx-help-back{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:44px;padding:10px 15px;border-radius:14px;
+  box-shadow:0 5px 14px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.08);
+  transition:transform .18s ease,filter .18s ease,box-shadow .18s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+#help .nx-help-back:active{transform:scale(.97);filter:brightness(1.1)}
+
+/* ЗАР НИЙТЛЭХ — үндсэн 8 ангиллын толгой хэсэгт тогтвортой, тод байрлал */
+#ads .page-content .nx-full-screen:has(.nexora-ad-grid) .nx-category-heading{
+  display:flex!important;align-items:center;justify-content:space-between;
+  gap:12px;width:100%;max-width:1120px;margin:0 auto 12px;
+  padding:0 2px;min-height:46px;
+}
+#ads .page-content .nx-full-screen:has(.nexora-ad-grid) .nx-category-title-wrap{
+  display:flex;align-items:center;gap:10px;min-width:0;
+}
+#ads .page-content .nx-full-screen:has(.nexora-ad-grid) .nx-screen-title{
+  color:var(--nx-silver-light,#d5dde4);font-size:clamp(15px,2.4vw,20px);
+  font-weight:900;letter-spacing:.045em;line-height:1.2;
+}
+#ads .page-content .nx-full-screen:has(.nexora-ad-grid) .nx-create-toggle{
+  display:inline-flex!important;align-items:center;justify-content:center;gap:8px;
+  flex:0 0 auto;min-height:44px;padding:10px 16px;
+  border:1px solid var(--nx-sage,#83a9a1)!important;border-radius:14px!important;
+  background:linear-gradient(135deg,var(--nx-teal-mid,#285052),var(--nx-teal,#172d30))!important;
+  color:#e3efeb!important;font-size:12px;font-weight:900;line-height:1.15;
+  letter-spacing:.025em;white-space:nowrap;
+  box-shadow:0 7px 18px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.12);
+  transition:transform .2s ease,filter .2s ease,box-shadow .2s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+#ads .page-content .nx-full-screen:has(.nexora-ad-grid) .nexora-ad-grid{
+  width:100%;max-width:1120px;margin:0 auto;
+}
+#ads .page-content .nx-full-screen:has(.nexora-ad-grid) .nx-create-toggle:active{
+  transform:scale(.97);filter:brightness(1.12);
+  box-shadow:0 3px 9px rgba(0,0,0,.22);
+}
+@media(hover:hover) and (pointer:fine){
+  #home>.topbar .profile-button:hover,
+  #help .nx-help-back:hover{
+    transform:translateY(-2px);filter:brightness(1.08);
+    box-shadow:0 8px 18px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.1);
+  }
+  #ads .page-content .nx-full-screen:has(.nexora-ad-grid) .nx-create-toggle:hover{
+    transform:translateY(-2px);filter:brightness(1.1);
+    box-shadow:0 11px 23px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.14);
+  }
+}
+@media(max-width:699px){
+  #home>.topbar .profile-button{min-height:39px;padding:8px 9px;border-radius:12px;font-size:10px}
+  #ads .page-content .nx-full-screen:has(.nexora-ad-grid) .nx-category-heading{
+    justify-content:flex-end;min-height:40px;margin-bottom:9px;
+  }
+  #ads .page-content .nx-full-screen:has(.nexora-ad-grid) .nx-category-title-wrap{display:none!important}
+  #ads .page-content .nx-full-screen:has(.nexora-ad-grid) .nx-create-toggle{
+    min-height:40px;padding:9px 14px;font-size:11px;border-radius:13px!important;
+  }
+}
+@media(max-width:360px){
+  #home>.topbar{padding-inline:8px;gap:5px}
+  #home>.topbar .nexora-logo-img{width:clamp(104px,31vw,116px)}
+  #home>.topbar>div:last-child{gap:4px}
+  #home>.topbar .profile-button{min-height:37px;padding:7px 7px;font-size:9px;gap:4px}
+}
+@media(prefers-reduced-motion:reduce){
+  #home>.topbar .profile-button,#help .nx-help-back,
+  #ads .page-content .nx-full-screen:has(.nexora-ad-grid) .nx-create-toggle{
+    transition:none!important;transform:none!important;filter:none!important;
+  }
+}
+</style>
