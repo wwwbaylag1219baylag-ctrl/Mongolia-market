@@ -3421,27 +3421,53 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
           const label = name.includes("хаан") ? "ХААН БАНК" : name.includes("хас") ? "ХАС БАНК" : bank.bank_name;
           return `
             <button type="button" data-bank-id="${esc(bank.id)}"
-              style="min-height:58px;padding:13px 8px;border:2px solid #d6ad55 !important;border-radius:12px;background:#f5f5f5 !important;color:#171717 !important;font-size:15px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.16);">
-              <span style="color:#171717 !important;">${esc(label)}</span>
+              style="min-height:62px;padding:13px 8px;border:2px solid #d6ad55;border-radius:12px;background:#171717;color:#f3d58d;font-size:15px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.2);touch-action:pan-y;user-select:none;-webkit-user-select:none;">
+              ${esc(label)}
+              <span style="display:block;margin-top:5px;font-size:10px;font-weight:500;color:#ddd;">УДААН ДАРЖ ДАНС ХАРАХ</span>
             </button>
           `;
         }).join("")}
       </div>
       <section id="nx-selected-bank-info" hidden
-        style="margin-top:16px;padding:16px;border:1px solid #d6ad55;border-radius:12px;background:#fff !important;color:#171717 !important;">
-        <div id="nx-selected-bank-name" style="font-size:16px;font-weight:800;color:#171717 !important;"></div>
-        <div style="margin-top:12px;font-size:13px;color:#555 !important;">ДАНСНЫ ДУГААР</div>
-        <div id="nx-selected-bank-number" style="margin-top:4px;font-size:21px;font-weight:800;letter-spacing:.4px;color:#111 !important;overflow-wrap:anywhere;"></div>
-        <div style="margin-top:12px;font-size:13px;color:#555 !important;">ДАНС ЭЗЭМШИГЧ</div>
-        <div id="nx-selected-bank-holder" style="margin-top:4px;font-size:15px;font-weight:700;color:#171717 !important;"></div>
+        style="margin-top:16px;padding:16px;border:1px solid #d6ad55;border-radius:12px;background:#fff;color:#171717;">
+        <div id="nx-selected-bank-name" style="font-size:16px;font-weight:800;color:#171717;"></div>
+        <div style="margin-top:12px;font-size:13px;color:#555;">ДАНСНЫ ДУГААР</div>
+        <div id="nx-selected-bank-number" style="margin-top:4px;font-size:21px;font-weight:800;letter-spacing:.4px;color:#111;overflow-wrap:anywhere;"></div>
+        <div style="margin-top:12px;font-size:13px;color:#555;">ДАНС ЭЗЭМШИГЧ</div>
+        <div id="nx-selected-bank-holder" style="margin-top:4px;font-size:15px;font-weight:700;color:#171717;"></div>
         <button type="button" data-bank-continue
-          style="width:100%;margin-top:18px;padding:15px;border:0;border-radius:10px;background:#d6ad55 !important;color:#171717 !important;font-weight:800;font-size:15px;">
+          style="width:100%;margin-top:18px;padding:15px;border:0;border-radius:10px;background:#d6ad55;color:#171717;font-weight:800;font-size:15px;">
           ЭНЭ ДАНСААР ҮРГЭЛЖЛҮҮЛЭХ
         </button>
       </section>
     `;
-  }
 
+    let bankHoldTimer = null;
+    list.addEventListener("pointerdown", function (event) {
+      const button = event.target.closest("[data-bank-id]");
+      if (!button) return;
+      clearTimeout(bankHoldTimer);
+      bankHoldTimer = setTimeout(function () {
+        const bank = (window.NEXORA_BANK_CACHE || []).find(function (b) {
+          return String(b.id) === button.dataset.bankId;
+        });
+        if (!bank) return;
+        selectedBank = bank;
+        const panel = document.getElementById("nx-selected-bank-info");
+        document.getElementById("nx-selected-bank-name").textContent = bank.bank_name || "";
+        document.getElementById("nx-selected-bank-number").textContent = bank.account_number || "";
+        document.getElementById("nx-selected-bank-holder").textContent = bank.account_holder || "";
+        panel.hidden = false;
+        button.style.background = "#f5f5f5";
+        button.style.color = "#171717";
+      }, 650);
+    });
+    ["pointerup","pointercancel","pointerleave"].forEach(function (eventName) {
+      list.addEventListener(eventName, function () { clearTimeout(bankHoldTimer); });
+    });
+    list.addEventListener("contextmenu", function (event) {
+      if (event.target.closest("[data-bank-id]")) event.preventDefault();
+    });
   function showReceiptForm() {
     content.innerHTML = `
       <div class="nx-create-screen">
@@ -3748,17 +3774,9 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       selectedBank = (window.NEXORA_BANK_CACHE || []).find(function (b) {
         return String(b.id) === bankButton.dataset.bankId;
       });
-      if (selectedBank) {
-        const panel = document.getElementById("nx-selected-bank-info");
-        document.getElementById("nx-selected-bank-name").textContent = selectedBank.bank_name || "";
-        document.getElementById("nx-selected-bank-number").textContent = selectedBank.account_number || "";
-        document.getElementById("nx-selected-bank-holder").textContent = selectedBank.account_holder || "";
-        panel.hidden = false;
-        document.querySelectorAll("[data-bank-id]").forEach(function (button) {
-          button.style.background = button === bankButton ? "#d6ad55" : "#f5f5f5";
-          button.style.color = "#171717";
-        });
-      }
+      document.querySelectorAll("[data-bank-id]").forEach(function (button) {
+        button.style.outline = button === bankButton ? "2px solid #d6ad55" : "none";
+      });
       return;
     }
 
