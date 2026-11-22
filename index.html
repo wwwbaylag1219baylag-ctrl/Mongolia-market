@@ -8369,3 +8369,143 @@ button.nx-platform-back:focus-visible,
   #market-app:has(#nx-wholesale-detail-image) *{scroll-behavior:auto!important;transition:none!important}
 }
 </style>
+
+
+<style id="NEXORA-CATALOG-CARD-POLISH-2026">
+/* 7-р шат: жижиглэн + бөөний каталогийн картын дүрслэл. Өнгө, үнэ, урсгалд өөрчлөлтгүй. */
+#shop .nx-temu-products>.nx-temu-product,
+#market-app .nx-market-grid>.nx-market-product-tile{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden!important;
+  border-radius:18px!important;
+  box-shadow:0 9px 22px rgba(0,0,0,.19),inset 0 1px 0 rgba(255,255,255,.12)!important;
+  backface-visibility:hidden;
+  transition:transform .24s cubic-bezier(.2,.72,.22,1),box-shadow .24s ease!important;
+}
+#shop .nx-temu-product-open{
+  overflow:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+#shop .nx-temu-product-image,
+#market-app .nx-market-grid>.nx-market-product-tile>img:first-child{
+  display:block;
+  width:100%!important;
+  aspect-ratio:1/1!important;
+  object-fit:cover!important;
+  background:rgba(0,0,0,.12);
+  transition:transform .5s cubic-bezier(.2,.72,.22,1),filter .35s ease;
+  backface-visibility:hidden;
+}
+#shop .nx-temu-product-info{
+  padding:10px 10px 9px!important;
+}
+#shop .nx-temu-product-type{
+  border-radius:7px!important;
+  padding:4px 8px!important;
+  letter-spacing:.045em;
+}
+#shop .nx-temu-product-title{
+  min-height:36px;
+  line-height:1.42!important;
+  font-weight:750!important;
+}
+#shop .nx-temu-product-store{
+  display:flex;
+  align-items:center;
+  min-height:22px;
+  line-height:1.35;
+}
+#shop .nx-temu-product-store img{
+  flex:0 0 28px;
+  width:28px!important;height:28px!important;
+  border:1px solid rgba(128,128,128,.24);
+  background:rgba(128,128,128,.08);
+}
+#shop .nx-temu-product-price{
+  margin-top:9px!important;
+  line-height:1.2;
+  letter-spacing:-.02em;
+}
+#shop .nx-temu-product-meta{
+  min-height:27px;
+  line-height:1.45!important;
+}
+#shop .nx-temu-product-action{
+  min-height:40px!important;
+  margin:4px 9px 10px!important;
+  border-radius:12px!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  box-shadow:0 4px 10px rgba(0,0,0,.13),inset 0 1px 0 rgba(255,255,255,.16);
+  -webkit-tap-highlight-color:transparent;
+}
+#market-app .nx-market-grid>.nx-market-product-tile{
+  padding:10px!important;
+}
+#market-app .nx-market-grid>.nx-market-product-tile>img:first-child{
+  border-radius:14px!important;
+  box-shadow:0 5px 14px rgba(0,0,0,.18);
+  cursor:zoom-in;
+}
+#market-app .nx-market-grid>.nx-market-product-tile h3{
+  margin:11px 2px 5px!important;
+  line-height:1.35!important;
+  font-size:15px!important;
+  font-weight:850!important;
+}
+#market-app .nx-market-grid>.nx-market-product-tile .nx-market-muted{
+  line-height:1.45!important;
+}
+#market-app .nx-market-grid>.nx-market-product-tile .nx-market-price{
+  display:block;
+  margin:8px 0!important;
+  line-height:1.2;
+  font-size:19px!important;
+  font-weight:950!important;
+}
+#market-app .nx-market-grid>.nx-market-product-tile .nx-market-btn{
+  width:100%;
+  min-height:42px;
+  margin-top:7px;
+  border-radius:12px!important;
+  font-weight:900!important;
+  box-shadow:0 4px 11px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.13);
+  -webkit-tap-highlight-color:transparent;
+}
+#shop .nx-temu-demo-product{
+  border-radius:18px!important;
+  box-shadow:0 8px 20px rgba(0,0,0,.15)!important;
+}
+@media(hover:hover) and (min-width:700px){
+  #shop .nx-temu-products>.nx-temu-product:hover,
+  #market-app .nx-market-grid>.nx-market-product-tile:hover{
+    transform:translateY(-4px);
+    box-shadow:0 16px 30px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.14)!important;
+  }
+  #shop .nx-temu-products>.nx-temu-product:hover .nx-temu-product-image,
+  #market-app .nx-market-grid>.nx-market-product-tile:hover>img:first-child{
+    transform:scale(1.035);
+    filter:saturate(1.06);
+  }
+}
+@media(max-width:699px){
+  #shop .nx-temu-products>.nx-temu-product,
+  #market-app .nx-market-grid>.nx-market-product-tile{
+    border-radius:15px!important;
+  }
+  #shop .nx-temu-product-action:active,
+  #market-app .nx-market-grid>.nx-market-product-tile .nx-market-btn:active{
+    transform:scale(.98);
+    filter:brightness(1.06);
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #shop .nx-temu-products>.nx-temu-product,
+  #shop .nx-temu-product-image,
+  #market-app .nx-market-grid>.nx-market-product-tile,
+  #market-app .nx-market-grid>.nx-market-product-tile>img:first-child{
+    transition:none!important;transform:none!important;filter:none!important;
+  }
+}
+</style>
