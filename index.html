@@ -5773,7 +5773,39 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       #ads .nx-create-screen .nx-map-button,#ads .nx-create-screen [type="button"]{border-color:${c.accent}88}
       #ads .nx-create-screen [type="submit"]{background:${c.button}!important;color:${c.button_text}!important}
       ${t.theme_finish==="glossy"?`
-      .platform-card,.card,.panel,.welcome-panel,.auth-panel,.ad-card,.product-card,.profile-card,.category-card,.choice-card,.modal-content,.form-section,.listing-card,#shop .nx-market-card,#ads .nexora-ad-category,#shop .nx-choice-card{background-image:linear-gradient(145deg,rgba(255,255,255,.095),rgba(255,255,255,.015) 42%,rgba(0,0,0,.10))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 10px 26px rgba(0,0,0,.22)!important;backdrop-filter:blur(8px) saturate(1.12)}
+      /* Бүх төрлийн гадаргуу: карт, цэс, толгой, таб, ангилал, форм, мэдээллийн самбар */
+      .platform-card,.card,.panel,.welcome-panel,.auth-panel,.ad-card,.product-card,.profile-card,.category-card,.choice-card,.modal-content,.form-section,.listing-card,
+      .section-card,.content-panel,.info-panel,.settings-panel,.dashboard-card,.stat-card,.summary-card,.notice-card,.empty-state,
+      .topbar,.page-header,.page-heading,.bottom-nav,.nav-bar,.footer,.toolbar,.tabs,.tab-list,
+      #ads .nx-full-screen,#ads .nx-category-heading,#ads .nx-create-screen,#ads .nx-create-form,#ads .nx-create-panel,
+      #ads .nx-subcategory-item,#ads .nx-accordion-section,#ads .nx-accordion-tab,#ads .nx-accordion-option,
+      #shop .nx-market-card,#shop .nx-choice-card,#shop .nx-temu-header,#shop .nx-temu-category-rail .nx-temu-chip,
+      #market-app .nx-market-tabs button,#market-app .nx-market-nav button,#market-app .nx-market-category-choice,
+      #market-app .nx-nexora-card,#market-app .nx-nexora-brand-header,#market-app .nx-catalog-cart{
+        background-image:linear-gradient(145deg,rgba(255,255,255,.15),rgba(255,255,255,.035) 43%,rgba(0,0,0,.13))!important;
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.20),0 9px 25px rgba(0,0,0,.24)!important;
+        backdrop-filter:blur(10px) saturate(1.16)!important;
+        -webkit-backdrop-filter:blur(10px) saturate(1.16)!important;
+      }
+      .platform-card,.card,.panel,.welcome-panel,.auth-panel,.ad-card,.product-card,.profile-card,.category-card,.choice-card,.modal-content,.form-section,.listing-card,
+      .section-card,.content-panel,.info-panel,.settings-panel,.dashboard-card,.stat-card,.summary-card,.notice-card,
+      #ads .nx-subcategory-item,#ads .nx-accordion-section,#ads .nx-accordion-tab,#ads .nx-accordion-option,
+      #shop .nx-market-card,#shop .nx-choice-card,#market-app .nx-nexora-card{
+        border-color:rgba(255,255,255,.20)!important;
+      }
+      .topbar,.page-header,.page-heading,.bottom-nav,.nav-bar,.footer,.toolbar,.tabs,.tab-list{
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 8px 23px rgba(0,0,0,.25)!important;
+      }
+      input,select,textarea,.nx-market-input,.nx-market-select,.nx-market-textarea{
+        box-shadow:inset 0 2px 5px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.10)!important;
+        transition:border-color .2s ease,box-shadow .2s ease,filter .2s ease!important;
+      }
+      input:focus,select:focus,textarea:focus,.nx-market-input:focus,.nx-market-select:focus,.nx-market-textarea:focus{
+        box-shadow:0 0 0 3px rgba(255,255,255,.10),0 0 18px rgba(255,255,255,.12),inset 0 1px 0 rgba(255,255,255,.16)!important;
+      }
+      .platform-card:hover,.card:hover,.panel:hover,.category-card:hover,.choice-card:hover,#ads .nx-subcategory-item:hover,#shop .nx-choice-card:hover{
+        filter:brightness(1.045);box-shadow:inset 0 1px 0 rgba(255,255,255,.24),0 12px 29px rgba(0,0,0,.28)!important;
+      }
       button,.primary-button,.btn-primary,.publish-button,.action-primary,.auth-submit,#shop .nx-market-btn:not(.secondary),#ads .nx-create-submit{background-image:linear-gradient(145deg,rgba(255,255,255,.24),rgba(255,255,255,.04) 48%,rgba(0,0,0,.12))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 5px 14px rgba(0,0,0,.24)!important;transition:filter .2s ease,transform .2s ease,box-shadow .2s ease}
       .topbar,.page-header,.bottom-nav,.nav-bar{background-image:linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.035) 46%,rgba(0,0,0,.14))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.20),0 7px 22px rgba(0,0,0,.25)!important;backdrop-filter:blur(12px) saturate(1.16)}
       /* Карт цэс, толгой дэвсгэр болон платформын табууд — админы сонгосон суурь өнгөн дээр гялгар гэрэл */
