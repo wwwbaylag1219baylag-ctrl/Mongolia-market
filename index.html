@@ -7656,6 +7656,39 @@ html,body{
 }
 </style>
 
+<script id="NEXORA-MULTILANGUAGE-CORE-2026">
+(function(){
+  "use strict";
+  const dictionary={
+    mn:{help:"❔ Тусламж",admin:"⚙ Админ",heroDescription:"Монголын зар болон худалдааны нэгдсэн платформ",adsTitle:"ЗАРЫН ПЛАТФОРМ",adsDescription:"Зар хайх, зар үзэх, өөрийн зараа нийтлэх нэгдсэн орчин.",shopTitle:"ХУДАЛДААНЫ ПЛАТФОРМ",shopDescription:"Жижиглэн болон бөөний барааг нэг дороос хайж, захиалах нэгдсэн худалдаа.",language:"Хэл сонгох"},
+    en:{help:"❔ Help",admin:"⚙ Admin",heroDescription:"Mongolia's integrated classifieds and marketplace platform",adsTitle:"CLASSIFIEDS",adsDescription:"Find listings, browse offers and publish your own ads in one place.",shopTitle:"MARKETPLACE",shopDescription:"A unified place to discover and order wholesale and retail products.",language:"Choose language"},
+    zh:{help:"❔ 帮助",admin:"⚙ 管理员",heroDescription:"蒙古综合分类信息与购物平台",adsTitle:"分类信息平台",adsDescription:"在一个平台搜索信息、浏览商品并发布自己的广告。",shopTitle:"购物平台",shopDescription:"一站式搜索和订购批发及零售商品。",language:"选择语言"},
+    ru:{help:"❔ Помощь",admin:"⚙ Админ",heroDescription:"Единая платформа объявлений и торговли Монголии",adsTitle:"ДОСКА ОБЪЯВЛЕНИЙ",adsDescription:"Ищите объявления, просматривайте предложения и публикуйте свои.",shopTitle:"ТОРГОВАЯ ПЛАТФОРМА",shopDescription:"Единая площадка для поиска и заказа оптовых и розничных товаров.",language:"Выбрать язык"},
+    ko:{help:"❔ 도움말",admin:"⚙ 관리자",heroDescription:"몽골 통합 광고 및 쇼핑 플랫폼",adsTitle:"광고 플랫폼",adsDescription:"한곳에서 광고를 검색하고 둘러보며 직접 등록하세요.",shopTitle:"쇼핑 플랫폼",shopDescription:"도매 및 소매 상품을 한곳에서 검색하고 주문하세요.",language:"언어 선택"},
+    ja:{help:"❔ ヘルプ",admin:"⚙ 管理",heroDescription:"モンゴルの広告・ショッピング統合プラットフォーム",adsTitle:"広告プラットフォーム",adsDescription:"広告の検索・閲覧・掲載をひとつの場所で行えます。",shopTitle:"ショッピングプラットフォーム",shopDescription:"卸売商品と小売商品をまとめて検索・注文できます。",language:"言語を選択"}
+  };
+  const selector=document.getElementById("nx-language-select");
+  if(!selector)return;
+  function applyLanguage(code){
+    const lang=dictionary[code]?code:"mn";
+    const words=dictionary[lang];
+    document.documentElement.lang=lang==="zh"?"zh-CN":lang;
+    document.querySelectorAll("[data-i18n]").forEach(function(node){
+      const key=node.getAttribute("data-i18n");
+      if(Object.prototype.hasOwnProperty.call(words,key))node.textContent=words[key];
+    });
+    selector.value=lang;
+    selector.setAttribute("aria-label",words.language);
+    try{localStorage.setItem("nexora-language",lang);}catch(error){}
+    const titles={mn:"NEXORA | Mongolia Marketplace",en:"NEXORA | Mongolia Marketplace",zh:"NEXORA | 蒙古购物平台",ru:"NEXORA | Торговая площадка Монголии",ko:"NEXORA | 몽골 마켓플레이스",ja:"NEXORA | モンゴルマーケットプレイス"};
+    document.title=titles[lang];
+  }
+  let saved="mn";
+  try{saved=localStorage.getItem("nexora-language")||"mn";}catch(error){}
+  selector.addEventListener("change",function(){applyLanguage(selector.value);});
+  applyLanguage(saved);
+})();
+</script>
 </body>
 
 <style id="NEXORA-RETAIL-PLATFORM-HEADER-BACK-ARROW-2026">
