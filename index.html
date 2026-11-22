@@ -1064,8 +1064,9 @@ textarea:disabled,
     SUPABASE_KEY,
     {
       auth: {
-        // Нэвтрэлтийг хуудсуудын хооронд хадгална. Админ самбар тусдаа хуудас тул
-        // session хадгалагдахгүй бол хуучин админ дахин нэвтрэх шаардлагатай болно.
+        // Дэлгүүрийн хэрэглэгчийн session-ийг админ самбарын session-ээс тусгаарлана.
+        // Ингэснээр админ нэвтрэлт дэлгүүрийн профайлд автоматаар үйлчлэхгүй.
+        storageKey: "nexora-shop-auth",
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true
