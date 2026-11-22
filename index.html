@@ -520,6 +520,16 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 @media(min-width:700px){#shop .nx-temu-products{grid-template-rows:repeat(4,minmax(0,1fr))!important;grid-auto-columns:180px!important;gap:12px!important;padding-inline:18px!important}}
 
 </style>
+
+  <!-- NEXORA 20-р шат: түгээмэл эх үүсвэрүүдтэй холболтыг урьдчилан бэлтгэх -->
+  <link rel="preconnect" href="https://grbpbmowhkbtuxostfny.supabase.co" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.simpleicons.org" crossorigin>
+  <link rel="dns-prefetch" href="//unpkg.com">
+  <link rel="dns-prefetch" href="//tile.openstreetmap.org">
+  <link rel="preload" as="image" href="./assets/nexora-logo.jpg" fetchpriority="high">
+
 </head>
 
 <body>
@@ -7286,6 +7296,35 @@ html,body{
     transition:none!important;
     animation:none!important;
     transform:none!important;
+  }
+}
+</style>
+
+
+<style id="NEXORA-ADS-MARKET-STAGE20-2026">
+/* 20-р шат — зураг дүрслэл ба жагсаалтын paint ачааллыг хөнгөрүүлэх.
+   Зөвхөн CSS rendering hint; картын хэмжээ, өгөгдөл, event, захиалга өөрчлөхгүй. */
+#ads .nx-ad-card-image,
+#shop .nx-temu-product-image,
+#market-app .nx-market-product-tile img{
+  backface-visibility:hidden;
+}
+#ads .nx-ad-card-grid,
+#shop .nx-temu-products,
+#market-app .nx-market-grid{
+  overscroll-behavior-inline:contain;
+  -webkit-overflow-scrolling:touch;
+}
+#ads .nx-ad-card-image,
+#shop .nx-temu-product-image,
+#market-app .nx-market-product-tile img{
+  image-rendering:auto;
+}
+@media(prefers-reduced-motion:reduce){
+  #ads .nx-ad-card-grid,
+  #shop .nx-temu-products,
+  #market-app .nx-market-grid{
+    scroll-behavior:auto!important;
   }
 }
 </style>
