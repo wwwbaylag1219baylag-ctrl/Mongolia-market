@@ -622,6 +622,32 @@ textarea:disabled,
 }
 </style>
 
+
+<style id="NEXORA-DEMO-CARD-COMPACT-ROWS-2026">
+/* Жишээ барааны картуудыг контентын өндрөөр тааруулж, илүүдэл хоосон зайг арилгана. */
+#shop .nx-temu-products{
+  grid-template-rows:repeat(3,max-content)!important;
+  align-items:start!important;
+  grid-auto-rows:max-content!important;
+}
+#shop .nx-temu-products>.nx-temu-product{
+  height:auto!important;
+  min-height:0!important;
+  align-self:start!important;
+}
+#shop .nx-temu-demo-product .nx-temu-demo-note{
+  min-height:0!important;
+  height:auto!important;
+  padding:5px 7px 7px!important;
+}
+@media(min-width:700px){
+  #shop .nx-temu-products{
+    grid-template-rows:repeat(4,max-content)!important;
+    align-items:start!important;
+  }
+}
+</style>
+
 </head>
 
 <body>
