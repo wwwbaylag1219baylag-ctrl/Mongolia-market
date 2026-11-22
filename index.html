@@ -1282,6 +1282,9 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
   }
   .nexora-ad-name{flex:1;min-width:0;font-size:clamp(15px,2.2vw,19px);line-height:1.35;font-weight:750;letter-spacing:-.25px;overflow-wrap:anywhere}
+  .nexora-ad-photo-wrap{overflow:hidden!important;padding:0!important;background:#171717!important;border-color:rgba(255,255,255,.18)!important}
+  .nexora-ad-photo-wrap img{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit}
+
   .nexora-ad-number{flex:0 0 auto;color:#d6ad55;background:rgba(214,173,85,.10);border:1px solid rgba(214,173,85,.16);border-radius:999px;padding:7px 10px;font-size:10px;font-weight:700;letter-spacing:.35px;line-height:1.2;white-space:nowrap;margin-left:auto}
   @media(hover:hover) and (pointer:fine){.nexora-ad-category:hover{transform:translateY(-2px);border-color:rgba(214,173,85,.65);box-shadow:0 13px 28px rgba(0,0,0,.28),0 0 0 3px rgba(214,173,85,.08)}}
 
@@ -1331,42 +1334,50 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
     {
       number: 1,
       name: "Автомашин, тээврийн хэрэгсэл",
-      icon: "🚗"
+      icon: "🚗",
+      image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=85"
     },
     {
       number: 2,
       name: "Үл хөдлөх хөрөнгө",
-      icon: "🏠"
+      icon: "🏠",
+      image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=85"
     },
     {
       number: 3,
       name: "Ажлын байр",
-      icon: "💼"
+      icon: "💼",
+      image: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=900&q=85"
     },
     {
       number: 4,
       name: "Үйлчилгээ",
-      icon: "🛠️"
+      icon: "🛠️",
+      image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=85"
     },
     {
       number: 8,
       name: "Мал аж ахуй, газар тариалан",
-      icon: "🐎"
+      icon: "🐎",
+      image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=85"
     },
     {
       number: 9,
       name: "Барилгын материал, тоног төхөөрөмж",
-      icon: "🏗️"
+      icon: "🏗️",
+      image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=900&q=85"
     },
     {
       number: 11,
       name: "Спорт, аялал, амралт",
-      icon: "🏕️"
+      icon: "🏕️",
+      image: "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=900&q=85"
     },
     {
       number: 12,
       name: "Бусад зар",
-      icon: "📦"
+      icon: "📦",
+      image: "https://images.unsplash.com/photo-1490312278390-ab64016e0aa9?auto=format&fit=crop&w=900&q=85"
     }
   ];
 
@@ -1391,7 +1402,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
             data-nx-category="${category.number}"
             aria-pressed="false"
           >
-            <span class="nexora-ad-icon">${category.icon}</span>
+            <span class="nexora-ad-icon nexora-ad-photo-wrap"><img src="${category.image}" alt="${category.name}" loading="lazy" decoding="async"></span>
             <span class="nexora-ad-name">${category.name}</span>
             <span class="nexora-ad-number">
               АНГИЛАЛ ${category.number}
@@ -1900,7 +1911,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
             <button type="button"
               class="nexora-ad-category"
               data-nx-category="${category.number}">
-              <span class="nexora-ad-icon">${category.icon}</span>
+              <span class="nexora-ad-icon nexora-ad-photo-wrap"><img src="${category.image}" alt="${category.name}" loading="lazy" decoding="async"></span>
               <span class="nexora-ad-name">${category.name}</span>
               <span class="nexora-ad-number">
                 АНГИЛАЛ ${category.number}
@@ -1929,15 +1940,47 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       "Аялал,жуучлал":"https://images.unsplash.com/photo-1530789253388-582c481c54b0?auto=format&fit=crop&w=1000&q=85",
       "Худалдаа,борлуулалт":"https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1000&q=85",
       "Оффис":"https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1000&q=85",
-      "Тээвэр, гааль, агуулах":"https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1000&q=85"
+      "Тээвэр, гааль, агуулах":"https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1000&q=85",
+      "Автомашин":"https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1000&q=85",
+      "Мотоцикл, мопед":"https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=1000&q=85",
+      "Ачааны тээврийн хэрэгсэл":"https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=1000&q=85",
+      "Автобус":"https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=1000&q=85",
+      "Автомашины сэлбэг, хэрэгсэл":"https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=1000&q=85",
+      "Орон сууц":"https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=85",
+      "Хашаа байшин":"https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1000&q=85",
+      "Хаус, зуслан":"https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1000&q=85",
+      "Газар":"https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=85",
+      "Өрөө, байр":"https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1000&q=85",
+      "Оффис, үйлчилгээний талбай":"https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1000&q=85",
+      "Агуулах, үйлдвэрийн байр":"https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1000&q=85",
+      "Засвар үйлчилгээ":"https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1000&q=85",
+      "Гоо сайхан":"https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1000&q=85",
+      "Сургалт":"https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1000&q=85",
+      "Тээвэр, хүргэлт":"https://images.unsplash.com/photo-1580674285054-bed31e145f59?auto=format&fit=crop&w=1000&q=85",
+      "Бусад үйлчилгээ":"https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1000&q=85",
+      "Мал, амьтан":"https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=1000&q=85",
+      "Малын гаралтай бүтээгдэхүүн":"https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=1000&q=85",
+      "Газар тариалан":"https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=85",
+      "Тоног төхөөрөмж":"https://images.unsplash.com/photo-1530267981375-f0de937f5f13?auto=format&fit=crop&w=1000&q=85",
+      "Тэжээл":"https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=85",
+      "Барилгын материал":"https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1000&q=85",
+      "Хаалга, цонх":"https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1000&q=85",
+      "Сантехник, цахилгаан":"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1000&q=85",
+      "Спорт":"https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1000&q=85",
+      "Аялал":"https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1000&q=85",
+      "Амралт":"https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1000&q=85",
+      "Гэр ахуй":"https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=85",
+      "Цахилгаан бараа":"https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=1000&q=85",
+      "Хувцас, гоёл":"https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1000&q=85",
+      "Бусад":"https://images.unsplash.com/photo-1490312278390-ab64016e0aa9?auto=format&fit=crop&w=1000&q=85"
     };
     const isJobCategory = Number(category.number) === 3;
     content.innerHTML = '<div class="nx-full-screen" data-nx-stage="groups">' +
       '<div class="nx-subcategory-list nx-category-card-list nx-job-sector-grid' + (isJobCategory ? ' nx-job-sector-photo-grid' : '') + '">' +
       groups.map((group, index) => {
-        const photo = jobSectorPhotos[group] || "";
-        return '<button type="button" class="nx-subcategory-item nx-choice-card' + (isJobCategory ? ' nx-job-photo-card' : '') + '" data-nx-group="' + index + '" aria-pressed="false">' +
-          (isJobCategory ? '<img class="nx-job-sector-photo" src="' + photo + '" alt="' + group + '" loading="lazy" decoding="async"><span class="nx-job-sector-shade" aria-hidden="true"></span>' : '') +
+        const photo = jobSectorPhotos[group] || category.image;
+        return '<button type="button" class="nx-subcategory-item nx-choice-card nx-job-photo-card" data-nx-group="' + index + '" aria-pressed="false">' +
+          '<img class="nx-job-sector-photo" src="' + photo + '" alt="' + group + '" loading="lazy" decoding="async"><span class="nx-job-sector-shade" aria-hidden="true"></span>' +
           '<span class="nx-choice-index">' + String(index+1).padStart(2,"0") + '</span>' +
           '<span class="nx-choice-name">' + group + '</span>' +
           (isJobCategory ? '<span class="nx-choice-arrow" aria-hidden="true">›</span>' : '') +
@@ -2377,6 +2420,19 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   margin-top: 15px;
   font-weight: 700;
 }
+
+/* NEXORA realistic category photography */
+#ads .nx-job-sector-grid .nx-job-photo-card{position:relative!important;isolation:isolate!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:flex-end!important;gap:8px!important;min-height:148px!important;padding:14px!important;overflow:hidden!important;border:1px solid rgba(214,173,85,.42)!important;border-radius:19px!important;background:#171717!important;text-align:left!important;box-shadow:0 12px 28px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.16)!important;transition:transform .24s ease,box-shadow .24s ease,border-color .24s ease!important}
+#ads .nx-job-sector-photo{position:absolute!important;inset:0!important;z-index:-2!important;display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;transition:transform .5s cubic-bezier(.2,.8,.2,1)!important}
+#ads .nx-job-sector-shade{position:absolute!important;inset:0!important;z-index:-1!important;background:linear-gradient(180deg,rgba(0,0,0,.02) 5%,rgba(0,0,0,.22) 42%,rgba(0,0,0,.88) 100%)!important}
+#ads .nx-job-sector-photo-grid .nx-choice-index{position:absolute!important;top:10px!important;left:10px!important;display:grid!important;place-items:center!important;width:29px!important;height:29px!important;flex:none!important;border:1px solid rgba(255,255,255,.55)!important;border-radius:9px!important;background:rgba(0,0,0,.58)!important;color:#fff!important;font-size:10px!important;backdrop-filter:blur(5px)!important}
+#ads .nx-job-sector-photo-grid .nx-choice-name{position:relative!important;z-index:1!important;display:block!important;flex:1 1 auto!important;width:100%!important;align-content:end!important;color:#fff!important;font-size:14px!important;line-height:1.3!important;font-weight:850!important;text-shadow:0 2px 8px rgba(0,0,0,.95)!important}
+#ads .nx-job-sector-photo-grid .nx-choice-arrow{position:absolute!important;right:12px!important;bottom:11px!important;z-index:2!important;color:#fff!important;font-size:22px!important}
+@media(hover:hover) and (pointer:fine){#ads .nx-job-sector-photo-grid .nx-job-photo-card:hover{transform:translateY(-3px)!important;border-color:rgba(255,218,145,.8)!important;box-shadow:0 18px 36px rgba(0,0,0,.34),0 0 22px rgba(214,173,85,.12)!important}#ads .nx-job-sector-photo-grid .nx-job-photo-card:hover .nx-job-sector-photo{transform:scale(1.07)!important}}
+@media(max-width:520px){#ads .nx-job-sector-photo-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}#ads .nx-job-sector-photo-grid .nx-job-photo-card{min-height:132px!important;padding:11px!important}#ads .nx-job-sector-photo-grid .nx-choice-name{font-size:12px!important}}
+@media(max-width:350px){#ads .nx-job-sector-photo-grid{grid-template-columns:1fr!important}}
+@media(prefers-reduced-motion:reduce){#ads .nx-job-sector-photo,#ads .nx-job-photo-card{transition:none!important}}
+
 </style>
 
 <script>
