@@ -6510,6 +6510,190 @@ html,body{
 </style>
 
 
+
+<style id="NEXORA-6D-INTERACTIVE-GLASS-2026">
+/* NEXORA 6D: давхар гүн, шилэн гэрэл, хүрэлтэд хариулах мэдрэмж.
+   Зөвхөн харагдах эффект; навигаци, сагс, захиалгын үйлдэлд хүрэхгүй. */
+:where(
+  #home .platform-card,
+  #ads .nexora-ad-category,
+  #ads .nx-subcategory-item,
+  #ads .nx-choice-card,
+  #ads .nx-accordion-section,
+  #ads .nx-accordion-option,
+  #ads .nx-create-submit,
+  #ads .nx-create-toggle,
+  #shop .nx-temu-chip,
+  #shop .nx-temu-profile,
+  #market-app .nx-nexora-card,
+  #market-app .nx-market-tabs button,
+  #market-app .nx-market-nav button,
+  #market-app .nx-market-category-choice,
+  #market-app .nx-market-product-tile,
+  #market-app .nx-catalog-cart,
+  #market-app .nx-market-product-tile button
+){
+  position:relative;
+  isolation:isolate;
+  transform:translateZ(0);
+  transition:transform .22s cubic-bezier(.2,.8,.2,1),
+             box-shadow .22s ease,border-color .22s ease,
+             filter .22s ease;
+  box-shadow:
+    0 12px 24px rgba(0,0,0,.27),
+    0 3px 7px rgba(0,0,0,.18),
+    inset 0 1.5px 0 rgba(255,255,255,.22),
+    inset 0 -2px 0 rgba(0,0,0,.16);
+  -webkit-tap-highlight-color:transparent;
+}
+.nx-6d-light{
+  position:absolute!important;
+  inset:0!important;
+  z-index:4!important;
+  display:block!important;
+  border-radius:inherit!important;
+  pointer-events:none!important;
+  opacity:0;
+  background:radial-gradient(
+    circle at var(--nx-6d-x,50%) var(--nx-6d-y,15%),
+    rgba(255,255,255,.34) 0,
+    rgba(255,255,255,.12) 18%,
+    transparent 58%
+  );
+  mix-blend-mode:screen;
+  transition:opacity .2s ease;
+}
+:where(
+  #home .platform-card,
+  #ads .nexora-ad-category,
+  #ads .nx-subcategory-item,
+  #ads .nx-choice-card,
+  #ads .nx-accordion-section,
+  #ads .nx-accordion-option,
+  #ads .nx-create-submit,
+  #ads .nx-create-toggle,
+  #shop .nx-temu-chip,
+  #shop .nx-temu-profile,
+  #market-app .nx-nexora-card,
+  #market-app .nx-market-tabs button,
+  #market-app .nx-market-nav button,
+  #market-app .nx-market-category-choice,
+  #market-app .nx-market-product-tile,
+  #market-app .nx-catalog-cart,
+  #market-app .nx-market-product-tile button
+):hover{
+  transform:translateY(-3px) scale(1.012);
+  box-shadow:
+    0 18px 32px rgba(0,0,0,.34),
+    0 5px 13px rgba(0,0,0,.22),
+    inset 0 1.5px 0 rgba(255,255,255,.32),
+    inset 0 -2px 0 rgba(0,0,0,.12),
+    0 0 18px rgba(90,185,255,.12);
+  filter:saturate(1.08) brightness(1.035);
+}
+:where(
+  #home .platform-card,
+  #ads .nexora-ad-category,
+  #ads .nx-subcategory-item,
+  #ads .nx-choice-card,
+  #ads .nx-accordion-section,
+  #ads .nx-accordion-option,
+  #ads .nx-create-submit,
+  #ads .nx-create-toggle,
+  #shop .nx-temu-chip,
+  #shop .nx-temu-profile,
+  #market-app .nx-nexora-card,
+  #market-app .nx-market-tabs button,
+  #market-app .nx-market-nav button,
+  #market-app .nx-market-category-choice,
+  #market-app .nx-market-product-tile,
+  #market-app .nx-catalog-cart,
+  #market-app .nx-market-product-tile button
+):active{
+  transform:translateY(2px) scale(.985);
+  box-shadow:
+    0 3px 7px rgba(0,0,0,.28),
+    inset 0 3px 8px rgba(0,0,0,.24),
+    inset 0 1px 0 rgba(255,255,255,.12);
+  filter:brightness(.98);
+}
+@media(hover:hover) and (pointer:fine){
+  :where(
+    #home .platform-card,
+    #ads .nexora-ad-category,
+    #ads .nx-subcategory-item,
+    #ads .nx-choice-card,
+    #ads .nx-accordion-section,
+    #ads .nx-accordion-option,
+    #ads .nx-create-submit,
+    #ads .nx-create-toggle,
+    #shop .nx-temu-chip,
+    #shop .nx-temu-profile,
+    #market-app .nx-nexora-card,
+    #market-app .nx-market-tabs button,
+    #market-app .nx-market-nav button,
+    #market-app .nx-market-category-choice,
+    #market-app .nx-market-product-tile,
+    #market-app .nx-catalog-cart,
+    #market-app .nx-market-product-tile button
+  ):hover>.nx-6d-light{opacity:1}
+}
+@media(hover:none){
+  .nx-6d-light{opacity:.42}
+}
+@media(prefers-reduced-motion:reduce){
+  .nx-6d-light{display:none!important}
+  :where(#home .platform-card,#ads .nexora-ad-category,#ads .nx-subcategory-item,
+  #ads .nx-choice-card,#ads .nx-accordion-section,#ads .nx-accordion-option,
+  #ads .nx-create-submit,#ads .nx-create-toggle,#shop .nx-temu-chip,
+  #shop .nx-temu-profile,#market-app .nx-nexora-card,#market-app .nx-market-tabs button,
+  #market-app .nx-market-nav button,#market-app .nx-market-category-choice,
+  #market-app .nx-market-product-tile,#market-app .nx-catalog-cart,
+  #market-app .nx-market-product-tile button){transition:none!important}
+}
+</style>
+<script id="NEXORA-6D-INTERACTIVE-LIGHT-2026">
+(()=> {
+  const selector = [
+    '#home .platform-card','#ads .nexora-ad-category','#ads .nx-subcategory-item',
+    '#ads .nx-choice-card','#ads .nx-accordion-section','#ads .nx-accordion-option',
+    '#ads .nx-create-submit','#ads .nx-create-toggle','#shop .nx-temu-chip',
+    '#shop .nx-temu-profile','#market-app .nx-nexora-card',
+    '#market-app .nx-market-tabs button','#market-app .nx-market-nav button',
+    '#market-app .nx-market-category-choice','#market-app .nx-market-product-tile',
+    '#market-app .nx-catalog-cart','#market-app .nx-market-product-tile button'
+  ].join(',');
+  const attach = root => {
+    if (!root || !root.querySelectorAll) return;
+    root.querySelectorAll(selector).forEach(el => {
+      if (el.dataset.nx6dReady) return;
+      el.dataset.nx6dReady='1';
+      const light=document.createElement('span');
+      light.className='nx-6d-light';
+      light.setAttribute('aria-hidden','true');
+      el.appendChild(light);
+      const move=e=>{
+        const rect=el.getBoundingClientRect();
+        if(!rect.width||!rect.height)return;
+        el.style.setProperty('--nx-6d-x',((e.clientX-rect.left)/rect.width*100)+'%');
+        el.style.setProperty('--nx-6d-y',((e.clientY-rect.top)/rect.height*100)+'%');
+        light.style.opacity='1';
+      };
+      el.addEventListener('pointermove',move,{passive:true});
+      el.addEventListener('pointerleave',()=>{light.style.opacity='0'},{passive:true});
+    });
+  };
+  const start=()=>attach(document);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
+  else start();
+  const observer=new MutationObserver(records=>{
+    for(const record of records) for(const node of record.addedNodes)
+      if(node.nodeType===1){if(node.matches?.(selector))attach(node.parentNode);attach(node);}
+  });
+  observer.observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
+
 </body>
 
 <style id="NEXORA-RETAIL-PLATFORM-HEADER-BACK-ARROW-2026">
