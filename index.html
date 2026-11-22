@@ -7134,6 +7134,81 @@ html,body{
 }
 </style>
 
+
+<style id="NEXORA-ADS-MARKET-STAGE18-2026">
+/* 18-р шат — 18D төхөөрөмжийн зохицол.
+   CSS-only responsive hardening. Өгөгдөл, үнэ, event, захиалга, нэвтрэлт, төлбөрийн логикт хүрэхгүй. */
+#ads,#shop,#market-app{min-width:0;max-width:100%}
+#ads * ,#shop * ,#market-app *{box-sizing:border-box}
+#ads .nx-ad-card-grid,
+#shop .nx-temu-products,
+#market-app .nx-market-grid{
+  min-width:0;align-items:stretch;
+}
+#ads .nx-ad-card-grid>*,
+#shop .nx-temu-products>*,
+#market-app .nx-market-grid>*{
+  min-width:0;max-width:100%;
+}
+#ads .nx-ad-card--visual .nx-ad-card-body,
+#ads .nx-detail-block,
+#shop .nx-temu-product-info,
+#market-app .nx-market-grid>.nx-market-product-tile{
+  min-width:0;overflow-wrap:anywhere;
+}
+#ads img,#shop img,#market-app img{
+  max-width:100%;
+}
+#ads input,#ads select,#ads textarea,#ads button,
+#shop input,#shop select,#shop textarea,#shop button,
+#market-app input,#market-app select,#market-app textarea,#market-app button{
+  max-width:100%;min-width:0;
+}
+#market-app .nx-market-grid>.nx-market-product-tile>.nx-market-btn{
+  min-height:44px;white-space:normal;overflow-wrap:anywhere;
+}
+#shop .nx-temu-chip{min-height:40px}
+#ads .nx-ad-card--visual .nx-ad-card-title,
+#ads .nx-detail-value,
+#shop .nx-temu-product-title,
+#shop .nx-temu-product-store,
+#market-app .nx-market-grid>.nx-market-product-tile>h3{
+  overflow-wrap:anywhere;word-break:normal;
+}
+@media(min-width:700px) and (max-width:1100px){
+  #ads .nx-ad-card-grid,
+  #shop .nx-temu-products,
+  #market-app .nx-market-grid{
+    column-gap:clamp(10px,1.8vw,18px);
+    row-gap:clamp(12px,2vw,20px);
+  }
+  #ads .nx-detail-block{padding:clamp(14px,2vw,20px)!important}
+}
+@media(max-width:699px){
+  #ads,#shop,#market-app{width:100%;max-width:100%;overflow-x:clip}
+  #ads .nx-ad-card--visual,
+  #shop .nx-temu-products>.nx-temu-product,
+  #market-app .nx-market-grid>.nx-market-product-tile{
+    min-width:0;max-width:100%;
+  }
+  #ads .nx-detail-value,
+  #shop .nx-temu-product-title,
+  #market-app .nx-market-grid>.nx-market-product-tile>h3{
+    line-height:1.45;
+  }
+}
+@media(max-width:360px){
+  #ads .nx-ad-card--visual .nx-ad-card-body{padding-inline:9px}
+  #shop .nx-temu-product-info{padding-inline:9px}
+  #market-app .nx-market-grid>.nx-market-product-tile>.nx-market-btn{
+    margin-inline:8px;width:calc(100% - 16px);
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #ads,#shop,#market-app{scroll-behavior:auto}
+}
+</style>
+
 </body>
 
 <style id="NEXORA-RETAIL-PLATFORM-HEADER-BACK-ARROW-2026">
