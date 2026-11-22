@@ -11693,3 +11693,93 @@ textarea:focus-visible{
   }
 }
 </style>
+
+
+<style id="NEXORA-ADS-ADFORM-DEPTH-2026">
+/* Бараа/зар нийтлэх маягт — хонхойсон гадаргуу, товойсон бичвэр.
+   Зөвхөн CSS; form fields, validation, upload болон submit ажиллагаа өөрчлөгдөхгүй. */
+#ads .nx-create-screen #nx-create-ad-form .nx-create-input:not(button),
+#ads .nx-create-screen #nx-create-ad-form .nx-create-textarea,
+#ads .nx-create-screen #nx-create-ad-form input:not([type="file"]):not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),
+#ads .nx-create-screen #nx-create-ad-form select,
+#ads .nx-create-screen #nx-create-ad-form textarea{
+  color:var(--nx-silver-light,#f3eee4)!important;
+  background-color:var(--nx-coffee,#191919)!important;
+  background-image:linear-gradient(155deg,rgba(0,0,0,.28),rgba(255,255,255,.025) 48%,rgba(255,255,255,.055))!important;
+  border:1px solid rgba(214,173,85,.32)!important;
+  border-top-color:rgba(0,0,0,.72)!important;
+  border-left-color:rgba(0,0,0,.58)!important;
+  border-radius:12px!important;
+  box-shadow:inset 3px 4px 9px rgba(0,0,0,.48),
+             inset -1px -1px 3px rgba(255,255,255,.055),
+             0 1px 0 rgba(255,255,255,.035)!important;
+  text-shadow:0 1px 0 rgba(255,255,255,.13),
+              0 -1px 1px rgba(0,0,0,.68);
+  font-weight:600;
+  letter-spacing:.012em;
+  caret-color:var(--nx-rose,#d6ad55);
+  transition:border-color .2s ease,box-shadow .2s ease,
+             background-color .2s ease;
+}
+#ads .nx-create-screen #nx-create-ad-form .nx-create-input:not(button),
+#ads .nx-create-screen #nx-create-ad-form input:not([type="file"]):not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),
+#ads .nx-create-screen #nx-create-ad-form select{
+  min-height:49px;
+  padding:12px 14px!important;
+}
+#ads .nx-create-screen #nx-create-ad-form .nx-create-textarea,
+#ads .nx-create-screen #nx-create-ad-form textarea{
+  min-height:120px;
+  padding:14px!important;
+  line-height:1.65;
+}
+#ads .nx-create-screen #nx-create-ad-form .nx-create-input::placeholder,
+#ads .nx-create-screen #nx-create-ad-form input::placeholder,
+#ads .nx-create-screen #nx-create-ad-form textarea::placeholder{
+  color:rgba(220,211,194,.48)!important;
+  font-weight:450;
+  text-shadow:0 1px 1px rgba(0,0,0,.65);
+  opacity:1;
+}
+#ads .nx-create-screen #nx-create-ad-form .nx-create-label{
+  color:var(--nx-bronze-light,#e0c27f)!important;
+  font-weight:800;
+  letter-spacing:.018em;
+  text-shadow:0 1px 0 rgba(255,255,255,.10),
+              0 -1px 2px rgba(0,0,0,.72);
+}
+#ads .nx-create-screen #nx-create-ad-form select option{
+  background:var(--nx-coffee,#191919);
+  color:var(--nx-silver-light,#f3eee4);
+}
+#ads .nx-create-screen #nx-create-ad-form .nx-create-input:not(button):focus,
+#ads .nx-create-screen #nx-create-ad-form input:not([type="file"]):not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):focus,
+#ads .nx-create-screen #nx-create-ad-form select:focus,
+#ads .nx-create-screen #nx-create-ad-form textarea:focus{
+  border-color:rgba(214,173,85,.78)!important;
+  box-shadow:inset 3px 4px 10px rgba(0,0,0,.52),
+             inset -1px -1px 3px rgba(255,255,255,.06),
+             0 0 0 3px rgba(214,173,85,.13),
+             0 0 17px rgba(214,173,85,.09)!important;
+  outline:none;
+}
+#ads .nx-create-screen #nx-create-ad-form input[type="file"]{
+  color:var(--nx-silver-light,#f3eee4);
+}
+@media(max-width:699px){
+  #ads .nx-create-screen #nx-create-ad-form .nx-create-input:not(button),
+  #ads .nx-create-screen #nx-create-ad-form input:not([type="file"]):not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),
+  #ads .nx-create-screen #nx-create-ad-form select{
+    min-height:50px;
+    font-size:15px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #ads .nx-create-screen #nx-create-ad-form .nx-create-input,
+  #ads .nx-create-screen #nx-create-ad-form input,
+  #ads .nx-create-screen #nx-create-ad-form select,
+  #ads .nx-create-screen #nx-create-ad-form textarea{
+    transition:none!important;
+  }
+}
+</style>
