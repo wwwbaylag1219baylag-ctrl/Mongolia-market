@@ -1086,7 +1086,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       resendButton.textContent = "ИЛГЭЭЖ БАЙНА…";
       try {
         if (!pendingConfirmationEmail) throw new Error("И-мэйл хаяг олдсонгүй. Дахин бүртгүүлнэ үү.");
-        const { error } = await db.auth.resend({ type: "signup", email: pendingConfirmationEmail });
+        const { error } = await db.auth.resend({ type: "signup", email: pendingConfirmationEmail, options: { emailRedirectTo: window.location.origin + "/Mongolia-market/" } });
         if (error) throw error;
         const message = document.getElementById("nexora-confirmation-message");
         if (message) { message.textContent = "Баталгаажуулах имэйлийг дахин илгээлээ. Спам хавтсаа ч шалгаарай."; message.style.display = "block"; }
@@ -1153,6 +1153,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
           email: email,
           password: password,
           options: {
+            emailRedirectTo: window.location.origin + "/Mongolia-market/",
             data: {
               full_name: fullName,
               phone: phone
