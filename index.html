@@ -3413,19 +3413,33 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       return;
     }
 
-    list.innerHTML = result.data.map(function (bank) {
-      return `
-        <button type="button" data-bank-id="${esc(bank.id)}"
-          style="display:block;width:100%;box-sizing:border-box;padding:18px;margin:12px 0;text-align:left;border:2px solid #d6ad55 !important;border-radius:14px;background:linear-gradient(145deg,#292316,#171717) !important;color:#f0d28a !important;box-shadow:0 5px 16px rgba(0,0,0,.28);">
-          <strong style="display:block;font-size:17px;font-weight:800;color:#f3d58d !important;">${esc(bank.bank_name)}</strong>
-          <div style="margin-top:9px;font-size:16px;font-weight:700;color:#ffffff !important;">${esc(bank.account_number)}</div>
-          <div style="margin-top:6px;font-size:13px;color:#d0c7b7 !important;">${esc(bank.account_holder)}</div>
-          <div style="margin-top:10px;font-size:12px;font-weight:800;color:#d6ad55 !important;">СОНГОХ ›</div>
-        </button>
-      `;
-    }).join("");
-
     window.NEXORA_BANK_CACHE = result.data;
+    list.innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        ${result.data.map(function (bank) {
+          const name = String(bank.bank_name || "").toLowerCase();
+          const label = name.includes("хаан") ? "ХААН БАНК" : name.includes("хас") ? "ХАС БАНК" : bank.bank_name;
+          return `
+            <button type="button" data-bank-id="${esc(bank.id)}"
+              style="min-height:58px;padding:13px 8px;border:2px solid #d6ad55 !important;border-radius:12px;background:#f5f5f5 !important;color:#171717 !important;font-size:15px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.16);">
+              <span style="color:#171717 !important;">${esc(label)}</span>
+            </button>
+          `;
+        }).join("")}
+      </div>
+      <section id="nx-selected-bank-info" hidden
+        style="margin-top:16px;padding:16px;border:1px solid #d6ad55;border-radius:12px;background:#fff !important;color:#171717 !important;">
+        <div id="nx-selected-bank-name" style="font-size:16px;font-weight:800;color:#171717 !important;"></div>
+        <div style="margin-top:12px;font-size:13px;color:#555 !important;">ДАНСНЫ ДУГААР</div>
+        <div id="nx-selected-bank-number" style="margin-top:4px;font-size:21px;font-weight:800;letter-spacing:.4px;color:#111 !important;overflow-wrap:anywhere;"></div>
+        <div style="margin-top:12px;font-size:13px;color:#555 !important;">ДАНС ЭЗЭМШИГЧ</div>
+        <div id="nx-selected-bank-holder" style="margin-top:4px;font-size:15px;font-weight:700;color:#171717 !important;"></div>
+        <button type="button" data-bank-continue
+          style="width:100%;margin-top:18px;padding:15px;border:0;border-radius:10px;background:#d6ad55 !important;color:#171717 !important;font-weight:800;font-size:15px;">
+          ЭНЭ ДАНСААР ҮРГЭЛЖЛҮҮЛЭХ
+        </button>
+      </section>
+    `;
   }
 
   function showReceiptForm() {
@@ -3734,6 +3748,21 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       selectedBank = (window.NEXORA_BANK_CACHE || []).find(function (b) {
         return String(b.id) === bankButton.dataset.bankId;
       });
+      if (selectedBank) {
+        const panel = document.getElementById("nx-selected-bank-info");
+        document.getElementById("nx-selected-bank-name").textContent = selectedBank.bank_name || "";
+        document.getElementById("nx-selected-bank-number").textContent = selectedBank.account_number || "";
+        document.getElementById("nx-selected-bank-holder").textContent = selectedBank.account_holder || "";
+        panel.hidden = false;
+        document.querySelectorAll("[data-bank-id]").forEach(function (button) {
+          button.style.background = button === bankButton ? "#d6ad55" : "#f5f5f5";
+          button.style.color = "#171717";
+        });
+      }
+      return;
+    }
+
+    if (target.closest("[data-bank-continue]")) {
       if (selectedBank) showReceiptForm();
       return;
     }
