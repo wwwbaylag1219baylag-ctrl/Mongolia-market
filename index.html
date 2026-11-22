@@ -7443,6 +7443,52 @@ html,body{
 }
 </style>
 
+
+<style id="NEXORA-ADS-MARKET-STAGE22-2026">
+/* 22-р шат — дэлгэц нээгдэх үеийн зөөлөн, premium motion.
+   CSS-only: screen navigation, DOM, event, data, auth, payment and order logic untouched. */
+@keyframes nxScreenReveal22{
+  from{opacity:0;transform:translate3d(0,9px,0);filter:blur(1.5px)}
+  to{opacity:1;transform:translate3d(0,0,0);filter:blur(0)}
+}
+@keyframes nxHeaderReveal22{
+  from{opacity:0;transform:translate3d(0,-5px,0)}
+  to{opacity:1;transform:translate3d(0,0,0)}
+}
+
+/* ЗАР, худалдаа, профайл зэрэг дэлгэц идэвхжих бүрд гол агуулга зөөлөн гарч ирнэ */
+.screen.active>.page-content{
+  animation:nxScreenReveal22 .34s cubic-bezier(.2,.72,.25,1) both;
+  will-change:opacity,transform;
+}
+.screen.active>.topbar{
+  animation:nxHeaderReveal22 .26s ease-out both;
+}
+
+/* Нүүр дэлгэцийн гол хэсэгт арай удаан, тайван нээлт */
+.screen.active>.home-content{
+  animation:nxScreenReveal22 .42s cubic-bezier(.2,.72,.25,1) both;
+  will-change:opacity,transform;
+}
+
+/* Том дэлгэц дээр хөдөлгөөнийг даруухан хадгална */
+@media(min-width:900px){
+  .screen.active>.page-content{
+    animation-duration:.3s;
+  }
+}
+
+/* Хөдөлгөөн багасгах тохиргоотой хэрэглэгчид хөдөлгөөнт шилжилтгүй */
+@media(prefers-reduced-motion:reduce){
+  .screen.active>.page-content,
+  .screen.active>.topbar,
+  .screen.active>.home-content{
+    animation:none!important;
+    will-change:auto!important;
+  }
+}
+</style>
+
 </body>
 
 <style id="NEXORA-RETAIL-PLATFORM-HEADER-BACK-ARROW-2026">
