@@ -9966,3 +9966,102 @@ body:has(#nx-retail-lightbox-close)>div:has(#nx-retail-lightbox-close) img{
   #market-app:has(#nx-cart-order) #nx-market-msg{transition:none!important}
 }
 </style>
+
+
+<style id="NEXORA-ADS-MARKET-STAGE14-2026">
+/* 14-р шат — ЗАР + ХУДАЛДАА: keyboard focus, touch feedback, responsive control consistency.
+   Зөвхөн CSS; өнгөний палитр, товчны үйлдэл, навигаци, өгөгдөл ба бизнес логикт хүрэхгүй. */
+
+/* Keyboard хэрэглэгчдэд яг аль элемент сонгогдсоныг тод харуулна */
+#ads .nx-ad-card:focus-visible,
+#ads [data-nx-category]:focus-visible,
+#ads [data-nx-back]:focus-visible,
+#ads [data-nx-create-toggle]:focus-visible,
+#ads .nx-subcategory-item:focus-visible,
+#ads .nx-choice-card:focus-visible,
+#ads .nx-list-back:focus-visible,
+#ads .nx-list-search:focus-visible,
+#market-app .nx-temu-chip:focus-visible,
+#market-app .nx-market-product-tile:focus-visible,
+#market-app .nx-temu-product:focus-visible,
+#market-app button:focus-visible,
+#market-app a:focus-visible,
+#market-app [role="button"]:focus-visible{
+  outline:2px solid #d6ad55!important;
+  outline-offset:3px!important;
+  box-shadow:0 0 0 4px rgba(214,173,85,.16)!important;
+  position:relative;z-index:2;
+}
+
+/* Хурууны үйлдэл: товч хариу, давхар tap highlight багасгах */
+#ads .nx-ad-card,
+#ads [data-nx-category],
+#ads .nx-subcategory-item,
+#ads .nx-choice-card,
+#ads .nx-list-back,
+#market-app .nx-temu-chip,
+#market-app .nx-market-product-tile,
+#market-app .nx-temu-product,
+#market-app button{
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+#ads .nx-ad-card:active,
+#ads [data-nx-category]:active,
+#ads .nx-subcategory-item:active,
+#ads .nx-choice-card:active,
+#market-app .nx-temu-chip:active,
+#market-app .nx-market-product-tile:active,
+#market-app .nx-temu-product:active{
+  transition-duration:.08s!important;
+}
+
+/* Идэвхгүй товчны төлөвийг өнгийг нь солихгүйгээр ялгана */
+#ads button:disabled,
+#ads [aria-disabled="true"],
+#market-app button:disabled,
+#market-app [aria-disabled="true"]{
+  cursor:not-allowed!important;
+  opacity:.52;
+  filter:saturate(.72);
+  box-shadow:none;
+}
+
+/* Хэвтээ ангиллын зам дээр гүйлгэхэд төгсгөлийн chip тасрахгүй */
+#market-app .nx-temu-category-rail{
+  scroll-padding-inline:12px;
+  overscroll-behavior-inline:contain;
+}
+#market-app .nx-temu-chip{
+  flex:0 0 auto;white-space:nowrap;
+}
+#ads .nx-ad-card,
+#market-app .nx-market-product-tile,
+#market-app .nx-temu-product{
+  min-width:0;overflow-wrap:anywhere;
+}
+
+/* Desktop дээр сонголтын хил, сүүдрийг хэтрүүлэхгүйгээр hover ялгаруулна */
+@media(hover:hover) and (pointer:fine){
+  #ads .nx-ad-card:focus-visible,
+  #ads .nx-subcategory-item:focus-visible,
+  #ads .nx-choice-card:focus-visible,
+  #market-app .nx-market-product-tile:focus-visible,
+  #market-app .nx-temu-product:focus-visible{
+    transform:translateY(-2px);
+  }
+}
+
+/* Хөдөлгөөн багасгах тохиргоог бүрэн хүндэтгэнэ */
+@media(prefers-reduced-motion:reduce){
+  #ads .nx-ad-card:active,
+  #ads [data-nx-category]:active,
+  #ads .nx-subcategory-item:active,
+  #ads .nx-choice-card:active,
+  #market-app .nx-temu-chip:active,
+  #market-app .nx-market-product-tile:active,
+  #market-app .nx-temu-product:active{
+    transition:none!important;transform:none!important;
+  }
+}
+</style>
