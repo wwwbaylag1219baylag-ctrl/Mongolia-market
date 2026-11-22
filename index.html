@@ -7329,6 +7329,120 @@ html,body{
 }
 </style>
 
+
+<style id="NEXORA-ADS-MARKET-STAGE21-2026">
+/* 21-р шат — NEXORA-ийн амьд, premium мэдрэмж.
+   CSS-only visual layer: DOM, event, өгөгдөл, төлбөр, үнэ, захиалга, навигацид хүрэхгүй. */
+
+/* ЗАР — зурагтай картанд зөөлөн гүн ба гэрлийн давхарга */
+#ads .nx-ad-card--visual{
+  border-color:rgba(214,173,85,.22);
+  box-shadow:0 7px 22px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.035);
+  transition:transform .24s cubic-bezier(.2,.75,.25,1),
+             box-shadow .24s ease,border-color .24s ease;
+}
+#ads .nx-ad-card--visual .nx-ad-card-media{
+  background:linear-gradient(145deg,rgba(214,173,85,.09),rgba(0,0,0,.12));
+}
+#ads .nx-ad-card--visual .nx-ad-card-image{
+  transform:scale(1);
+  transition:transform .48s cubic-bezier(.2,.7,.25,1),filter .35s ease;
+}
+#ads .nx-ad-card--visual .nx-ad-card-body{
+  position:relative;
+  background:linear-gradient(180deg,rgba(255,255,255,.012),transparent 42%);
+}
+
+/* ЖИЖИГЛЭН — барааны зураг бодит дэлгүүрийн витрин мэт */
+#shop .nx-temu-products>.nx-temu-product{
+  border-color:rgba(214,173,85,.18);
+  box-shadow:0 4px 15px rgba(0,0,0,.075);
+  transition:transform .22s cubic-bezier(.2,.75,.25,1),
+             box-shadow .22s ease,border-color .22s ease;
+}
+#shop .nx-temu-product-image{
+  transform:scale(1);
+  transition:transform .42s cubic-bezier(.2,.7,.25,1),filter .3s ease;
+}
+#shop .nx-temu-product-info{
+  position:relative;
+}
+
+/* БӨӨНИЙ — картын хүрээ, гэрэл, нийлүүлэгчийн дүрслэл */
+#market-app .nx-market-grid>.nx-market-product-tile{
+  border:1px solid rgba(214,173,85,.2);
+  box-shadow:0 7px 20px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.035);
+  transition:transform .22s cubic-bezier(.2,.75,.25,1),
+             box-shadow .22s ease,border-color .22s ease;
+}
+#market-app .nx-market-grid>.nx-market-product-tile>img{
+  transition:filter .25s ease,transform .35s cubic-bezier(.2,.7,.25,1);
+}
+
+/* Ангиллын сонголтууд — хариу үйлдэл нь зөөлөн, ойлгомжтой */
+#ads .nx-subcategory-item,
+#ads .nx-choice-card,
+#shop .nx-temu-chip,
+#market-app .nx-market-category-choice{
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .2s cubic-bezier(.2,.75,.25,1),
+             box-shadow .2s ease,border-color .2s ease,filter .2s ease;
+}
+
+/* Hover зөвхөн хулганатай төхөөрөмжид; утасны swipe/scroll-д саад болохгүй */
+@media(hover:hover) and (pointer:fine){
+  #ads .nx-ad-card--visual:hover{
+    transform:translateY(-4px);
+    border-color:rgba(214,173,85,.58);
+    box-shadow:0 15px 34px rgba(0,0,0,.28),0 0 0 1px rgba(214,173,85,.08);
+  }
+  #ads .nx-ad-card--visual:hover .nx-ad-card-image,
+  #shop .nx-temu-products>.nx-temu-product:hover .nx-temu-product-image{
+    transform:scale(1.045);
+  }
+  #shop .nx-temu-products>.nx-temu-product:hover{
+    transform:translateY(-3px);
+    border-color:rgba(214,173,85,.42);
+    box-shadow:0 12px 25px rgba(0,0,0,.13);
+  }
+  #market-app .nx-market-grid>.nx-market-product-tile:hover{
+    transform:translateY(-3px);
+    border-color:rgba(214,173,85,.55);
+    box-shadow:0 15px 30px rgba(0,0,0,.28),0 0 18px rgba(214,173,85,.055);
+  }
+  #market-app .nx-market-grid>.nx-market-product-tile:hover>img{
+    filter:saturate(1.06) brightness(1.035);
+  }
+  #ads .nx-subcategory-item:hover,
+  #ads .nx-choice-card:hover,
+  #shop .nx-temu-chip:hover,
+  #market-app .nx-market-category-choice:hover{
+    filter:brightness(1.045);
+  }
+}
+
+/* Touch дээр товшилтын богино feedback — үйлдлийн handler-д хүрэхгүй */
+#ads .nx-ad-card--visual:active,
+#shop .nx-temu-products>.nx-temu-product:active,
+#market-app .nx-market-grid>.nx-market-product-tile:active{
+  filter:brightness(1.035);
+}
+@media(prefers-reduced-motion:reduce){
+  #ads .nx-ad-card--visual,
+  #ads .nx-ad-card--visual .nx-ad-card-image,
+  #shop .nx-temu-products>.nx-temu-product,
+  #shop .nx-temu-product-image,
+  #market-app .nx-market-grid>.nx-market-product-tile,
+  #market-app .nx-market-grid>.nx-market-product-tile>img,
+  #ads .nx-subcategory-item,
+  #ads .nx-choice-card,
+  #shop .nx-temu-chip,
+  #market-app .nx-market-category-choice{
+    transition:none!important;transform:none!important;
+  }
+}
+</style>
+
 </body>
 
 <style id="NEXORA-RETAIL-PLATFORM-HEADER-BACK-ARROW-2026">
