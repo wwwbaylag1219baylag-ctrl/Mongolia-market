@@ -99,6 +99,8 @@
    const title=type==="wholesale_order_payment"?"Бөөний захиалгын төлбөрийн баримт":r.payment_purpose==="renewal"?"Нийлүүлэгчийн сарын эрх сунгах":r.title||r.store_name||r.name||r.supplier_name||(r.fee_type?(type==="retail_fee_payment"?(r.fee_type==="logo"?"Онлайн дэлгүүрийн логоны төлбөр":"Жижиглэнгийн бараа байршуулалтын төлбөр"):(r.fee_type==="logo"?"Нийлүүлэгчийн логоны төлбөр":"Бөөний бараа байршуулалтын төлбөр")):("Хүсэлт "+String(r.id||"").slice(0,8)));
    const details=[];
    if(r.owner_type)details.push(["Эзэмшигч",r.owner_type==="company"?"Байгууллага":r.owner_type==="individual"?"Хувь хүн":r.owner_type]);
+   if(r.duration_days)details.push(["Эрхийн хугацаа",r.duration_days+" хоног"]);
+   if(r.bank_accounts)details.push(["Төлбөр хүлээн авах данс",r.bank_accounts.bank_name+" · "+r.bank_accounts.account_number+" · "+r.bank_accounts.account_holder]);
    if(r.payment_purpose)details.push(["Төлбөрийн зориулалт",r.payment_purpose==="renewal"?"Сарын эрх сунгалт":"Анхны бүртгэл"]);
    if(r.phone)details.push(["Утас",r.phone]);
    if(r.buyer_name)details.push(["Захиалагч",r.buyer_name]);
@@ -254,7 +256,8 @@
      ["market_supplier_registration_payments","id,user_id,supplier_id,owner_type,supplier_name,payment_purpose,phone,email,register_no,amount,bank_name,account_number,account_holder,transfer_reference,receipt_path,status,admin_note,created_at","supplier_registration_payment"],
      ["nexora_store_payments","id,store_id,user_id,amount,bank_name,transfer_reference,receipt_path,status,admin_note,created_at","store_payment"],
      ["market_order_payment_requests","id,order_id,buyer_id,amount,transfer_reference,receipt_path,status,created_at","market_order_payment","pending_review"],
-     ["wholesale_order_payment_requests","id,order_id,buyer_id,amount,transfer_reference,receipt_path,status,admin_note,created_at","wholesale_order_payment","pending_review"]
+     ["wholesale_order_payment_requests","id,order_id,buyer_id,amount,transfer_reference,receipt_path,status,admin_note,created_at","wholesale_order_payment","pending_review"],
+     ["nexora_posting_payment_requests","id,user_id,owner_type,amount,duration_days,bank_account_id,transfer_reference,receipt_path,status,created_at,bank_accounts(bank_name,account_number,account_holder)","posting_entitlement","pending_review"]
     ];
     const loaded=await Promise.all(sources.map(async x=>{const {data,error}=await query(x[0],x[1],[["status",x[3]||"pending"]]);if(error)throw error;return {data:data||[],type:x[2]};}));
     const blocks=await Promise.all(loaded.map(x=>cards(x.data,x.type)));
@@ -308,6 +311,7 @@
   }
   try{
    if(type==="ad_payment")result=await db.rpc(action==="approve"?"admin_approve_payment_request":"admin_reject_payment_request",{p_request_id:id});
+   else if(type==="posting_entitlement")result=await db.rpc("nexora_admin_review_posting_payment",{p_request_id:id,p_approve:action==="approve"});
    else if(type==="free_ad")result=await db.rpc("admin_review_free_ad",{p_ad_id:id,p_approve:action==="approve"});
    else if(type==="wholesale_order_payment"){
     result=await db.rpc("nexora_review_wholesale_order_payment",{p_payment_id:id,p_approve:action==="approve",p_note:action==="approve"?null:"Төлбөрийн баримт баталгаажаагүй"});
