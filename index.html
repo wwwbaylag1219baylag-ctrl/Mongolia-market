@@ -10277,3 +10277,124 @@ body:has(#nx-retail-lightbox-close)>div:has(#nx-retail-lightbox-close) img{
   #market-app .nx-market-category-choice{transition:none!important;transform:none!important}
 }
 </style>
+
+
+<style id="NEXORA-ADS-MARKET-STAGE17-2026">
+/* 17-р шат — ЗАР + ХУДАЛДАА: эзэмшигч/дэлгүүрийн мэдээлэл ба дэлгэрэнгүй уншигдах байдал.
+   CSS-only: нийлүүлэгчийн нэр, лого, үнэ, мэдээлэл болон товчны ажиллагааг өөрчлөхгүй. */
+
+/* ЗАР — нийтлэлийн үнэ, тайлбар, байршил/огнооны мэдээллийн ялгарал */
+#ads .nx-ad-card--visual .nx-ad-card-price{
+  display:block;letter-spacing:-.025em;
+  font-variant-numeric:tabular-nums;
+}
+#ads .nx-ad-card--visual .nx-ad-card-meta{
+  align-items:center;flex-wrap:wrap;line-height:1.45;
+}
+#ads .nx-ad-card--visual .nx-ad-card-meta>*{
+  display:inline-flex;align-items:center;gap:5px;
+}
+#ads .nx-ad-card-more{
+  min-height:30px;padding-top:3px;
+}
+#ads .nx-detail-block{
+  padding:clamp(13px,2vw,19px)!important;
+  box-shadow:0 9px 24px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.025);
+}
+#ads .nx-detail-label{
+  display:block;margin-bottom:5px;line-height:1.35;
+}
+#ads .nx-detail-value{
+  display:block;min-width:0;line-height:1.55;
+  overflow-wrap:anywhere;word-break:normal;
+}
+#ads .nx-detail-price{
+  display:inline-block;line-height:1.25;
+  font-variant-numeric:tabular-nums;overflow-wrap:anywhere;
+}
+#ads #nx-ad-detail-images{
+  gap:10px;
+}
+#ads #nx-ad-detail-images img{
+  display:block;max-width:100%;background:rgba(255,255,255,.035);
+}
+
+/* ЖИЖИГЛЭН — дэлгүүрийн нэр болон барааны төрлийг ялгаж уншуулах */
+#shop .nx-temu-product-info{min-width:0}
+#shop .nx-temu-product-type{
+  max-width:100%;line-height:1.35;overflow-wrap:anywhere;
+}
+#shop .nx-temu-product-title{
+  overflow-wrap:anywhere;line-height:1.45;
+}
+#shop .nx-temu-product-store{
+  display:block;max-width:100%;min-height:15px;
+  line-height:1.4;overflow:hidden;text-overflow:ellipsis;
+}
+#shop .nx-temu-product-price{
+  line-height:1.25;letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;
+}
+#shop .nx-temu-product-meta{
+  line-height:1.5;overflow-wrap:anywhere;
+}
+
+/* БӨӨНИЙ — нийлүүлэгчийн лого, дэлгүүрийн нэр, доод захиалга/үлдэгдлийн бүлэг */
+#market-app .nx-market-grid>.nx-market-product-tile>img{
+  flex-shrink:0;max-width:100%;
+}
+#market-app .nx-market-grid>.nx-market-product-tile>img[alt="Барааны лого"]{
+  width:38px;height:38px;min-width:38px;
+  margin:9px 10px 2px!important;
+  padding:3px;box-sizing:border-box;
+  border:1px solid rgba(214,173,85,.2);
+  background:rgba(255,255,255,.035);
+}
+#market-app .nx-market-grid>.nx-market-product-tile>h3{
+  margin:10px 11px 5px;line-height:1.4;
+  overflow-wrap:anywhere;
+}
+#market-app .nx-market-grid>.nx-market-product-tile>p.nx-market-muted:first-of-type{
+  margin:0 11px 7px;padding-bottom:8px;
+  border-bottom:1px solid rgba(214,173,85,.14);
+  font-size:12px;line-height:1.4;
+  overflow-wrap:anywhere;
+}
+#market-app .nx-market-grid>.nx-market-product-tile>.nx-market-price{
+  display:block;margin:2px 11px 5px;
+  font-size:clamp(17px,2vw,20px);line-height:1.3;
+  font-variant-numeric:tabular-nums;overflow-wrap:anywhere;
+}
+#market-app .nx-market-grid>.nx-market-product-tile>p.nx-market-muted:nth-of-type(2){
+  margin:3px 11px 10px;padding:8px 9px;
+  border-radius:10px;background:rgba(255,255,255,.035);
+  font-size:11px;line-height:1.5;overflow-wrap:anywhere;
+}
+#market-app .nx-market-grid>.nx-market-product-tile>.nx-market-btn{
+  margin:0 10px 11px;width:calc(100% - 20px);
+  min-height:42px;flex-shrink:0;
+}
+
+/* Гар утас: мэдээллийн хэсгүүдийг шахалгүй, хуруунд тохиромжтой байлгана */
+@media(max-width:699px){
+  #ads .nx-detail-price{font-size:clamp(21px,6vw,25px)}
+  #market-app .nx-market-grid>.nx-market-product-tile>h3{font-size:14px}
+  #market-app .nx-market-grid>.nx-market-product-tile>.nx-market-btn{min-height:44px}
+}
+@media(min-width:700px){
+  #ads .nx-ad-card--visual:hover .nx-ad-card-more{transform:translateX(2px)}
+  #ads .nx-ad-card-more{transition:transform .18s ease}
+  #market-app .nx-market-grid>.nx-market-product-tile>img[alt="Барааны лого"]{
+    transition:transform .2s ease,box-shadow .2s ease;
+  }
+  #market-app .nx-market-grid>.nx-market-product-tile:hover>img[alt="Барааны лого"]{
+    transform:scale(1.04);box-shadow:0 5px 14px rgba(0,0,0,.14);
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #ads .nx-ad-card-more,
+  #market-app .nx-market-grid>.nx-market-product-tile>img[alt="Барааны лого"]{
+    transition:none!important;transform:none!important;
+  }
+}
+</style>
