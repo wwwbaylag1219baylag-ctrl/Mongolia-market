@@ -9606,3 +9606,131 @@ button.nx-platform-back:focus-visible,
   }
 }
 </style>
+
+
+<style id="NEXORA-ADS-MARKET-STAGE11-2026">
+/* 11-р шат — зураг томруулж үзэх, сагсны мөр, зар нийтлэх формын нарийн өнгөлгөө.
+   Зөвхөн CSS: зураг солих, сагс, захиалга, нийтлэх үйлдэл болон өнгөний палитрыг өөрчлөхгүй. */
+
+/* ЗАР — нийтлэх формын талбаруудын зай, фокус, уншигдах байдал */
+#ads .nx-create-screen #nx-create-form,
+#ads .nx-create-screen .nx-create-form,
+#ads .nx-create-screen .nx-create-panel{
+  width:100%;max-width:760px;margin-inline:auto;
+  border-radius:20px;
+}
+#ads .nx-create-screen input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+#ads .nx-create-screen select,
+#ads .nx-create-screen textarea{
+  box-sizing:border-box;width:100%;min-height:46px;
+  padding:11px 13px;border-radius:12px;
+  line-height:1.45;font-size:14px;
+  transition:border-color .18s ease,box-shadow .18s ease;
+}
+#ads .nx-create-screen textarea{min-height:112px;resize:vertical}
+#ads .nx-create-screen input:focus-visible,
+#ads .nx-create-screen select:focus-visible,
+#ads .nx-create-screen textarea:focus-visible{
+  outline:2px solid color-mix(in srgb,var(--gold,#d6ad55) 55%,transparent);
+  outline-offset:2px;
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--gold,#d6ad55) 12%,transparent);
+}
+#ads .nx-create-screen label{
+  display:block;line-height:1.4;margin-bottom:6px;
+}
+#ads .nx-create-screen input[type="file"]{
+  box-sizing:border-box;width:100%;max-width:100%;min-height:44px;
+  padding:9px;border-radius:12px;overflow:hidden;
+}
+#ads .nx-create-screen button,
+#ads .nx-create-screen [type="submit"]{
+  min-height:44px;border-radius:13px;
+  -webkit-tap-highlight-color:transparent;
+}
+#ads .nx-create-screen button:active,
+#ads .nx-create-screen [type="submit"]:active{transform:scale(.985)}
+@media(max-width:699px){
+  #ads .nx-create-screen{padding-inline:10px}
+  #ads .nx-create-screen input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+  #ads .nx-create-screen select,
+  #ads .nx-create-screen textarea{font-size:16px;min-height:46px}
+}
+
+/* ХУДАЛДАА — жижиглэн/бөөний үндсэн зураг, thumbnail touch target */
+#market-app #nx-wholesale-detail-image{
+  display:block;width:100%!important;max-height:min(54vh,500px)!important;
+  min-height:210px;object-fit:contain!important;
+  padding:8px;box-sizing:border-box;border-radius:20px!important;
+  box-shadow:0 13px 30px rgba(0,0,0,.18);
+}
+#market-app:has(#nx-wholesale-detail-image) [data-wholesale-thumb],
+#market-app:has(#nx-retail-detail-image) [data-retail-thumb],
+#market-app .nx-temu-detail [data-unified-wh-thumb]{
+  min-width:58px;min-height:58px;border-radius:12px;
+  overflow:hidden;-webkit-tap-highlight-color:transparent;
+}
+#market-app:has(#nx-wholesale-detail-image) [data-wholesale-thumb] img{
+  width:100%;height:100%;display:block;object-fit:cover;
+}
+
+/* Бүтэн дэлгэцийн зураг харагч — inline style-тай overlay-г аюулгүйгээр өнгөлнө */
+body:has(#nx-wholesale-lightbox-close)>div:has(#nx-wholesale-lightbox-close),
+body:has(#nx-retail-lightbox-close)>div:has(#nx-retail-lightbox-close){
+  padding:clamp(12px,3vw,24px)!important;
+  background:rgba(5,7,9,.975)!important;
+  backdrop-filter:blur(16px) saturate(1.08);
+  -webkit-backdrop-filter:blur(16px) saturate(1.08);
+}
+body:has(#nx-wholesale-lightbox-close) #nx-wholesale-lightbox-close,
+body:has(#nx-wholesale-lightbox-close) #nx-wholesale-lightbox-prev,
+body:has(#nx-wholesale-lightbox-close) #nx-wholesale-lightbox-next,
+body:has(#nx-retail-lightbox-close) #nx-retail-lightbox-close,
+body:has(#nx-retail-lightbox-close) #nx-retail-lightbox-prev,
+body:has(#nx-retail-lightbox-close) #nx-retail-lightbox-next{
+  min-width:46px;min-height:46px;padding:11px 15px!important;
+  border-radius:15px!important;
+  box-shadow:0 7px 20px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.12);
+  font-weight:900;touch-action:manipulation;
+}
+body:has(#nx-wholesale-lightbox-close)>div:has(#nx-wholesale-lightbox-close) img,
+body:has(#nx-retail-lightbox-close)>div:has(#nx-retail-lightbox-close) img{
+  max-width:min(100%,1200px)!important;max-height:88dvh!important;
+  object-fit:contain!important;border-radius:12px;
+  filter:drop-shadow(0 12px 30px rgba(0,0,0,.35));
+}
+@media(max-width:699px){
+  body:has(#nx-wholesale-lightbox-close)>div:has(#nx-wholesale-lightbox-close),
+  body:has(#nx-retail-lightbox-close)>div:has(#nx-retail-lightbox-close){
+    padding:10px!important;padding-top:max(68px,env(safe-area-inset-top))!important;
+    padding-bottom:max(18px,env(safe-area-inset-bottom))!important;
+  }
+  body:has(#nx-wholesale-lightbox-close) #nx-wholesale-lightbox-prev,
+  body:has(#nx-retail-lightbox-close) #nx-retail-lightbox-prev{left:8px!important}
+  body:has(#nx-wholesale-lightbox-close) #nx-wholesale-lightbox-next,
+  body:has(#nx-retail-lightbox-close) #nx-retail-lightbox-next{right:8px!important}
+}
+
+/* САГС — барааны мэдээлэл, тоо ширхэгийн товчийг эвтэйхэн байрлуулах */
+#market-app .nx-cart-product-card{
+  gap:12px;padding:13px!important;border-radius:17px!important;
+  align-items:center;box-shadow:0 8px 22px rgba(0,0,0,.12);
+}
+#market-app .nx-cart-product-content{overflow-wrap:anywhere}
+#market-app .nx-cart-product-content>b,
+#market-app .nx-cart-product-content h3{
+  display:block;line-height:1.35;font-size:14px;
+}
+#market-app .nx-cart-product-content button{
+  min-width:38px;min-height:38px;margin:4px 3px 0 0;
+  border-radius:11px;-webkit-tap-highlight-color:transparent;
+}
+@media(max-width:390px){
+  #market-app .nx-cart-product-card{gap:9px;padding:10px!important}
+  #market-app .nx-cart-product-content button{min-width:36px;min-height:36px}
+}
+@media(prefers-reduced-motion:reduce){
+  #ads .nx-create-screen input,
+  #ads .nx-create-screen select,
+  #ads .nx-create-screen textarea{transition:none!important}
+}
+</style>
