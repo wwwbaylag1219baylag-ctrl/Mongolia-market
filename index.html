@@ -4543,8 +4543,37 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
         const draft={name:String(v.name).trim(),owner_type:ownerType,type:v.type,register_no:String(v.register_no).trim(),phone:String(v.phone).trim(),email:String(v.email||"").trim(),address:String(v.address).trim()};
         // Төлбөрийн дэлгэцээс буцахад бүртгэлийн маягт руу буцна.
         window.NEXORA_SHOP_BACK = () => showSupplier(backAction);
-        host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-supplier-payment-back" aria-label="Буцах" title="Буцах">‹</button><h2 class="nexora-ad-heading">'+(isRenewal?"НИЙЛҮҮЛЭГЧИЙН ЭРХ СУНГАХ":"НИЙЛҮҮЛЭГЧИЙН САРЫН ЭРХ")+'</h2><section class="nx-admin-card"><p class="nx-market-muted">Эзэмшигчийн төрөл: '+(ownerType==="company"?"Компани":"Хувь хүн")+'</p><p class="nx-market-price">'+money(amount)+'</p><p class="nx-market-muted">Сарын суурь хураамж · '+Number(feeSettings.duration_days||30)+' хоног</p></section><h3>АДМИНЫ ДАНСНЫ СОНГОЛТ</h3><div id="nx-supplier-bank-list">'+banks.map((b,i)=>'<label class="nx-admin-card" style="display:flex;gap:12px;align-items:flex-start;margin:10px 0;cursor:pointer"><input type="radio" name="supplier_bank" value="'+esc(b.id)+'" '+(i===0?"checked":"")+' style="margin-top:5px"><span><strong>'+esc(b.bank_name)+'</strong><p class="nx-market-price">'+esc(b.account_number)+'</p><p class="nx-market-muted">'+esc(b.account_holder)+'</p></span></label>').join("")+'</div><form id="nx-supplier-payment-form"><label>Гүйлгээний утга / лавлах дугаар *</label><input class="nx-market-input" name="transfer_reference" required maxlength="150"><label>Төлбөрийн баримт (JPG, PNG, WEBP, PDF · 8MB хүртэл) *</label><input class="nx-market-input" name="receipt" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required><button class="nx-market-btn" type="submit">ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭХ</button></form><p id="nx-supplier-payment-msg" class="nx-market-muted"></p>';
+        host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-supplier-payment-back" aria-label="Буцах" title="Буцах">‹</button><h2 class="nexora-ad-heading">'+(isRenewal?"НИЙЛҮҮЛЭГЧИЙН ЭРХ СУНГАХ":"НИЙЛҮҮЛЭГЧИЙН САРЫН ЭРХ")+'</h2><section class="nx-admin-card"><p class="nx-market-muted">Эзэмшигчийн төрөл: '+(ownerType==="company"?"Компани":"Хувь хүн")+'</p><p class="nx-market-price">'+money(amount)+'</p><p class="nx-market-muted">Сарын суурь хураамж · '+Number(feeSettings.duration_days||30)+' хоног</p></section><h3>АДМИНЫ ДАНСНЫ СОНГОЛТ</h3><div id="nx-supplier-bank-list">'+banks.map((b,i)=>'<label class="nx-admin-card" data-supplier-bank-card style="display:flex;gap:12px;align-items:flex-start;margin:10px 0;cursor:pointer;transition:background .2s,color .2s"><input type="radio" name="supplier_bank" value="'+esc(b.id)+'" '+(i===0?"checked":"")+' style="margin-top:5px;accent-color:#168cff;flex:0 0 auto"><span style="min-width:0;color:#f0d28a"><strong>'+esc(b.bank_name)+'</strong><span data-supplier-bank-details style="display:none"><p class="nx-market-price">'+esc(b.account_number)+'</p><p class="nx-market-muted">'+esc(b.account_holder)+'</p></span><small style="display:block;margin-top:5px;color:#aaa39a">ЦЭНХЭР ДУГУЙГ УДААН ДАРЖ ДАНС ХАРАХ</small></span></label>').join("")+'</div><form id="nx-supplier-payment-form"><label>Гүйлгээний утга / лавлах дугаар *</label><input class="nx-market-input" name="transfer_reference" required maxlength="150"><label>Төлбөрийн баримт (JPG, PNG, WEBP, PDF · 8MB хүртэл) *</label><input class="nx-market-input" name="receipt" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required><button class="nx-market-btn" type="submit">ТӨЛБӨРИЙН БАРИМТ ИЛГЭЭХ</button></form><p id="nx-supplier-payment-msg" class="nx-market-muted"></p>';
         document.getElementById("nx-supplier-payment-back").onclick=()=>showSupplier(backAction);
+        // Цэнхэр radio товчийг удаан дарахад сонгосон банкны дансны мэдээлэл гарна.
+        const supplierBankList=document.getElementById("nx-supplier-bank-list");
+        supplierBankList.querySelectorAll("[data-supplier-bank-card]").forEach(card=>{
+          const radio=card.querySelector('input[name="supplier_bank"]');
+          let holdTimer=null;
+          const cancelHold=()=>{if(holdTimer)clearTimeout(holdTimer);holdTimer=null;};
+          const revealDetails=()=>{
+            if(!radio.checked)return;
+            supplierBankList.querySelectorAll("[data-supplier-bank-card]").forEach(other=>{
+              other.style.background="#171717";
+              const details=other.querySelector("[data-supplier-bank-details]");
+              if(details)details.style.display="none";
+              const text=other.querySelector("span");
+              if(text)text.style.color="#f0d28a";
+            });
+            card.style.background="#f5f5f5";
+            const details=card.querySelector("[data-supplier-bank-details]");
+            if(details)details.style.display="block";
+            const text=card.querySelector("span");
+            if(text)text.style.color="#171717";
+          };
+          radio.addEventListener("touchstart",()=>{cancelHold();holdTimer=setTimeout(revealDetails,550);},{passive:true});
+          radio.addEventListener("touchend",cancelHold,{passive:true});
+          radio.addEventListener("touchcancel",cancelHold,{passive:true});
+          radio.addEventListener("pointerdown",event=>{if(event.pointerType==="mouse"&&event.button===0){cancelHold();holdTimer=setTimeout(revealDetails,550);}});
+          radio.addEventListener("pointerup",cancelHold);
+          radio.addEventListener("pointercancel",cancelHold);
+          radio.addEventListener("contextmenu",event=>event.preventDefault());
+        });
         document.getElementById("nx-supplier-payment-form").onsubmit=async ev=>{
           ev.preventDefault();
           const payForm=ev.currentTarget,payButton=payForm.querySelector('button[type="submit"]'),msg=document.getElementById("nx-supplier-payment-msg"),reference=String(payForm.elements.transfer_reference.value||"").trim(),file=payForm.elements.receipt.files?.[0],bankId=host.querySelector('input[name="supplier_bank"]:checked')?.value,bank=banks.find(x=>x.id===bankId);
