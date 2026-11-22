@@ -2002,6 +2002,13 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
       "Mercedes-Benz":"mercedesbenz","BMW":"bmw","Audi":"audi","Volkswagen":"volkswagen",
       "Porsche":"porsche","Land Rover":"landrover"
     };
+    /* Автомашины марк бүрт мэргэжлийн авто гэрэл зургийн фон. */
+    const carBrandPhotos = [
+      "photo-1492144534655-ae79c964c9d7","photo-1503376780353-7e6692767b70",
+      "photo-1552519507-da3b142c6e3d","photo-1503736334956-4c8f8e92946d",
+      "photo-1511919884226-fd3cad34687c","photo-1533473359331-0135ef1b58bf",
+      "photo-1549317661-bd32c8ce0db2","photo-1519641471654-76ce0107ad1b"
+    ];
 
     content.innerHTML = `
       <div class="nx-full-screen" data-nx-stage="items">
@@ -2022,7 +2029,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
             <button type="button"
               class="nx-subcategory-item nx-choice-card ${isCarBrandList ? "nx-car-brand-card" : ""}"
               data-nx-item="${index}">
-              ${isCarBrandList && brandSlug ? `<img class="nx-car-brand-logo" src="https://cdn.simpleicons.org/${brandSlug}" alt="${item} лого" loading="lazy" decoding="async" onerror="this.style.display='none'">` : ""}
+              ${isCarBrandList ? `<img class="nx-car-brand-photo" src="https://images.unsplash.com/${carBrandPhotos[index % carBrandPhotos.length]}?auto=format&fit=crop&w=900&q=88" alt="" aria-hidden="true" loading="lazy" decoding="async">` : ""}
+              ${isCarBrandList && brandSlug ? `<img class="nx-car-brand-logo" src="https://cdn.simpleicons.org/${brandSlug}/ffffff" alt="${item} лого" loading="lazy" decoding="async" onerror="this.style.display='none'">` : ""}
               <span class="nx-choice-index">${String(index+1).padStart(2,"0")}</span>
               <span class="nx-choice-name">${item}</span>
               ${isCarBrandList ? "" : '<span class="nx-choice-arrow">›</span>'}
@@ -6895,17 +6903,29 @@ html,body{
 }
 #ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-car-brand-card{
   position:relative!important;isolation:isolate;overflow:hidden!important;
-  box-sizing:border-box!important;min-width:0!important;min-height:132px!important;
+  box-sizing:border-box!important;min-width:0!important;min-height:150px!important;
   padding:14px 10px 12px!important;display:flex!important;flex-direction:column!important;
   align-items:center!important;justify-content:center!important;gap:8px!important;
   border:1px solid rgba(214,173,85,.34)!important;border-radius:17px!important;
-  background:radial-gradient(ellipse at 50% 32%,rgba(255,255,255,.12),transparent 67%),linear-gradient(145deg,#20252b,#101419)!important;
-  box-shadow:0 8px 20px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.08)!important;
+  background:#111820!important;
+  box-shadow:0 8px 20px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.08)!important;
 }
+#ads .page-content .nx-car-brand-card .nx-car-brand-photo{
+  position:absolute!important;inset:0!important;z-index:-2!important;
+  display:block!important;width:100%!important;height:100%!important;
+  object-fit:cover!important;object-position:center!important;
+  filter:saturate(1.08) contrast(1.04)!important;transition:transform .35s ease!important;
+}
+#ads .page-content .nx-car-brand-card:before{
+  content:"";position:absolute!important;inset:0!important;z-index:-1!important;
+  background:linear-gradient(180deg,rgba(3,8,14,.10) 0%,rgba(3,8,14,.18) 36%,rgba(3,8,14,.78) 100%)!important;
+}
+#ads .page-content .nx-car-brand-card:active .nx-car-brand-photo,
+#ads .page-content .nx-car-brand-card.selected .nx-car-brand-photo{transform:scale(1.06)!important;}
 #ads .page-content .nx-car-brand-card .nx-car-brand-logo{
-  display:block!important;width:min(88%,150px)!important;height:68px!important;
+  display:block!important;width:min(78%,132px)!important;height:58px!important;
   max-width:100%!important;object-fit:contain!important;object-position:center!important;
-  filter:drop-shadow(0 3px 5px rgba(0,0,0,.34));margin:0 auto!important;
+  filter:drop-shadow(0 2px 7px rgba(0,0,0,.85))!important;margin:0 auto!important;
 }
 #ads .page-content .nx-car-brand-card .nx-choice-name{
   position:relative;z-index:1;display:block!important;width:100%;text-align:center!important;
@@ -6916,7 +6936,7 @@ html,body{
 #ads .page-content .nx-car-brand-card:active{transform:scale(.975);border-color:#e0bd70!important}
 @media(min-width:700px){
  #ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-car-brand-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
- #ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-car-brand-card{min-height:150px!important}
+ #ads .page-content .nx-full-screen[data-nx-stage="items"] .nx-car-brand-card{min-height:170px!important}
  #ads .page-content .nx-car-brand-card .nx-car-brand-logo{height:82px!important}
 }
 
