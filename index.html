@@ -4811,7 +4811,7 @@ textarea:disabled,
               other.style.borderColor=active?"#d6ad55":"rgba(214,173,85,.55)";
               other.style.boxShadow=active?"0 5px 16px rgba(0,0,0,.12)":"none";
             });
-            const radio=supplierBankList.querySelector('input[name="supplier_bank"][value="'+CSS.escape(String(bank.id))+'"]');
+            const radio=Array.from(supplierBankList.querySelectorAll('input[name="supplier_bank"]')).find(input=>String(input.value)===String(bank.id));
             if(radio)radio.checked=true;
             document.getElementById("nx-supplier-bank-name").textContent=bank.bank_name||"";
             document.getElementById("nx-supplier-bank-number").textContent=bank.account_number||"";
