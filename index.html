@@ -797,15 +797,21 @@ textarea:disabled,
 
 
 <style id="NEXORA-RETAIL-ONLY-ROW-GAP-2026">
-/* Зөвхөн жижиглэн каталогийн мөр хоорондын зай: картын хэмжээ ба доторх зайд хүрэхгүй. */
+/* Зөвхөн жижиглэн каталогийн мөрийн бодит зай. Картын доторх хэмжээ/агуулгыг өөрчлөхгүй. */
 @media(max-width:699px){
   #shop #nx-retail-categories .nx-temu-products{
-    grid-template-rows:repeat(4,auto)!important;
-    grid-auto-rows:auto!important;
+    grid-template-rows:repeat(4,max-content)!important;
+    grid-auto-rows:max-content!important;
     align-content:start!important;
+    align-items:start!important;
     row-gap:6px!important;
     column-gap:8px!important;
     gap:6px 8px!important;
+  }
+  #shop #nx-retail-categories .nx-temu-products>.nx-temu-product{
+    height:auto!important;
+    min-height:0!important;
+    align-self:start!important;
   }
 }
 </style>
