@@ -7,6 +7,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script>document.documentElement.classList.add("nx-theme-pending");</script>
   <meta name="theme-color" content="#090909">
+  <meta name="application-name" content="NEXORA">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="./assets/nexora-app-icon.svg">
+  <link rel="apple-touch-icon" href="./assets/nexora-app-icon.svg">
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./sw.js", { scope: "./" }).catch(function (error) {
+          console.warn("NEXORA service worker registration failed:", error);
+        });
+      });
+    }
+  </script>
 
   <title>NEXORA | Mongolia Marketplace</title>
 
