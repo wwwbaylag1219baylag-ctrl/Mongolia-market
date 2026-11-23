@@ -859,6 +859,45 @@ textarea:disabled,
 }
 </style>
 
+
+<style id="NEXORA-RETAIL-GRID-REMOVE-EMPTY-TRACKS-2026">
+/* Жижиглэнгийн барааны 4 мөр: дэлгэцийн өндрөөр сунгахгүй, картын бодит өндрөөр залгуулна. */
+#shop #nx-retail-categories .nx-temu-products{
+  display:grid!important;
+  grid-auto-flow:column!important;
+  grid-template-rows:repeat(4,min-content)!important;
+  grid-auto-rows:min-content!important;
+  grid-auto-columns:min(42vw,170px)!important;
+  align-content:start!important;
+  align-items:start!important;
+  justify-content:start!important;
+  justify-items:stretch!important;
+  height:max-content!important;
+  min-height:0!important;
+  max-height:none!important;
+  gap:8px 8px!important;
+  row-gap:8px!important;
+  column-gap:8px!important;
+  padding:2px 12px 8px!important;
+  margin:0!important;
+}
+#shop #nx-retail-categories .nx-temu-products>.nx-temu-product{
+  display:flex!important;
+  flex-direction:column!important;
+  align-self:start!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:0!important;
+}
+#shop #nx-retail-categories{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  align-content:start!important;
+}
+</style>
+
 </head>
 
 <body>
