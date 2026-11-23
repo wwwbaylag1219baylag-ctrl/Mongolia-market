@@ -854,48 +854,29 @@ textarea:disabled,
 
   <link rel="stylesheet" href="./assets/ugalz-aurora-001.css">
 
-<style id="UGALZ-NATURAL-RAIN-DROP-007">
-/* Natural clear rainwater: one drop gathers at the medallion and lands at the commerce panel edge */
-#home .home-content{position:relative;padding-top:clamp(18px,3vh,34px)}
-#home .hero{padding-top:clamp(16px,3vw,28px)}
+<style id="UGALZ-LOGO-MOTION-008">
+/* Зөвхөн эх логог бүхэлд нь зөөлөн хөдөлгөнө. Нэмэлт дусал, дүрс үүсгэхгүй. */
 #home .hero-logo{display:flex;justify-content:center;align-items:center;min-height:0;margin:0 auto 8px}
-#home .nexora-logo-hero{display:block;width:min(76vw,350px);height:auto;max-height:none;object-fit:contain;filter:drop-shadow(0 10px 22px rgba(70,190,220,.18))}
-#home .ugalz-water-stage{position:absolute;z-index:12;left:0;right:0;top:0;bottom:48px;overflow:visible;pointer-events:none}
-#home .ugalz-drop-track{position:absolute;left:50%;top:clamp(300px,83vw,365px);bottom:0;width:1px;transform:translateX(-50%)}
-#home .ugalz-drop-track i{position:absolute;left:50%;top:0;width:18px;height:22px;opacity:0;transform:translateX(-50%) scale(.08,.08);border-radius:52% 48% 48% 52% / 40% 42% 72% 72%;
- background:
- radial-gradient(ellipse at 27% 17%,rgba(255,255,255,.98) 0 4%,rgba(255,255,255,.7) 7%,transparent 19%),
- radial-gradient(ellipse at 72% 78%,rgba(24,73,96,.24) 0 3%,transparent 34%),
- radial-gradient(ellipse at 48% 42%,rgba(255,255,255,.10) 0 28%,rgba(205,244,250,.18) 54%,rgba(255,255,255,.55) 76%,rgba(80,151,177,.42) 91%,rgba(255,255,255,.82) 100%);
- border:1px solid rgba(238,253,255,.88);
- box-shadow:inset 1px 1px 2px rgba(255,255,255,.95),inset -2px -3px 5px rgba(40,87,106,.18),0 2px 4px rgba(4,28,42,.14);
- filter:drop-shadow(0 1px 2px rgba(230,250,255,.5));
- animation:ugalzRainDrop 8.5s cubic-bezier(.36,.04,.62,.98) infinite}
-#home .ugalz-drop-track i:before{content:"";position:absolute;left:50%;top:4px;width:4px;height:9px;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.12));filter:blur(.25px);transform:translateX(-50%);opacity:.9}
-#home .ugalz-drop-track i:after{content:"";position:absolute;left:50%;top:calc(100% - 3px);width:4px;height:4px;border-radius:50%;opacity:0;transform:translate(-50%,-50%) scale(.1);background:rgba(235,251,255,.8);box-shadow:-18px -3px 0 -1px rgba(235,251,255,.8),18px -5px 0 -1px rgba(235,251,255,.75),-9px -17px 0 -1px rgba(235,251,255,.7),11px -19px 0 -1px rgba(235,251,255,.7);animation:ugalzRainSpray 8.5s ease-out infinite}
-@keyframes ugalzRainDrop{
-0%,8%{opacity:0;top:0;transform:translateX(-50%) scale(.06,.06)}
-17%{opacity:1;top:0;transform:translateX(-50%) scale(.48,.52)}
-29%{opacity:1;top:0;transform:translateX(-50%) scale(1.05,1.18)}
-38%{opacity:1;top:0;transform:translateX(-50%) scale(1.2,1.65)}
-43%{opacity:1;top:2px;transform:translateX(-50%) scale(.82,2.15)}
-47%{opacity:1;top:8px;transform:translateX(-50%) scale(.62,1.95)}
-51%{opacity:1;top:calc(100% - 30px);transform:translateX(-50%) scale(.78,1.2)}
-88%{opacity:1;top:calc(100% - 30px);transform:translateX(-50%) scale(.78,1.2)}
-93%,100%{opacity:0;top:calc(100% - 28px);transform:translateX(-50%) scale(1.1,.65)}
+#home .nexora-logo-hero{
+  display:block;width:min(76vw,350px);height:auto;max-height:none;object-fit:contain;
+  transform-origin:50% 50%;
+  will-change:transform,filter;
+  animation:ugalzLogoAlive 6.8s ease-in-out infinite;
 }
-@keyframes ugalzRainSpray{
-0%,88%{opacity:0;transform:translate(-50%,-50%) scale(.1)}
-92%{opacity:.85;transform:translate(-50%,-50%) scale(1)}
-100%{opacity:0;transform:translate(-50%,-50%) scale(2.8)}
+@keyframes ugalzLogoAlive{
+  0%,100%{transform:translateY(0) scale(1) rotate(0deg);filter:drop-shadow(0 10px 22px rgba(70,190,220,.18)) brightness(1) saturate(1)}
+  25%{transform:translateY(-3px) scale(1.012) rotate(-.25deg);filter:drop-shadow(0 13px 25px rgba(70,190,220,.25)) brightness(1.035) saturate(1.06)}
+  50%{transform:translateY(0) scale(1.018) rotate(0deg);filter:drop-shadow(0 15px 28px rgba(70,190,220,.3)) brightness(1.055) saturate(1.1)}
+  75%{transform:translateY(2px) scale(1.008) rotate(.2deg);filter:drop-shadow(0 12px 24px rgba(70,190,220,.22)) brightness(1.02) saturate(1.04)}
 }
 @media(max-width:600px){
  #home .home-content{padding-top:16px}
  #home .hero{padding-top:12px;padding-bottom:24px}
  #home .nexora-logo-hero{width:min(76vw,310px)}
- #home .ugalz-drop-track{top:clamp(285px,78vw,330px)}
 }
-@media(prefers-reduced-motion:reduce){#home .ugalz-water-stage{display:none}}
+@media(prefers-reduced-motion:reduce){
+ #home .nexora-logo-hero{animation:none!important;will-change:auto}
+}
 </style>
 
 </head>
@@ -919,7 +900,7 @@ textarea:disabled,
       <div class="home-content">
 
         <div class="hero">
-          <div class="hero-logo ugalz-waterfall-logo"><img class="nexora-logo-hero" src="./assets/a_highly_polished_cinematic_3d_web_brand_logo_sce-1.png" alt="Угалз.мн — усан цэнхэр медальон"><span class="ugalz-drip ugalz-drip-one" aria-hidden="true"></span><span class="ugalz-drip ugalz-drip-two" aria-hidden="true"></span><span class="ugalz-drip ugalz-drip-three" aria-hidden="true"></span></div>
+          <div class="hero-logo"><img class="nexora-logo-hero" src="./assets/a_highly_polished_cinematic_3d_web_brand_logo_sce-1.png" alt="Угалз.мн"></div>
 
           <div class="hero-subtitle">
             МОНГОЛЫН ЗАР · ХУДАЛДАА
@@ -965,7 +946,7 @@ textarea:disabled,
 
         </div>
 
-        <div class="ugalz-water-stage" aria-hidden="true"><div class="ugalz-drop-track"><i></i></div></div>
+        
 
       </div>
 
