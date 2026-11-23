@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 700" role="img" aria-labelledby="title desc">
+<title id="title">Угалз.мн усан цэнхэр лого</title><desc id="desc">Усан цэнхэр дугуй медальон, алтлаг Угалз.мн бичиг, бодит мэт усан дуслууд</desc>
+<defs>
+ <radialGradient id="bg" cx="34%" cy="25%" r="78%"><stop stop-color="#efffff"/><stop offset=".22" stop-color="#a8f0ff"/><stop offset=".58" stop-color="#38bce9"/><stop offset="1" stop-color="#07518e"/></radialGradient>
+ <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset=".18" stop-color="#607c98"/><stop offset=".36" stop-color="#f7ffff"/><stop offset=".58" stop-color="#173c68"/><stop offset=".8" stop-color="#e8fbff"/><stop offset="1" stop-color="#234b75"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2=".15" y2="1"><stop stop-color="#fff4c7"/><stop offset=".18" stop-color="#d9a43e"/><stop offset=".42" stop-color="#fff0a1"/><stop offset=".62" stop-color="#9d5a13"/><stop offset=".82" stop-color="#f9d879"/><stop offset="1" stop-color="#6f390c"/></linearGradient>
+ <radialGradient id="drop" cx="28%" cy="20%" r="75%"><stop stop-color="#fff"/><stop offset=".16" stop-color="#e8ffff"/><stop offset=".42" stop-color="#8cecff"/><stop offset=".72" stop-color="#28a9df"/><stop offset="1" stop-color="#07518e"/></radialGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur in="SourceAlpha" stdDeviation="9"/><feOffset dy="10"/><feComponentTransfer><feFuncA type="linear" slope=".45"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <filter id="shine"><feGaussianBlur stdDeviation="2.5"/></filter>
+</defs>
+<ellipse cx="365" cy="618" rx="245" ry="22" fill="#002c55" opacity=".3" filter="url(#shine)"/>
+<circle cx="350" cy="335" r="292" fill="#05264c" opacity=".6" filter="url(#shadow)"/>
+<circle cx="350" cy="325" r="290" fill="url(#rim)"/>
+<circle cx="350" cy="325" r="278" fill="#071d3b"/>
+<circle cx="350" cy="325" r="270" fill="url(#bg)" stroke="#dffaff" stroke-width="5"/>
+<circle cx="350" cy="325" r="258" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="2"/>
+<path d="M139 160Q205 65 350 65" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".65" filter="url(#shine)"/>
+<path d="M532 125Q608 218 604 338" fill="none" stroke="#c8f7ff" stroke-width="5" stroke-linecap="round" opacity=".42"/>
+<path d="M350 112l42 42-42 42-42-42z" fill="url(#gold)" stroke="#5a3512" stroke-width="5" filter="url(#shadow)"/>
+<path d="M350 126l27 28-27 28-27-28z" fill="none" stroke="#fff1bd" stroke-width="3"/>
+<text x="350" y="310" text-anchor="middle" font-family="Georgia,serif" font-size="86" font-weight="bold" letter-spacing="-4" fill="#4d2a0a" opacity=".75">Угалз.мн</text>
+<text x="344" y="300" text-anchor="middle" font-family="Georgia,serif" font-size="86" font-weight="bold" letter-spacing="-4" fill="url(#gold)" stroke="#fff0b0" stroke-width="1.5" paint-order="stroke">Угалз.мн</text>
+<path d="M205 335Q350 370 495 335" fill="none" stroke="url(#gold)" stroke-width="10" stroke-linecap="round" filter="url(#shadow)"/>
+<g fill="url(#drop)" stroke="#e8ffff" stroke-opacity=".7" stroke-width="2">
+ <path d="M226 400C226 378 242 358 242 358S258 378 258 400a16 16 0 1 1-32 0z"/>
+ <path d="M440 416C440 389 459 365 459 365s19 24 19 51a19 19 0 1 1-38 0z"/>
+ <path d="M326 440C326 410 348 382 348 382s22 28 22 58a22 22 0 1 1-44 0z"/>
+</g>
+<g fill="none" stroke="#fff" stroke-linecap="round" opacity=".85"><path d="M234 390q4-17 11-23" stroke-width="4"/><path d="M449 405q4-20 12-26" stroke-width="4"/><path d="M337 430q4-23 12-31" stroke-width="5"/></g>
+<g fill="#fff" opacity=".8"><circle cx="180" cy="250" r="5"/><circle cx="520" cy="250" r="7"/><circle cx="190" cy="475" r="4"/><circle cx="515" cy="480" r="5"/></g>
+</svg>
