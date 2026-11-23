@@ -12457,3 +12457,46 @@ textarea:focus-visible{
   #market-app .nx-market-grid{row-gap:5px!important}
 }
 </style>
+
+
+<style id="NEXORA-DEMO-CARD-VERTICAL-GAP-FIX-2026">
+/* Жижиглэнгийн жишээ бараануудын мөр хоорондын илүүдэл хоосон зайг арилгах */
+#shop #nx-retail-categories{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  align-content:start!important;
+}
+#shop .nx-temu-products{
+  display:grid!important;
+  grid-auto-flow:column!important;
+  grid-template-rows:repeat(4,max-content)!important;
+  grid-auto-rows:max-content!important;
+  align-content:start!important;
+  align-items:start!important;
+  justify-content:start!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  row-gap:10px!important;
+  column-gap:8px!important;
+  gap:10px 8px!important;
+  padding-top:2px!important;
+  padding-bottom:8px!important;
+  margin-top:0!important;
+  margin-bottom:0!important;
+}
+#shop .nx-temu-products>.nx-temu-product{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  align-self:start!important;
+  margin-block:0!important;
+}
+@media(min-width:700px){
+  #shop .nx-temu-products{
+    grid-template-rows:repeat(3,max-content)!important;
+    gap:12px 10px!important;
+  }
+}
+</style>
