@@ -1,29 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 700" role="img" aria-labelledby="title desc">
-<title id="title">Угалз.мн</title>
-<desc id="desc">Цэнхэр дугуй медальон, алтлаг Монгол угалз болон Угалз.мн бичигтэй брэндийн лого</desc>
+<title id="title">Угалз.мн</title><desc id="desc">Тунгалаг усан цэнхэр дугуй медальон, алтлаг товойлгон Угалз.мн бичигтэй лого</desc>
 <defs>
- <linearGradient id="plate" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e6fbff"/><stop offset=".48" stop-color="#9eddf0"/><stop offset="1" stop-color="#4f91b6"/></linearGradient>
- <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset=".28" stop-color="#b9dce9"/><stop offset=".58" stop-color="#203c61"/><stop offset=".82" stop-color="#f5ffff"/><stop offset="1" stop-color="#315a80"/></linearGradient>
- <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff5d0"/><stop offset=".24" stop-color="#d8ad5d"/><stop offset=".55" stop-color="#70451f"/><stop offset=".76" stop-color="#fff0b0"/><stop offset="1" stop-color="#9c672d"/></linearGradient>
- <linearGradient id="water" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#d9fbff"/><stop offset=".4" stop-color="#61c8ec"/><stop offset=".75" stop-color="#277eae"/><stop offset="1" stop-color="#e9ffff"/></linearGradient>
- <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur in="SourceAlpha" stdDeviation="7" result="b"/><feOffset dy="8"/><feComponentTransfer><feFuncA type="linear" slope=".38"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <radialGradient id="aqua" cx="34%" cy="25%" r="78%"><stop stop-color="#f1ffff"/><stop offset=".2" stop-color="#9df2ff"/><stop offset=".55" stop-color="#31c4ed"/><stop offset=".82" stop-color="#0878b8"/><stop offset="1" stop-color="#063b70"/></radialGradient>
+ <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4ffff"/><stop offset=".22" stop-color="#6ceaff"/><stop offset=".5" stop-color="#07548e"/><stop offset=".78" stop-color="#d8ffff"/><stop offset="1" stop-color="#06325d"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fffbdc"/><stop offset=".18" stop-color="#ffe69a"/><stop offset=".42" stop-color="#c58a36"/><stop offset=".58" stop-color="#75431c"/><stop offset=".78" stop-color="#ffe7a0"/><stop offset="1" stop-color="#a66b25"/></linearGradient>
+ <filter id="deep" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur in="SourceAlpha" stdDeviation="7" result="blur"/><feOffset dx="0" dy="9" result="offset"/><feComponentTransfer in="offset" result="shadow"><feFuncA type="linear" slope=".55"/></feComponentTransfer><feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <filter id="shine"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
 </defs>
-<ellipse cx="370" cy="365" rx="292" ry="292" fill="#142d4c" opacity=".25"/>
-<circle cx="350" cy="345" r="286" fill="url(#rim)" stroke="#203958" stroke-width="5"/>
-<circle cx="350" cy="345" r="270" fill="url(#plate)" stroke="#f4ffff" stroke-width="4"/>
-<circle cx="350" cy="345" r="252" fill="none" stroke="#4c7794" stroke-width="2" opacity=".65"/>
-<path d="M350 116 L379 151 L350 186 L321 151 Z" fill="url(#gold)" stroke="#65421f" stroke-width="4" filter="url(#shadow)"/>
-<path d="M350 130 L366 151 L350 171 L334 151 Z" fill="none" stroke="#fff4cf" stroke-width="3"/>
-<text x="350" y="222" text-anchor="middle" fill="#66451f" font-family="Arial,sans-serif" font-size="21" font-weight="700" letter-spacing="3">МОНГОЛЫН НЭГДСЭН ПЛАТФОРМ</text>
-<text x="350" y="344" text-anchor="middle" fill="url(#gold)" stroke="#68451f" stroke-width="1.2" paint-order="stroke" font-family="Georgia,'Noto Serif',serif" font-size="91" font-weight="700" filter="url(#shadow)">Угалз.мн</text>
-<path d="M150 378 Q350 394 550 378" fill="none" stroke="#fff7d9" stroke-width="3" opacity=".75"/>
-<text x="350" y="438" text-anchor="middle" fill="#634522" font-family="Georgia,serif" font-size="42" letter-spacing="5" filter="url(#shadow)">ЗАР · ХУДАЛДАА</text>
-<g fill="url(#water)" stroke="#dffaff" stroke-width="2" opacity=".92">
- <path d="M184 460 C180 500 185 525 171 552 C157 580 165 602 182 602 C201 602 205 579 193 552 C182 527 190 494 184 460Z"/>
- <path d="M270 470 C266 516 275 545 260 577 C247 606 257 624 273 624 C291 624 296 603 283 576 C271 547 278 512 270 470Z"/>
- <path d="M430 468 C426 510 435 540 420 570 C408 596 418 616 434 616 C451 616 456 596 444 569 C431 539 438 508 430 468Z"/>
- <path d="M516 456 C511 494 518 519 507 544 C496 569 504 586 518 586 C534 586 539 569 527 543 C517 518 523 490 516 456Z"/>
-</g>
-<path d="M350 442 C341 490 350 529 330 567 C309 609 327 645 350 645 C374 645 392 609 370 567 C350 529 359 490 350 442Z" fill="url(#gold)" stroke="#7a542a" stroke-width="3" filter="url(#shadow)"/>
-<path d="M344 489 C342 532 342 554 330 578" fill="none" stroke="#fff8dc" stroke-width="7" stroke-linecap="round" opacity=".85"/>
+<circle cx="350" cy="350" r="316" fill="#031e3d" opacity=".35"/>
+<circle cx="350" cy="342" r="302" fill="url(#edge)" stroke="#d9ffff" stroke-width="5"/>
+<circle cx="350" cy="342" r="286" fill="url(#aqua)" stroke="#075b91" stroke-width="5"/>
+<circle cx="350" cy="342" r="267" fill="none" stroke="#d5fbff" stroke-width="3" opacity=".85"/>
+<circle cx="350" cy="342" r="252" fill="none" stroke="#e9ffff" stroke-width="1.5" opacity=".45"/>
+<path d="M350 100 C367 125 388 137 388 157 C388 180 371 196 350 196 C329 196 312 180 312 157 C312 137 333 125 350 100Z" fill="url(#gold)" stroke="#80521e" stroke-width="4" filter="url(#deep)"/>
+<path d="M350 126 C360 143 372 151 372 164 C372 177 362 185 350 185 C338 185 328 177 328 164 C328 151 340 143 350 126Z" fill="none" stroke="#fff5c9" stroke-width="3"/>
+<text x="350" y="245" text-anchor="middle" fill="#f4ffff" font-family="Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="4">МОНГОЛЫН НЭГДСЭН ПЛАТФОРМ</text>
+<text x="350" y="362" text-anchor="middle" fill="url(#gold)" stroke="#5d3518" stroke-width="2" paint-order="stroke" font-family="Georgia,'Noto Serif',serif" font-size="91" font-weight="700" filter="url(#deep)">Угалз.мн</text>
+<path d="M142 397 Q350 415 558 397" fill="none" stroke="#eaffff" stroke-width="3" opacity=".8"/>
+<text x="350" y="466" text-anchor="middle" fill="#f2ffff" stroke="#075080" stroke-width="1" paint-order="stroke" font-family="Georgia,serif" font-size="39" font-weight="700" letter-spacing="5" filter="url(#deep)">ЗАР · ХУДАЛДАА</text>
+<g fill="none" stroke="#dfffff" stroke-width="5" opacity=".9" filter="url(#shine)"><path d="M105 285 Q130 180 235 145"/><path d="M465 145 Q570 180 595 285"/></g>
+<g fill="url(#gold)" stroke="#75481f" stroke-width="3"><path d="M350 500 l17 24 -17 24 -17-24Z"/><path d="M245 520 l10 14 -10 14 -10-14Z"/><path d="M455 520 l10 14 -10 14 -10-14Z"/></g>
 </svg>
