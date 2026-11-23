@@ -854,37 +854,47 @@ textarea:disabled,
 
   <link rel="stylesheet" href="./assets/ugalz-aurora-001.css">
 
-<style id="UGALZ-WATER-DROPS-006">
-/* Нэг бодит мэт дусал: логоны доод ирмэгээс худалдааны платформын доод хэсэг хүртэл */
-#home .ugalz-waterfall-logo{position:relative;isolation:isolate;overflow:visible}
-#home .nexora-logo-hero{position:relative;z-index:1;display:block;width:min(78vw,390px);max-height:390px;object-fit:contain;filter:drop-shadow(0 12px 26px rgba(35,190,240,.28))}
-#home .ugalz-water-stage{position:fixed;inset:0;z-index:8;pointer-events:none;overflow:hidden}
-#home .ugalz-water-stage i{position:absolute;left:50%;top:37vh;width:34px;height:43px;border-radius:48% 52% 58% 58% / 35% 38% 72% 72%;background:radial-gradient(ellipse at 28% 18%,rgba(255,255,255,.98) 0 5%,rgba(240,255,255,.95) 10%,rgba(143,237,255,.92) 28%,rgba(46,175,224,.86) 58%,rgba(0,81,143,.9) 100%);border:1px solid rgba(255,255,255,.65);box-shadow:inset 4px 3px 7px rgba(255,255,255,.9),inset -5px -7px 10px rgba(0,47,105,.45),0 4px 15px rgba(47,190,245,.5);opacity:0;transform:translate(-50%,-12px) scale(.08,.08);animation:ugalzRealDrop 7.2s cubic-bezier(.42,0,.58,1) infinite}
-#home .ugalz-water-stage i:nth-child(2),#home .ugalz-water-stage i:nth-child(3){display:none}
-#home .ugalz-water-stage i:before{content:"";position:absolute;left:50%;bottom:-7px;width:110px;height:44px;border-radius:50%;transform:translateX(-50%) scale(.08,.08);opacity:0;background:radial-gradient(ellipse,rgba(255,255,255,.98) 0 2%,rgba(190,248,255,.95) 5% 9%,rgba(50,184,230,.65) 12% 18%,transparent 63%);filter:drop-shadow(0 0 8px rgba(110,225,255,.8));animation:ugalzRealSplash 7.2s ease-out infinite}
-#home .ugalz-water-stage i:after{content:"";position:absolute;left:50%;bottom:0;width:8px;height:12px;border-radius:50%;background:linear-gradient(120deg,#fff,#8ceaff 55%,#168fc9);opacity:0;box-shadow:-30px -10px 0 -2px #a9f1ff,30px -9px 0 -2px #d8fbff,-17px -25px 0 -3px #fff,19px -27px 0 -3px #8ceaff;animation:ugalzRealSpray 7.2s ease-out infinite}
-@keyframes ugalzRealDrop{
-0%,8%{opacity:0;transform:translate(-50%,-10px) scale(.08,.08)}
-18%{opacity:1;transform:translate(-50%,0) scale(.45,.48)}
-34%{opacity:1;transform:translate(-50%,5px) scale(1.05,1.15)}
-43%{opacity:1;transform:translate(-50%,12px) scale(1.28,1.5)}
-49%{opacity:1;transform:translate(-50%,22px) scale(1.12,1.9)}
-53%{opacity:1;transform:translate(-50%,30px) scale(.82,2.05)}
-56%{opacity:1;transform:translate(-50%,30px) scale(1.02,1.6)}
-91%{opacity:1;transform:translate(-50%,calc(100vh - 37vh - 62px)) scale(.92,1.2)}
-94%,100%{opacity:0;transform:translate(-50%,calc(100vh - 37vh - 48px)) scale(1.2,.6)}
+<style id="UGALZ-NATURAL-RAIN-DROP-007">
+/* Natural clear rainwater: one drop gathers at the medallion and lands at the commerce panel edge */
+#home .home-content{position:relative;padding-top:clamp(18px,3vh,34px)}
+#home .hero{padding-top:clamp(16px,3vw,28px)}
+#home .hero-logo{display:flex;justify-content:center;align-items:center;min-height:0;margin:0 auto 8px}
+#home .nexora-logo-hero{display:block;width:min(76vw,350px);height:auto;max-height:none;object-fit:contain;filter:drop-shadow(0 10px 22px rgba(70,190,220,.18))}
+#home .ugalz-water-stage{position:absolute;z-index:12;left:0;right:0;top:0;bottom:48px;overflow:visible;pointer-events:none}
+#home .ugalz-drop-track{position:absolute;left:50%;top:clamp(300px,83vw,365px);bottom:0;width:1px;transform:translateX(-50%)}
+#home .ugalz-drop-track i{position:absolute;left:50%;top:0;width:18px;height:22px;opacity:0;transform:translateX(-50%) scale(.08,.08);border-radius:52% 48% 48% 52% / 40% 42% 72% 72%;
+ background:
+ radial-gradient(ellipse at 27% 17%,rgba(255,255,255,.98) 0 4%,rgba(255,255,255,.7) 7%,transparent 19%),
+ radial-gradient(ellipse at 72% 78%,rgba(24,73,96,.24) 0 3%,transparent 34%),
+ radial-gradient(ellipse at 48% 42%,rgba(255,255,255,.10) 0 28%,rgba(205,244,250,.18) 54%,rgba(255,255,255,.55) 76%,rgba(80,151,177,.42) 91%,rgba(255,255,255,.82) 100%);
+ border:1px solid rgba(238,253,255,.88);
+ box-shadow:inset 1px 1px 2px rgba(255,255,255,.95),inset -2px -3px 5px rgba(40,87,106,.18),0 2px 4px rgba(4,28,42,.14);
+ filter:drop-shadow(0 1px 2px rgba(230,250,255,.5));
+ animation:ugalzRainDrop 8.5s cubic-bezier(.36,.04,.62,.98) infinite}
+#home .ugalz-drop-track i:before{content:"";position:absolute;left:50%;top:4px;width:4px;height:9px;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.12));filter:blur(.25px);transform:translateX(-50%);opacity:.9}
+#home .ugalz-drop-track i:after{content:"";position:absolute;left:50%;top:calc(100% - 3px);width:4px;height:4px;border-radius:50%;opacity:0;transform:translate(-50%,-50%) scale(.1);background:rgba(235,251,255,.8);box-shadow:-18px -3px 0 -1px rgba(235,251,255,.8),18px -5px 0 -1px rgba(235,251,255,.75),-9px -17px 0 -1px rgba(235,251,255,.7),11px -19px 0 -1px rgba(235,251,255,.7);animation:ugalzRainSpray 8.5s ease-out infinite}
+@keyframes ugalzRainDrop{
+0%,8%{opacity:0;top:0;transform:translateX(-50%) scale(.06,.06)}
+17%{opacity:1;top:0;transform:translateX(-50%) scale(.48,.52)}
+29%{opacity:1;top:0;transform:translateX(-50%) scale(1.05,1.18)}
+38%{opacity:1;top:0;transform:translateX(-50%) scale(1.2,1.65)}
+43%{opacity:1;top:2px;transform:translateX(-50%) scale(.82,2.15)}
+47%{opacity:1;top:8px;transform:translateX(-50%) scale(.62,1.95)}
+51%{opacity:1;top:calc(100% - 30px);transform:translateX(-50%) scale(.78,1.2)}
+88%{opacity:1;top:calc(100% - 30px);transform:translateX(-50%) scale(.78,1.2)}
+93%,100%{opacity:0;top:calc(100% - 28px);transform:translateX(-50%) scale(1.1,.65)}
 }
-@keyframes ugalzRealSplash{
-0%,90%{opacity:0;transform:translateX(-50%) scale(.05,.05)}
-94%{opacity:1;transform:translateX(-50%) scale(1,.75)}
-100%{opacity:0;transform:translateX(-50%) scale(2.1,1.5)}
+@keyframes ugalzRainSpray{
+0%,88%{opacity:0;transform:translate(-50%,-50%) scale(.1)}
+92%{opacity:.85;transform:translate(-50%,-50%) scale(1)}
+100%{opacity:0;transform:translate(-50%,-50%) scale(2.8)}
 }
-@keyframes ugalzRealSpray{
-0%,90%{opacity:0;transform:translateY(0) scale(.1)}
-94%{opacity:1;transform:translateY(-25px) scale(1)}
-100%{opacity:0;transform:translateY(-42px) scale(.4)}
+@media(max-width:600px){
+ #home .home-content{padding-top:16px}
+ #home .hero{padding-top:12px;padding-bottom:24px}
+ #home .nexora-logo-hero{width:min(76vw,310px)}
+ #home .ugalz-drop-track{top:clamp(285px,78vw,330px)}
 }
-@media(max-width:600px){#home .nexora-logo-hero{width:min(82vw,330px);max-height:330px}#home .ugalz-water-stage i{top:39vh;width:29px;height:37px}}
 @media(prefers-reduced-motion:reduce){#home .ugalz-water-stage{display:none}}
 </style>
 
@@ -910,7 +920,6 @@ textarea:disabled,
 
         <div class="hero">
           <div class="hero-logo ugalz-waterfall-logo"><img class="nexora-logo-hero" src="./assets/ugalz-water-logo.svg" alt="Угалз.мн — усан цэнхэр медальон"><span class="ugalz-drip ugalz-drip-one" aria-hidden="true"></span><span class="ugalz-drip ugalz-drip-two" aria-hidden="true"></span><span class="ugalz-drip ugalz-drip-three" aria-hidden="true"></span></div>
-          <div class="ugalz-water-stage" aria-hidden="true"><i></i><i></i><i></i></div>
 
           <div class="hero-subtitle">
             МОНГОЛЫН ЗАР · ХУДАЛДАА
@@ -955,6 +964,8 @@ textarea:disabled,
           </button>
 
         </div>
+
+        <div class="ugalz-water-stage" aria-hidden="true"><div class="ugalz-drop-track"><i></i></div></div>
 
       </div>
 
