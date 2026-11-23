@@ -1,7 +1,7 @@
 {
   "id": "/Mongolia-market/",
-  "name": "NEXORA | Mongolia Marketplace",
-  "short_name": "NEXORA",
+  "name": "Угалз.мн — Монголын зар, худалдаа",
+  "short_name": "Угалз.мн",
   "description": "Монголын зарын болон худалдааны нэгдсэн платформ",
   "lang": "mn",
   "start_url": "/Mongolia-market/",
@@ -12,7 +12,7 @@
   "theme_color": "#090909",
   "icons": [
     {
-      "src": "./assets/nexora-app-icon.svg",
+      "src": "./assets/ugalz-app-icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
