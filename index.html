@@ -638,46 +638,7 @@ textarea:disabled,
 </style>
 
 
-<style id="NEXORA-DEMO-CARD-COMPACT-ROWS-2026">
-/* Утас: 4 мөр, компьютер: 3 мөр. Контейнерийн суналт ба мөрийн хоосон зайг арилгана. */
-#shop .nx-temu-products{
-  grid-template-rows:repeat(4,max-content)!important;
-  grid-auto-rows:max-content!important;
-  align-content:start!important;
-  align-items:start!important;
-  justify-content:start!important;
-  height:max-content!important;
-  min-height:0!important;
-  max-height:none!important;
-  gap:3px!important;
-  row-gap:3px!important;
-  column-gap:6px!important;
-  padding-top:2px!important;
-  padding-bottom:8px!important;
-}
-#shop .nx-temu-products>.nx-temu-product{
-  height:auto!important;
-  min-height:0!important;
-  max-height:none!important;
-  align-self:start!important;
-  margin-top:0!important;
-  margin-bottom:0!important;
-}
-#shop .nx-temu-demo-product .nx-temu-demo-note{
-  min-height:0!important;
-  height:auto!important;
-  padding:3px 5px 4px!important;
-}
-@media(min-width:700px){
-  #shop .nx-temu-products{
-    grid-template-rows:repeat(3,max-content)!important;
-    align-content:start!important;
-    gap:5px!important;
-    row-gap:5px!important;
-    column-gap:8px!important;
-  }
-}
-</style>
+
 
 <style id="NEXORA-ADS-CREATE-BACK-BUTTON-2026">
 #ads .nx-create-screen .nx-create-exit{
@@ -832,50 +793,19 @@ textarea:disabled,
 
 
 
-<style id="NEXORA-RETAIL-GRID-SPACING-AUTHORITATIVE-2026">
-/* Нэг эх сурвалжтай тохиргоо: жижиглэн барааны 4 эгнээний бодит, тогтвортой зай. */
-#shop #nx-retail-categories .nx-temu-products{
-  display:grid!important;
-  grid-auto-flow:column!important;
-  grid-template-rows:repeat(4,max-content)!important;
-  grid-auto-rows:max-content!important;
-  grid-auto-columns:min(42vw,170px)!important;
-  align-content:start!important;
-  align-items:start!important;
-  justify-content:start!important;
-  justify-items:stretch!important;
-  height:auto!important;
-  min-height:0!important;
-  max-height:none!important;
-  gap:7px 8px!important;
-  row-gap:7px!important;
-  column-gap:8px!important;
-  padding:2px 12px 8px!important;
-  margin:0!important;
-  overflow-x:auto!important;
-  overflow-y:hidden!important;
-}
-#shop #nx-retail-categories .nx-temu-products>.nx-temu-product{
-  box-sizing:border-box!important;
-  display:flex!important;
-  flex-direction:column!important;
-  align-self:start!important;
-  height:auto!important;
-  min-height:0!important;
-  max-height:none!important;
-  margin:0!important;
-}
-#shop #nx-retail-categories{
-  height:auto!important;
-  min-height:0!important;
-  max-height:none!important;
-  align-self:start!important;
-}
-@media(min-width:700px){
+
+
+
+<style id="NEXORA-RETAIL-ONLY-ROW-GAP-2026">
+/* Зөвхөн жижиглэн каталогийн мөр хоорондын зай: картын хэмжээ ба доторх зайд хүрэхгүй. */
+@media(max-width:699px){
   #shop #nx-retail-categories .nx-temu-products{
-    grid-template-rows:repeat(3,max-content)!important;
-    grid-auto-columns:180px!important;
-    gap:10px 10px!important;
+    grid-template-rows:repeat(4,auto)!important;
+    grid-auto-rows:auto!important;
+    align-content:start!important;
+    row-gap:6px!important;
+    column-gap:8px!important;
+    gap:6px 8px!important;
   }
 }
 </style>
@@ -12633,55 +12563,7 @@ textarea:focus-visible{
 }
 </style>
 
-<style id="NEXORA-PRODUCT-ROW-SPACING-FIX-2026">
-/* Барааны картын хэвтээ мөрүүдийг ойртуулна; багана хоорондын зай, картын хэмжээ хэвээр. */
-#shop .nx-temu-products{row-gap:5px!important}
-#market-app .nx-market-grid{row-gap:6px!important}
-@media(max-width:699px){
-  #shop .nx-temu-products{row-gap:5px!important}
-  #market-app .nx-market-grid{row-gap:5px!important}
-}
-</style>
 
 
-<style id="NEXORA-DEMO-CARD-VERTICAL-GAP-FIX-2026">
-/* Жижиглэнгийн жишээ бараануудын мөр хоорондын илүүдэл хоосон зайг арилгах */
-#shop #nx-retail-categories{
-  height:auto!important;
-  min-height:0!important;
-  max-height:none!important;
-  align-content:start!important;
-}
-#shop .nx-temu-products{
-  display:grid!important;
-  grid-auto-flow:column!important;
-  grid-template-rows:repeat(4,max-content)!important;
-  grid-auto-rows:max-content!important;
-  align-content:start!important;
-  align-items:start!important;
-  justify-content:start!important;
-  height:auto!important;
-  min-height:0!important;
-  max-height:none!important;
-  row-gap:10px!important;
-  column-gap:8px!important;
-  gap:10px 8px!important;
-  padding-top:2px!important;
-  padding-bottom:8px!important;
-  margin-top:0!important;
-  margin-bottom:0!important;
-}
-#shop .nx-temu-products>.nx-temu-product{
-  height:auto!important;
-  min-height:0!important;
-  max-height:none!important;
-  align-self:start!important;
-  margin-block:0!important;
-}
-@media(min-width:700px){
-  #shop .nx-temu-products{
-    grid-template-rows:repeat(3,max-content)!important;
-    gap:12px 10px!important;
-  }
-}
-</style>
+
+
