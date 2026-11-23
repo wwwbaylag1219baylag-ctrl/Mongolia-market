@@ -854,18 +854,24 @@ textarea:disabled,
 
   <link rel="stylesheet" href="./assets/ugalz-aurora-001.css">
 
-<style id="UGALZ-WATERFALL-LOGO-003">
-/* Угалз.мн — логогийн доороос тунгалаг усан дусал урсах зөөлөн эффект */
-#home .ugalz-waterfall-logo{position:relative;isolation:isolate;overflow:visible;padding-bottom:27px}
-#home .ugalz-waterfall-logo .nexora-logo-hero{position:relative;z-index:1;filter:drop-shadow(0 5px 13px rgba(75,190,235,.13))}
-#home .ugalz-waterfall-logo .ugalz-drip{position:absolute;z-index:2;top:calc(100% - 31px);width:7px;height:11px;pointer-events:none;opacity:0;transform-origin:50% 0;border-radius:55% 55% 65% 65%;background:linear-gradient(105deg,rgba(220,250,255,.98) 0%,rgba(92,205,239,.9) 34%,rgba(27,115,177,.82) 72%,rgba(218,250,255,.95) 100%);box-shadow:inset 1px 0 2px rgba(255,255,255,.8),0 0 8px rgba(74,190,238,.55),0 2px 5px rgba(0,0,0,.25);animation:ugalzWaterDrop 3.8s ease-in infinite}
-#home .ugalz-waterfall-logo .ugalz-drip:before{content:"";position:absolute;left:2px;top:-13px;width:3px;height:15px;border-radius:4px;background:linear-gradient(to bottom,rgba(118,218,247,0),rgba(166,237,255,.88));filter:blur(.35px)}
-#home .ugalz-waterfall-logo .ugalz-drip-one{left:28%;animation-delay:0s}
-#home .ugalz-waterfall-logo .ugalz-drip-two{left:51%;width:8px;height:13px;animation-delay:1.25s;animation-duration:4.2s}
-#home .ugalz-waterfall-logo .ugalz-drip-three{left:73%;width:6px;height:10px;animation-delay:2.45s;animation-duration:3.5s}
-@keyframes ugalzWaterDrop{0%{opacity:0;transform:translateY(-5px) scale(.72,.55)}12%{opacity:.92;transform:translateY(0) scale(1,.85)}54%{opacity:1;transform:translateY(15px) scale(.9,1.12)}72%{opacity:.95;transform:translateY(25px) scale(.78,1.18)}88%,100%{opacity:0;transform:translateY(38px) scale(.55,.7)}}
-@media(max-width:600px){#home .ugalz-waterfall-logo{padding-bottom:23px}#home .ugalz-waterfall-logo .ugalz-drip{top:calc(100% - 28px);width:6px;height:9px}}
-@media(prefers-reduced-motion:reduce){#home .ugalz-waterfall-logo .ugalz-drip{animation:none;opacity:.72;transform:translateY(9px)}}
+<style id="UGALZ-WATERFALL-LOGO-004">
+/* Угалз.мн — дэлгэцийн ёроол хүртэл урсаж, доороо цацрах ус */
+#home .ugalz-waterfall-logo{position:relative;isolation:isolate;overflow:visible;padding-bottom:12px}
+#home .nexora-logo-hero{position:relative;z-index:1;width:min(72vw,340px);max-height:340px;object-fit:contain;filter:drop-shadow(0 10px 24px rgba(68,190,231,.2))}
+#home .ugalz-water-stage{position:fixed;inset:0;z-index:8;pointer-events:none;overflow:hidden}
+#home .ugalz-water-stage i{position:absolute;top:27vh;bottom:12px;width:5px;border-radius:8px;background:linear-gradient(90deg,rgba(220,250,255,.04),rgba(150,231,255,.68),rgba(255,255,255,.92),rgba(68,170,220,.2));box-shadow:0 0 8px rgba(110,215,255,.42);opacity:.62;transform-origin:top;animation:ugalzWaterStream 2.6s ease-in-out infinite}
+#home .ugalz-water-stage i:nth-child(1){left:28%;animation-delay:-.4s}
+#home .ugalz-water-stage i:nth-child(2){left:50%;width:7px;opacity:.8;animation-delay:-1.3s}
+#home .ugalz-water-stage i:nth-child(3){left:72%;animation-delay:-2s}
+#home .ugalz-water-stage i:before{content:"";position:absolute;left:50%;top:-15px;width:13px;height:18px;transform:translateX(-50%);border-radius:55% 55% 65% 65%;background:linear-gradient(110deg,#eaffff 0%,#8de4ff 35%,#258dc4 78%,#efffff 100%);box-shadow:inset 2px 0 3px rgba(255,255,255,.9),0 0 13px rgba(95,210,255,.8);animation:ugalzFallingDrop 1.7s cubic-bezier(.45,.05,.7,.95) infinite}
+#home .ugalz-water-stage i:after{content:"";position:absolute;left:50%;bottom:-2px;width:74px;height:28px;transform:translateX(-50%) scale(.35);opacity:0;border-radius:50%;background:radial-gradient(ellipse at center,rgba(230,253,255,.95) 0 4%,rgba(113,218,255,.65) 5% 9%,transparent 10% 100%);filter:drop-shadow(0 0 7px rgba(105,215,255,.65));animation:ugalzSplash 1.7s ease-out infinite}
+#home .ugalz-water-stage i:nth-child(2):before,#home .ugalz-water-stage i:nth-child(2):after{animation-delay:.55s}
+#home .ugalz-water-stage i:nth-child(3):before,#home .ugalz-water-stage i:nth-child(3):after{animation-delay:1.05s}
+@keyframes ugalzWaterStream{0%,100%{opacity:.42;transform:scaleX(.75)}50%{opacity:.92;transform:scaleX(1.15)}}
+@keyframes ugalzFallingDrop{0%{top:-18px;opacity:0;transform:translateX(-50%) scale(.65,.75)}8%{opacity:1}88%{opacity:1;transform:translateX(-50%) scale(.8,1.15)}100%{top:calc(100% + 5px);opacity:0;transform:translateX(-50%) scale(1.35,.65)}}
+@keyframes ugalzSplash{0%,82%{opacity:0;transform:translateX(-50%) scale(.2,.25)}88%{opacity:1;transform:translateX(-50%) scale(.55,.65)}100%{opacity:0;transform:translateX(-50%) scale(1.5,1.2)}}
+@media(max-width:600px){#home .nexora-logo-hero{width:min(78vw,290px);max-height:290px}#home .ugalz-water-stage i{top:31vh;width:4px}#home .ugalz-water-stage i:nth-child(1){left:22%}#home .ugalz-water-stage i:nth-child(2){left:50%}#home .ugalz-water-stage i:nth-child(3){left:78%}}
+@media(prefers-reduced-motion:reduce){#home .ugalz-water-stage{display:none}}
 </style>
 
 </head>
@@ -890,6 +896,7 @@ textarea:disabled,
 
         <div class="hero">
           <div class="hero-logo ugalz-waterfall-logo"><img class="nexora-logo-hero" src="./assets/ugalz-logo.svg" alt="Угалз.мн — Зар • Худалдаа • Боломж"><span class="ugalz-drip ugalz-drip-one" aria-hidden="true"></span><span class="ugalz-drip ugalz-drip-two" aria-hidden="true"></span><span class="ugalz-drip ugalz-drip-three" aria-hidden="true"></span></div>
+          <div class="ugalz-water-stage" aria-hidden="true"><i></i><i></i><i></i></div>
 
           <div class="hero-subtitle">
             МОНГОЛЫН ЗАР · ХУДАЛДАА
