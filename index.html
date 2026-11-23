@@ -7,23 +7,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script>document.documentElement.classList.add("nx-theme-pending");</script>
   <meta name="theme-color" content="#090909">
-  <meta name="application-name" content="NEXORA">
+  <meta name="application-name" content="Угалз.мн">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" type="image/svg+xml" href="./assets/nexora-app-icon.svg">
-  <link rel="apple-touch-icon" href="./assets/nexora-app-icon.svg">
+  <link rel="icon" type="image/svg+xml" href="./assets/ugalz-app-icon.svg">
+  <link rel="apple-touch-icon" href="./assets/ugalz-app-icon.svg">
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
         navigator.serviceWorker.register("./sw.js", { scope: "./" }).catch(function (error) {
-          console.warn("NEXORA service worker registration failed:", error);
+          console.warn("Угалз.мн service worker registration failed:", error);
         });
       });
     }
   </script>
 
-  <title>NEXORA | Mongolia Marketplace</title>
+  <title>Угалз.мн | Mongolia Marketplace</title>
 
   <style>
     :root {
@@ -283,7 +283,7 @@
       }
     }
   
-/* NEXORA ADMIN — цэгцтэй удирдлагын интерфэйс */
+/* Угалз.мн ADMIN — цэгцтэй удирдлагын интерфэйс */
 #nexora-admin-app{max-width:1120px;padding:22px 16px 40px}
 #nexora-admin-app .nx-admin-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:18px}
 #nexora-admin-app .nx-admin-head .nexora-ad-heading{margin:0 0 7px;font-size:24px;letter-spacing:.4px}
@@ -321,7 +321,7 @@
 @media(max-width:430px){#nexora-admin-app{padding:18px 12px 32px}#nexora-admin-app .nx-admin-head .nexora-ad-heading{font-size:21px}#nexora-admin-app .nx-admin-tabs{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#nexora-admin-app .nx-admin-tabs button{min-height:44px;font-size:12px}#nexora-admin-app .nx-admin-stat{padding:13px}#nexora-admin-app .nx-admin-stat-value{font-size:24px}}
 
 
-/* NEXORA Тусламж төв — screenshot-той ижил өргөн, дугуй булантай бүлгүүд */
+/* Угалз.мн Тусламж төв — screenshot-той ижил өргөн, дугуй булантай бүлгүүд */
 .nx-help-screen{max-width:1000px;margin:0 auto;padding:22px 18px 60px;color:#f7f5ef}
 .nx-help-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
 .nx-help-back{border:1px solid rgba(214,173,85,.45);background:#1c1b17;color:#e8c56f;border-radius:11px;padding:10px 13px;font-weight:700}
@@ -354,7 +354,7 @@
 
 html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:hidden}
   
-/* NEXORA mobile dual marketplace home: retail above, wholesale below */
+/* Угалз.мн mobile dual marketplace home: retail above, wholesale below */
 @media(max-width:699px){.nx-shop-profile-open{display:inline-flex;align-items:center;gap:6px}.nx-shop-profile-logo{width:27px;height:27px;flex:0 0 27px;display:grid;place-items:center;overflow:hidden;border:1px solid rgba(214,173,85,.7);border-radius:50%;background:#090909;color:#d6ad55;font-size:13px;font-weight:900}.nx-shop-profile-logo img{width:100%;height:100%;object-fit:cover;border-radius:50%}}
 @media(max-width:699px){
   #market-app{padding:0!important;min-height:calc(100dvh - 0px)!important;height:100dvh!important;overflow:hidden!important}
@@ -536,18 +536,18 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 
 </style>
 
-  <!-- NEXORA 20-р шат: түгээмэл эх үүсвэрүүдтэй холболтыг урьдчилан бэлтгэх -->
+  <!-- Угалз.мн 20-р шат: түгээмэл эх үүсвэрүүдтэй холболтыг урьдчилан бэлтгэх -->
   <link rel="preconnect" href="https://grbpbmowhkbtuxostfny.supabase.co" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
   <link rel="preconnect" href="https://cdn.simpleicons.org" crossorigin>
   <link rel="dns-prefetch" href="//unpkg.com">
   <link rel="dns-prefetch" href="//tile.openstreetmap.org">
-  <link rel="preload" as="image" href="./assets/nexora-logo.jpg" fetchpriority="high">
+  <link rel="preload" as="image" href="./assets/ugalz-logo.svg" fetchpriority="high">
 
 
 <style id="NEXORA-GLOBAL-RECESSED-FIELDS-2026">
-/* NEXORA — бүх хэсгийн мэдээлэл оруулах, тайлбар бичих талбарын гүн хонхойсон гадаргуу.
+/* Угалз.мн — бүх хэсгийн мэдээлэл оруулах, тайлбар бичих талбарын гүн хонхойсон гадаргуу.
    Зөвхөн харагдах байдлыг өөрчилнө; form/validation/upload/table logic-д хүрэхгүй. */
 :root{
   --nx-field-recess-bg:#17191b;
@@ -873,10 +873,10 @@ textarea:disabled,
       <div class="home-content">
 
         <div class="hero">
-          <div class="hero-logo"><img class="nexora-logo-hero" src="./assets/nexora-logo.jpg" alt="NEXORA — Зар • Худалдаа • Боломж"></div>
+          <div class="hero-logo"><img class="nexora-logo-hero" src="./assets/ugalz-logo.svg" alt="Угалз.мн — Зар • Худалдаа • Боломж"></div>
 
           <div class="hero-subtitle">
-            MONGOLIA MARKETPLACE
+            МОНГОЛЫН ЗАР · ХУДАЛДАА
           </div>
 
           <p class="hero-description" data-i18n="heroDescription">
@@ -922,7 +922,7 @@ textarea:disabled,
       </div>
 
       <footer class="footer">
-        © NEXORA — MONGOLIA MARKETPLACE
+        © Угалз.мн — МОНГОЛЫН ЗАР · ХУДАЛДАА
       </footer>
 
     </section>
@@ -937,7 +937,7 @@ textarea:disabled,
         <div class="welcome-panel">Зарын ангилал ачаалж байна…</div>
       </main>
 
-      <footer class="footer">NEXORA</footer>
+      <footer class="footer">Угалз.мн</footer>
 
     </section>
 
@@ -953,19 +953,19 @@ textarea:disabled,
         <div class="welcome-panel">Худалдааны платформ ачаалж байна…</div>
       </main>
 
-      <footer class="footer">NEXORA</footer>
+      <footer class="footer">Угалз.мн</footer>
     </section>
 
 
     <section id="myads" class="screen">
       <header class="topbar"><button class="back-button" type="button" onclick="NEXORA.back()" aria-label="Буцах">‹</button><div class="page-heading">МИНИЙ ЗАРУУД</div><div class="header-space"></div></header>
       <main class="page-content" id="nexora-my-ads-app"><div class="welcome-panel">Зарууд ачаалж байна…</div></main>
-      <footer class="footer">NEXORA</footer>
+      <footer class="footer">Угалз.мн</footer>
     </section>
     <section id="myorders" class="screen">
       <header class="topbar"><button class="back-button" type="button" onclick="NEXORA.back()" aria-label="Буцах">‹</button><div class="page-heading">МИНИЙ ЗАХИАЛГУУД</div><div class="header-space"></div></header>
       <main class="page-content" id="nexora-my-orders-app"><div class="welcome-panel">Захиалгууд ачаалж байна…</div></main>
-      <footer class="footer">NEXORA</footer>
+      <footer class="footer">Угалз.мн</footer>
     </section>
 
     <!-- ПРОФАЙЛ -->
@@ -981,7 +981,7 @@ textarea:disabled,
           <p>Дэлгүүр болон бөөний худалдааны үйлчилгээг ашиглахын тулд бүртгэлээрээ нэвтэрнэ үү.</p>
         </div>
       </main>
-      <footer class="footer">NEXORA</footer>
+      <footer class="footer">Угалз.мн</footer>
     </section>
 
 <!-- 2-Р ХЭСЭГ ДУУСАВ -->
@@ -990,7 +990,7 @@ textarea:disabled,
     <section id="help" class="screen">
       <div class="nx-help-screen">
         <div class="nx-help-head"><button class="nx-help-back" type="button" onclick="NEXORA.back()">← Буцах</button><h1 class="nx-help-title">Тусламж төв</h1></div>
-        <p class="nx-help-intro">NEXORA ашиглахтай холбоотой түгээмэл асуулт, хариултууд. Асуултаа хайх эсвэл доорх бүлгүүдийг нээнэ үү.</p>
+        <p class="nx-help-intro">Угалз.мн ашиглахтай холбоотой түгээмэл асуулт, хариултууд. Асуултаа хайх эсвэл доорх бүлгүүдийг нээнэ үү.</p>
         <input id="nx-help-search" class="nx-help-search" type="search" placeholder="Асуулт хайх... (жишээ нь: VIP, зар, дэлгүүр)" aria-label="Тусламжийн асуулт хайх">
         <div id="nx-help-groups">
           <details class="nx-help-group" open><summary>🛍️ Худалдан авагчдад</summary><div class="nx-help-items">
@@ -1053,7 +1053,7 @@ textarea:disabled,
       </div>
     </section>
 
-<!-- ========== NEXORA NAVIGATION ========== -->
+<!-- ========== Угалз.мн NAVIGATION ========== -->
 
     <script>
       (function () {
@@ -1136,7 +1136,7 @@ textarea:disabled,
               try {
                 await Promise.resolve(window.NEXORA_SHOP_HOME());
               } catch (error) {
-                console.error("NEXORA худалдааны каталог эхлүүлэхэд алдаа:", error);
+                console.error("Угалз.мн худалдааны каталог эхлүүлэхэд алдаа:", error);
               }
             }
 
@@ -1235,7 +1235,7 @@ textarea:disabled,
   const panel = document.getElementById("nexora-auth-panel");
 
   if (!panel) {
-    console.error("NEXORA auth panel олдсонгүй.");
+    console.error("Угалз.мн auth panel олдсонгүй.");
     return;
   }
 
@@ -1293,7 +1293,7 @@ textarea:disabled,
     panel.innerHTML = `
       <button type="button" data-auth-back style="padding:9px 14px;margin:0 0 14px;border:1px solid rgba(214,173,85,.5);border-radius:10px;background:#191919;color:#d6ad55;">‹ Сонголт руу буцах</button>
       <div style="margin:4px 0 20px;">
-        <h2 style="margin:0 0 5px;color:#f7f5ef;">${registering ? "ШИНЭ БҮРТГЭЛ" : "НЭВТРЭХ"}</h2><p style="margin:0;color:#aaa39a;font-size:13px;">${registering ? "NEXORA бүртгэл үүсгэх" : "Өмнөх бүртгэлээрээ нэвтрэх"}</p>
+        <h2 style="margin:0 0 5px;color:#f7f5ef;">${registering ? "ШИНЭ БҮРТГЭЛ" : "НЭВТРЭХ"}</h2><p style="margin:0;color:#aaa39a;font-size:13px;">${registering ? "Угалз.мн бүртгэл үүсгэх" : "Өмнөх бүртгэлээрээ нэвтрэх"}</p>
       </div>
       <form id="nexora-auth-form">
         ${registering ? `
@@ -1339,7 +1339,7 @@ textarea:disabled,
     panel.innerHTML = `
       <div style="margin:4px 0 18px;padding:4px 0 14px;border-bottom:1px solid rgba(214,173,85,.25);">
         <h2 style="margin:0 0 6px;color:#f7f5ef;">Удирдлагын хэсэг</h2>
-        <p style="margin:0;color:#aaa39a;font-size:13px;">NEXORA дансны удирдлага</p>
+        <p style="margin:0;color:#aaa39a;font-size:13px;">Угалз.мн дансны удирдлага</p>
       </div>
 
       <p style="margin:12px 0;color:#f7f5ef;">
@@ -2779,7 +2779,7 @@ textarea:disabled,
   font-weight: 700;
 }
 
-/* NEXORA realistic category photography */
+/* Угалз.мн realistic category photography */
 #ads .nx-job-sector-grid .nx-job-photo-card{position:relative!important;isolation:isolate!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:flex-end!important;gap:8px!important;min-height:148px!important;padding:14px!important;overflow:hidden!important;border:1px solid rgba(214,173,85,.42)!important;border-radius:19px!important;background:#171717!important;text-align:left!important;box-shadow:0 12px 28px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.16)!important;transition:transform .24s ease,box-shadow .24s ease,border-color .24s ease!important}
 #ads .nx-job-sector-photo{position:absolute!important;inset:0!important;z-index:-2!important;display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;transition:transform .5s cubic-bezier(.2,.8,.2,1)!important}
 #ads .nx-job-sector-shade{position:absolute!important;inset:0!important;z-index:-1!important;background:linear-gradient(180deg,rgba(0,0,0,.02) 5%,rgba(0,0,0,.22) 42%,rgba(0,0,0,.88) 100%)!important}
@@ -3037,7 +3037,7 @@ textarea:disabled,
             }
           }
         } catch (imageError) {
-          console.warn("NEXORA ad cover images:", imageError);
+          console.warn("Угалз.мн ad cover images:", imageError);
         }
       }
       if (thisRequest !== requestNumber) return;
@@ -3184,7 +3184,7 @@ textarea:disabled,
       if (selectedAd?.id === ad.id && gallery.isConnected && !cachedCover) {
         gallery.innerHTML = '<div class="nx-list-message">Зураг ачаалахад алдаа гарлаа. Дахин оролдоно уу.</div>';
       }
-      console.warn("NEXORA detail gallery load:", error);
+      console.warn("Угалз.мн detail gallery load:", error);
     }
   }
 
@@ -4299,7 +4299,7 @@ textarea:disabled,
           const action=dx<0?window.NEXORA_SHOP_NEXT:window.NEXORA_SHOP_BACK;
           if(typeof action==="function")action(zone);
         })
-        .catch(error=>console.error("NEXORA худалдааны шудралт:",error))
+        .catch(error=>console.error("Угалз.мн худалдааны шудралт:",error))
         .finally(()=>{opening=false;});
     },{passive:true});
     home.addEventListener("touchcancel",()=>{start=null;},{passive:true});
@@ -4340,7 +4340,7 @@ textarea:disabled,
       else if(window.NEXORA&&typeof window.NEXORA.back==="function") window.NEXORA.back();
     }
   }, {passive:true});
-  if(!db){host.innerHTML='<div class="nx-market-error">Худалдааны системтэй холбогдож чадсангүй. Интернэт холболтоо шалгаад хуудсыг дахин ачаална уу.</div>';console.error("NEXORA marketplace: Supabase client unavailable");return;}
+  if(!db){host.innerHTML='<div class="nx-market-error">Худалдааны системтэй холбогдож чадсангүй. Интернэт холболтоо шалгаад хуудсыг дахин ачаална уу.</div>';console.error("Угалз.мн marketplace: Supabase client unavailable");return;}
   let products=[],cart=[],wholesaleCart=[],marketUser=null,searchText="",productViewStates={},productApprovalChannel=null,productApprovalPoll=null,wholesaleNotificationChannel=null,wholesaleNotificationUserId=null;
   // Энэ хуудас нээгдсэнээс хойш хэрэглэгч нэвтрэх үйлдлийг өөрөө хийсэн эсэхийг санана.
   let shopAuthExplicitlyCompleted=false;
@@ -4402,7 +4402,7 @@ textarea:disabled,
       .on("postgres_changes",{event:"INSERT",schema:"public",table:"wholesale_supplier_notifications",filter:"user_id=eq."+userId},onNewNotification)
       .on("postgres_changes",{event:"INSERT",schema:"public",table:"wholesale_order_notifications",filter:"user_id=eq."+userId},onNewNotification)
       .on("postgres_changes",{event:"INSERT",schema:"public",table:"market_supplier_registration_notifications",filter:"user_id=eq."+userId},onNewNotification)
-      .subscribe((status,err)=>{if(status==="CHANNEL_ERROR"||status==="TIMED_OUT")console.warn("NEXORA мэдэгдлийн realtime холболт:",status,err||"");});
+      .subscribe((status,err)=>{if(status==="CHANNEL_ERROR"||status==="TIMED_OUT")console.warn("Угалз.мн мэдэгдлийн realtime холболт:",status,err||"");});
   }
   async function showWholesaleNotifications(backAction=showWholesaleCatalog){
     // Дээд системийн буцах товчийг тухайн дэлгэцийн шууд эцэг дэлгэцтэй ижил чиглэлд барина.
@@ -4670,9 +4670,9 @@ textarea:disabled,
         if(!signedAvatarError&&signedAvatar?.signedUrl)profileAvatarUrl=signedAvatar.signedUrl;
       }
       host.innerHTML='<section class="nx-profile-accordion-root"><div class="nx-profile-identity" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;margin:4px 0 18px">'+
-        '<img id="nx-profile-avatar-preview" src="'+esc(profileAvatarUrl||"./assets/nexora-logo.jpg")+'" alt="Профайл зураг" style="width:92px;height:92px;border-radius:50%;object-fit:cover;border:2px solid var(--border);background:#111">'+
+        '<img id="nx-profile-avatar-preview" src="'+esc(profileAvatarUrl||"./assets/ugalz-logo.svg")+'" alt="Профайл зураг" style="width:92px;height:92px;border-radius:50%;object-fit:cover;border:2px solid var(--border);background:#111">'+
         '<button type="button" class="nx-market-btn secondary" id="nx-profile-avatar-choose">ПРОФАЙЛЫН ЗУРАГ СОНГОХ</button><input id="nx-profile-avatar-input" type="file" accept="image/jpeg,image/png,image/webp" style="display:none"><p id="nx-profile-avatar-msg" class="nx-market-muted" style="font-size:12px"></p>'+
-        '<img src="./assets/nexora-logo.jpg" alt="NEXORA" style="width:190px;max-width:70vw;height:76px;object-fit:contain">'+
+        '<img src="./assets/ugalz-logo.svg" alt="Угалз.мн" style="width:190px;max-width:70vw;height:76px;object-fit:contain">'+
         '<h2 class="nx-profile-heading">МИНИЙ ПРОФАЙЛ</h2><p class="nx-market-muted">'+esc(name)+'</p><p class="nx-market-muted">'+esc(authData.user.email||"")+'</p></div>'+
         '<div class="nx-profile-accordion-content">'+
         '<button class="nx-market-btn" id="nx-profile-publish">＋ БАРАА НИЙТЛЭХ</button>'+
@@ -4732,7 +4732,7 @@ textarea:disabled,
     marketUser=authData.user;
     host.innerHTML='<button type="button" class="nx-market-btn secondary nx-market-back-arrow" id="nx-business-choice-back">‹ Буцах</button>'+
       '<h2 class="nexora-ad-heading">БИЗНЕСЭЭ БҮРТГҮҮЛЭХ</h2>'+
-      '<p class="nx-market-muted">Та нэг NEXORA профайлаасаа онлайн дэлгүүр болон бөөний нийлүүлэгчийн чиглэлээ тохируулна. Барааны каталог, үнэ, захиалгын урсгал хоёр чиглэлд тусдаа байна.</p>'+
+      '<p class="nx-market-muted">Та нэг Угалз.мн профайлаасаа онлайн дэлгүүр болон бөөний нийлүүлэгчийн чиглэлээ тохируулна. Барааны каталог, үнэ, захиалгын урсгал хоёр чиглэлд тусдаа байна.</p>'+
       '<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0">'+
       '<button type="button" id="nx-business-choice-retail" class="nx-admin-card" style="display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:10px;padding:16px;border:1px solid var(--border);border-radius:16px;background:var(--card);color:var(--text);min-height:190px;cursor:pointer"><span style="font-size:34px">🛍️</span><strong style="font-size:15px">ЖИЖИГЛЭН ХУДАЛДАА</strong><span class="nx-market-muted" style="font-size:12px">Онлайн дэлгүүр нээж бараагаа ширхэгээр худалдах</span><span style="font-size:11px;font-weight:700">B2C · Жижиглэнгийн дэлгүүр</span></button>'+
       '<button type="button" id="nx-business-choice-wholesale" class="nx-admin-card" style="display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:10px;padding:16px;border:1px solid var(--border);border-radius:16px;background:var(--card);color:var(--text);min-height:190px;cursor:pointer"><span style="font-size:34px">📦</span><strong style="font-size:15px">БӨӨНИЙ НИЙЛҮҮЛЭГЧ</strong><span class="nx-market-muted" style="font-size:12px">Бараагаа бөөний үнээр нийлүүлж захиалга авах</span><span style="font-size:11px;font-weight:700">B2B · Нийлүүлэгч</span></button>'+
@@ -5335,7 +5335,7 @@ textarea:disabled,
       const grouped=new Map();rows.forEach(p=>{const key=p.category||"Бусад";if(!grouped.has(key))grouped.set(key,[]);grouped.get(key).push(p);});
       host.innerHTML='<div class="nx-catalog-topline"><span class="nx-swipe-home-hint">← энд шудар</span><button class="nx-catalog-cart" id="nx-wholesale-cart" type="button" aria-label="Бөөний сагс">🛒</button></div><div class="nexora-ad-heading">БӨӨНИЙ ХУДАЛДАА</div><p class="nx-market-muted">Нийлүүлэгчдийн бөөний бараа · Жижиглэнгийн бараанаас тусдаа.</p>';
       document.getElementById("nx-wholesale-cart").onclick=showWholesaleCart;
-      const runWholesaleScreen=async(action,label)=>{const parent=openWholesaleProfile;document.getElementById("shop")?.classList.add("nx-shop-profile-fullscreen");host.classList.add("nx-profile-fullscreen");window.NEXORA_SHOP_BACK=parent;try{const {data:sessionData,error:sessionError}=await db.auth.getSession();if(sessionError)throw sessionError;const {data:authData,error:authError}=await db.auth.getUser();if(authError)throw authError;if(!sessionData?.session||!authData?.user||!authData.user.email_confirmed_at){window.NEXORA_SHOP_NEXT=null;host.innerHTML='<section class="nx-profile-accordion-root"><button class="nx-profile-back" id="nx-wholesale-login-back" aria-label="Буцах">‹</button><h2 class="nx-profile-heading">НЭВТРЭХ ШААРДЛАГАТАЙ</h2><p class="nx-market-muted">'+esc(label)+' хэсгийг ашиглахын тулд NEXORA бүртгэлдээ нэвтэрч имэйлээ баталгаажуулна уу.</p><button class="nx-market-btn" id="nx-wholesale-login-open">НЭВТРЭХ / БҮРТГҮҮЛЭХ</button></section>';document.getElementById("nx-wholesale-login-back").onclick=parent;document.getElementById("nx-wholesale-login-open").onclick=()=>window.NEXORA?.open("profile");return;}host.innerHTML='<div class="nx-market-loading" role="status" style="padding:24px;text-align:center">' + label + ' нээгдэж байна…</div>';await action();window.NEXORA_SHOP_BACK=parent;const back=host.querySelector("button[id$=\"-back\"],button[id*=\"-back\"],button.nx-market-back-arrow");if(back){back.classList.add("nx-profile-child-back");back.onclick=parent;}}catch(err){console.error("NEXORA wholesale screen error:",err);host.innerHTML='<section class="nx-profile-accordion-root"><button class="nx-profile-back" id="nx-wholesale-action-back" aria-label="Буцах">‹</button><div class="nx-market-error" role="alert" style="padding:16px;margin-top:12px">Хэсэг нээхэд алдаа гарлаа: '+esc(err?.message||String(err))+'</div></section>';document.getElementById("nx-wholesale-action-back").onclick=parent;window.NEXORA_SHOP_BACK=parent;}};
+      const runWholesaleScreen=async(action,label)=>{const parent=openWholesaleProfile;document.getElementById("shop")?.classList.add("nx-shop-profile-fullscreen");host.classList.add("nx-profile-fullscreen");window.NEXORA_SHOP_BACK=parent;try{const {data:sessionData,error:sessionError}=await db.auth.getSession();if(sessionError)throw sessionError;const {data:authData,error:authError}=await db.auth.getUser();if(authError)throw authError;if(!sessionData?.session||!authData?.user||!authData.user.email_confirmed_at){window.NEXORA_SHOP_NEXT=null;host.innerHTML='<section class="nx-profile-accordion-root"><button class="nx-profile-back" id="nx-wholesale-login-back" aria-label="Буцах">‹</button><h2 class="nx-profile-heading">НЭВТРЭХ ШААРДЛАГАТАЙ</h2><p class="nx-market-muted">'+esc(label)+' хэсгийг ашиглахын тулд Угалз.мн бүртгэлдээ нэвтэрч имэйлээ баталгаажуулна уу.</p><button class="nx-market-btn" id="nx-wholesale-login-open">НЭВТРЭХ / БҮРТГҮҮЛЭХ</button></section>';document.getElementById("nx-wholesale-login-back").onclick=parent;document.getElementById("nx-wholesale-login-open").onclick=()=>window.NEXORA?.open("profile");return;}host.innerHTML='<div class="nx-market-loading" role="status" style="padding:24px;text-align:center">' + label + ' нээгдэж байна…</div>';await action();window.NEXORA_SHOP_BACK=parent;const back=host.querySelector("button[id$=\"-back\"],button[id*=\"-back\"],button.nx-market-back-arrow");if(back){back.classList.add("nx-profile-child-back");back.onclick=parent;}}catch(err){console.error("Угалз.мн wholesale screen error:",err);host.innerHTML='<section class="nx-profile-accordion-root"><button class="nx-profile-back" id="nx-wholesale-action-back" aria-label="Буцах">‹</button><div class="nx-market-error" role="alert" style="padding:16px;margin-top:12px">Хэсэг нээхэд алдаа гарлаа: '+esc(err?.message||String(err))+'</div></section>';document.getElementById("nx-wholesale-action-back").onclick=parent;window.NEXORA_SHOP_BACK=parent;}};
       const openWholesaleProfile=async()=>openRetailProfile(showWholesaleCatalog);
 
       if(wholesaleNotificationUserId)refreshWholesaleNotificationBadge(wholesaleNotificationUserId);
@@ -5626,7 +5626,7 @@ textarea:disabled,
     window.NEXORA_SHOP_PROFILE = null;
     let stage="жижиглэн болон бөөний барааны жагсаалт";
     const wait=(promise,label,ms=12000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(label+" хүсэлт 12 секундэд хариу өгсөнгүй. Холболт эсвэл өгөгдлийн сангийн эрхийг шалгана уу.")),ms))]);
-    host.innerHTML='<div class="nx-temu-page" style="padding:24px;color:#555">NEXORA худалдааны каталог ачаалж байна…</div>';
+    host.innerHTML='<div class="nx-temu-page" style="padding:24px;color:#555">Угалз.мн худалдааны каталог ачаалж байна…</div>';
     try{
       const [retailResult,wholesaleResult]=await Promise.all([
         wait(db.from("market_products").select("id,owner_id,title,category,price,description,phone,location,image_path,product_logo_path,stock_quantity,min_order_quantity,created_at").eq("status","active").order("created_at",{ascending:false}).limit(200),"Жижиглэнгийн бараа"),
@@ -5658,8 +5658,8 @@ textarea:disabled,
         try{
           const signed=await wait(db.storage.from("market-product-images").createSignedUrls(allPaths.map(x=>x.path),3600),"Зургийн холбоос",8000);
           (signed.data||[]).forEach((x,i)=>{if(x?.signedUrl&&!x.error)urlMap.set(allPaths[i].key,x.signedUrl);});
-          if(signed.error)console.warn("NEXORA зураг түр ачаалсангүй:",signed.error);
-        }catch(imageError){console.warn("NEXORA зураг түр ачаалсангүй:",imageError);}
+          if(signed.error)console.warn("Угалз.мн зураг түр ачаалсангүй:",signed.error);
+        }catch(imageError){console.warn("Угалз.мн зураг түр ачаалсангүй:",imageError);}
       }
       const retailProducts=retailRows.map(p=>{
         const profile=profileMap.get(String(p.owner_id))||{},paths=retailImageMap.get(String(p.id))||[];
@@ -5672,19 +5672,19 @@ textarea:disabled,
       products=[...retailProducts,...wholesaleProducts].sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
       marketUser=null;
       showRetailCatalog();
-      db.auth.getUser().then(({data,error})=>{if(!error){marketUser=data?.user||null;refreshTemuProfileImage();}}).catch(error=>console.warn("NEXORA нэвтрэлтийн мэдээлэл:",error));
+      db.auth.getUser().then(({data,error})=>{if(!error){marketUser=data?.user||null;refreshTemuProfileImage();}}).catch(error=>console.warn("Угалз.мн нэвтрэлтийн мэдээлэл:",error));
     }catch(err){
-      console.error("NEXORA нэгдсэн худалдааны каталогийн алдаа ("+stage+"):",err);
-      host.innerHTML='<div class="nx-temu-page" style="padding:22px;color:#333"><h2 style="color:#222">NEXORA худалдаа</h2><p style="color:#777">Бараа ачаалахад алдаа ('+esc(stage)+'): '+esc(err.message||err)+'</p><button class="nx-market-btn" id="nx-retail-retry">Дахин ачаалах</button></div>';
+      console.error("Угалз.мн нэгдсэн худалдааны каталогийн алдаа ("+stage+"):",err);
+      host.innerHTML='<div class="nx-temu-page" style="padding:22px;color:#333"><h2 style="color:#222">Угалз.мн худалдаа</h2><p style="color:#777">Бараа ачаалахад алдаа ('+esc(stage)+'): '+esc(err.message||err)+'</p><button class="nx-market-btn" id="nx-retail-retry">Дахин ачаалах</button></div>';
       document.getElementById("nx-retail-retry").onclick=loadProducts;
     }
   }
   async function refreshTemuProfileImage(){
     const button=document.getElementById("nx-temu-profile");
     if(!button)return;
-    const fallback="./assets/nexora-logo.jpg";
+    const fallback="./assets/ugalz-logo.svg";
     // Хувийн профайл зураг нь дэлгүүрийн болон барааны логоноос тусдаа байна.
-    button.innerHTML='<img src="'+fallback+'" alt="NEXORA">';
+    button.innerHTML='<img src="'+fallback+'" alt="Угалз.мн">';
     try{
       const {data:auth,error:authError}=await db.auth.getUser();
       if(authError)throw authError;
@@ -5698,11 +5698,11 @@ textarea:disabled,
       }
       const currentButton=document.getElementById("nx-temu-profile");
       if(!currentButton)return;
-      currentButton.innerHTML='<img src="'+esc(url||fallback)+'" alt="'+(url?"Хувийн профайл зураг":"NEXORA")+'" onerror="this.onerror=null;this.src=\''+fallback+'\'">';
+      currentButton.innerHTML='<img src="'+esc(url||fallback)+'" alt="'+(url?"Хувийн профайл зураг":"Угалз.мн")+'" onerror="this.onerror=null;this.src=\''+fallback+'\'">';
     }catch(error){
-      console.warn("NEXORA хувийн профайл зураг:",error);
+      console.warn("Угалз.мн хувийн профайл зураг:",error);
       const currentButton=document.getElementById("nx-temu-profile");
-      if(currentButton)currentButton.innerHTML='<img src="'+fallback+'" alt="NEXORA">';
+      if(currentButton)currentButton.innerHTML='<img src="'+fallback+'" alt="Угалз.мн">';
     }
   }
   function showRetailCatalog(){
@@ -5711,10 +5711,10 @@ textarea:disabled,
     retailActiveCategory=null;
     const count=cart.reduce((n,x)=>n+x.qty,0);
     host.innerHTML='<div class="nx-temu-page">'+
-      '<header class="nx-temu-header"><div class="nx-temu-brand"><span class="nx-temu-mark">N</span><strong>NEXORA</strong></div><button class="nx-temu-profile" id="nx-temu-profile" type="button" aria-label="Профайл зураг эсвэл лого"><span style="font-size:19px">◯</span></button></header>'+
+      '<header class="nx-temu-header"><div class="nx-temu-brand"><span class="nx-temu-mark">У</span><strong>Угалз.мн</strong></div><button class="nx-temu-profile" id="nx-temu-profile" type="button" aria-label="Профайл зураг эсвэл лого"><span style="font-size:19px">◯</span></button></header>'+
       '<div class="nx-temu-search-wrap"><span class="nx-temu-search-icon">⌕</span><input class="nx-temu-search" id="nx-retail-search" type="search" placeholder="Бараа хайх, дэлгүүр хайх…" value="'+esc(searchText)+'"></div>'+
       '<div class="nx-temu-category-rail" id="nx-temu-category-rail"></div>'+
-      '<section class="nx-temu-hero"><div class="nx-temu-hero-copy"><small>NEXORA MARKETPLACE</small><h2>Худалдаа нэг дороос</h2><p>Жижиглэн болон бөөний барааг нэг каталогоос хайж сонгоорой.</p></div><div class="nx-temu-hero-art">🛍️</div></section>'+
+      '<section class="nx-temu-hero"><div class="nx-temu-hero-copy"><small>Угалз.мн · ХУДАЛДАА</small><h2>Худалдаа нэг дороос</h2><p>Жижиглэн болон бөөний барааг нэг каталогоос хайж сонгоорой.</p></div><div class="nx-temu-hero-art">🛍️</div></section>'+
       '<div class="nx-temu-section-head"><strong>ТАНД САНАЛ БОЛГОХ</strong><span id="nx-temu-product-count"></span></div>'+
       '<div id="nx-retail-categories"></div>'+
     '</div>'+
@@ -5933,7 +5933,7 @@ textarea:disabled,
     if(bankError){host.innerHTML='<p class="nx-market-muted">Худалдагчийн дансны мэдээлэл татахад алдаа: '+esc(bankError.message)+'</p><button class="nx-market-btn" id="nx-order-back">Буцах</button>';document.getElementById("nx-order-back").onclick=loadProducts;return;}
     const banks=new Map((bankRows||[]).map(x=>[String(x.user_id),x]));
     const accountCards=orders.map(order=>{const sellerId=sellerForOrder.get(String(order.id)),bank=banks.get(sellerId);return '<section class="nx-admin-card" style="margin:12px 0"><h3>'+esc(bank?.store_name||"Худалдагчийн дэлгүүр")+'</h3><p class="nx-market-muted">Захиалгын дугаар: '+esc(order.id)+'</p><p class="nx-market-price">Төлөх дүн: '+money(order.total_amount)+'</p>'+(bank?'<p><strong>Банк:</strong> '+esc(bank.bank_name)+'</p><p class="nx-market-price">'+esc(bank.account_number)+'</p><p><strong>Данс эзэмшигч:</strong> '+esc(bank.account_holder)+'</p><p><strong>Холбоо барих:</strong> '+esc(bank.phone||"—")+'</p>':'<p class="nx-market-muted">Худалдагч банкны дансаа бүртгүүлээгүй байна. Худалдагчтай утсаар холбогдоно уу.</p>')+'<p class="nx-market-muted">Гүйлгээний утгад захиалгын дугаарыг бичнэ үү.</p></section>';}).join("");
-    host.innerHTML='<button class="nx-market-btn secondary" id="nx-order-back">‹ Буцах</button><h2 class="nexora-ad-heading">ХУДАЛДАГЧ РУУ ТӨЛБӨР ШИЛЖҮҮЛЭХ</h2><p class="nx-market-muted">NEXORA захиалгын төлбөр хүлээн авахгүй. Доорх дэлгүүр бүрийн данс руу тус тус шилжүүлнэ. Худалдагч мөнгө орсныг шалгаж төлбөрийг өөрөө баталгаажуулна.</p>'+accountCards+'<p class="nx-market-muted">Хүлээн авагч: '+esc(delivery.recipientName||"—")+' · Утас: '+esc(delivery.deliveryPhone||"—")+' · Хаяг: '+esc(delivery.deliveryAddress||"Газрын зураг дээр тэмдэглэсэн")+'</p>'+(delivery.latitude!=null&&delivery.longitude!=null?'<button type="button" class="nx-market-btn secondary" id="nx-order-delivery-map">📍 Хүргэлтийн байршил харах</button>':"");
+    host.innerHTML='<button class="nx-market-btn secondary" id="nx-order-back">‹ Буцах</button><h2 class="nexora-ad-heading">ХУДАЛДАГЧ РУУ ТӨЛБӨР ШИЛЖҮҮЛЭХ</h2><p class="nx-market-muted">Угалз.мн захиалгын төлбөр хүлээн авахгүй. Доорх дэлгүүр бүрийн данс руу тус тус шилжүүлнэ. Худалдагч мөнгө орсныг шалгаж төлбөрийг өөрөө баталгаажуулна.</p>'+accountCards+'<p class="nx-market-muted">Хүлээн авагч: '+esc(delivery.recipientName||"—")+' · Утас: '+esc(delivery.deliveryPhone||"—")+' · Хаяг: '+esc(delivery.deliveryAddress||"Газрын зураг дээр тэмдэглэсэн")+'</p>'+(delivery.latitude!=null&&delivery.longitude!=null?'<button type="button" class="nx-market-btn secondary" id="nx-order-delivery-map">📍 Хүргэлтийн байршил харах</button>':"");
     document.getElementById("nx-order-back").onclick=backAction;const mapButton=document.getElementById("nx-order-delivery-map");if(mapButton)mapButton.onclick=()=>window.NEXORA_OPEN_MAP_SCREEN(delivery.latitude,delivery.longitude,false);
   }
   async function placeOrder(){
@@ -6315,7 +6315,7 @@ textarea:disabled,
   }
   db.rpc("nexora_get_public_theme")
     .then(({data,error})=>{if(!error&&data)apply(data);})
-    .catch(err=>console.warn("NEXORA theme load:",err))
+    .catch(err=>console.warn("Угалз.мн theme load:",err))
     .finally(()=>document.documentElement.classList.remove("nx-theme-pending"));
 })();
 </script>
@@ -6361,7 +6361,7 @@ textarea:disabled,
 </style>
 
 <style id="NEXORA-ADS-BUTTON-SYSTEM-2026">
-/* NEXORA ЗАР платформ: бүх үйлдлийн товч нэг дизайн системтэй, өнгийг админ удирдана */
+/* Угалз.мн ЗАР платформ: бүх үйлдлийн товч нэг дизайн системтэй, өнгийг админ удирдана */
 #ads .page-content .nx-back,
 #ads .page-content .nx-list-back,
 #ads .page-content .nx-create-back,
@@ -6818,7 +6818,7 @@ html,body{
 }
 </style>
 <style id="NEXORA-EXACT-COMMERCE-REFERENCE">
-/* Илгээсэн NEXORA зураг — барааны динамик зургуудыг үндсэн нүүрэнд огт ачаалахгүй */
+/* Илгээсэн Угалз.мн зураг — барааны динамик зургуудыг үндсэн нүүрэнд огт ачаалахгүй */
 #market-app .nx-shop-reference-screen{
   position:relative;width:100%;max-width:100%;margin:0 auto;
   overflow:hidden;background:#061b58;line-height:0;
@@ -6937,7 +6937,7 @@ html,body{
 
 
 <style id="NEXORA-6D-INTERACTIVE-GLASS-2026">
-/* NEXORA 6D: давхар гүн, шилэн гэрэл, хүрэлтэд хариулах мэдрэмж.
+/* Угалз.мн 6D: давхар гүн, шилэн гэрэл, хүрэлтэд хариулах мэдрэмж.
    Зөвхөн харагдах эффект; навигаци, сагс, захиалгын үйлдэлд хүрэхгүй. */
 :where(
   #home .platform-card,
@@ -7854,7 +7854,7 @@ html,body{
     selector.value=lang;
     selector.setAttribute("aria-label",words.language);
     try{localStorage.setItem("nexora-language",lang);}catch(error){}
-    const titles={mn:"NEXORA | Mongolia Marketplace",en:"NEXORA | Mongolia Marketplace",zh:"NEXORA | 蒙古购物平台",ru:"NEXORA | Торговая площадка Монголии",ko:"NEXORA | 몽골 마켓플레이스",ja:"NEXORA | モンゴルマーケットプレイス"};
+    const titles={mn:"Угалз.мн | Монголын зар, худалдаа",en:"Угалз.мн | Mongolian Marketplace",zh:"Угалз.мн | 蒙古分类与购物平台",ru:"Угалз.мн | Объявления и торговля Монголии",ko:"Угалз.мн | 몽골 광고·쇼핑 플랫폼",ja:"Угалз.мн | モンゴルの広告・マーケットプレイス"};
     document.title=titles[lang];
   }
   let saved="mn";
@@ -8126,7 +8126,7 @@ var rows={
 "БҮРТГҮҮЛЭХ":["SIGN UP","注册","ЗАРЕГИСТРИРОВАТЬСЯ","회원가입","新規登録"],
 "НЭВТРЭХ ХЭСЭГ РҮҮ":["BACK TO LOGIN","返回登录","К ВХОДУ","로그인으로","ログインへ戻る"],
 "ШИНЭ БҮРТГЭЛ":["CREATE ACCOUNT","创建账户","НОВАЯ РЕГИСТРАЦИЯ","새 계정","新規登録"],
-"NEXORA бүртгэл үүсгэх":["Create a NEXORA account","创建 NEXORA 账户","Создать аккаунт NEXORA","NEXORA 계정 만들기","NEXORAアカウントを作成"],
+"Угалз.мн бүртгэл үүсгэх":["Create a Угалз.мн account","创建 Угалз.мн 账户","Создать аккаунт Угалз.мн","Угалз.мн 계정 만들기","Угалз.мнアカウントを作成"],
 "Өмнөх бүртгэлээрээ нэвтрэх":["Log in to your existing account","使用现有账户登录","Войти в существующий аккаунт","기존 계정으로 로그인","既存のアカウントでログイン"],
 "Овог, нэр":["Full name","姓名","Фамилия и имя","성명","氏名"],
 "Нэрээ оруулна уу":["Enter your name","请输入姓名","Введите имя","이름을 입력하세요","名前を入力してください"],
@@ -8145,7 +8145,7 @@ var rows={
 "Бүртгэл үүсгэх":["Create account","创建账户","Создать аккаунт","계정 만들기","アカウントを作成"],
 "Түр хүлээнэ үү...":["Please wait...","请稍候…","Пожалуйста, подождите…","잠시만 기다려 주세요…","お待ちください…"],
 "Удирдлагын хэсэг":["Dashboard","管理面板","Панель управления","대시보드","管理画面"],
-"NEXORA дансны удирдлага":["NEXORA account management","NEXORA 账户管理","Управление аккаунтом NEXORA","NEXORA 계정 관리","NEXORAアカウント管理"],
+"Угалз.мн дансны удирдлага":["Угалз.мн account management","Угалз.мн 账户管理","Управление аккаунтом Угалз.мн","Угалз.мн 계정 관리","Угалз.мнアカウント管理"],
 "Миний зарууд":["My listings","我的信息","Мои объявления","내 광고","自分の掲載"],
 "Миний захиалгууд":["My orders","我的订单","Мои заказы","내 주문","注文履歴"],
 "АДМИН УДИРДЛАГА":["ADMIN PANEL","管理员面板","ПАНЕЛЬ АДМИНИСТРАТОРА","관리자 패널","管理者パネル"],
@@ -8506,7 +8506,7 @@ refresh();
 </style>
 
 
-<!-- NEXORA: borderless curved back arrows -->
+<!-- Угалз.мн: borderless curved back arrows -->
 <style id="NEXORA-BORDERLESS-CURVED-BACK-ARROWS-2026">
 /* Буцах сумнууд: дөрвөлжин хүрээгүй, цэвэр нумарсан сум */
 .back-button,
@@ -8672,7 +8672,7 @@ button.nx-platform-back:focus-visible,
 
 
 <style id="NEXORA-ADS-SUBCATEGORY-PREMIUM-2026">
-/* NEXORA ADS — premium subcategory refresh (visual-only; preserves existing navigation/data) */
+/* Угалз.мн ADS — premium subcategory refresh (visual-only; preserves existing navigation/data) */
 #ads .nx-full-screen {
   background:
     radial-gradient(ellipse at 92% 0%, rgba(214,173,85,.10), transparent 38%),
@@ -8887,7 +8887,7 @@ button.nx-platform-back:focus-visible,
 }
 
 
-/* NEXORA ADS — үндсэн 8 ангиллын шинэ premium grid */
+/* Угалз.мн ADS — үндсэн 8 ангиллын шинэ premium grid */
 #ads .page-content .nx-full-screen .nexora-ad-grid{
   width:100%;
   max-width:1080px;
@@ -9019,7 +9019,7 @@ button.nx-platform-back:focus-visible,
 </style>
 
 <style id="NEXORA-BLUE-MAIN-TAB-2026">
-/* NEXORA хэрэглэгчийн баталсан цэнхэр үндсэн нүүр */
+/* Угалз.мн хэрэглэгчийн баталсан цэнхэр үндсэн нүүр */
 #shop{background:#020b29!important;color:#fff!important}
 #shop>.topbar,#shop>.footer{display:none!important}
 #market-app{padding:0!important;margin:0!important;max-width:none!important;width:100%!important;height:100dvh!important;min-height:100dvh!important;overflow:hidden!important;background:#020b29!important}
@@ -9070,7 +9070,7 @@ button.nx-platform-back:focus-visible,
 
 
 <style id="NEXORA-MULTI-PALETTE-2026">
-/* NEXORA: зар ба худалдааны платформд 2–5 палитрыг хэсэг тус бүрт зохицуулан хэрэглэв.
+/* Угалз.мн: зар ба худалдааны платформд 2–5 палитрыг хэсэг тус бүрт зохицуулан хэрэглэв.
    Барааны карт, зураг, үнэ болон барааны жагсаалтын одоогийн өнгийг зориуд өөрчлөхгүй. */
 :root{
   --nx-blue-deep:#18263a; --nx-blue-mid:#344b65; --nx-silver:#9bafc0; --nx-silver-light:#d5dde4;
@@ -9198,7 +9198,7 @@ button.nx-platform-back:focus-visible,
 
 
 <style id="NEXORA-DEPTH-MOTION-LAYER-2026">
-/* NEXORA depth layer: subtle spatial depth and responsive motion.
+/* Угалз.мн depth layer: subtle spatial depth and responsive motion.
    Visual-only enhancement. Existing markup, controls, and navigation remain unchanged. */
 #ads .page-content .nx-full-screen[data-nx-stage="categories"] .nexora-ad-grid,
 #ads .nx-job-sector-photo-grid{
@@ -12370,7 +12370,7 @@ body:has(#nx-retail-lightbox-close)>div:has(#nx-retail-lightbox-close) img{
 
 
 <style id="NEXORA-ADS-MARKET-STAGE30-2026">
-/* 30-р шат — Unified NEXORA Brand Finish.
+/* 30-р шат — Unified Угалз.мн Brand Finish.
    CSS-only polish across shared surfaces; no markup, data, or interaction changes. */
 
 /* Нэгдсэн үндсэн гадаргуу */
