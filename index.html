@@ -524,8 +524,8 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
 <style id="NEXORA-DEMO-CARDS-HORIZONTAL-2026">
 /* Барааны картууд 3 мөрөөр, том дэлгэцэд 4 мөрөөр байрлаж хэвтээ гүйлгэнэ. */
 #shop #nx-retail-categories{width:100%;max-width:100%;overflow:hidden}
-#shop .nx-temu-products{display:grid!important;grid-auto-flow:column!important;grid-template-rows:repeat(3,minmax(0,1fr))!important;grid-auto-columns:min(42vw,170px)!important;align-items:stretch!important;gap:10px!important;width:100%!important;max-width:100%!important;overflow-x:auto!important;overflow-y:hidden!important;padding:4px 14px 18px!important;margin:0!important;scroll-snap-type:x proximity!important;scroll-padding-left:14px!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-x:contain!important;touch-action:pan-x pan-y!important;scrollbar-width:thin!important}
-#shop .nx-temu-products>.nx-temu-product{box-sizing:border-box!important;min-width:0!important;width:100%!important;max-width:none!important;height:100%!important;scroll-snap-align:start!important}
+#shop .nx-temu-products{display:grid!important;grid-auto-flow:column!important;grid-template-rows:repeat(4,max-content)!important;grid-auto-rows:max-content!important;grid-auto-columns:min(42vw,170px)!important;align-content:start!important;align-items:start!important;gap:6px 8px!important;width:100%!important;max-width:100%!important;overflow-x:auto!important;overflow-y:hidden!important;padding:4px 14px 18px!important;margin:0!important;scroll-snap-type:x proximity!important;scroll-padding-left:14px!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-x:contain!important;touch-action:pan-x pan-y!important;scrollbar-width:thin!important}
+#shop .nx-temu-products>.nx-temu-product{box-sizing:border-box!important;min-width:0!important;width:100%!important;max-width:none!important;height:auto!important;min-height:0!important;align-self:start!important;scroll-snap-align:start!important}
 #shop .nx-temu-demo-product .nx-temu-demo-image-wrap{height:auto!important;aspect-ratio:1/1!important}
 #shop .nx-temu-demo-product .nx-temu-product-image{width:100%!important;height:100%!important;aspect-ratio:1/1!important;object-fit:cover!important}
 #shop .nx-temu-demo-product .nx-temu-product-title{min-height:30px;font-size:11px!important}
@@ -797,7 +797,7 @@ textarea:disabled,
 
 
 <style id="NEXORA-RETAIL-ONLY-ROW-GAP-2026">
-/* Зөвхөн жижиглэн каталогийн мөрийн бодит зай. Картын доторх хэмжээ/агуулгыг өөрчлөхгүй. */
+/* Зөвхөн мөр хоорондын зай. Картын өргөн, зураг, агуулгын хэмжээнд хүрэхгүй. */
 @media(max-width:699px){
   #shop #nx-retail-categories .nx-temu-products{
     grid-template-rows:repeat(4,max-content)!important;
