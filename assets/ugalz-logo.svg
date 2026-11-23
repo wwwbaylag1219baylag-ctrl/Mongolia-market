@@ -1,26 +1,66 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 340" role="img" aria-labelledby="title desc">
-<title id="title">Угалз.мн</title><desc id="desc">Монгол угалзны хээтэй алтлаг Угалз.мн брэндийн лого</desc>
+<title id="title">Угалз.мн</title>
+<desc id="desc">Монгол угалзны хээ, тэнгэрийн хөх гэрэл, алтлаг металл өнгө хосолсон Угалз.мн брэндийн тэмдэг</desc>
 <defs>
-  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0bd"/><stop offset=".42" stop-color="#d6ad55"/><stop offset="1" stop-color="#9f7128"/></linearGradient>
-  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#171510"/><stop offset="1" stop-color="#080808"/></linearGradient>
-  <filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <linearGradient id="night" x1="0" y1="0" x2="1" y2="1">
+    <stop stop-color="#080d1c"/><stop offset=".52" stop-color="#111a31"/><stop offset="1" stop-color="#17132b"/>
+  </linearGradient>
+  <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+    <stop stop-color="#fff5d6"/><stop offset=".2" stop-color="#f4d58f"/><stop offset=".48" stop-color="#bd8b3f"/><stop offset=".72" stop-color="#fff0bd"/><stop offset="1" stop-color="#9b682b"/>
+  </linearGradient>
+  <linearGradient id="aurora" x1="0" y1="0" x2="1" y2="1">
+    <stop stop-color="#baf7ff"/><stop offset=".48" stop-color="#72ddec"/><stop offset="1" stop-color="#b8a8ff"/>
+  </linearGradient>
+  <linearGradient id="word" x1="0" y1="0" x2="0" y2="1">
+    <stop stop-color="#fff8e5"/><stop offset=".42" stop-color="#f2d28c"/><stop offset="1" stop-color="#c08b43"/>
+  </linearGradient>
+  <radialGradient id="halo">
+    <stop stop-color="#6be3f2" stop-opacity=".22"/><stop offset=".58" stop-color="#9b8aff" stop-opacity=".10"/><stop offset="1" stop-color="#091326" stop-opacity="0"/>
+  </radialGradient>
+  <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
+    <feGaussianBlur stdDeviation="7" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="textShadow" x="-20%" y="-30%" width="140%" height="170%">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="5" result="b"/>
+    <feOffset dy="5" result="o"/>
+    <feComponentTransfer><feFuncA type="linear" slope=".35"/></feComponentTransfer>
+    <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
 </defs>
-<rect width="1000" height="340" rx="28" fill="url(#bg)"/>
-<rect x="7" y="7" width="986" height="326" rx="23" fill="none" stroke="#8c682f" stroke-opacity=".65" stroke-width="2"/>
-<g transform="translate(175 170)" fill="none" stroke="url(#gold)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)">
-  <circle r="116" stroke-width="3" opacity=".72"/>
-  <circle r="101" stroke-width="2" opacity=".55"/>
-  <path d="M0-82 C-43-112-91-83-87-39 C-84-5-47 10-26-12 C-10-29-20-54-39-53 C-53-52-58-36-47-27" />
-  <path d="M0-82 C43-112 91-83 87-39 C84-5 47 10 26-12 C10-29 20-54 39-53 C53-52 58-36 47-27" />
-  <path d="M0 82 C-43 112-91 83-87 39 C-84 5-47-10-26 12 C-10 29-20 54-39 53 C-53 52-58 36-47 27" />
-  <path d="M0 82 C43 112 91 83 87 39 C84 5 47-10 26 12 C10 29 20 54 39 53 C53 52 58 36 47 27" />
-  <path d="M-16-43 Q0-63 16-43 L30-20 Q0 0 30 20 L16 43 Q0 63-16 43 L-30 20 Q0 0-30-20 Z" stroke-width="5"/>
-  <path d="M-116 0 H-78 M78 0 H116 M0-116 V-82 M0 82 V116" stroke-width="4" opacity=".8"/>
-  <path d="M-95-70 Q-70-95-45-92 M95-70 Q70-95 45-92 M-95 70 Q-70 95-45 92 M95 70 Q70 95 45 92" stroke-width="4"/>
+<rect width="1000" height="340" rx="30" fill="url(#night)"/>
+<ellipse cx="500" cy="170" rx="500" ry="220" fill="url(#halo)"/>
+<rect x="6" y="6" width="988" height="328" rx="25" fill="none" stroke="url(#metal)" stroke-opacity=".58" stroke-width="2"/>
+<rect x="13" y="13" width="974" height="314" rx="20" fill="none" stroke="url(#aurora)" stroke-opacity=".16" stroke-width="1"/>
+<g transform="translate(176 170)">
+  <circle r="132" fill="#091326" fill-opacity=".32" stroke="url(#aurora)" stroke-opacity=".45" stroke-width="1.5"/>
+  <circle r="119" fill="none" stroke="url(#metal)" stroke-width="2.5" opacity=".88"/>
+  <circle r="108" fill="none" stroke="url(#aurora)" stroke-width="1.4" opacity=".7" stroke-dasharray="2 7"/>
+  <circle r="92" fill="none" stroke="url(#metal)" stroke-width="1.6" opacity=".42"/>
+  <g fill="none" stroke="url(#metal)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" filter="url(#softGlow)">
+    <path d="M0-78 C-30-111-83-105-91-62 C-98-27-69-5-43-17 C-22-27-23-54-43-57 C-57-59-66-46-58-35"/>
+    <path d="M0-78 C30-111 83-105 91-62 C98-27 69-5 43-17 C22-27 23-54 43-57 C57-59 66-46 58-35"/>
+    <path d="M0 78 C-30 111-83 105-91 62 C-98 27-69 5-43 17 C-22 27-23 54-43 57 C-57 59-66 46-58 35"/>
+    <path d="M0 78 C30 111 83 105 91 62 C98 27 69 5 43 17 C22 27 23 54 43 57 C57 59 66 46 58 35"/>
+  </g>
+  <path d="M0-48 L15-15 L48 0 L15 15 L0 48 L-15 15 L-48 0 L-15-15 Z" fill="#0d1a2e" stroke="url(#aurora)" stroke-width="3"/>
+  <path d="M0-28 L9-9 L28 0 L9 9 L0 28 L-9 9 L-28 0 L-9-9 Z" fill="url(#metal)" opacity=".95"/>
+  <g stroke="url(#aurora)" stroke-width="3" stroke-linecap="round" opacity=".9">
+    <path d="M0-130 V-117 M0 117 V130 M-130 0 H-117 M117 0 H130"/>
+    <path d="M-92-92 L-82-82 M92-92 L82-82 M-92 92 L-82 82 M92 92 L82 82"/>
+  </g>
+  <g fill="url(#metal)">
+    <circle cx="0" cy="-119" r="3.5"/><circle cx="119" cy="0" r="3.5"/>
+    <circle cx="0" cy="119" r="3.5"/><circle cx="-119" cy="0" r="3.5"/>
+  </g>
 </g>
-<g fill="url(#gold)">
-  <text x="340" y="195" font-family="Georgia, 'Noto Serif', serif" font-size="126" font-weight="700" letter-spacing="1">Угалз.мн</text>
-  <path d="M345 226 H890" stroke="#d6ad55" stroke-width="2" opacity=".65"/>
-  <text x="348" y="272" font-family="Arial, sans-serif" font-size="25" font-weight="600" letter-spacing="5">МОНГОЛЫН ЗАР · ХУДАЛДАА</text>
+<g filter="url(#textShadow)">
+  <text x="345" y="191" fill="url(#word)" font-family="'Noto Serif', Georgia, serif" font-size="119" font-weight="700" letter-spacing="1">Угалз.мн</text>
 </g>
+<path d="M350 222 H917" stroke="url(#metal)" stroke-width="2" opacity=".72"/>
+<path d="M350 228 H917" stroke="url(#aurora)" stroke-width="1" opacity=".25"/>
+<g fill="#d9e9f5" font-family="Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="5">
+  <text x="354" y="273">МОНГОЛЫН ЗАР · ХУДАЛДАА</text>
+</g>
+<circle cx="925" cy="270" r="3" fill="url(#aurora)"/>
 </svg>
