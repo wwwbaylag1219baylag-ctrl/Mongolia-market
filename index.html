@@ -798,6 +798,43 @@ textarea:disabled,
 }
 </style>
 
+
+<style id="NEXORA-RETAIL-FOUR-ROW-SPACING-TIGHT-2026">
+/* Худалдаа > жижиглэн каталог: дөрвөн мөрийн хоорондын илүүдэл зайг арилгана. */
+@media(max-width:699px){
+  #shop #nx-retail-categories,
+  #shop #nx-retail-categories .nx-temu-products{
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    align-content:start!important;
+    justify-content:start!important;
+  }
+  #shop #nx-retail-categories .nx-temu-products{
+    display:grid!important;
+    grid-auto-flow:column!important;
+    grid-template-rows:repeat(4,max-content)!important;
+    grid-auto-rows:max-content!important;
+    grid-auto-columns:min(42vw,170px)!important;
+    align-items:start!important;
+    gap:5px 8px!important;
+    row-gap:5px!important;
+    column-gap:8px!important;
+    padding:3px 12px 8px!important;
+    margin:0!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+  }
+  #shop #nx-retail-categories .nx-temu-products>.nx-temu-product{
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    align-self:start!important;
+    margin:0!important;
+  }
+}
+</style>
+
 </head>
 
 <body>
