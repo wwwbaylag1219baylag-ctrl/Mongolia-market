@@ -797,22 +797,58 @@ textarea:disabled,
 
 
 <style id="NEXORA-RETAIL-ONLY-ROW-GAP-2026">
-/* Зөвхөн мөр хоорондын зай. Картын өргөн, зураг, агуулгын хэмжээнд хүрэхгүй. */
-@media(max-width:699px){
-  #shop #nx-retail-categories .nx-temu-products{
+/* Retail demo catalog: compact row spacing only; card dimensions/content remain unchanged. */
+#market-app #nx-retail-categories .nx-temu-products,
+#shop #nx-retail-categories .nx-temu-products,
+#nx-retail-categories .nx-temu-products{
+  display:grid!important;
+  grid-auto-flow:column!important;
+  grid-template-rows:repeat(4,max-content)!important;
+  grid-auto-rows:max-content!important;
+  align-content:start!important;
+  align-items:start!important;
+  row-gap:6px!important;
+  column-gap:8px!important;
+  gap:6px 8px!important;
+}
+#market-app #nx-retail-categories .nx-temu-products>.nx-temu-product,
+#shop #nx-retail-categories .nx-temu-products>.nx-temu-product,
+#nx-retail-categories .nx-temu-products>.nx-temu-product{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  align-self:start!important;
+}
+@media(min-width:700px){
+  #market-app #nx-retail-categories .nx-temu-products,
+  #shop #nx-retail-categories .nx-temu-products,
+  #nx-retail-categories .nx-temu-products{
     grid-template-rows:repeat(4,max-content)!important;
-    grid-auto-rows:max-content!important;
-    align-content:start!important;
-    align-items:start!important;
-    row-gap:6px!important;
-    column-gap:8px!important;
-    gap:6px 8px!important;
+    row-gap:8px!important;
+    gap:8px 10px!important;
   }
-  #shop #nx-retail-categories .nx-temu-products>.nx-temu-product{
-    height:auto!important;
-    min-height:0!important;
-    align-self:start!important;
-  }
+}
+</style>
+
+<style id="NEXORA-RETAIL-ROW-GAP-CASCADE-LAST-2026">
+/* Final cascade guard: target the actual retail grid regardless of wrapper nesting. */
+#market-app #nx-retail-categories .nx-temu-products,
+#shop #nx-retail-categories .nx-temu-products,
+#nx-retail-categories .nx-temu-products{
+  grid-template-rows:repeat(4,max-content)!important;
+  grid-auto-rows:max-content!important;
+  align-content:start!important;
+  align-items:start!important;
+  row-gap:6px!important;
+  gap:6px 8px!important;
+}
+#market-app #nx-retail-categories .nx-temu-products>.nx-temu-product,
+#shop #nx-retail-categories .nx-temu-products>.nx-temu-product,
+#nx-retail-categories .nx-temu-products>.nx-temu-product{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  align-self:start!important;
 }
 </style>
 
