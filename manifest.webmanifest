@@ -1,0 +1,21 @@
+{
+  "id": "/Mongolia-market/",
+  "name": "NEXORA | Mongolia Marketplace",
+  "short_name": "NEXORA",
+  "description": "Монголын зарын болон худалдааны нэгдсэн платформ",
+  "lang": "mn",
+  "start_url": "/Mongolia-market/",
+  "scope": "/Mongolia-market/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#090909",
+  "theme_color": "#090909",
+  "icons": [
+    {
+      "src": "./assets/nexora-app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
