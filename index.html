@@ -398,7 +398,7 @@ html.nx-theme-pending{background:#090909}html.nx-theme-pending body{visibility:h
   #shop .nx-temu-page::-webkit-scrollbar { display:none; }
   #shop .nx-temu-header { position:sticky; top:0; z-index:30; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 15px 10px; background:rgba(255,255,255,.97); border-bottom:1px solid #f0f0f0; }
   #shop .nx-temu-brand { display:flex; align-items:center; gap:8px; min-width:0; }
-  #shop .nx-temu-mark { width:34px; height:34px; display:grid; place-items:center; flex:0 0 34px; border-radius:11px 11px 11px 4px; background:linear-gradient(145deg,#ff8a24,#f04c18); color:#fff; font-size:21px; font-weight:950; transform:rotate(-4deg); box-shadow:0 4px 10px #f05a2026; }
+  #shop .nx-temu-mark { width:38px; height:38px; display:block; flex:0 0 38px; border-radius:11px; object-fit:cover; border:1px solid rgba(214,173,85,.45); box-shadow:0 3px 12px rgba(0,0,0,.16); }
   #shop .nx-temu-brand strong { color:#202124; font-size:21px; font-weight:950; letter-spacing:1.4px; }
   #shop .nx-temu-profile { width:42px; height:42px; flex:0 0 42px; display:grid; place-items:center; overflow:hidden; padding:0; border:2px solid #f1a15b; border-radius:50%; background:#fff7f0; color:#f16b22; cursor:pointer; }
   #shop .nx-temu-profile img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
@@ -5711,7 +5711,7 @@ textarea:disabled,
     retailActiveCategory=null;
     const count=cart.reduce((n,x)=>n+x.qty,0);
     host.innerHTML='<div class="nx-temu-page">'+
-      '<header class="nx-temu-header"><div class="nx-temu-brand"><span class="nx-temu-mark">У</span><strong>Угалз.мн</strong></div><button class="nx-temu-profile" id="nx-temu-profile" type="button" aria-label="Профайл зураг эсвэл лого"><span style="font-size:19px">◯</span></button></header>'+
+      '<header class="nx-temu-header"><div class="nx-temu-brand"><img class="nx-temu-mark" src="./assets/ugalz-app-icon.svg" alt=""><strong>Угалз.мн</strong></div><button class="nx-temu-profile" id="nx-temu-profile" type="button" aria-label="Профайл зураг эсвэл лого"><span style="font-size:19px">◯</span></button></header>'+
       '<div class="nx-temu-search-wrap"><span class="nx-temu-search-icon">⌕</span><input class="nx-temu-search" id="nx-retail-search" type="search" placeholder="Бараа хайх, дэлгүүр хайх…" value="'+esc(searchText)+'"></div>'+
       '<div class="nx-temu-category-rail" id="nx-temu-category-rail"></div>'+
       '<section class="nx-temu-hero"><div class="nx-temu-hero-copy"><small>Угалз.мн · ХУДАЛДАА</small><h2>Худалдаа нэг дороос</h2><p>Жижиглэн болон бөөний барааг нэг каталогоос хайж сонгоорой.</p></div><div class="nx-temu-hero-art">🛍️</div></section>'+
