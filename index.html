@@ -799,41 +799,7 @@ textarea:disabled,
 </style>
 
 
-<style id="NEXORA-RETAIL-FOUR-ROW-SPACING-TIGHT-2026">
-/* Худалдаа > жижиглэн каталог: дөрвөн мөрийн хоорондын илүүдэл зайг арилгана. */
-@media(max-width:699px){
-  #shop #nx-retail-categories,
-  #shop #nx-retail-categories .nx-temu-products{
-    height:auto!important;
-    min-height:0!important;
-    max-height:none!important;
-    align-content:start!important;
-    justify-content:start!important;
-  }
-  #shop #nx-retail-categories .nx-temu-products{
-    display:grid!important;
-    grid-auto-flow:column!important;
-    grid-template-rows:repeat(4,max-content)!important;
-    grid-auto-rows:max-content!important;
-    grid-auto-columns:min(42vw,170px)!important;
-    align-items:start!important;
-    gap:5px 8px!important;
-    row-gap:5px!important;
-    column-gap:8px!important;
-    padding:3px 12px 8px!important;
-    margin:0!important;
-    overflow-x:auto!important;
-    overflow-y:hidden!important;
-  }
-  #shop #nx-retail-categories .nx-temu-products>.nx-temu-product{
-    height:auto!important;
-    min-height:0!important;
-    max-height:none!important;
-    align-self:start!important;
-    margin:0!important;
-  }
-}
-</style>
+
 
 
 <style id="NEXORA-RETAIL-CATEGORY-CHIPS-CLEAN-ORANGE-2026">
@@ -860,28 +826,37 @@ textarea:disabled,
 </style>
 
 
-<style id="NEXORA-RETAIL-GRID-REMOVE-EMPTY-TRACKS-2026">
-/* Жижиглэнгийн барааны 4 мөр: дэлгэцийн өндрөөр сунгахгүй, картын бодит өндрөөр залгуулна. */
+
+
+
+
+
+
+<style id="NEXORA-RETAIL-GRID-SPACING-AUTHORITATIVE-2026">
+/* Нэг эх сурвалжтай тохиргоо: жижиглэн барааны 4 эгнээний бодит, тогтвортой зай. */
 #shop #nx-retail-categories .nx-temu-products{
   display:grid!important;
   grid-auto-flow:column!important;
-  grid-template-rows:repeat(4,min-content)!important;
-  grid-auto-rows:min-content!important;
+  grid-template-rows:repeat(4,max-content)!important;
+  grid-auto-rows:max-content!important;
   grid-auto-columns:min(42vw,170px)!important;
   align-content:start!important;
   align-items:start!important;
   justify-content:start!important;
   justify-items:stretch!important;
-  height:max-content!important;
+  height:auto!important;
   min-height:0!important;
   max-height:none!important;
-  gap:8px 8px!important;
-  row-gap:8px!important;
+  gap:7px 8px!important;
+  row-gap:7px!important;
   column-gap:8px!important;
   padding:2px 12px 8px!important;
   margin:0!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
 }
 #shop #nx-retail-categories .nx-temu-products>.nx-temu-product{
+  box-sizing:border-box!important;
   display:flex!important;
   flex-direction:column!important;
   align-self:start!important;
@@ -894,40 +869,12 @@ textarea:disabled,
   height:auto!important;
   min-height:0!important;
   max-height:none!important;
-  align-content:start!important;
-}
-</style>
-
-
-<style id="NEXORA-RETAIL-ROW-TRACKS-FINAL-2026">
-/* Барааны grid: мөрүүдийг 1fr-ээр дэлгэцийн өндрөөр сунгахгүй, картын бодит өндрөөр байрлуулна. */
-#shop #nx-retail-categories > .nx-temu-products{
-  display:grid!important;
-  grid-auto-flow:column!important;
-  grid-template-rows:repeat(4,max-content)!important;
-  grid-auto-rows:max-content!important;
-  align-content:start!important;
-  align-items:start!important;
-  justify-content:start!important;
-  height:auto!important;
-  min-height:0!important;
-  max-height:none!important;
-  gap:8px 8px!important;
-  row-gap:8px!important;
-  column-gap:8px!important;
-  padding:2px 12px 8px!important;
-  margin:0!important;
-}
-#shop #nx-retail-categories > .nx-temu-products > .nx-temu-product{
-  height:auto!important;
-  min-height:0!important;
-  max-height:none!important;
   align-self:start!important;
-  margin:0!important;
 }
 @media(min-width:700px){
-  #shop #nx-retail-categories > .nx-temu-products{
+  #shop #nx-retail-categories .nx-temu-products{
     grid-template-rows:repeat(3,max-content)!important;
+    grid-auto-columns:180px!important;
     gap:10px 10px!important;
   }
 }
