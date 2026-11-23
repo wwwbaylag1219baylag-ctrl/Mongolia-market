@@ -898,6 +898,41 @@ textarea:disabled,
 }
 </style>
 
+
+<style id="NEXORA-RETAIL-ROW-TRACKS-FINAL-2026">
+/* Барааны grid: мөрүүдийг 1fr-ээр дэлгэцийн өндрөөр сунгахгүй, картын бодит өндрөөр байрлуулна. */
+#shop #nx-retail-categories > .nx-temu-products{
+  display:grid!important;
+  grid-auto-flow:column!important;
+  grid-template-rows:repeat(4,max-content)!important;
+  grid-auto-rows:max-content!important;
+  align-content:start!important;
+  align-items:start!important;
+  justify-content:start!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  gap:8px 8px!important;
+  row-gap:8px!important;
+  column-gap:8px!important;
+  padding:2px 12px 8px!important;
+  margin:0!important;
+}
+#shop #nx-retail-categories > .nx-temu-products > .nx-temu-product{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  align-self:start!important;
+  margin:0!important;
+}
+@media(min-width:700px){
+  #shop #nx-retail-categories > .nx-temu-products{
+    grid-template-rows:repeat(3,max-content)!important;
+    gap:10px 10px!important;
+  }
+}
+</style>
+
 </head>
 
 <body>
