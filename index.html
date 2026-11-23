@@ -854,20 +854,21 @@ textarea:disabled,
 
   <link rel="stylesheet" href="./assets/ugalz-aurora-001.css">
 
-<style id="UGALZ-LOGO-MOTION-008">
-/* Зөвхөн эх логог бүхэлд нь зөөлөн хөдөлгөнө. Нэмэлт дусал, дүрс үүсгэхгүй. */
-#home .hero-logo{display:flex;justify-content:center;align-items:center;min-height:0;margin:0 auto 8px}
+<style id="UGALZ-LOGO-MOTION-009">
+/* Эх PNG хөдөлгөөнгүй. Давхарласан хуулбарын зөвхөн усан төв хэсэгт долгионы displacement үйлчилнэ. */
+#home .hero-logo{position:relative;isolation:isolate;display:flex;justify-content:center;align-items:center;min-height:0;margin:0 auto 8px;overflow:visible}
 #home .nexora-logo-hero{
-  display:block;width:min(76vw,350px);height:auto;max-height:none;object-fit:contain;
-  transform-origin:50% 50%;
-  will-change:transform,filter;
-  animation:ugalzLogoAlive 6.8s ease-in-out infinite;
+  position:relative;z-index:0;display:block;width:min(76vw,350px);height:auto;max-height:none;object-fit:contain;
+  transform:none!important;filter:none!important;animation:none!important;will-change:auto;
 }
-@keyframes ugalzLogoAlive{
-  0%,100%{transform:translateY(0) scale(1) rotate(0deg);filter:drop-shadow(0 10px 22px rgba(70,190,220,.18)) brightness(1) saturate(1)}
-  25%{transform:translateY(-3px) scale(1.012) rotate(-.25deg);filter:drop-shadow(0 13px 25px rgba(70,190,220,.25)) brightness(1.035) saturate(1.06)}
-  50%{transform:translateY(0) scale(1.018) rotate(0deg);filter:drop-shadow(0 15px 28px rgba(70,190,220,.3)) brightness(1.055) saturate(1.1)}
-  75%{transform:translateY(2px) scale(1.008) rotate(.2deg);filter:drop-shadow(0 12px 24px rgba(70,190,220,.22)) brightness(1.02) saturate(1.04)}
+#home .hero-logo:after{
+  content:"";position:absolute;z-index:1;inset:0;pointer-events:none;
+  background-image:url("./assets/a_highly_polished_cinematic_3d_web_brand_logo_sce-1.png");
+  background-repeat:no-repeat;background-position:center;background-size:contain;
+  clip-path:ellipse(31% 29% at 50% 48%);
+  -webkit-clip-path:ellipse(31% 29% at 50% 48%);
+  filter:url(#ugalzWaterDisplacement);
+  opacity:.98;
 }
 @media(max-width:600px){
  #home .home-content{padding-top:16px}
@@ -875,10 +876,11 @@ textarea:disabled,
  #home .nexora-logo-hero{width:min(76vw,310px)}
 }
 @media(prefers-reduced-motion:reduce){
- #home .nexora-logo-hero{animation:none!important;will-change:auto}
+ #home .hero-logo:after{filter:none!important;opacity:0}
 }
 </style>
 
+<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden"><filter id="ugalzWaterDisplacement" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.025" numOctaves="2" seed="8" result="waterNoise"><animate attributeName="baseFrequency" values="0.012 0.025;0.018 0.035;0.012 0.025" dur="7s" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" in2="waterNoise" scale="13" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
 </head>
 
 <body>
