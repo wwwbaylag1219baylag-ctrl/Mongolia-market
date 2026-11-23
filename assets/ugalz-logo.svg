@@ -1,66 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 340" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 700" role="img" aria-labelledby="title desc">
 <title id="title">Угалз.мн</title>
-<desc id="desc">Монгол угалзны хээ, тэнгэрийн хөх гэрэл, алтлаг металл өнгө хосолсон Угалз.мн брэндийн тэмдэг</desc>
+<desc id="desc">Цэнхэр дугуй медальон, алтлаг Монгол угалз болон Угалз.мн бичигтэй брэндийн лого</desc>
 <defs>
-  <linearGradient id="night" x1="0" y1="0" x2="1" y2="1">
-    <stop stop-color="#080d1c"/><stop offset=".52" stop-color="#111a31"/><stop offset="1" stop-color="#17132b"/>
-  </linearGradient>
-  <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
-    <stop stop-color="#fff5d6"/><stop offset=".2" stop-color="#f4d58f"/><stop offset=".48" stop-color="#bd8b3f"/><stop offset=".72" stop-color="#fff0bd"/><stop offset="1" stop-color="#9b682b"/>
-  </linearGradient>
-  <linearGradient id="aurora" x1="0" y1="0" x2="1" y2="1">
-    <stop stop-color="#baf7ff"/><stop offset=".48" stop-color="#72ddec"/><stop offset="1" stop-color="#b8a8ff"/>
-  </linearGradient>
-  <linearGradient id="word" x1="0" y1="0" x2="0" y2="1">
-    <stop stop-color="#fff8e5"/><stop offset=".42" stop-color="#f2d28c"/><stop offset="1" stop-color="#c08b43"/>
-  </linearGradient>
-  <radialGradient id="halo">
-    <stop stop-color="#6be3f2" stop-opacity=".22"/><stop offset=".58" stop-color="#9b8aff" stop-opacity=".10"/><stop offset="1" stop-color="#091326" stop-opacity="0"/>
-  </radialGradient>
-  <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
-    <feGaussianBlur stdDeviation="7" result="blur"/>
-    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-  </filter>
-  <filter id="textShadow" x="-20%" y="-30%" width="140%" height="170%">
-    <feGaussianBlur in="SourceAlpha" stdDeviation="5" result="b"/>
-    <feOffset dy="5" result="o"/>
-    <feComponentTransfer><feFuncA type="linear" slope=".35"/></feComponentTransfer>
-    <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
-  </filter>
+ <linearGradient id="plate" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e6fbff"/><stop offset=".48" stop-color="#9eddf0"/><stop offset="1" stop-color="#4f91b6"/></linearGradient>
+ <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset=".28" stop-color="#b9dce9"/><stop offset=".58" stop-color="#203c61"/><stop offset=".82" stop-color="#f5ffff"/><stop offset="1" stop-color="#315a80"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff5d0"/><stop offset=".24" stop-color="#d8ad5d"/><stop offset=".55" stop-color="#70451f"/><stop offset=".76" stop-color="#fff0b0"/><stop offset="1" stop-color="#9c672d"/></linearGradient>
+ <linearGradient id="water" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#d9fbff"/><stop offset=".4" stop-color="#61c8ec"/><stop offset=".75" stop-color="#277eae"/><stop offset="1" stop-color="#e9ffff"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur in="SourceAlpha" stdDeviation="7" result="b"/><feOffset dy="8"/><feComponentTransfer><feFuncA type="linear" slope=".38"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
 </defs>
-<rect width="1000" height="340" rx="30" fill="url(#night)"/>
-<ellipse cx="500" cy="170" rx="500" ry="220" fill="url(#halo)"/>
-<rect x="6" y="6" width="988" height="328" rx="25" fill="none" stroke="url(#metal)" stroke-opacity=".58" stroke-width="2"/>
-<rect x="13" y="13" width="974" height="314" rx="20" fill="none" stroke="url(#aurora)" stroke-opacity=".16" stroke-width="1"/>
-<g transform="translate(176 170)">
-  <circle r="132" fill="#091326" fill-opacity=".32" stroke="url(#aurora)" stroke-opacity=".45" stroke-width="1.5"/>
-  <circle r="119" fill="none" stroke="url(#metal)" stroke-width="2.5" opacity=".88"/>
-  <circle r="108" fill="none" stroke="url(#aurora)" stroke-width="1.4" opacity=".7" stroke-dasharray="2 7"/>
-  <circle r="92" fill="none" stroke="url(#metal)" stroke-width="1.6" opacity=".42"/>
-  <g fill="none" stroke="url(#metal)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" filter="url(#softGlow)">
-    <path d="M0-78 C-30-111-83-105-91-62 C-98-27-69-5-43-17 C-22-27-23-54-43-57 C-57-59-66-46-58-35"/>
-    <path d="M0-78 C30-111 83-105 91-62 C98-27 69-5 43-17 C22-27 23-54 43-57 C57-59 66-46 58-35"/>
-    <path d="M0 78 C-30 111-83 105-91 62 C-98 27-69 5-43 17 C-22 27-23 54-43 57 C-57 59-66 46-58 35"/>
-    <path d="M0 78 C30 111 83 105 91 62 C98 27 69 5 43 17 C22 27 23 54 43 57 C57 59 66 46 58 35"/>
-  </g>
-  <path d="M0-48 L15-15 L48 0 L15 15 L0 48 L-15 15 L-48 0 L-15-15 Z" fill="#0d1a2e" stroke="url(#aurora)" stroke-width="3"/>
-  <path d="M0-28 L9-9 L28 0 L9 9 L0 28 L-9 9 L-28 0 L-9-9 Z" fill="url(#metal)" opacity=".95"/>
-  <g stroke="url(#aurora)" stroke-width="3" stroke-linecap="round" opacity=".9">
-    <path d="M0-130 V-117 M0 117 V130 M-130 0 H-117 M117 0 H130"/>
-    <path d="M-92-92 L-82-82 M92-92 L82-82 M-92 92 L-82 82 M92 92 L82 82"/>
-  </g>
-  <g fill="url(#metal)">
-    <circle cx="0" cy="-119" r="3.5"/><circle cx="119" cy="0" r="3.5"/>
-    <circle cx="0" cy="119" r="3.5"/><circle cx="-119" cy="0" r="3.5"/>
-  </g>
+<ellipse cx="370" cy="365" rx="292" ry="292" fill="#142d4c" opacity=".25"/>
+<circle cx="350" cy="345" r="286" fill="url(#rim)" stroke="#203958" stroke-width="5"/>
+<circle cx="350" cy="345" r="270" fill="url(#plate)" stroke="#f4ffff" stroke-width="4"/>
+<circle cx="350" cy="345" r="252" fill="none" stroke="#4c7794" stroke-width="2" opacity=".65"/>
+<path d="M350 116 L379 151 L350 186 L321 151 Z" fill="url(#gold)" stroke="#65421f" stroke-width="4" filter="url(#shadow)"/>
+<path d="M350 130 L366 151 L350 171 L334 151 Z" fill="none" stroke="#fff4cf" stroke-width="3"/>
+<text x="350" y="222" text-anchor="middle" fill="#66451f" font-family="Arial,sans-serif" font-size="21" font-weight="700" letter-spacing="3">МОНГОЛЫН НЭГДСЭН ПЛАТФОРМ</text>
+<text x="350" y="344" text-anchor="middle" fill="url(#gold)" stroke="#68451f" stroke-width="1.2" paint-order="stroke" font-family="Georgia,'Noto Serif',serif" font-size="91" font-weight="700" filter="url(#shadow)">Угалз.мн</text>
+<path d="M150 378 Q350 394 550 378" fill="none" stroke="#fff7d9" stroke-width="3" opacity=".75"/>
+<text x="350" y="438" text-anchor="middle" fill="#634522" font-family="Georgia,serif" font-size="42" letter-spacing="5" filter="url(#shadow)">ЗАР · ХУДАЛДАА</text>
+<g fill="url(#water)" stroke="#dffaff" stroke-width="2" opacity=".92">
+ <path d="M184 460 C180 500 185 525 171 552 C157 580 165 602 182 602 C201 602 205 579 193 552 C182 527 190 494 184 460Z"/>
+ <path d="M270 470 C266 516 275 545 260 577 C247 606 257 624 273 624 C291 624 296 603 283 576 C271 547 278 512 270 470Z"/>
+ <path d="M430 468 C426 510 435 540 420 570 C408 596 418 616 434 616 C451 616 456 596 444 569 C431 539 438 508 430 468Z"/>
+ <path d="M516 456 C511 494 518 519 507 544 C496 569 504 586 518 586 C534 586 539 569 527 543 C517 518 523 490 516 456Z"/>
 </g>
-<g filter="url(#textShadow)">
-  <text x="345" y="191" fill="url(#word)" font-family="'Noto Serif', Georgia, serif" font-size="119" font-weight="700" letter-spacing="1">Угалз.мн</text>
-</g>
-<path d="M350 222 H917" stroke="url(#metal)" stroke-width="2" opacity=".72"/>
-<path d="M350 228 H917" stroke="url(#aurora)" stroke-width="1" opacity=".25"/>
-<g fill="#d9e9f5" font-family="Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="5">
-  <text x="354" y="273">МОНГОЛЫН ЗАР · ХУДАЛДАА</text>
-</g>
-<circle cx="925" cy="270" r="3" fill="url(#aurora)"/>
+<path d="M350 442 C341 490 350 529 330 567 C309 609 327 645 350 645 C374 645 392 609 370 567 C350 529 359 490 350 442Z" fill="url(#gold)" stroke="#7a542a" stroke-width="3" filter="url(#shadow)"/>
+<path d="M344 489 C342 532 342 554 330 578" fill="none" stroke="#fff8dc" stroke-width="7" stroke-linecap="round" opacity=".85"/>
 </svg>
