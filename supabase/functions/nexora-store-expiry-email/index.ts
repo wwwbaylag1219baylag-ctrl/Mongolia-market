@@ -84,7 +84,7 @@ Deno.serve(async (req: Request) => {
       const html = `<div style="font-family:Arial,sans-serif;line-height:1.6;color:#222">
         <h2>${safeTitle}</h2>
         <p>${safeMessage}</p>
-        <p>Дэлгүүрийн эрхээ сунгахын тулд NEXORA хэрэглэгчийн самбарт нэвтэрнэ үү.</p>
+        <p>Дэлгүүрийн эрхээ сунгахын тулд Угалз.мн хэрэглэгчийн самбарт нэвтэрнэ үү.</p>
       </div>`;
 
       const response = await fetch("https://api.resend.com/emails", {
@@ -96,7 +96,7 @@ Deno.serve(async (req: Request) => {
         body: JSON.stringify({
           from: fromEmail,
           to: [email],
-          subject: String(notice.title ?? "NEXORA сануулга"),
+          subject: String(notice.title ?? "Угалз.мн сануулга"),
           html,
         }),
         signal: AbortSignal.timeout(15000),
