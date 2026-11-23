@@ -7957,6 +7957,7 @@ function apply(root,lang){if(!root)return;var w=document.createTreeWalker(root,N
 var current="mn",busy=false;function refresh(){current=ix[select.value]!=null?select.value:"mn";busy=true;apply(document.getElementById("shop"),current);busy=false;}
 select.addEventListener("change",refresh);var shop=document.getElementById("shop");if(shop)new MutationObserver(function(){if(!busy)apply(shop,current);}).observe(shop,{childList:true,subtree:true});refresh();
 })();
+</script>
 
 <script id="NEXORA-PROFILE-PUBLISH-I18N-2026">
 (function(){
