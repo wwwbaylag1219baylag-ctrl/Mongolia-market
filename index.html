@@ -6080,8 +6080,8 @@ textarea:disabled,
     if(!window.__nxDeliveryPoint){msg.textContent="Газрын зураг дээр хүргүүлэх байршлаа pin тавьж сонгоно уу.";return;}
     const retailIds=cart.map(x=>x.id),wholesaleIds=wholesaleCart.map(x=>x.id);
     const [retailRes,wholesaleRes]=await Promise.all([
-      hasRetail?db.from("market_products").select("id,owner_id,stock_quantity,min_order_quantity").in("id",retailIds).eq("status","active"):Promise.resolve({data:[],error:null}),
-      hasWholesale?db.from("wholesale_products").select("id,owner_id,stock_quantity,min_order_quantity").in("id",wholesaleIds).eq("status","active"):Promise.resolve({data:[],error:null})
+      hasRetail?db.from("market_products").select("id,owner_id,stock_quantity,min_order_quantity").in("id",retailIds).in("status",["active","approved"]):Promise.resolve({data:[],error:null}),
+      hasWholesale?db.from("wholesale_products").select("id,owner_id,stock_quantity,min_order_quantity").in("id",wholesaleIds).in("status",["active","approved"]):Promise.resolve({data:[],error:null})
     ]);
     if(retailRes.error||wholesaleRes.error){msg.textContent="Барааны мэдээллийг шалгахад алдаа гарлаа: "+(retailRes.error||wholesaleRes.error).message;return;}
     const retailMap=new Map((retailRes.data||[]).map(p=>[String(p.id),p]));
