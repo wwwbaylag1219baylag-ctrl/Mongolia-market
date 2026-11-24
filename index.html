@@ -5861,7 +5861,7 @@ textarea:disabled,
   window.NEXORA_SHOP_OPEN = async function(zone){
     if(zone!=="retail"&&zone!=="wholesale")return;
     await window.NEXORA?.open("shop");
-    if(zone==="retail")showRetailCatalog();
+    if(zone==="retail")await loadProducts();
     else await showWholesaleCatalog();
   };
   function renderRetailCategories(){
