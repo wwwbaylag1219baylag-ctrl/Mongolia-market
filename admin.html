@@ -77,15 +77,13 @@
  const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
  const money=v=>Number(v||0).toLocaleString("mn-MN")+" ₮";
  const tabs=[
-  ["overview","Тойм"],["ads","Энгийн зар (хуучин)"],["payments","Зарын төлбөр"],["products","Бараа"],
+  ["overview","Тойм"],["payments","Зарын төлбөр"],
   ["commercePayments","Худалдааны төлбөр"],["suppliers","Нийлүүлэгч"],
   ["pricing","Үнийн тохиргоо"],["theme","Дэвсгэр өнгө"]
  ];
  const sections={
-  ads:["Хуучин үнэгүй зарын хүсэлт","Өмнөх үнэгүй зарын хяналтад үлдсэн хүсэлтүүд"],
   payments:["Зарын төлбөр","Төлбөрийн баримт болон багцын мэдээлэл"],
-  products:["Бараа бүтээгдэхүүн","Нийтлэх зөвшөөрөл хүлээж буй бараа"],
-  commercePayments:["Худалдааны нэгдсэн төлбөр","Дэлгүүрийн эрх, нийлүүлэгчийн бүртгэл, жижиглэн болон бөөний бараа нийтлэх бүх төлбөрийг нэг жагсаалтаас хянана. Зар сурталчилгааны төлбөр тусдаа хэвээр."],
+  commercePayments:["Худалдааны нэгдсэн төлбөр","Дэлгүүрийн эрх, нийлүүлэгчийн бүртгэл, жижиглэн болон бөөний барааны эрхийн төлбөрийг нэг жагсаалтаас хянана. Барааны төлбөр баталгаажмагц бараа шууд нийтлэгдэнэ. Зар сурталчилгааны төлбөр тусдаа хэвээр."],
   suppliers:["Нийлүүлэгч","Бүртгэлтэй нийлүүлэгчдийн жагсаалт"],
   pricing:["Үнийн тохиргоо","Зарын багц болон лого, бараа байршуулалтын суурь хураамжийг удирдах"],
   theme:["Платформын өнгөний тохиргоо","Админ самбарын харагдах өнгийг өөрчлөх"]
@@ -194,24 +192,22 @@
  }
  async function overview(){
   const count=async(table,status)=>{let q=db.from(table).select("id",{count:"exact",head:true});if(status)q=q.eq("status",status);const {count,error}=await withTimeout(q,"Тоймын мэдээлэл татах: "+table);if(error)throw error;return count??0;};
-  const [ads,adPayments,retailProducts,wholesaleProducts,retailFees,wholesaleFees,supplierFees,storeFees,orderPayments,wholesaleOrderPayments]=await Promise.all([
-   count("classified_ads","pending_review"),count("payment_requests","pending_review"),
-   count("market_products","pending"),count("wholesale_products","pending"),
+  const [adPayments,retailFees,wholesaleFees,supplierFees,storeFees,orderPayments,wholesaleOrderPayments]=await Promise.all([
+   count("payment_requests","pending_review"),
    count("market_retail_fee_payments","pending"),count("wholesale_supplier_fee_payments","pending"),
-   count("market_supplier_registration_payments","pending"),count("nexora_store_payments","pending"),count("market_order_payment_requests","pending_review"),count("wholesale_order_payment_requests","pending_review")
+   count("market_supplier_registration_payments","pending"),count("nexora_store_payments","pending"),
+   count("market_order_payment_requests","pending_review"),count("wholesale_order_payment_requests","pending_review")
   ]);
   const stats=[
-   ["Үнэгүй зарын хүсэлт",ads,"ads"],
    ["Зарын төлбөр",adPayments,"payments"],
-   ["Жижиглэн + бөөний бараа",retailProducts+wholesaleProducts,"products"],
    ["Худалдааны төлбөрийн хүсэлт",retailFees+wholesaleFees+supplierFees+storeFees+orderPayments+wholesaleOrderPayments,"commercePayments"],
    ["Бүртгэлтэй нийлүүлэгч",await count("market_suppliers",null),"suppliers"]
   ];
-  return '<h2 class="nx-admin-section-title">Хяналтын тойм</h2><p class="nx-admin-section-note">Зарын төлбөр тусдаа. Худалдааны бүх төлбөр нэг удирдлагад нэгтгэгдсэн.</p><div class="nx-admin-stats">'+stats.map(x=>
+  return '<h2 class="nx-admin-section-title">Хяналтын тойм</h2><p class="nx-admin-section-note">Барааны төлбөр баталгаажмагц жижиглэн болон бөөний бараа шууд нийтлэгдэнэ. Зар болон худалдааны төлбөр тусдаа удирдлагатай.</p><div class="nx-admin-stats">'+stats.map(x=>
    '<div class="nx-admin-stat"><div class="nx-admin-stat-label">'+x[0]+'</div><div class="nx-admin-stat-value">'+x[1]+'</div><button type="button" class="nx-admin-stat-link" data-open-tab="'+x[2]+'">Жагсаалт харах →</button></div>'
   ).join("")+'</div>';
  }
- async function loadPricing(){
+async function loadPricing(){
   const body=document.getElementById("nx-admin-body");
   body.innerHTML='<h2 class="nx-admin-section-title">Үнийн тохиргоо</h2><p class="nx-admin-section-note">Зарын багц тусдаа. Худалдаанд зөвхөн сарын суурь хураамж үйлчилнэ; бараа нийтлэхэд нэмэлт төлбөргүй.</p><div class="nx-admin-loading">Тохиргоо ачаалж байна…</div>';
   const {data,error}=await withTimeout(db.from("nexora_settings").select("ad_package_config,individual_price,company_price,duration_days").eq("id",1).single(),"Үнийн тохиргоо ачаалах");if(error)throw error;
@@ -311,17 +307,6 @@
     body.querySelectorAll("[data-open-tab]").forEach(b=>b.onclick=()=>{activeTab=b.dataset.openTab;loadTab();});
     return;
    }
-   if(activeTab==="products"){
-    const sources=[
-     ["market_products","id,title,category,price,owner_id,status,stock_quantity,min_order_quantity,created_at","product"],
-     ["wholesale_products","id,title,category,price,owner_id,status,stock_quantity,min_order_quantity,wholesale_price_tiers,created_at","wholesale_product"]
-    ];
-    const loaded=await Promise.all(sources.map(async x=>{const {data,error}=await query(x[0],x[1],[["status",x[3]||"pending"]]);if(error)throw error;return {data:data||[],type:x[2]};}));
-    const blocks=await Promise.all(loaded.map(x=>cards(x.data,x.type)));
-    body.innerHTML='<h2 class="nx-admin-section-title">Нэгдсэн барааны хяналт</h2><p class="nx-admin-section-note">Жижиглэн болон бөөний бараа нэг жагсаалтад. Зөвшөөрөх/татгалзах үйлдэл нь хуучин захиалгын холбоосыг хамгаалсан дотоод шалгалтаар хийгдэнэ.</p>'+(loaded.every(x=>!x.data.length)?empty("Хяналтад хүлээгдэж буй бараа алга."):blocks.join(""));
-    body.querySelectorAll("[data-review]").forEach(b=>b.onclick=()=>review(b.dataset.review,b.dataset.id,b.dataset.action));
-    return;
-   }
    if(activeTab==="commercePayments"){
     const sources=[
      ["market_retail_fee_payments","id,user_id,store_id,product_id,fee_type,amount,bank_name,account_number,account_holder,transfer_reference,receipt_path,status,admin_note,created_at","retail_fee_payment"],
@@ -339,12 +324,10 @@
     return;
    }
    const cfg={
-    ads:["classified_ads","id,title,category,price,status,package_type,package_days,package_amount,created_at",[["status","pending_review"]],"free_ad"],
     payments:["payment_requests","id,ad_id,user_id,amount,package_days,transfer_reference,receipt_path,status,created_at,classified_ads(id,title,category,subcategory,description,price,phone,package_type,package_days,package_amount,latitude,longitude,ad_images(image_path,display_order))",[["status","pending_review"]],"ad_payment"],
-    wholesaleProducts:["wholesale_products","id,title,category,price,owner_id,status,stock_quantity,min_order_quantity,wholesale_price_tiers,created_at",[["status","pending"]],"wholesale_product"],
     stores:["nexora_store_payments","id,store_id,user_id,amount,bank_name,transfer_reference,receipt_path,status,created_at",[["status","pending"]],"store_payment"],
     suppliers:["market_suppliers","id,name,type,owner_type,register_no,phone,email,address,status,created_at",[],""],
-
+   
    }[activeTab];
    const [table,cols,filters,type]=cfg;
    body.innerHTML='<h2 class="nx-admin-section-title">'+sections[activeTab][0]+'</h2><p class="nx-admin-section-note">'+sections[activeTab][1]+'</p><div class="nx-admin-loading">Жагсаалт ачаалж байна…</div>';
@@ -385,7 +368,6 @@
   try{
    if(type==="ad_payment")result=await db.rpc(action==="approve"?"admin_approve_payment_request":"admin_reject_payment_request",{p_request_id:id});
    else if(type==="posting_entitlement")result=await db.rpc("nexora_admin_review_posting_payment",{p_request_id:id,p_approve:action==="approve"});
-   else if(type==="free_ad")result=await db.rpc("admin_review_free_ad",{p_ad_id:id,p_approve:action==="approve"});
    else if(type==="wholesale_order_payment"){
     result=await db.rpc("nexora_review_wholesale_order_payment",{p_payment_id:id,p_approve:action==="approve",p_note:action==="approve"?null:"Төлбөрийн баримт баталгаажаагүй"});
    }
@@ -398,8 +380,6 @@
     const note=action==="approve"?null:(supplierRejectNote||"Төлбөрийн баримт баталгаажаагүй");
     result=await db.rpc("nexora_review_commerce_payment",{p_payment_kind:kindMap[type],p_payment_id:paymentId,p_approve:action==="approve",p_note:note});
    }
-   else if(type==="product")result=await db.rpc("nexora_review_market_retail_product",{p_product_id:id,p_approve:action==="approve"});
-   else if(type==="wholesale_product")result=await db.rpc("nexora_review_wholesale_product",{p_product_id:id,p_approve:action==="approve"});
    else if(type==="supplier")result=await db.from("market_suppliers").update({status:action==="approve"?"approved":"rejected"}).eq("id",id);
    if(result?.error)throw result.error;
    alert("Хүсэлтийг амжилттай шийдвэрлэлээ.");
