@@ -6178,9 +6178,9 @@ textarea:disabled,
   if(!window.supabase?.createClient){document.documentElement.classList.remove("nx-theme-pending");return;}
   const db=window.supabase.createClient(url,key);
   function apply(config){
-    const t={background:"#090909",panel:"#171717",text:"#f7f5ef",accent:"#d6ad55",button:"#d6ad55",button_text:"#090909",home_header_bg:"#301d27",header:"#301d27",secondary:"#583442",border:"#a88d75",muted:"#b9afa4",icon:"#d9b9a8",input:"#292522",retail_accent:"#9ebcf2",platform_ads_bg:"#242424",platform_ads_title:"#d6ad55",platform_ads_text:"#b9afa4",platform_ads_icon:"#d6ad55",platform_ads_border:"#a88d75",platform_shop_bg:"#242424",platform_shop_title:"#d6ad55",platform_shop_text:"#b9afa4",platform_shop_icon:"#d6ad55",platform_shop_border:"#a88d75",...(config||{})};
+    const t={background:"#090909",panel:"#171717",text:"#f7f5ef",accent:"#d6ad55",button:"#d6ad55",button_text:"#090909",home_header_bg:"#301d27",header:"#301d27",secondary:"#583442",border:"#a88d75",muted:"#b9afa4",icon:"#d9b9a8",input:"#292522",retail_accent:"#9ebcf2",platform_ads_bg:"#242424",platform_ads_title:"#d6ad55",platform_ads_text:"#b9afa4",platform_ads_icon:"#d6ad55",platform_ads_border:"#a88d75",platform_shop_bg:"#242424",platform_shop_title:"#d6ad55",platform_shop_text:"#b9afa4",platform_shop_icon:"#d6ad55",platform_shop_border:"#a88d75",platform_shop_input:"#ffffff",platform_shop_input_text:"#242424",platform_shop_placeholder:"#777777",platform_shop_button:"#f26722",platform_shop_button_text:"#ffffff",retail_accent:"#f26722",...(config||{})};
     const mix=(hex,level=100)=>{const n=parseInt(String(hex).replace("#",""),16);if(!Number.isFinite(n))return hex;const f=Math.max(0,Math.min(200,Number(level)||0))/100;const target=f<1?0:255;const k=f<1?1-f:f-1;return "#"+[16,8,0].map(s=>Math.round(((n>>s)&255)*(1-k)+target*k).toString(16).padStart(2,"0")).join("");};
-    if(!config?.retail_accent||String(config.retail_accent).toLowerCase()==="#f26722")t.retail_accent=t.platform_shop_title||t.accent;const c={...t};["background","panel","text","accent","button","button_text","home_header_bg","header","secondary","border","muted","icon","input","retail_accent","platform_ads_bg","platform_ads_title","platform_ads_text","platform_ads_icon","platform_ads_border","platform_shop_bg","platform_shop_title","platform_shop_text","platform_shop_icon","platform_shop_border"].forEach(k=>c[k]=mix(t[k],t[k+"_level"]??100));document.documentElement.style.setProperty("--nx-home-background",c.background);
+    if(!config?.retail_accent)t.retail_accent="#f26722";const c={...t};["background","panel","text","accent","button","button_text","home_header_bg","header","secondary","border","muted","icon","input","retail_accent","platform_ads_bg","platform_ads_title","platform_ads_text","platform_ads_icon","platform_ads_border","platform_shop_bg","platform_shop_title","platform_shop_text","platform_shop_icon","platform_shop_border","platform_shop_input","platform_shop_input_text","platform_shop_placeholder","platform_shop_button","platform_shop_button_text","retail_accent"].forEach(k=>c[k]=mix(t[k],t[k+"_level"]??100));document.documentElement.style.setProperty("--nx-home-background",c.background);
     const style=document.getElementById("nx-public-theme");
     const css=`
       #home{
@@ -6398,10 +6398,30 @@ textarea:disabled,
       #home .platform-card:nth-child(2) .platform-title{color:${c.platform_shop_title}!important}
       #home .platform-card:nth-child(2) .platform-description{color:${c.platform_shop_text}!important}
       #home .platform-card:nth-child(2) .platform-icon{color:${c.platform_shop_icon}!important}
+      /* Худалдааны хэсгийн гадаргуу, бичвэр, оруулах талбар, товч — админ тохиргоог яг дагана. */
+      #shop,#shop.screen,#shop.screen.active{background:${c.platform_shop_bg}!important;background-color:${c.platform_shop_bg}!important;color:${c.platform_shop_text}!important}
+      #shop>.topbar,#shop .topbar,#shop .nx-temu-header,#shop .nx-temu-bottom-nav{background:linear-gradient(145deg,${mix(c.platform_shop_bg,132)},${c.platform_shop_bg} 54%,${mix(c.platform_shop_bg,78)})!important;background-color:${c.platform_shop_bg}!important;color:${c.platform_shop_text}!important;border-color:${c.platform_shop_border}!important}
+      #shop .nx-market-card,#shop .nx-choice-card,#shop .nx-temu-product,#shop .nx-temu-product-info,#shop .nx-temu-search-wrap,#shop .nx-market-product-tile,#shop .nx-market-card h3{background:${c.platform_shop_bg}!important;color:${c.platform_shop_text}!important;border-color:${c.platform_shop_border}!important}
+      #shop .nx-temu-product-info *,#shop .nx-choice-card *,#shop .nx-market-card *{color:inherit}
+      #shop .nx-temu-section-head,#shop .nx-temu-section-head strong,#shop .nx-screen-title,#shop .nexora-ad-heading,#shop .page-heading{color:${c.platform_shop_title}!important}
+      #shop p,#shop label,#shop .nx-temu-product-name,#shop .nx-market-product-info,#shop .nx-market-product-info h3,#shop .nx-market-product-info p{color:${c.platform_shop_text}!important}
+      #shop input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),#shop select,#shop textarea,#shop .nx-market-input,#shop .nx-market-select,#shop .nx-market-textarea{background:${c.platform_shop_input}!important;background-color:${c.platform_shop_input}!important;color:${c.platform_shop_input_text}!important;border-color:${c.platform_shop_border}!important}
+      #shop input::placeholder,#shop textarea::placeholder,#shop .nx-market-input::placeholder,#shop .nx-market-textarea::placeholder{color:${c.platform_shop_placeholder}!important;opacity:1!important}
+      #shop .nx-market-btn:not(.secondary),#shop .nx-temu-product-action,#shop [data-retail-add],#shop button[type="submit"]{background:linear-gradient(145deg,${mix(c.retail_accent,132)},${c.retail_accent} 55%,${mix(c.retail_accent,78)})!important;background-color:${c.platform_shop_button}!important;color:${c.platform_shop_button_text}!important;border-color:${c.platform_shop_button}!important}
+      #shop .nx-market-btn.secondary,#shop .nx-platform-back{background:${c.platform_shop_bg}!important;color:${c.platform_shop_title}!important;border-color:${c.platform_shop_border}!important}
+      #shop .nx-temu-category-rail .nx-temu-chip{background:${c.platform_shop_bg}!important;color:${c.platform_shop_text}!important;border-color:${c.platform_shop_border}!important}
+      #shop .nx-temu-category-rail .nx-temu-chip.active{background:${c.retail_accent}!important;background-color:${c.retail_accent}!important;color:#ffffff!important;border-color:${c.retail_accent}!important}
+      #shop .nx-temu-mark,#shop .nx-temu-hero{background:linear-gradient(135deg,${c.retail_accent},${mix(c.retail_accent,78)})!important}
+      #shop .nx-temu-profile{border-color:${c.retail_accent}!important;color:${c.retail_accent}!important}
+      #shop .nx-temu-product-type{background:${c.retail_accent}22!important;color:${c.retail_accent}!important}
+      #shop .nx-temu-product-price,#shop .nx-market-price,#shop .nx-temu-detail .nx-market-price{color:${c.retail_accent}!important}
+      #shop svg,#shop .icon{color:${c.platform_shop_icon}!important}
       `;
     let el=document.getElementById("nx-public-theme");
     if(!el){el=document.createElement("style");el.id="nx-public-theme";document.head.appendChild(el);}
     el.textContent=css;
+    const moveThemeToCascadeEnd=()=>{if(document.body&&el.parentNode!==document.body)document.body.appendChild(el);};
+    if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",moveThemeToCascadeEnd,{once:true});else moveThemeToCascadeEnd();
     const themeMeta=document.querySelector('meta[name="theme-color"]');
     if(themeMeta)themeMeta.setAttribute("content",t.background);
   }
