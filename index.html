@@ -5896,7 +5896,7 @@ textarea:disabled,
       ["Хоол, хүнс","Хүнсний бүтээгдэхүүн","photo-1547592180-85f173990554"],
       ["Хүүхдийн бараа","Хүүхдийн өрөө","photo-1503454537195-1dcabb73ffb9"],
       ["Гэр ахуй","Ор дэрний хэрэглэл","photo-1631049307264-da0ec9d70304"],
-    ].filter(x=>!x[2].includes("placeholder")).map((x,i)=>({category:x[0],title:x[1],image:"https://images.unsplash.com/"+x[2]+"?auto=format&fit=crop&w=720&q=85",id:"demo-"+i,_isDemo:true}));
+    ].filter(x=>!x[2].includes("placeholder")).slice(0,20).map((x,i)=>({category:x[0],title:x[1],image:"https://images.unsplash.com/"+x[2]+"?auto=format&fit=crop&w=720&q=85",id:"demo-"+i,_isDemo:true}));
     const retailProducts=products.filter(p=>p._marketType==="retail");
     // Танилцуулгын самбар нь барааны каталог биш: бодит барааны зураг энд хэзээ ч орохгүй.
     if(retailHeroTimer){clearInterval(retailHeroTimer);retailHeroTimer=null;}
@@ -5904,15 +5904,10 @@ textarea:disabled,
     retailHeroIndex=0;
     const heroArt=document.getElementById("nx-temu-hero-art");
     if(heroArt){heroArt.innerHTML="🛍️";heroArt.removeAttribute("style");}
-    // Ангиллын бичлэгийн том/жижиг үсэг, илүү зайг үл харгалзан бодит бараатай ангиллыг танина.
-    const normalizeCategory=value=>String(value||"Бусад").trim().toLocaleLowerCase("mn").replace(/\\s+/g," ");
-    // Зураг нь амжилттай ачаалагдсан идэвхтэй бодит бараа байгаа үед л тухайн ангиллын жишээ зургийг солино.
-    const realCategoriesWithPhotos=new Set(retailProducts.filter(p=>(p._images||[]).some(image=>image?.url)).map(p=>normalizeCategory(p.category)));
-    const visibleDemos=demoProducts.filter(p=>!realCategoriesWithPhotos.has(normalizeCategory(p.category)));
-    // Бодит барааг эхэнд нь харуулж, түүний оронд нэг захиалга авахгүй жишээ картыг хасна.
-    const sourceProducts=retailProducts.length
-      ? [...retailProducts,...visibleDemos.slice(1)]
-      : visibleDemos;
+    // Эхний 20 жишээ карт бодит бараагаар нэг нэгээрээ солигдоно.
+    // 20-оос олон бодит бараа нийтлэгдсэн бол нэмэлт жишээ карт үүсгэхгүй.
+    const demoSlotsToReplace=Math.min(retailProducts.length,20);
+    const sourceProducts=[...retailProducts,...demoProducts.slice(demoSlotsToReplace)];
     const query=String(searchText||"").trim().toLocaleLowerCase("mn");
     const allCategories=[...new Set(sourceProducts.map(p=>p.category||"Бусад"))].sort((a,b)=>a.localeCompare(b,"mn"));
     const filtered=sourceProducts.filter(p=>
