@@ -4454,7 +4454,7 @@ textarea:disabled,
     if(productApprovalChannel)db.removeChannel(productApprovalChannel);
     productApprovalChannel=db.channel("ugalz-retail-product-approvals")
       .on("postgres_changes",{event:"UPDATE",schema:"public",table:"market_products"},payload=>{
-        if(payload?.new?.status==="active"&&document.getElementById("nx-temu-hero-art")){
+        if(["active","approved"].includes(payload?.new?.status)&&document.getElementById("nx-temu-hero-art")){
           loadProducts().catch(error=>console.warn("Баталгаажсан барааны танилцуулга шинэчлэгдсэнгүй:",error));
         }
       })
@@ -5421,7 +5421,7 @@ textarea:disabled,
     window.NEXORA_SHOP_BACK=showShopLanding;
     document.getElementById("nx-wholesale-cart").onclick=showWholesaleCart;
     try{
-      const {data,error}=await db.from("wholesale_products").select("id,owner_id,title,category,price,description,phone,location,image_paths,product_logo_path,stock_quantity,min_order_quantity,wholesale_price_tiers,created_at").eq("status","active").order("created_at",{ascending:false}).limit(100);
+      const {data,error}=await db.from("wholesale_products").select("id,owner_id,title,category,price,description,phone,location,image_paths,product_logo_path,stock_quantity,min_order_quantity,wholesale_price_tiers,created_at").in("status",["active","approved"]).order("created_at",{ascending:false}).limit(100);
       if(error)throw error;
       const rows=data||[],owners=[...new Set(rows.map(x=>x.owner_id).filter(Boolean))],profiles=owners.length?await db.from("nexora_store_profiles").select("user_id,store_name").in("user_id",owners):{data:[]};
       const profileMap=new Map((profiles.data||[]).map(x=>[String(x.user_id),x]));
@@ -5724,8 +5724,8 @@ textarea:disabled,
     host.innerHTML='<div class="nx-temu-page" style="padding:24px;color:#555">Угалз.мн худалдааны каталог ачаалж байна…</div>';
     try{
       const [retailResult,wholesaleResult]=await Promise.all([
-        wait(db.from("market_products").select("id,owner_id,title,category,price,description,phone,location,image_path,product_logo_path,stock_quantity,min_order_quantity,created_at").eq("status","active").order("created_at",{ascending:false}).limit(200),"Жижиглэнгийн бараа"),
-        wait(db.from("wholesale_products").select("id,owner_id,title,category,price,description,phone,location,image_paths,product_logo_path,stock_quantity,min_order_quantity,wholesale_price_tiers,created_at").eq("status","active").order("created_at",{ascending:false}).limit(200),"Бөөний бараа")
+        wait(db.from("market_products").select("id,owner_id,title,category,price,description,phone,location,image_path,product_logo_path,stock_quantity,min_order_quantity,created_at").in("status",["active","approved"]).order("created_at",{ascending:false}).limit(200),"Жижиглэнгийн бараа"),
+        wait(db.from("wholesale_products").select("id,owner_id,title,category,price,description,phone,location,image_paths,product_logo_path,stock_quantity,min_order_quantity,wholesale_price_tiers,created_at").in("status",["active","approved"]).order("created_at",{ascending:false}).limit(200),"Бөөний бараа")
       ]);
       if(retailResult.error)throw retailResult.error;
       if(wholesaleResult.error)throw wholesaleResult.error;
