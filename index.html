@@ -6131,7 +6131,12 @@ textarea:disabled,
     await showOrderPayment(order.id,auth.user,{recipientName:order.recipient_name,deliveryPhone:order.delivery_phone,deliveryAddress:order.delivery_address,deliveryNote:order.delivery_note,latitude:order.delivery_latitude,longitude:order.delivery_longitude});
   };
   // Худалдааны платформыг home-оос дахин нээхэд үргэлж жижиглэнгийн каталогийг эхлүүлнэ.
-  window.NEXORA_SHOP_HOME = loadProducts;
+  window.NEXORA_SHOP_HOME = function(){
+    // Худалдааны нүүр шинээр нээгдэхэд хуучин хайлт/ангиллын шүүлт барааг нуух ёсгүй.
+    searchText="";
+    retailActiveCategory=null;
+    return loadProducts();
+  };
   loadProducts();
 })();
 </script>
