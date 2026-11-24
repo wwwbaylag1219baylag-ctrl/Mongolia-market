@@ -4516,13 +4516,14 @@ textarea:disabled,
   }
 
   async function wholesaleUnreadCount(userId){
-    const [fee,orders,registration]=await Promise.all([
+    const [fee,orders,registration,posting]=await Promise.all([
       db.from("wholesale_supplier_notifications").select("id",{count:"exact",head:true}).eq("user_id",userId).is("read_at",null),
       db.from("wholesale_order_notifications").select("id",{count:"exact",head:true}).eq("user_id",userId).is("read_at",null),
-      db.from("market_supplier_registration_notifications").select("id",{count:"exact",head:true}).eq("user_id",userId).is("read_at",null)
+      db.from("market_supplier_registration_notifications").select("id",{count:"exact",head:true}).eq("user_id",userId).is("read_at",null),
+      db.from("nexora_posting_notifications").select("id",{count:"exact",head:true}).eq("user_id",userId).is("read_at",null)
     ]);
-    if(fee.error)throw fee.error;if(orders.error)throw orders.error;if(registration.error)throw registration.error;
-    return (fee.count||0)+(orders.count||0)+(registration.count||0);
+    if(fee.error)throw fee.error;if(orders.error)throw orders.error;if(registration.error)throw registration.error;if(posting.error)throw posting.error;
+    return (fee.count||0)+(orders.count||0)+(registration.count||0)+(posting.count||0);
   }
   async function refreshWholesaleNotificationBadge(userId){
     const button=document.getElementById("nx-wholesale-notifications")||document.getElementById("nx-store-notifications")||document.getElementById("nx-fee-notification-open")||document.getElementById("nx-order-notification-open")||document.getElementById("nx-wholesale-orders-notifications");if(!button)return;
