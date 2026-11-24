@@ -907,6 +907,20 @@ textarea:disabled,
 
 
 
+
+<style id="UGALZ-PRODUCT-OCEAN-WAVE-2026">
+/* Зөвхөн Худалдааны платформын Барааны каталогийн ард далайн давалгаа; бусад дэлгэц, админ тохиргоонд хүрэхгүй. */
+#shop{position:relative!important;isolation:isolate!important;}
+#shop>.ugalz-product-ocean-background{display:none;position:absolute;inset:0;width:100%;height:100%;min-height:100%;object-fit:cover;object-position:center center;z-index:0;pointer-events:none;background:#071c2a;}
+#shop>.ugalz-product-ocean-shade{display:none;position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,rgba(3,17,28,.30),rgba(3,17,28,.52));}
+#shop:has(#market-app .nx-temu-page)>.ugalz-product-ocean-background,
+#shop:has(#market-app .nx-temu-page)>.ugalz-product-ocean-shade{display:block;}
+#shop>.topbar,#shop>#market-app,#shop>.footer{position:relative;z-index:1;}
+#shop:has(#market-app .nx-temu-page) #market-app,
+#shop:has(#market-app .nx-temu-page) #market-app .nx-temu-page{background:transparent!important;}
+@media(prefers-reduced-motion:reduce){#shop>.ugalz-product-ocean-background{display:none!important;}#shop>.ugalz-product-ocean-shade{display:none!important;}}
+</style>
+
 </head>
 
 <body>
@@ -1002,6 +1016,10 @@ textarea:disabled,
 
     <!-- ХУДАЛДААНЫ ПЛАТФОРМ: ЗАРЫН ДЭЛГЭЦЭЭС ТУСДАА -->
     <section id="shop" class="screen">
+      <!-- Худалдааны Барааны каталогийн арын далайн давалгаа -->
+      <video class="ugalz-product-ocean-background" autoplay muted loop playsinline webkit-playsinline preload="metadata" aria-hidden="true" tabindex="-1"><source src="https://videos.pexels.com/video-files/30474729/13058576_1080_1920_60fps.mp4" type="video/mp4"></video>
+      <div class="ugalz-product-ocean-shade" aria-hidden="true"></div>
+
       <header class="topbar">
         <button class="back-button" type="button" onclick="NEXORA.back()" aria-label="Өмнөх дэлгэц рүү буцах">‹</button>
         <div class="page-heading">ХУДАЛДААНЫ ПЛАТФОРМ</div>
