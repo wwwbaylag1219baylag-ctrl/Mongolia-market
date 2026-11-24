@@ -5858,12 +5858,19 @@ textarea:disabled,
     };
     host.innerHTML="";
   }
-  // Хоёр тусдаа товчны найдвартай чиглүүлэлт: тус бүр өөрийн каталогийг нээнэ.
+  // Угалз.мн-д жижиглэн, бөөний бараа нэг Барааны каталогт харагдана.
+  // Хуучин тусдаа бөөний каталог руу чиглүүлдэг callback-уудыг нэгдсэн каталог руу шилжүүлнэ.
+  showWholesaleCatalog = async function(){
+    searchText="";
+    retailActiveCategory=null;
+    return loadProducts();
+  };
   window.NEXORA_SHOP_OPEN = async function(zone){
     if(zone!=="retail"&&zone!=="wholesale")return;
     await window.NEXORA?.open("shop");
-    if(zone==="retail"){searchText="";retailActiveCategory=null;await loadProducts();}
-    else await showWholesaleCatalog();
+    searchText="";
+    retailActiveCategory=null;
+    await loadProducts();
   };
   function renderRetailCategories(){
     const target=document.getElementById("nx-retail-categories"),rail=document.getElementById("nx-temu-category-rail");
