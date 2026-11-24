@@ -5948,9 +5948,9 @@ textarea:disabled,
       card.innerHTML='<button type="button" class="nx-temu-product-open" aria-label="'+esc(p.title)+' дэлгэрэнгүй">'+
         (image?'<img class="nx-temu-product-image" src="'+esc(image)+'" alt="'+esc(p.title)+'">':'<div class="nx-temu-product-no-image">Зураггүй</div>')+
         '<div class="nx-temu-product-info"><span class="nx-temu-product-type">'+esc(p.category||"Бусад")+'</span><span class="nx-temu-product-title">'+esc(p.title)+'</span><div class="nx-temu-product-store">'+(p._logoUrl?'<img src="'+esc(p._logoUrl)+'" alt="Барааны лого" style="width:30px;height:30px;border-radius:50%;object-fit:contain;vertical-align:middle;margin-right:7px">':"")+esc(p._storeName||"Онлайн дэлгүүр")+'</div><div class="nx-temu-product-price">'+money(p.price)+'</div><div class="nx-temu-product-meta">'+esc(tierText)+'</div></div></button>'+
-        '<button type="button" class="nx-temu-product-action">Сагслах</button>';
+        '<button type="button" class="nx-temu-product-action">'+(wholesale?"Захиалах":"Сагслах")+'</button>';
       card.querySelector(".nx-temu-product-open").onclick=()=>wholesale?showUnifiedWholesaleDetail(p):showRetailProductDetail(p);
-      card.querySelector(".nx-temu-product-action").onclick=()=>wholesale?addToWholesaleCart(p):addToCart(p);
+      card.querySelector(".nx-temu-product-action").onclick=()=>wholesale?showUnifiedWholesaleDetail(p):addToCart(p);
       grid.appendChild(card);
     });
   }
