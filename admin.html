@@ -42,7 +42,33 @@
 .nx-admin-brand-logo{display:block;width:min(100%,270px);height:auto;object-fit:contain;margin:0 0 16px}.nx-admin-brand-lockup{display:flex;flex-direction:column;align-items:flex-start;gap:10px;min-width:0}.nx-admin-brand-lockup .nx-admin-brand-logo{width:min(100%,230px);margin:0}.nx-admin-login .nx-admin-brand-logo{width:min(100%,300px);margin:0 auto 20px}.nx-admin-login h1{text-align:center}.nx-admin-login{max-width:440px;margin:8vh auto 0;padding:26px 20px;border:1px solid rgba(214,173,85,.35);border-radius:18px;background:#151515}.nx-admin-login h1{color:#e8c778;font-size:22px;margin-bottom:10px}.nx-admin-login p{color:#aaa39a;font-size:13px;line-height:1.6;margin-bottom:18px}.nx-admin-login label{display:block;color:#ddd4c5;font-size:13px;margin:12px 0 6px}.nx-admin-login input{display:block;width:100%;min-height:46px;padding:12px;border:1px solid rgba(214,173,85,.35);border-radius:10px;background:#090909;color:#fff}.nx-admin-login #nx-admin-login-message{min-height:18px;margin:10px 0;color:#b9e9a5;overflow-wrap:anywhere}.nx-admin-login #nx-admin-login-message.is-error{color:#ffaaaa}.nx-admin-login-submit{width:100%;min-height:46px;margin:8px 0 14px;border:0;border-radius:10px;background:#d6ad55;color:#090909;font-weight:800}.nx-admin-login a{color:#d6ad55;font-size:13px;text-decoration:none}
 @media(max-width:680px){body{padding:12px 8px 28px}#nexora-admin-app .nx-admin-head{flex-direction:column}#nexora-admin-app .nx-admin-head-actions{width:100%}#nexora-admin-app .nx-admin-home, .nx-admin-home,#nexora-admin-app .nx-admin-logout, .nx-admin-logout{flex:1}}
 \n/* Full-screen admin settings pages */\nbody.nx-admin-focus{padding:0!important;min-height:100vh;width:100%;overflow-x:hidden}#nexora-admin-app.nx-admin-focus-app{width:100%!important;max-width:none!important;min-height:100vh;margin:0!important;padding:0 16px 32px!important}.nx-admin-focusbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:62px;margin:0 -16px 18px;padding:10px 16px;background:#090909;border-bottom:1px solid rgba(214,173,85,.25)}.nx-admin-focusbar strong{flex:1;text-align:center;color:#f0d28a;font-size:14px;letter-spacing:.4px}.nx-admin-focusbar .nx-admin-home{flex:0 0 auto;min-height:40px;padding:9px 12px;border:1px solid rgba(214,173,85,.45);border-radius:10px;background:#171717;color:#f0d28a;text-decoration:none;font-size:12px;font-weight:800;white-space:nowrap}.nx-admin-back{min-height:40px;padding:9px 12px;border:1px solid rgba(214,173,85,.45);border-radius:10px;background:#171717;color:#f0d28a;font-weight:700}.nx-admin-focus-app #nx-admin-body{width:100%;max-width:1100px;margin:0 auto}.nx-admin-focus-app .nx-admin-section-title{margin-top:8px;font-size:24px}.nx-admin-focus-app .nx-admin-section-note{font-size:14px}@media(max-width:600px){#nexora-admin-app.nx-admin-focus-app{padding:0 12px 24px!important}.nx-admin-focusbar{margin:0 -12px 16px;padding:9px 12px}.nx-admin-focusbar strong{font-size:12px}.nx-admin-back,.nx-admin-focusbar .nx-admin-logout{font-size:11px;padding:8px}.nx-admin-focus-app .nx-admin-section-title{font-size:21px}}\n</style></head><body><main id="nexora-admin-app"><div class="nx-admin-loading">Админ самбар ачаалж байна…</div></main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>(function(){const root=document.getElementById("nexora-admin-app");if(!window.supabase||typeof window.supabase.createClient!=="function"){if(root)root.innerHTML='<div class="nx-admin-error">Supabase холболтын сан ачаалагдсангүй. Интернэтээ шалгаад хуудсыг дахин ачаална уу.</div>';return;}const u="https://grbpbmowhkbtuxostfny.supabase.co",k="sb_publishable_wspX-C4VBPJMmvWuQgsMTw_h40w8O3x";try{window.NEXORA_SUPABASE=window.supabase.createClient(u,k,{auth:{storageKey:"nexora-admin-auth",storage:window.sessionStorage,persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});}catch(e){if(root)root.innerHTML='<div class="nx-admin-error">Админ холболт эхлүүлэхэд алдаа гарлаа: '+String(e?.message||e).replace(/[&<>"]/g,x=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[x]))+'</div>';}})();</script><script>(function(){
+<script>
+(function(){
+ const root=document.getElementById("nexora-admin-app");
+ const sources=["https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2","https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"];
+ let index=0,finished=false;
+ function showFailure(reason){
+  if(finished)return;finished=true;
+  if(root)root.innerHTML='<div class="nx-admin-error"><strong>Админ холболтын сан ачаалж чадсангүй.</strong><br>'+String(reason||"CDN холболт амжилтгүй").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))+'<br><br>Интернэт эсвэл CDN холболтыг шалгаад дахин оролдоно уу.<br><button type="button" onclick="location.reload()" style="margin-top:12px;padding:10px 16px;border:0;border-radius:8px;background:#d6ad55;color:#090909;font-weight:700">Дахин оролдох</button></div>';
+ }
+ function loadNext(){
+  if(index>=sources.length){showFailure("Supabase-ийн үндсэн болон нөөц сангийн холбоос хоёулаа хариу өгсөнгүй.");return;}
+  const src=sources[index++],tag=document.createElement("script");let settled=false;
+  const timer=setTimeout(()=>{if(settled)return;settled=true;tag.remove();loadNext();},10000);
+  tag.src=src;tag.async=true;
+  tag.onload=()=>{if(settled)return;settled=true;clearTimeout(timer);
+   if(!window.supabase||typeof window.supabase.createClient!=="function"){loadNext();return;}
+   try{
+    window.NEXORA_SUPABASE=window.supabase.createClient("https://grbpbmowhkbtuxostfny.supabase.co","sb_publishable_wspX-C4VBPJMmvWuQgsMTw_h40w8O3x",{auth:{storageKey:"nexora-admin-auth",storage:window.sessionStorage,persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    finished=true;if(typeof window.__nxAdminStart==="function")window.__nxAdminStart();
+   }catch(e){showFailure("Supabase холболт эхлүүлэхэд алдаа гарлаа: "+(e?.message||e));}
+  };
+  tag.onerror=()=>{if(settled)return;settled=true;clearTimeout(timer);tag.remove();loadNext();};
+  document.head.appendChild(tag);
+ }
+ loadNext();
+})();
+</script><script>window.__nxAdminStart=function(){
  const db=window.NEXORA_SUPABASE,root=document.getElementById("nexora-admin-app");
  if(!root)return;
  if(!db){root.innerHTML='<div class="nx-admin-error">Админ системийн холболт үүссэнгүй. Хуудсыг дахин ачаална уу.</div>';return;}
@@ -67,7 +93,7 @@
  const statusNames={pending:"Хүлээгдэж байна",pending_review:"Хяналтад",approved:"Зөвшөөрсөн",active:"Идэвхтэй",rejected:"Татгалзсан",pending_payment:"Төлбөр хүлээгдэж байна",paid:"Төлөгдсөн",unpaid:"Төлөгдөөгүй",processing:"Боловсруулж байна",completed:"Дууссан",cancelled:"Цуцалсан"};
  async function adminCheck(user){
   if(!user?.id)return false;
-  const {data:row,error}=await db.from("nexora_admins").select("user_id").eq("user_id",user.id).maybeSingle();
+  const {data:row,error}=await withTimeout(db.from("nexora_admins").select("user_id").eq("user_id",user.id).maybeSingle(),"Админы эрх шалгах");
   if(error)throw error;
   return !!row;
  }
@@ -91,7 +117,7 @@
   async function query(table,columns,filters=[]){
   let q=db.from(table).select(columns).order("created_at",{ascending:false}).limit(50);
   filters.forEach(([k,v])=>q=q.eq(k,v));
-  return await q;
+  return await withTimeout(q,"Мэдээлэл татах: "+table);
  }
  function empty(message){return '<div class="nx-admin-empty">◇<br>'+esc(message)+'</div>';}
  async function cards(rows,type){
@@ -167,7 +193,7 @@
   return '<div class="nx-admin-list">'+html.join("")+'</div>';
  }
  async function overview(){
-  const count=async(table,status)=>{let q=db.from(table).select("id",{count:"exact",head:true});if(status)q=q.eq("status",status);const {count,error}=await q;if(error)throw error;return count??0;};
+  const count=async(table,status)=>{let q=db.from(table).select("id",{count:"exact",head:true});if(status)q=q.eq("status",status);const {count,error}=await withTimeout(q,"Тоймын мэдээлэл татах: "+table);if(error)throw error;return count??0;};
   const [ads,adPayments,retailProducts,wholesaleProducts,retailFees,wholesaleFees,supplierFees,storeFees,orderPayments,wholesaleOrderPayments]=await Promise.all([
    count("classified_ads","pending_review"),count("payment_requests","pending_review"),
    count("market_products","pending"),count("wholesale_products","pending"),
@@ -188,7 +214,7 @@
  async function loadPricing(){
   const body=document.getElementById("nx-admin-body");
   body.innerHTML='<h2 class="nx-admin-section-title">Үнийн тохиргоо</h2><p class="nx-admin-section-note">Зарын багц тусдаа. Худалдаанд зөвхөн сарын суурь хураамж үйлчилнэ; бараа нийтлэхэд нэмэлт төлбөргүй.</p><div class="nx-admin-loading">Тохиргоо ачаалж байна…</div>';
-  const {data,error}=await db.from("nexora_settings").select("ad_package_config,individual_price,company_price,duration_days").eq("id",1).single();if(error)throw error;
+  const {data,error}=await withTimeout(db.from("nexora_settings").select("ad_package_config,individual_price,company_price,duration_days").eq("id",1).single(),"Үнийн тохиргоо ачаалах");if(error)throw error;
   const cfg=data.ad_package_config||{},fields=[["basic","Энгийн зар"],["featured","Онцгой"],["vip","VIP"],["premium","Premium"]];
   body.innerHTML='<h2 class="nx-admin-section-title">Зарын үнийн тохиргоо</h2><p class="nx-admin-section-note">Бүх зар төлбөртэй. Админ үнэ болон нийтлэх хугацааг энд удирдана.</p><form id="nx-pricing-form"><div class="nx-admin-list">'+fields.map(([key,label])=>{const v=cfg[key]||{};return '<section class="nx-admin-card"><h3>'+label+'</h3><label class="nx-admin-meta">Үнэ (₮)<input name="'+key+'_amount" type="number" min="1" required value="'+Number(v.amount??0)+'" class="nx-admin-search"></label><label class="nx-admin-meta">Хугацаа (хоног)<input name="'+key+'_days" type="number" min="1" max="365" required value="'+Number(v.days??7)+'" class="nx-admin-search"></label>'+'</section>';}).join("")+'</div><h2 class="nx-admin-section-title">Худалдааны сарын суурь хураамж</h2><p class="nx-admin-section-note">Хувь хүн болон компанийн сарын суурь хураамжийг админ хүссэн үедээ нэмэх, бууруулах боломжтой. Жижиглэн, бөөний бараа хэд ч нийтэлсэн нэмэлт төлбөргүй. Лого тусдаа төлбөргүй.</p><div class="nx-admin-list"><section class="nx-admin-card"><h3>Хувь хүн</h3><label class="nx-admin-meta">Сарын суурь хураамж (₮)<input name="individual_price" type="number" min="0" required value="'+Number(data.individual_price||0)+'" class="nx-admin-search"></label></section><section class="nx-admin-card"><h3>Компани</h3><label class="nx-admin-meta">Сарын суурь хураамж (₮)<input name="company_price" type="number" min="0" required value="'+Number(data.company_price||0)+'" class="nx-admin-search"></label></section><section class="nx-admin-card"><h3>Эрхийн хугацаа</h3><label class="nx-admin-meta">Хоног<input name="duration_days" type="number" min="1" max="365" required value="'+Number(data.duration_days||30)+'" class="nx-admin-search"></label><small class="nx-market-muted">Сарын эрхийн хугацаа. Админ хоногоор өөрчилж болно.</small></section></div><button class="nx-admin-refresh" style="margin-top:16px;width:100%" type="submit">✓ ҮНИЙН ТОХИРГОО ХАДГАЛАХ</button><p id="nx-pricing-message" class="nx-admin-section-note"></p></form>';
   document.getElementById("nx-pricing-form").onsubmit=async e=>{
@@ -234,7 +260,7 @@
  }
  async function loadTheme(){
   const body=document.getElementById("nx-admin-body");
-  const {data,error}=await db.from("nexora_settings").select("admin_theme_config").eq("id",1).single();if(error)throw error;
+  const {data,error}=await withTimeout(db.from("nexora_settings").select("admin_theme_config").eq("id",1).single(),"Өнгөний тохиргоо ачаалах");if(error)throw error;
   const t={background:"#090d16",panel:"#172235",text:"#f4f7fc",accent:"#9ebcf2",button:"#416fae",button_text:"#ffffff",header:"#142746",secondary:"#263e5f",border:"#6688b5",muted:"#b7c5d8",icon:"#c4ddff",input:"#101c2e",platform_ads_bg:"#172235",platform_ads_title:"#9ebcf2",platform_ads_text:"#d7e2f2",platform_ads_icon:"#c4ddff",platform_ads_border:"#6688b5",platform_shop_bg:"#172235",platform_shop_title:"#9ebcf2",platform_shop_text:"#d7e2f2",platform_shop_icon:"#c4ddff",platform_shop_border:"#6688b5",theme_finish:"glossy",...(data.admin_theme_config||{})};
   const palettes={
    midnight:{label:"Шөнийн хөх",emoji:"🌌",background:"#080d1b",panel:"#14213b",header:"#1c3157",secondary:"#2c4773",text:"#f2f6ff",muted:"#aebedb",accent:"#9bbcff",button:"#416da9",button_text:"#ffffff",border:"#6689bd",icon:"#c7ddff",input:"#101b31"},
@@ -399,4 +425,4 @@
    }catch(e){if(/auth session missing/i.test(e?.message||"")){await db.auth.signOut({scope:"local"});renderLogin("Session олдсонгүй. Админ эрхтэй бүртгэлээр дахин нэвтэрнэ үү.",true);return;}root.innerHTML='<div class="nx-admin-error">Админ эрх шалгахад алдаа гарлаа: '+esc(e?.message||e)+'</div>';}
   }
   init();
-})();</script></body></html>
+};if(window.NEXORA_SUPABASE)window.__nxAdminStart();</script></body></html>
