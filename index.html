@@ -5305,7 +5305,7 @@ textarea:disabled,
  const publishUnified=async(v,files,logo,retail,wholesale,tiers,btn,msg)=>{
  btn.disabled=true;btn.textContent="НИЙТЭЛЖ БАЙНА…";const paths=[];let logoPath=null,created=[];
  try{if(logo){if(!["image/jpeg","image/png","image/webp"].includes(logo.type)||logo.size>5*1024*1024)throw new Error("Лого JPG, PNG, WEBP, 5MB хүртэл байх ёстой.");const ext=logo.type==="image/webp"?"webp":logo.type==="image/png"?"png":"jpg";logoPath=marketUser.id+"/wholesale-product-logos/"+crypto.randomUUID()+"."+ext;const u=await db.storage.from("market-product-images").upload(logoPath,logo,{upsert:false,contentType:logo.type});if(u.error)throw u.error;}
- for(let i=0;i<files.length;i++){const f=await compressMarketProductImage(files[i]),ext=f.type==="image/webp"?"webp":f.type==="image/png"?"png":"jpg",path=marketUser.id+"/wholesale-products/"+crypto.randomUUID()+"_"+i+"."+ext;const u=await db.storage.from("market-product-images").upload(path,f,{upsert:false,contentType:f.type});if(u.error)throw u.error;paths.push(path);}
+ for(let i=0;i<files.length;i++){const f=await compressMarketProductImage(files[i]),ext=f.type==="image/webp"?"webp":f.type==="image/png"?"png":"jpg",path=marketUser.id+"/"+(retail?"retail-products":"wholesale-products")+"/"+crypto.randomUUID()+"_"+i+"."+ext;const u=await db.storage.from("market-product-images").upload(path,f,{upsert:false,contentType:f.type});if(u.error)throw u.error;paths.push(path);}
  const common={owner_id:marketUser.id,title:v.title.trim(),category:v.category.trim(),stock_quantity:Number(v.stock),description:"",phone:String(v.phone||"").trim(),location:"",delivery_available:v.delivery_available==="yes",product_logo_path:logoPath};
  if(retail){const ins=await db.from("market_products").insert({...common,price:Number(v.retail_price),min_order_quantity:1,wholesale_price_tiers:[],image_path:paths[0],image_url:null,status:"pending"}).select("id").single();if(ins.error)throw ins.error;created.push({table:"market_products",id:ins.data.id});const im=await db.from("market_product_images").insert(paths.map((p,i)=>({product_id:ins.data.id,owner_id:marketUser.id,image_path:p,display_order:i})));if(im.error)throw im.error;}
  if(wholesale){const ins=await db.from("wholesale_products").insert({...common,price:Number(v.wholesale_price),min_order_quantity:Number(v.min_qty),wholesale_price_tiers:tiers,image_paths:paths,status:"pending"}).select("id").single();if(ins.error)throw ins.error;created.push({table:"wholesale_products",id:ins.data.id});}
@@ -5732,7 +5732,7 @@ textarea:disabled,
     host.innerHTML='<div class="nx-temu-page" style="padding:24px;color:#555">Угалз.мн худалдааны каталог ачаалж байна…</div>';
     try{
       const [retailResult,wholesaleResult]=await Promise.all([
-        wait(db.from("market_products").select("id,owner_id,title,category,price,description,phone,location,image_path,product_logo_path,stock_quantity,min_order_quantity,created_at").in("status",["active","approved"]).gt("stock_quantity",0).order("created_at",{ascending:false}).limit(200),"Жижиглэнгийн бараа").catch(error=>({data:[],error})),
+        wait(db.from("market_products").select("id,owner_id,title,category,price,description,phone,location,image_path,product_logo_path,stock_quantity,min_order_quantity,created_at").in("status",["active","approved"]).order("created_at",{ascending:false}).limit(200),"Жижиглэнгийн бараа").catch(error=>({data:[],error})),
         wait(db.from("wholesale_products").select("id,owner_id,title,category,price,description,phone,location,image_paths,product_logo_path,stock_quantity,min_order_quantity,wholesale_price_tiers,created_at").in("status",["active","approved"]).order("created_at",{ascending:false}).limit(200),"Бөөний бараа").catch(error=>({data:[],error}))
       ]);
       if(retailResult.error)console.error("Жижиглэнгийн барааны хүсэлт амжилтгүй:",retailResult.error);
@@ -5819,7 +5819,7 @@ textarea:disabled,
       '<header class="nx-temu-header"><div class="nx-temu-brand"><img class="nx-temu-mark" src="./assets/ugalz-app-icon.svg" alt=""><strong>Угалз.мн</strong></div><button class="nx-temu-profile" id="nx-temu-profile" type="button" aria-label="Профайл зураг эсвэл лого"><span style="font-size:19px">◯</span></button></header>'+
       '<div class="nx-temu-search-wrap"><span class="nx-temu-search-icon">⌕</span><input class="nx-temu-search" id="nx-retail-search" type="search" placeholder="Бараа хайх, дэлгүүр хайх…" value="'+esc(searchText)+'"></div>'+
       '<div class="nx-temu-category-rail" id="nx-temu-category-rail"></div>'+
-      '<section class="nx-temu-hero"><div class="nx-temu-hero-copy"><small>Угалз.мн · ХУДАЛДАА</small><h2>Худалдаа нэг дороос</h2><p>Жижиглэн болон бөөний барааг нэг каталогоос хайж сонгоорой.</p></div><div class="nx-temu-hero-art" id="nx-temu-hero-art">🛍️</div></section>'+
+      '<section class="nx-temu-hero"><div class="nx-temu-hero-copy"><small>Угалз.мн · ХУДАЛДАА</small><h2>Худалдаа нэг дороос</h2><p>Онлайн дэлгүүрүүдийн жижиглэнгийн барааг эндээс хайж сонгоорой.</p></div><div class="nx-temu-hero-art" id="nx-temu-hero-art">🛍️</div></section>'+
       '<div class="nx-temu-section-head"><strong>ТАНД САНАЛ БОЛГОХ</strong><span id="nx-temu-product-count"></span></div>'+
       '<div id="nx-retail-categories"></div>'+
     '</div>'+
@@ -5862,7 +5862,7 @@ textarea:disabled,
   window.NEXORA_SHOP_OPEN = async function(zone){
     if(zone!=="retail"&&zone!=="wholesale")return;
     await window.NEXORA?.open("shop");
-    if(zone==="retail")await loadProducts();
+    if(zone==="retail"){searchText="";retailActiveCategory=null;await loadProducts();}
     else await showWholesaleCatalog();
   };
   function renderRetailCategories(){
@@ -5902,7 +5902,7 @@ textarea:disabled,
       ["Гэр ахуй","Ор дэрний хэрэглэл","photo-1631049307264-da0ec9d70304"],
     ].filter(x=>!x[2].includes("placeholder")).slice(0,20).map((x,i)=>({category:x[0],title:x[1],image:"https://images.unsplash.com/"+x[2]+"?auto=format&fit=crop&w=720&q=85",id:"demo-"+i,_isDemo:true}));
     // Жижиглэн, бөөний бүх бодит бараа нэг нийтлэг каталогт нийтлэгдсэн дарааллаар харагдана.
-    const retailProducts=products;
+    const retailProducts=products.filter(p=>p._marketType==="retail");
     // Танилцуулгын самбар нь барааны каталог биш: бодит барааны зураг энд хэзээ ч орохгүй.
     if(retailHeroTimer){clearInterval(retailHeroTimer);retailHeroTimer=null;}
     retailHeroProductsKey="";
@@ -5911,8 +5911,8 @@ textarea:disabled,
     if(heroArt){heroArt.innerHTML="🛍️";heroArt.removeAttribute("style");}
     // Эхний 20 жишээ карт бодит бараагаар нэг нэгээрээ солигдоно.
     // 20-оос олон бодит бараа нийтлэгдсэн бол нэмэлт жишээ карт үүсгэхгүй.
-    const demoSlotsToReplace=Math.min(products.length,20);
-    const sourceProducts=[...products,...demoProducts.slice(demoSlotsToReplace)];
+    const demoSlotsToReplace=Math.min(retailProducts.length,20);
+    const sourceProducts=[...retailProducts,...demoProducts.slice(demoSlotsToReplace)];
     const query=String(searchText||"").trim().toLocaleLowerCase("mn");
     const allCategories=[...new Set(sourceProducts.map(p=>p.category||"Бусад"))].sort((a,b)=>a.localeCompare(b,"mn"));
     const filtered=sourceProducts.filter(p=>
