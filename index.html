@@ -4428,7 +4428,7 @@ textarea:disabled,
   // Энэ хуудас нээгдсэнээс хойш хэрэглэгч нэвтрэх үйлдлийг өөрөө хийсэн эсэхийг санана.
   let shopAuthExplicitlyCompleted=false;
   let profileOpenSection="retail"; // Нэгдсэн профайлаас буцаж ороход хамгийн сүүлд дэлгэсэн accordion-ийг сэргээнэ.
-  let retailActiveCategory=null,retailPendingCategory=null;
+  let retailActiveCategory=null,retailPendingCategory=null,retailHeroTimer=null,retailHeroIndex=0,retailHeroProductsKey="";
   // This app runs in its own IIFE; keep its display helpers local.
   const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const money=value=>Number(value||0).toLocaleString("mn-MN")+" ₮";
@@ -5797,7 +5797,7 @@ textarea:disabled,
       '<header class="nx-temu-header"><div class="nx-temu-brand"><img class="nx-temu-mark" src="./assets/ugalz-app-icon.svg" alt=""><strong>Угалз.мн</strong></div><button class="nx-temu-profile" id="nx-temu-profile" type="button" aria-label="Профайл зураг эсвэл лого"><span style="font-size:19px">◯</span></button></header>'+
       '<div class="nx-temu-search-wrap"><span class="nx-temu-search-icon">⌕</span><input class="nx-temu-search" id="nx-retail-search" type="search" placeholder="Бараа хайх, дэлгүүр хайх…" value="'+esc(searchText)+'"></div>'+
       '<div class="nx-temu-category-rail" id="nx-temu-category-rail"></div>'+
-      '<section class="nx-temu-hero"><div class="nx-temu-hero-copy"><small>Угалз.мн · ХУДАЛДАА</small><h2>Худалдаа нэг дороос</h2><p>Жижиглэн болон бөөний барааг нэг каталогоос хайж сонгоорой.</p></div><div class="nx-temu-hero-art">🛍️</div></section>'+
+      '<section class="nx-temu-hero"><div class="nx-temu-hero-copy"><small>Угалз.мн · ХУДАЛДАА</small><h2>Худалдаа нэг дороос</h2><p>Жижиглэн болон бөөний барааг нэг каталогоос хайж сонгоорой.</p></div><div class="nx-temu-hero-art" id="nx-temu-hero-art">🛍️</div></section>'+
       '<div class="nx-temu-section-head"><strong>ТАНД САНАЛ БОЛГОХ</strong><span id="nx-temu-product-count"></span></div>'+
       '<div id="nx-retail-categories"></div>'+
     '</div>'+
@@ -5880,6 +5880,40 @@ textarea:disabled,
       ["Гэр ахуй","Ор дэрний хэрэглэл","photo-1631049307264-da0ec9d70304"],
     ].filter(x=>!x[2].includes("placeholder")).map((x,i)=>({category:x[0],title:x[1],image:"https://images.unsplash.com/"+x[2]+"?auto=format&fit=crop&w=720&q=85",id:"demo-"+i,_isDemo:true}));
     const retailProducts=products.filter(p=>p._marketType==="retail");
+    // Админаар баталгаажсан (active) жижиглэнгийн барааны эхний зургийг танилцуулгад гаргаж, дарааллаар нь ээлжлүүлнэ.
+    const heroProducts=retailProducts.filter(p=>(p._images||[]).some(image=>image?.url));
+    const heroKey=heroProducts.map(p=>p.id).join("|");
+    const heroArt=document.getElementById("nx-temu-hero-art");
+    if(heroArt){
+      if(heroKey!==retailHeroProductsKey){
+        if(retailHeroTimer){clearInterval(retailHeroTimer);retailHeroTimer=null;}
+        retailHeroProductsKey=heroKey;
+        retailHeroIndex=0;
+      }
+      const drawHero=()=>{
+        const current=heroProducts[retailHeroIndex%heroProducts.length];
+        if(!current){heroArt.innerHTML="🛍️";return;}
+        const image=current._images.find(item=>item?.url)?.url;
+        heroArt.innerHTML='<img src="'+esc(image)+'" alt="'+esc(current.title)+'" style="display:block;width:100%;height:100%;min-height:112px;max-height:150px;object-fit:cover;border-radius:16px"><span style="position:absolute;left:8px;right:8px;bottom:8px;padding:6px 9px;border-radius:9px;background:rgba(0,0,0,.68);color:#fff;font-size:11px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(current.title)+'</span>';
+        heroArt.style.position="relative";
+        heroArt.style.overflow="hidden";
+        heroArt.style.padding="0";
+        heroArt.style.background="transparent";
+      };
+      if(heroProducts.length){
+        drawHero();
+        if(heroProducts.length>1&&!retailHeroTimer){
+          retailHeroTimer=setInterval(()=>{
+            if(!document.getElementById("nx-temu-hero-art")){clearInterval(retailHeroTimer);retailHeroTimer=null;return;}
+            retailHeroIndex=(retailHeroIndex+1)%heroProducts.length;
+            drawHero();
+          },4500);
+        }
+      }else{
+        heroArt.innerHTML="🛍️";
+        heroArt.removeAttribute("style");
+      }
+    }
     // Ангиллын бичлэгийн том/жижиг үсэг, илүү зайг үл харгалзан бодит бараатай ангиллыг танина.
     const normalizeCategory=value=>String(value||"Бусад").trim().toLocaleLowerCase("mn").replace(/\\s+/g," ");
     // Зураг нь амжилттай ачаалагдсан идэвхтэй бодит бараа байгаа үед л тухайн ангиллын жишээ зургийг солино.
