@@ -5741,11 +5741,11 @@ textarea:disabled,
       const owners=[...new Set([...retailRows,...wholesaleRows].map(x=>x.owner_id).filter(Boolean))];
       stage="дэлгүүрийн профайл болон зургийн мэдээлэл";
       const [profileRes,retailImageRes]=await Promise.all([
-        owners.length?wait(db.from("nexora_store_profiles").select("user_id,store_name").in("user_id",owners),"Дэлгүүрийн профайл"):Promise.resolve({data:[],error:null}),
-        retailRows.length?wait(db.from("market_product_images").select("product_id,image_path,display_order").in("product_id",retailRows.map(x=>x.id)).order("display_order",{ascending:true}),"Жижиглэнгийн зураг"):Promise.resolve({data:[],error:null})
+        owners.length?wait(db.from("nexora_store_profiles").select("user_id,store_name").in("user_id",owners),"Дэлгүүрийн профайл").catch(error=>({data:[],error})):Promise.resolve({data:[],error:null}),
+        retailRows.length?wait(db.from("market_product_images").select("product_id,image_path,display_order").in("product_id",retailRows.map(x=>x.id)).order("display_order",{ascending:true}),"Жижиглэнгийн зураг").catch(error=>({data:[],error})):Promise.resolve({data:[],error:null})
       ]);
-      if(profileRes.error)throw profileRes.error;
-      if(retailImageRes.error)throw retailImageRes.error;
+      if(profileRes.error)console.warn("Дэлгүүрийн нэрийн мэдээлэл ачаалсангүй; барааг үргэлжлүүлэн харуулна:",profileRes.error);
+      if(retailImageRes.error)console.warn("Нэмэлт зургийн жагсаалт ачаалсангүй; үндсэн зургийг ашиглана:",retailImageRes.error);
       const profileMap=new Map((profileRes.data||[]).map(x=>[String(x.user_id),x]));
       const retailImageMap=new Map();
       (retailImageRes.data||[]).forEach(x=>{if(!retailImageMap.has(String(x.product_id)))retailImageMap.set(String(x.product_id),[]);retailImageMap.get(String(x.product_id)).push(x.image_path);});
