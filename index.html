@@ -4459,7 +4459,7 @@ textarea:disabled,
         const stockChanged=payload?.new?.stock_quantity!==payload?.old?.stock_quantity;
         const becameVisible=["active","approved"].includes(nextStatus)&&!["active","approved"].includes(previousStatus);
         const becameUnavailable=previousStatus!==undefined&&(!["active","approved"].includes(nextStatus)||Number(payload?.new?.stock_quantity||0)<=0);
-        if((becameVisible||becameUnavailable||stockChanged)&&document.getElementById("nx-temu-hero-art")){
+        if((payload?.eventType==="DELETE"||becameVisible||becameUnavailable||stockChanged)&&document.getElementById("nx-temu-hero-art")){
           loadProducts().catch(error=>console.warn("Барааны каталогын шинэчлэлт амжилтгүй:",error));
         }
       })
