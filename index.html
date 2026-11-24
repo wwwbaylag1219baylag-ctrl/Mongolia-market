@@ -5938,14 +5938,16 @@ textarea:disabled,
       target.innerHTML='<div class="nx-temu-empty">Тохирох бараа олдсонгүй. Хайлтаа өөрчилж үзээрэй.</div>';
       return;
     }
-    target.innerHTML='<div class="nx-temu-products"></div>';
-    const grid=target.querySelector(".nx-temu-products");
+    const realItems=filtered.filter(p=>!p._isDemo),demoItems=filtered.filter(p=>p._isDemo);
+    target.innerHTML=(realItems.length?'<section><h3 style="margin:4px 14px 10px;color:#202124;font-size:15px;font-weight:900">БОДИТ БАРААНУУД</h3><div class="nx-temu-products" id="nx-temu-real-products"></div></section>':"")+
+      (demoItems.length?'<section><h3 style="margin:14px 14px 10px;color:#777;font-size:12px;font-weight:850">ЖИШЭЭ БАРАА · ЗАХИАЛГА АВАХГҮЙ</h3><div class="nx-temu-products" id="nx-temu-demo-products"></div></section>':"");
+    const realGrid=target.querySelector("#nx-temu-real-products"),demoGrid=target.querySelector("#nx-temu-demo-products");
     filtered.forEach(p=>{
       if(p._isDemo){
         const card=document.createElement("article");
         card.className="nx-temu-product nx-temu-demo-product";
         card.innerHTML='<div class="nx-temu-demo-image-wrap"><img class="nx-temu-product-image" src="'+esc(p.image)+'" alt="'+esc(p.title)+'" loading="lazy"><span class="nx-temu-demo-label">ЖИШЭЭ ЗУРАГ</span></div><div class="nx-temu-product-info"><span class="nx-temu-product-type">'+esc(p.category)+'</span><span class="nx-temu-product-title">'+esc(p.title)+'</span><div class="nx-temu-product-store">Бодит бараа нийтлэгдэхэд энэ ангиллын жишээг солино</div></div><div class="nx-temu-demo-note">Танилцуулгын зураг · Захиалга авахгүй</div>';
-        grid.appendChild(card);
+        demoGrid?.appendChild(card);
         return;
       }
       const wholesale=p._marketType==="wholesale";
@@ -5955,14 +5957,14 @@ textarea:disabled,
         ?Number(p.wholesale_price_tiers[0].min_qty||0)+"+ ширхэгээс хямд үнэ"
         :"Үлдэгдэл: "+Number(p.stock_quantity||0)+" ш";
       const card=document.createElement("article");
-      card.className="nx-temu-product";
+      card.className="nx-temu-product nx-temu-real-product";
       card.innerHTML='<button type="button" class="nx-temu-product-open" aria-label="'+esc(p.title)+' дэлгэрэнгүй">'+
-        (image?'<img class="nx-temu-product-image" src="'+esc(image)+'" alt="'+esc(p.title)+'">':'<div class="nx-temu-product-no-image">Зураггүй</div>')+
-        '<div class="nx-temu-product-info"><span class="nx-temu-product-type">'+esc(p.category||"Бусад")+'</span><span class="nx-temu-product-title">'+esc(p.title)+'</span><div class="nx-temu-product-store">'+(p._logoUrl?'<img src="'+esc(p._logoUrl)+'" alt="Барааны лого" style="width:30px;height:30px;border-radius:50%;object-fit:contain;vertical-align:middle;margin-right:7px">':"")+esc(p._storeName||"Онлайн дэлгүүр")+'</div><div class="nx-temu-product-price">'+money(p.price)+'</div><div class="nx-temu-product-meta">'+esc(tierText)+'</div></div></button>'+
+        (image?'<img class="nx-temu-product-image" src="'+esc(image)+'" alt="'+esc(p.title)+'" loading="lazy">':'<div class="nx-temu-product-no-image">Барааны зураг оруулаагүй</div>')+
+        '<div class="nx-temu-product-info" style="display:block!important;padding:10px!important;color:#202124!important;background:#fff!important"><span class="nx-temu-product-type" style="display:inline-flex!important">'+esc(p.category||"Бусад")+'</span><strong class="nx-temu-product-title" style="display:block!important;min-height:0!important;max-height:none!important;overflow:visible!important;color:#202124!important;font-size:14px!important;line-height:1.4!important;font-weight:850!important;white-space:normal!important">'+esc(p.title||"Нэргүй бараа")+'</strong><div class="nx-temu-product-store" style="display:block!important;color:#666!important">'+(p._logoUrl?'<img src="'+esc(p._logoUrl)+'" alt="Барааны лого" style="width:26px;height:26px;border-radius:50%;object-fit:contain;vertical-align:middle;margin-right:7px">':"")+esc(p._storeName||"Онлайн дэлгүүр")+'</div><div class="nx-temu-product-price" style="display:block!important;color:#d94d17!important;font-size:17px!important;font-weight:950!important">'+money(p.price)+'</div><div class="nx-temu-product-meta" style="display:block!important;color:#666!important">'+esc(tierText)+'</div></div></button>'+
         '<button type="button" class="nx-temu-product-action">'+(wholesale?"Захиалах":"Сагслах")+'</button>';
       card.querySelector(".nx-temu-product-open").onclick=()=>wholesale?showUnifiedWholesaleDetail(p):showRetailProductDetail(p);
       card.querySelector(".nx-temu-product-action").onclick=()=>wholesale?showUnifiedWholesaleDetail(p):addToCart(p);
-      grid.appendChild(card);
+      realGrid?.appendChild(card);
     });
   }
   function showUnifiedWholesaleDetail(product){
