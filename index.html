@@ -930,6 +930,53 @@ textarea:disabled,
 }
 </style>
 
+
+<style id="UGALZ-RETAIL-SINGLE-HORIZONTAL-ROW-2026">
+/* Бодит болон жишээ бараа: бүгд нэг хөндлөн эгнээнд, зүүн-баруун гүйлгэнэ. */
+#shop #nx-retail-categories .nx-temu-products,
+#shop .nx-temu-products,
+#nx-retail-categories .nx-temu-products{
+  display:grid!important;
+  grid-auto-flow:column!important;
+  grid-template-rows:max-content!important;
+  grid-auto-rows:max-content!important;
+  grid-auto-columns:min(42vw,170px)!important;
+  align-content:start!important;
+  align-items:start!important;
+  gap:8px!important;
+  width:100%!important;
+  max-width:100%!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  padding:4px 14px 18px!important;
+  margin:0!important;
+  -webkit-overflow-scrolling:touch!important;
+  overscroll-behavior-x:contain!important;
+  touch-action:pan-x pan-y!important;
+  scroll-snap-type:x proximity!important;
+}
+#shop #nx-retail-categories .nx-temu-products>.nx-temu-product,
+#shop .nx-temu-products>.nx-temu-product,
+#nx-retail-categories .nx-temu-products>.nx-temu-product{
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:auto!important;
+  min-height:0!important;
+  align-self:start!important;
+  scroll-snap-align:start!important;
+}
+@media(min-width:700px){
+  #shop #nx-retail-categories .nx-temu-products,
+  #shop .nx-temu-products,
+  #nx-retail-categories .nx-temu-products{
+    grid-auto-columns:180px!important;
+    gap:12px!important;
+    padding-inline:18px!important;
+  }
+}
+</style>
+
 </head>
 
 <body>
