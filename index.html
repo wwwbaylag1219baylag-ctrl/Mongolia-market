@@ -906,23 +906,6 @@ textarea:disabled,
 </style>
 
 
-<style id="UGALZ-PLATFORM-VIDEO-FRAME-2026">
-/* ЗАР болон ХУДАЛДАА: үндсэн нүүртэй ижил байгалийн видео фон, бүтэн дэлгэцийн хүрээ */
-#ads,#shop{position:relative!important;isolation:isolate!important;min-height:100svh!important;overflow:hidden!important;background:#080d12!important}
-#ads>.ugalz-platform-background,#shop>.ugalz-platform-background{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;z-index:0!important;pointer-events:none!important;display:block!important}
-#ads>.ugalz-platform-shade,#shop>.ugalz-platform-shade{position:absolute!important;inset:0!important;z-index:1!important;pointer-events:none!important;background:linear-gradient(180deg,rgba(3,8,14,.34),rgba(3,8,14,.54) 55%,rgba(3,8,14,.66))!important}
-#ads> :not(.ugalz-platform-background):not(.ugalz-platform-shade),
-#shop> :not(.ugalz-platform-background):not(.ugalz-platform-shade){position:relative;z-index:2}
-#ads>.page-content{background:transparent!important}
-#shop #market-app{position:relative!important;z-index:2!important;border:1px solid rgba(214,173,85,.48)!important;border-radius:12px!important;box-shadow:0 0 0 1px rgba(255,255,255,.07),0 0 22px rgba(214,173,85,.10)!important}
-#shop .nx-temu-page{border-radius:11px!important}
-@media(max-width:699px){
- #shop #market-app{border-radius:11px!important;box-shadow:inset 0 0 0 1px rgba(214,173,85,.20),0 0 18px rgba(214,173,85,.12)!important}
-}
-@media(prefers-reduced-motion:reduce){
- #ads>.ugalz-platform-background,#shop>.ugalz-platform-background{display:none!important}
-}
-</style>
 
 </head>
 
@@ -1010,8 +993,6 @@ textarea:disabled,
 
     <!-- ЗАРЫН ПЛАТФОРМ -->
     <section id="ads" class="screen">
-      <video class="ugalz-platform-background" id="ugalz-ads-background" autoplay muted loop playsinline webkit-playsinline preload="metadata" aria-hidden="true" tabindex="-1"><source src="https://videos.pexels.com/video-files/4360144/4360144-uhd_2562_1440_25fps.mp4" type="video/mp4"></video>
-      <div class="ugalz-platform-shade" aria-hidden="true"></div>
 
 
       <main class="page-content" id="nexora-ads-app">
@@ -1024,8 +1005,6 @@ textarea:disabled,
 
     <!-- ХУДАЛДААНЫ ПЛАТФОРМ: ЗАРЫН ДЭЛГЭЦЭЭС ТУСДАА -->
     <section id="shop" class="screen">
-      <video class="ugalz-platform-background" id="ugalz-shop-background" autoplay muted loop playsinline webkit-playsinline preload="metadata" aria-hidden="true" tabindex="-1"><source src="https://videos.pexels.com/video-files/4360144/4360144-uhd_2562_1440_25fps.mp4" type="video/mp4"></video>
-      <div class="ugalz-platform-shade" aria-hidden="true"></div>
       <header class="topbar">
         <button class="back-button" type="button" onclick="NEXORA.back()" aria-label="Өмнөх дэлгэц рүү буцах">‹</button>
         <div class="page-heading">ХУДАЛДААНЫ ПЛАТФОРМ</div>
