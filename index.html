@@ -6384,7 +6384,10 @@ textarea:disabled,
       #ads .nx-create-toggle,#ads .nx-create-open,#ads .nx-create-submit,#ads .nx-create-screen [type="submit"]{background:${c.platform_ads_title}!important;color:${c.platform_ads_bg}!important;border-color:${c.platform_ads_border}!important}
       #ads .nx-create-back,#ads .nx-back,#ads .nx-platform-back,#ads .nx-create-collapse{background:${c.platform_ads_bg}!important;color:${c.platform_ads_title}!important;border-color:${c.platform_ads_border}!important}
       /* Нүүрний суурь өнгө админы тохиргоог шууд дагана; хуучин градиент overlay өнгийг дарахгүй. */
-      #home{background:${c.background}!important;background-color:${c.background}!important;background-image:none!important;color:${c.text}!important;animation:none!important}
+      /* Бүтэн нүүрний суурь: viewport, body, app болон home section бүгд админы сонгосон өнгөтэй байна. */
+      html,body,#app{background:${c.background}!important}
+      #home,#home.screen,#home.screen.active{background:${c.background}!important;background-color:${c.background}!important;background-image:none!important;color:${c.text}!important;animation:none!important;min-height:100vh!important}
+      #home #ugalz-steppe-shade{display:none!important;background:none!important}
       #home #ugalz-steppe-shade{display:none!important;background:none!important}
       /* Нүүрний хоёр үндсэн таб тус тусын админ өнгийг авна. */
       #home .platform-card:first-child{background:linear-gradient(145deg,${mix(c.platform_ads_bg,128)},${c.platform_ads_bg} 52%,${mix(c.platform_ads_bg,78)})!important;background-color:${c.platform_ads_bg}!important;color:${c.platform_ads_text}!important;border:1px solid ${c.platform_ads_border}!important;border-radius:18px!important}
