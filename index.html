@@ -6383,6 +6383,18 @@ textarea:disabled,
       #ads .nexora-ad-icon,#ads .nx-choice-index,#ads .nx-choice-arrow,#ads .nx-subcategory-item span:last-child{color:${c.platform_ads_icon}!important}
       #ads .nx-create-toggle,#ads .nx-create-open,#ads .nx-create-submit,#ads .nx-create-screen [type="submit"]{background:${c.platform_ads_title}!important;color:${c.platform_ads_bg}!important;border-color:${c.platform_ads_border}!important}
       #ads .nx-create-back,#ads .nx-back,#ads .nx-platform-back,#ads .nx-create-collapse{background:${c.platform_ads_bg}!important;color:${c.platform_ads_title}!important;border-color:${c.platform_ads_border}!important}
+      /* Нүүрний суурь өнгө админы тохиргоог шууд дагана; хуучин градиент overlay өнгийг дарахгүй. */
+      #home{background:${c.background}!important;background-color:${c.background}!important;background-image:none!important;color:${c.text}!important;animation:none!important}
+      #home #ugalz-steppe-shade{display:none!important;background:none!important}
+      /* Нүүрний хоёр үндсэн таб тус тусын админ өнгийг авна. */
+      #home .platform-card:first-child{background:linear-gradient(145deg,${mix(c.platform_ads_bg,128)},${c.platform_ads_bg} 52%,${mix(c.platform_ads_bg,78)})!important;background-color:${c.platform_ads_bg}!important;color:${c.platform_ads_text}!important;border:1px solid ${c.platform_ads_border}!important;border-radius:18px!important}
+      #home .platform-card:nth-child(2){background:linear-gradient(145deg,${mix(c.platform_shop_bg,128)},${c.platform_shop_bg} 52%,${mix(c.platform_shop_bg,78)})!important;background-color:${c.platform_shop_bg}!important;color:${c.platform_shop_text}!important;border:1px solid ${c.platform_shop_border}!important;border-radius:18px!important}
+      #home .platform-card:first-child .platform-title{color:${c.platform_ads_title}!important}
+      #home .platform-card:first-child .platform-description{color:${c.platform_ads_text}!important}
+      #home .platform-card:first-child .platform-icon{color:${c.platform_ads_icon}!important}
+      #home .platform-card:nth-child(2) .platform-title{color:${c.platform_shop_title}!important}
+      #home .platform-card:nth-child(2) .platform-description{color:${c.platform_shop_text}!important}
+      #home .platform-card:nth-child(2) .platform-icon{color:${c.platform_shop_icon}!important}
       `;
     let el=document.getElementById("nx-public-theme");
     if(!el){el=document.createElement("style");el.id="nx-public-theme";document.head.appendChild(el);}
