@@ -5897,7 +5897,8 @@ textarea:disabled,
       ["Хүүхдийн бараа","Хүүхдийн өрөө","photo-1503454537195-1dcabb73ffb9"],
       ["Гэр ахуй","Ор дэрний хэрэглэл","photo-1631049307264-da0ec9d70304"],
     ].filter(x=>!x[2].includes("placeholder")).slice(0,20).map((x,i)=>({category:x[0],title:x[1],image:"https://images.unsplash.com/"+x[2]+"?auto=format&fit=crop&w=720&q=85",id:"demo-"+i,_isDemo:true}));
-    const retailProducts=products.filter(p=>p._marketType==="retail");
+    // Жижиглэн, бөөний бүх бодит бараа нэг нийтлэг каталогт нийтлэгдсэн дарааллаар харагдана.
+    const retailProducts=products;
     // Танилцуулгын самбар нь барааны каталог биш: бодит барааны зураг энд хэзээ ч орохгүй.
     if(retailHeroTimer){clearInterval(retailHeroTimer);retailHeroTimer=null;}
     retailHeroProductsKey="";
@@ -5906,8 +5907,8 @@ textarea:disabled,
     if(heroArt){heroArt.innerHTML="🛍️";heroArt.removeAttribute("style");}
     // Эхний 20 жишээ карт бодит бараагаар нэг нэгээрээ солигдоно.
     // 20-оос олон бодит бараа нийтлэгдсэн бол нэмэлт жишээ карт үүсгэхгүй.
-    const demoSlotsToReplace=Math.min(retailProducts.length,20);
-    const sourceProducts=[...retailProducts,...demoProducts.slice(demoSlotsToReplace)];
+    const demoSlotsToReplace=Math.min(products.length,20);
+    const sourceProducts=[...products,...demoProducts.slice(demoSlotsToReplace)];
     const query=String(searchText||"").trim().toLocaleLowerCase("mn");
     const allCategories=[...new Set(sourceProducts.map(p=>p.category||"Бусад"))].sort((a,b)=>a.localeCompare(b,"mn"));
     const filtered=sourceProducts.filter(p=>
@@ -5941,15 +5942,15 @@ textarea:disabled,
       const minQty=Math.max(1,Number(p.min_order_quantity||1));
       const tierText=wholesale&&Array.isArray(p.wholesale_price_tiers)&&p.wholesale_price_tiers.length
         ?Number(p.wholesale_price_tiers[0].min_qty||0)+"+ ширхэгээс хямд үнэ"
-        :wholesale?"Доод захиалга: "+minQty+" ш":"Үлдэгдэл: "+Number(p.stock_quantity||0)+" ш";
+        :"Үлдэгдэл: "+Number(p.stock_quantity||0)+" ш";
       const card=document.createElement("article");
       card.className="nx-temu-product";
       card.innerHTML='<button type="button" class="nx-temu-product-open" aria-label="'+esc(p.title)+' дэлгэрэнгүй">'+
         (image?'<img class="nx-temu-product-image" src="'+esc(image)+'" alt="'+esc(p.title)+'">':'<div class="nx-temu-product-no-image">Зураггүй</div>')+
-        '<div class="nx-temu-product-info"><span class="nx-temu-product-type">'+(wholesale?"БӨӨНИЙ ҮНЭ":"ЖИЖИГЛЭН")+'</span><span class="nx-temu-product-title">'+esc(p.title)+'</span><div class="nx-temu-product-store">'+(p._logoUrl?'<img src="'+esc(p._logoUrl)+'" alt="Барааны лого" style="width:30px;height:30px;border-radius:50%;object-fit:contain;vertical-align:middle;margin-right:7px">':"")+esc(p._storeName||"Онлайн дэлгүүр")+'</div><div class="nx-temu-product-price">'+money(p.price)+'</div><div class="nx-temu-product-meta">'+esc(tierText)+'</div></div></button>'+
-        '<button type="button" class="nx-temu-product-action">'+(wholesale?"Бөөний захиалах":"Сагслах")+'</button>';
+        '<div class="nx-temu-product-info"><span class="nx-temu-product-type">'+esc(p.category||"Бусад")+'</span><span class="nx-temu-product-title">'+esc(p.title)+'</span><div class="nx-temu-product-store">'+(p._logoUrl?'<img src="'+esc(p._logoUrl)+'" alt="Барааны лого" style="width:30px;height:30px;border-radius:50%;object-fit:contain;vertical-align:middle;margin-right:7px">':"")+esc(p._storeName||"Онлайн дэлгүүр")+'</div><div class="nx-temu-product-price">'+money(p.price)+'</div><div class="nx-temu-product-meta">'+esc(tierText)+'</div></div></button>'+
+        '<button type="button" class="nx-temu-product-action">Сагслах</button>';
       card.querySelector(".nx-temu-product-open").onclick=()=>wholesale?showUnifiedWholesaleDetail(p):showRetailProductDetail(p);
-      card.querySelector(".nx-temu-product-action").onclick=()=>wholesale?showUnifiedWholesaleDetail(p):addToCart(p);
+      card.querySelector(".nx-temu-product-action").onclick=()=>wholesale?addToWholesaleCart(p):addToCart(p);
       grid.appendChild(card);
     });
   }
