@@ -4450,6 +4450,18 @@ textarea:disabled,
     }
   }
   function stopProductApprovalWatch(){if(productApprovalChannel){db.removeChannel(productApprovalChannel);productApprovalChannel=null;}if(productApprovalPoll){clearInterval(productApprovalPoll);productApprovalPoll=null;}}
+  function startProductApprovalWatch(){
+    if(productApprovalChannel)db.removeChannel(productApprovalChannel);
+    productApprovalChannel=db.channel("ugalz-retail-product-approvals")
+      .on("postgres_changes",{event:"UPDATE",schema:"public",table:"market_products"},payload=>{
+        if(payload?.new?.status==="active"&&document.getElementById("nx-temu-hero-art")){
+          loadProducts().catch(error=>console.warn("Баталгаажсан барааны танилцуулга шинэчлэгдсэнгүй:",error));
+        }
+      })
+      .subscribe((status,error)=>{
+        if(status==="CHANNEL_ERROR"||status==="TIMED_OUT")console.warn("Барааны баталгаажуулалтын realtime холболт:",error||status);
+      });
+  }
 
   async function wholesaleUnreadCount(userId){
     const [fee,orders,registration]=await Promise.all([
@@ -5755,6 +5767,7 @@ textarea:disabled,
       products=[...retailProducts,...wholesaleProducts].sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
       marketUser=null;
       showRetailCatalog();
+      startProductApprovalWatch();
       db.auth.getUser().then(({data,error})=>{if(!error){marketUser=data?.user||null;refreshTemuProfileImage();}}).catch(error=>console.warn("Угалз.мн нэвтрэлтийн мэдээлэл:",error));
     }catch(err){
       console.error("Угалз.мн нэгдсэн худалдааны каталогийн алдаа ("+stage+"):",err);
