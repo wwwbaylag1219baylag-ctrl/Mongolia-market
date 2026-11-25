@@ -1,27 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="280" height="280" viewBox="0 0 280 280">
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="280" viewBox="0 0 60 80">
   <title>Монгол уламжлалт өлзий хээ</title>
-  <desc>Тасралтгүй сүлжилдсэн, дөрвөн талдаа тэгш хэмтэй Монгол өлзий утасны алтлаг дүрслэл.</desc>
-  <defs>
-    <g id="ulzii-strand" fill="none" stroke="#d6ad55" stroke-width="5.2" stroke-linecap="square" stroke-linejoin="round">
-      <path d="M140 20 H174 Q202 20 202 48 V78 H178 V52 H164 V78 H188 V102 H212 V126 H236 V150 H212 V174 H188 V198 H164 V222 H140"/>
-      <path d="M140 20 V44 H116 V68 H140 V92 H164 V116 H188 V140 H212"/>
-      <path d="M202 48 H226 Q250 48 250 72 V106 H226 V82 H202"/>
-    </g>
-    <g id="ulzii-weave" fill="none" stroke="#f0d28a" stroke-width="2.1" stroke-linecap="square" stroke-linejoin="round" opacity=".78">
-      <path d="M140 34 H174 Q188 34 188 48 V78 M192 98 H212 V126 M226 140 V150 Q226 164 212 164 H188 M164 188 H140"/>
-      <path d="M140 54 H120 V74 H140 V94 H160 V114 H180 V134 H200"/>
-    </g>
-  </defs>
-  <g opacity=".74">
-    <use href="#ulzii-strand"/>
-    <use href="#ulzii-strand" transform="rotate(90 140 140)"/>
-    <use href="#ulzii-strand" transform="rotate(180 140 140)"/>
-    <use href="#ulzii-strand" transform="rotate(270 140 140)"/>
-  </g>
-  <g opacity=".68">
-    <use href="#ulzii-weave"/>
-    <use href="#ulzii-weave" transform="rotate(90 140 140)"/>
-    <use href="#ulzii-weave" transform="rotate(180 140 140)"/>
-    <use href="#ulzii-weave" transform="rotate(270 140 140)"/>
-  </g>
+  <desc>Монгол гэрийн чимэглэлд хэрэглэгддэг тасралтгүй сүлжилдсэн өлзий утасны хээ.</desc>
+  <path fill="none" stroke="#d6ad55" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="round" opacity=".76"
+    d="M25,15 a7,7 0 1,1 10,0l-30,30a7,7 0 1,0 10,10l30-30 a7,7 0 1,1 10,10l-30,30a7,7 0 1,0 10,0l-30-30 a7,7 0 1,1 10-10l30,30a7,7 0 1,0 10-10z"/>
 </svg>
