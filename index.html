@@ -5729,8 +5729,17 @@ textarea:disabled,
   function showWholesaleCart(){showCart();}
     async function placeWholesaleOrder(product,backAction=showRetailCatalog){
     window.NEXORA_SHOP_BACK=backAction;
-    host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-wholesale-order-back" aria-label="Буцах" title="Буцах">‹</button><h2 class="nexora-ad-heading">БӨӨНИЙ ЗАХИАЛГА</h2><p>'+esc(product.title)+'</p><p id="nx-wholesale-price-preview" class="nx-market-price"></p><p class="nx-market-muted">'+((product.wholesale_price_tiers||[]).length?'Үнийн шатлал: '+(product.wholesale_price_tiers||[]).map(t=>Number(t.min_qty)+'ш-ээс '+money(t.price)).join(' · '):'Нэгж үнэ: '+money(product.price))+'</p><form id="nx-wholesale-order-form"><label>Тоо хэмжээ *</label><input class="nx-market-input" name="quantity" type="number" min="'+Number(product.min_order_quantity||1)+'" max="'+Number(product.stock_quantity||0)+'" value="'+Number(product._cartQty||product.min_order_quantity||1)+'" required><label>Хүлээн авагчийн нэр *</label><input class="nx-market-input" name="buyer_name" autocomplete="name" required><label>Утас *</label><input class="nx-market-input" name="buyer_phone" type="tel" autocomplete="tel" required><label>Хүргэлтийн хаяг</label><input class="nx-market-input" name="delivery_address" autocomplete="street-address"><label>Нэмэлт тайлбар</label><textarea class="nx-market-textarea" name="note" rows="3"></textarea><button class="nx-market-btn" type="submit">Захиалга илгээх</button></form><p class="nx-market-muted">Захиалга өгөхөд бүртгэл, нэвтрэлт шаардахгүй.</p><p id="nx-wholesale-order-msg" class="nx-market-muted"></p>';
+    let deliveryPoint=null;
+    host.innerHTML='<button class="nx-market-btn secondary nx-market-back-arrow" id="nx-wholesale-order-back" aria-label="Буцах" title="Буцах">‹</button><h2 class="nexora-ad-heading">БӨӨНИЙ ЗАХИАЛГА</h2><p>'+esc(product.title)+'</p><p id="nx-wholesale-price-preview" class="nx-market-price"></p><p class="nx-market-muted">'+((product.wholesale_price_tiers||[]).length?'Үнийн шатлал: '+(product.wholesale_price_tiers||[]).map(t=>Number(t.min_qty)+'ш-ээс '+money(t.price)).join(' · '):'Нэгж үнэ: '+money(product.price))+'</p><form id="nx-wholesale-order-form"><label>Тоо хэмжээ *</label><input class="nx-market-input" name="quantity" type="number" min="'+Number(product.min_order_quantity||1)+'" max="'+Number(product.stock_quantity||0)+'" value="'+Number(product._cartQty||product.min_order_quantity||1)+'" required><label>Хүлээн авагчийн нэр *</label><input class="nx-market-input" name="buyer_name" autocomplete="name" required><label>Утас *</label><input class="nx-market-input" name="buyer_phone" type="tel" autocomplete="tel" required><label>Хүргэлтийн байршил *</label><button class="nx-market-btn secondary" type="button" id="nx-wholesale-pick-map">📍 Газрын зураг дээр байршил тэмдэглэх</button><p id="nx-wholesale-map-label" class="nx-market-muted">Байршил сонгоогүй байна.</p><label>Нэмэлт тайлбар</label><textarea class="nx-market-textarea" name="note" rows="3"></textarea><button class="nx-market-btn" type="submit">Захиалга илгээх</button></form><p class="nx-market-muted">Захиалга өгөхөд бүртгэл, нэвтрэлт шаардахгүй.</p><p id="nx-wholesale-order-msg" class="nx-market-muted"></p>';
     document.getElementById("nx-wholesale-order-back").onclick=backAction;
+    document.getElementById("nx-wholesale-pick-map").onclick=()=>{
+      if(typeof window.NEXORA_OPEN_MAP_SCREEN!=="function"){document.getElementById("nx-wholesale-order-msg").textContent="Газрын зураг ачаалж чадсангүй. Дахин оролдоно уу.";return;}
+      window.NEXORA_OPEN_MAP_SCREEN(deliveryPoint?.latitude,deliveryPoint?.longitude,true,point=>{
+        deliveryPoint=point;
+        document.getElementById("nx-wholesale-map-label").textContent="Байршил сонгогдлоо ✓ ("+point.latitude.toFixed(6)+", "+point.longitude.toFixed(6)+")";
+        document.getElementById("nx-wholesale-pick-map").textContent="📍 Байршлыг өөрчлөх";
+      });
+    };
     const quantityInput=document.querySelector('#nx-wholesale-order-form [name="quantity"]'),pricePreview=document.getElementById("nx-wholesale-price-preview");
     const updateWholesalePricePreview=()=>{const qty=Math.max(Number(product.min_order_quantity||1),Number(quantityInput.value)||Number(product.min_order_quantity||1)),unit=priceForQuantity(product,qty);pricePreview.textContent="Нэгж үнэ: "+money(unit)+" · Нийт дүн: "+money(unit*qty);};
     quantityInput.oninput=updateWholesalePricePreview;updateWholesalePricePreview();
@@ -5739,15 +5748,17 @@ textarea:disabled,
       const form=e.currentTarget,v=Object.fromEntries(new FormData(form).entries()),qty=Number(v.quantity),btn=form.querySelector("button[type=submit]"),msg=document.getElementById("nx-wholesale-order-msg");
       if(!Number.isInteger(qty)||qty<Number(product.min_order_quantity||1)||qty>Number(product.stock_quantity||0)){msg.textContent="Захиалгын тоо хэмжээг шалгана уу.";return;}
       if(!String(v.buyer_name||"").trim()||!String(v.buyer_phone||"").trim()){msg.textContent="Нэр болон утасны дугаараа оруулна уу.";return;}
+      if(!deliveryPoint){msg.textContent="Хүргэлтийн байршлаа газрын зураг дээр тэмдэглэнэ үү.";return;}
       btn.disabled=true;btn.textContent="ЗАХИАЛГА ИЛГЭЭЖ БАЙНА…";
       const {data:orderId,error}=await db.rpc("nexora_create_guest_wholesale_order",{
         p_product_id:product.id,p_quantity:qty,p_buyer_name:String(v.buyer_name).trim(),
-        p_buyer_phone:String(v.buyer_phone).trim(),p_delivery_address:String(v.delivery_address||"").trim(),
-        p_note:String(v.note||"").trim()
+        p_buyer_phone:String(v.buyer_phone).trim(),p_delivery_address:"",
+        p_note:String(v.note||"").trim(),p_delivery_latitude:deliveryPoint.latitude,
+        p_delivery_longitude:deliveryPoint.longitude
       });
       if(error){msg.textContent="Захиалга илгээхэд алдаа: "+error.message;btn.disabled=false;btn.textContent="Захиалга илгээх";return;}
       wholesaleCart=wholesaleCart.filter(x=>String(x.id)!==String(product.id));
-      host.innerHTML='<h2 class="nexora-ad-heading">ЗАХИАЛГА ИЛГЭЭГДЛЭЭ</h2><p class="nx-market-muted">Таны бөөний захиалга нийлүүлэгчид амжилттай хүрлээ. Бүртгэл, нэвтрэлт шаардсангүй.</p><p class="nx-market-price">Захиалгын дугаар: '+esc(orderId)+'</p><p class="nx-market-muted">Нийлүүлэгч таны оруулсан утасны дугаараар холбогдоно.</p><div class="nx-market-toolbar"><button class="nx-market-btn" id="nx-wholesale-done">Каталог руу буцах</button></div>';
+      host.innerHTML='<h2 class="nexora-ad-heading">ЗАХИАЛГА ИЛГЭЭГДЛЭЭ</h2><p class="nx-market-muted">Таны бөөний захиалга нийлүүлэгчид амжилттай хүрлээ. Бүртгэл, нэвтрэлт шаардсангүй.</p><p class="nx-market-price">Захиалгын дугаар: '+esc(orderId)+'</p><p class="nx-market-muted">Хүргэлтийн байршил газрын зураг дээр бүртгэгдсэн. Нийлүүлэгч таны утсаар холбогдоно.</p><div class="nx-market-toolbar"><button class="nx-market-btn" id="nx-wholesale-done">Каталог руу буцах</button></div>';
       document.getElementById("nx-wholesale-done").onclick=backAction;
     };
   }
