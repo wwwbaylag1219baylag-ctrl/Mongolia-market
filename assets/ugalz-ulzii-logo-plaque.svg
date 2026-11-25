@@ -3,24 +3,24 @@
 <desc id="desc">Хэрэглэгчийн илгээсэн эх зургаас векторчилсон, хар алтлаг өнгийн тасралтгүй өлзий хээ. Угалз.мн лого тусдаа давхаргаар яг төвд байрлана.</desc>
 <defs>
  <linearGradient id="antiqueGold" x1="0.05" y1="0" x2="0.92" y2="1">
-  <stop offset="0" stop-color="#3d2b16"/><stop offset=".16" stop-color="#705022"/>
-  <stop offset=".31" stop-color="#a87932"/><stop offset=".43" stop-color="#d2a653"/>
-  <stop offset=".50" stop-color="#edc777"/><stop offset=".59" stop-color="#b98539"/>
-  <stop offset=".76" stop-color="#795322"/><stop offset=".9" stop-color="#4a3218"/>
-  <stop offset="1" stop-color="#2d2012"/>
+  <stop offset="0" stop-color="#302111"/><stop offset=".16" stop-color="#573b19"/>
+  <stop offset=".31" stop-color="#886027"/><stop offset=".43" stop-color="#b88a40"/>
+  <stop offset=".50" stop-color="#c99d58"/><stop offset=".59" stop-color="#93672b"/>
+  <stop offset=".76" stop-color="#62431d"/><stop offset=".9" stop-color="#3b2814"/>
+  <stop offset="1" stop-color="#24190f"/>
  </linearGradient>
  <linearGradient id="edgeLight" x1="0" y1="0" x2="1" y2="1">
-  <stop offset="0" stop-color="#f4d58c" stop-opacity=".82"/>
-  <stop offset=".38" stop-color="#e2b45d" stop-opacity=".4"/>
-  <stop offset=".72" stop-color="#513719" stop-opacity=".12"/>
-  <stop offset="1" stop-color="#24190e" stop-opacity=".7"/>
+  <stop offset="0" stop-color="#d5b16d" stop-opacity=".68"/>
+  <stop offset=".38" stop-color="#bd914b" stop-opacity=".3"/>
+  <stop offset=".72" stop-color="#422d17" stop-opacity=".12"/>
+  <stop offset="1" stop-color="#1d140b" stop-opacity=".7"/>
  </linearGradient>
  <filter id="metalDepth" x="-14%" y="-12%" width="128%" height="130%" color-interpolation-filters="sRGB">
   <feGaussianBlur in="SourceAlpha" stdDeviation="8" result="blur"/>
   <feOffset in="blur" dx="0" dy="10" result="deepShadow"/>
   <feColorMatrix in="deepShadow" type="matrix" values="0 0 0 0 0.04 0 0 0 0 0.025 0 0 0 0 0.01 0 0 0 .78 0" result="shadow"/>
   <feGaussianBlur in="SourceAlpha" stdDeviation="2.2" result="edgeBlur"/>
-  <feSpecularLighting in="edgeBlur" surfaceScale="5" specularConstant=".75" specularExponent="22" lighting-color="#ffe2a0" result="specular">
+  <feSpecularLighting in="edgeBlur" surfaceScale="5" specularConstant=".75" specularExponent="22" lighting-color="#e0bd7d" result="specular">
    <feDistantLight azimuth="225" elevation="55"/>
   </feSpecularLighting>
   <feComposite in="specular" in2="SourceAlpha" operator="in" result="shine"/>
