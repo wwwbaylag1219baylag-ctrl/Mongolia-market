@@ -1000,7 +1000,7 @@ textarea:disabled,
       <div class="home-content">
 
         <div class="hero">
-          <div class="hero-logo"><img class="nexora-logo-hero" src="./assets/ugalz-logo.svg?v=20261123a" alt="Угалз.мн"></div>
+          <div class="hero-logo"><img class="nexora-logo-hero" src="./assets/ugalz-logo.svg?v=20261125-black" alt="Угалз.мн"></div>
 
 
           <p class="hero-description" data-i18n="heroDescription">
@@ -4823,9 +4823,9 @@ textarea:disabled,
         if(!signedAvatarError&&signedAvatar?.signedUrl)profileAvatarUrl=signedAvatar.signedUrl;
       }
       host.innerHTML='<section class="nx-profile-accordion-root"><div class="nx-profile-identity" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;margin:4px 0 18px">'+
-        '<img id="nx-profile-avatar-preview" src="'+esc(profileAvatarUrl||"./assets/ugalz-logo.svg?v=20261123a")+'" alt="Профайл зураг" style="width:92px;height:92px;border-radius:50%;object-fit:cover;border:2px solid var(--border);background:#111">'+
+        '<img id="nx-profile-avatar-preview" src="'+esc(profileAvatarUrl||"./assets/ugalz-logo.svg?v=20261125-black")+'" alt="Профайл зураг" style="width:92px;height:92px;border-radius:50%;object-fit:cover;border:2px solid var(--border);background:#111">'+
         '<button type="button" class="nx-market-btn secondary" id="nx-profile-avatar-choose">ПРОФАЙЛЫН ЗУРАГ СОНГОХ</button><input id="nx-profile-avatar-input" type="file" accept="image/jpeg,image/png,image/webp" style="display:none"><p id="nx-profile-avatar-msg" class="nx-market-muted" style="font-size:12px"></p>'+
-        '<img src="./assets/ugalz-logo.svg?v=20261123a" alt="Угалз.мн" style="width:190px;max-width:70vw;height:76px;object-fit:contain">'+
+        '<img src="./assets/ugalz-logo.svg?v=20261125-black" alt="Угалз.мн" style="width:190px;max-width:70vw;height:76px;object-fit:contain">'+
         '<h2 class="nx-profile-heading">МИНИЙ ПРОФАЙЛ</h2><p class="nx-market-muted">'+esc(name)+'</p><p class="nx-market-muted">'+esc(authData.user.email||"")+'</p></div>'+
         '<div class="nx-profile-accordion-content">'+
         '<button class="nx-market-btn" id="nx-profile-publish">＋ БАРАА НИЙТЛЭХ</button>'+
@@ -5866,7 +5866,7 @@ textarea:disabled,
   async function refreshTemuProfileImage(){
     const button=document.getElementById("nx-temu-profile");
     if(!button)return;
-    const fallback="./assets/ugalz-logo.svg?v=20261123a";
+    const fallback="./assets/ugalz-logo.svg?v=20261125-black";
     // Хувийн профайл зураг нь дэлгүүрийн болон барааны логоноос тусдаа байна.
     button.innerHTML='<img src="'+fallback+'" alt="Угалз.мн">';
     try{
