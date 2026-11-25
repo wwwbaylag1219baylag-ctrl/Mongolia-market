@@ -1,33 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320" fill="none">
-  <title>Угалз.мн — алтан өлзий хээ</title>
-  <desc>Дөрвөн зүгт тэгш хэмтэй, тасралтгүй сүлжилдсэн Монгол өлзий хээний алтлаг чимэглэл.</desc>
-  <defs>
-    <linearGradient id="gold" x1="42" y1="34" x2="278" y2="286" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#F5D995"/>
-      <stop offset=".48" stop-color="#D6AD55"/>
-      <stop offset="1" stop-color="#A9792D"/>
-    </linearGradient>
-  </defs>
-  <g stroke="url(#gold)" stroke-width="5.2" stroke-linecap="square" stroke-linejoin="round" opacity=".92">
-    <!-- Гадна талын тасралтгүй дөрвөлжин өлзий хүрээ -->
-    <path d="M112 34H208Q250 34 250 76V112H214V84H236V76Q236 48 208 48H112Q84 48 84 76V84H106V112H70V76Q70 34 112 34Z"/>
-    <path d="M286 112V208Q286 250 244 250H208V214H236V236H244Q272 236 272 208V112Q272 84 244 84H236V106H208V70H244Q286 70 286 112Z"/>
-    <path d="M208 286H112Q70 286 70 244V208H106V236H84V244Q84 272 112 272H208Q236 272 236 244V236H214V208H250V244Q250 286 208 286Z"/>
-    <path d="M34 208V112Q34 70 76 70H112V106H84V84H76Q48 84 48 112V208Q48 236 76 236H84V214H112V250H76Q34 250 34 208Z"/>
-    <!-- Дотор сүлжилдсэн өлзийн зангилаа -->
-    <path d="M112 70H178Q202 70 202 94V112H178V96H188V94Q188 84 178 84H112Q102 84 102 94V112H78V94Q78 70 112 70Z"/>
-    <path d="M250 112V178Q250 202 226 202H208V178H224V188H226Q236 188 236 178V112Q236 102 226 102H208V78H226Q250 78 250 112Z"/>
-    <path d="M208 250H142Q118 250 118 226V208H142V224H132V226Q132 236 142 236H208Q218 236 218 226V208H242V226Q242 250 208 250Z"/>
-    <path d="M70 208V142Q70 118 94 118H112V142H96V132H94Q84 132 84 142V208Q84 218 94 218H112V242H94Q70 242 70 208Z"/>
-    <!-- Төвийн дөрвөн талт зангилаа -->
-    <path d="M112 112H160V136H136V160H112V112Z"/>
-    <path d="M208 112V160H184V136H160V112H208Z"/>
-    <path d="M208 208H160V184H184V160H208V208Z"/>
-    <path d="M112 208V160H136V184H160V208H112Z"/>
-  </g>
-  <g fill="#F0D28A" opacity=".82">
-    <circle cx="160" cy="160" r="4.5"/>
-    <circle cx="160" cy="22" r="2.5"/><circle cx="298" cy="160" r="2.5"/>
-    <circle cx="160" cy="298" r="2.5"/><circle cx="22" cy="160" r="2.5"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="1236" height="1532" viewBox="0 0 1236 1532" role="img" aria-labelledby="title desc">
+<title id="title">Угалз.мн — Монгол мөнхийн өлзий хээ</title>
+<desc id="desc">Хэрэглэгчийн илгээсэн эх зургаас векторчилсон, хар алтлаг өнгийн тасралтгүй өлзий хээ. Угалз.мн лого тусдаа давхаргаар яг төвд байрлана.</desc>
+<defs>
+ <linearGradient id="antiqueGold" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#806027"/><stop offset=".28" stop-color="#b98736"/>
+  <stop offset=".52" stop-color="#d4a64e"/><stop offset=".76" stop-color="#a8782d"/>
+  <stop offset="1" stop-color="#6e4d20"/>
+ </linearGradient>
+ <filter id="softMetal" x="-8%" y="-6%" width="116%" height="112%">
+  <feGaussianBlur in="SourceAlpha" stdDeviation="5" result="blur"/><feOffset dy="3" result="shadow"/>
+  <feComponentTransfer in="shadow" result="shadowAlpha"><feFuncA type="linear" slope=".32"/></feComponentTransfer>
+  <feMerge><feMergeNode in="shadowAlpha"/><feMergeNode in="SourceGraphic"/></feMerge>
+ </filter>
+</defs>
+<path d="M617,30 L376,272 L535,434 L525,449 L454,515 L291,356 L50,596 L50,602 L207,760 L207,765 L49,927 L290,1170 L450,1015 L459,1012 L523,1076 L534,1093 L377,1256 L619,1496 L861,1257 L860,1251 L703,1093 L716,1075 L780,1013 L788,1013 L939,1165 L948,1169 L1189,929 L1185,920 L1031,765 L1032,759 L1189,602 L1189,596 L949,357 L934,366 L787,513 L775,510 L703,434 L861,271Z M616,1175 L638,1191 L699,1254 L664,1294 L618,1336 L539,1256Z M617,849 L698,925 L698,931 L622,1006 L605,996 L540,931 L541,924Z M946,847 L1026,925 L1023,934 L950,1006 L936,999 L867,926Z M291,846 L370,926 L364,937 L294,1006 L288,1006 L211,926Z M783,684 L863,762 L859,771 L784,843 L703,764Z M454,684 L477,702 L534,763 L455,843 L375,765 L376,759Z M946,520 L1026,597 L1019,611 L949,679 L869,603 L875,589Z M616,520 L626,524 L699,597 L662,639 L619,678 L540,602 L545,591Z M291,519 L372,598 L296,677 L288,679 L212,603 L211,597Z M616,191 L623,192 L699,270 L622,350 L612,347 L539,272Z" fill="url(#antiqueGold)" fill-rule="evenodd" stroke="#9b7130" stroke-width="1.8" stroke-linejoin="round" filter="url(#softMetal)"/>
 </svg>
