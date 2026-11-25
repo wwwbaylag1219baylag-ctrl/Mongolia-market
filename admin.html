@@ -143,6 +143,7 @@
    if(r.buyer_phone)details.push(["Захиалагчийн утас",r.buyer_phone]);
    if(r.supplier_id)details.push(["Нийлүүлэгчийн ID",r.supplier_id]);
    if(r.delivery_address)details.push(["Хүргэлтийн хаяг",r.delivery_address]);
+   if(r.delivery_latitude!=null&&r.delivery_longitude!=null)details.push(["Хүргэлтийн газрын зураг",Number(r.delivery_latitude).toFixed(6)+", "+Number(r.delivery_longitude).toFixed(6)]);
    if(Array.isArray(r.items))details.push(["Захиалгын мөр",r.items.length+" төрөл"]);
    if(r.email)details.push(["И-мэйл",r.email]);
    if(r.user_id)details.push(["Төлбөр илгээсэн хэрэглэгч",String(r.user_id).slice(0,8)+"…"]);
