@@ -1,17 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="360" height="180" viewBox="0 0 360 180">
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
 <defs>
- <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#073b3b"/><stop offset=".52" stop-color="#0b5550"/><stop offset="1" stop-color="#092f38"/></linearGradient>
- <pattern id="knot" width="72" height="72" patternUnits="userSpaceOnUse">
-  <g fill="none" stroke="#d6ad55" stroke-width="1.45" opacity=".19" stroke-linecap="round" stroke-linejoin="round">
-   <path d="M12 36 C12 22 22 12 36 12 C50 12 60 22 60 36 C60 50 50 60 36 60 C22 60 12 50 12 36Z"/>
-   <path d="M22 36 C22 28 28 22 36 22 C44 22 50 28 50 36 C50 44 44 50 36 50 C28 50 22 44 22 36Z"/>
-   <path d="M12 36 H22 M50 36 H60 M36 12 V22 M36 50 V60"/>
+ <pattern id="ulzii" width="120" height="120" patternUnits="userSpaceOnUse">
+  <g fill="none" stroke="#d6ad55" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="round" opacity=".34">
+   <path d="M20 60 V42 Q20 20 42 20 H60 V38 H43 Q38 38 38 43 V60 H20Z"/>
+   <path d="M100 60 V78 Q100 100 78 100 H60 V82 H77 Q82 82 82 77 V60 H100Z"/>
+   <path d="M60 20 H78 Q100 20 100 42 V60 H82 V43 Q82 38 77 38 H60 V20Z"/>
+   <path d="M60 100 H42 Q20 100 20 78 V60 H38 V77 Q38 82 43 82 H60 V100Z"/>
+   <path d="M38 60 H60 V38 M82 60 H60 V82"/>
+  </g>
+  <g fill="none" stroke="#f2d995" stroke-width="1" opacity=".18">
+   <path d="M0 0 H12 Q20 0 20 8 V20 H8 Q0 20 0 12Z"/>
+   <path d="M120 120 H108 Q100 120 100 112 V100 H112 Q120 100 120 108Z"/>
   </g>
  </pattern>
 </defs>
-<rect width="360" height="180" rx="26" fill="url(#bg)"/>
-<rect width="360" height="180" rx="26" fill="url(#knot)"/>
-<rect x="7" y="7" width="346" height="166" rx="21" fill="none" stroke="#d6ad55" stroke-opacity=".55" stroke-width="1.2"/>
-<rect x="13" y="13" width="334" height="154" rx="17" fill="none" stroke="#f4dfaa" stroke-opacity=".16"/>
-<path d="M24 35 Q24 24 35 24 H56 M304 24 H325 Q336 24 336 35 M24 145 Q24 156 35 156 H56 M304 156 H325 Q336 156 336 145" fill="none" stroke="#e8c77c" stroke-opacity=".62" stroke-width="2"/>
+<rect width="120" height="120" fill="url(#ulzii)"/>
 </svg>
