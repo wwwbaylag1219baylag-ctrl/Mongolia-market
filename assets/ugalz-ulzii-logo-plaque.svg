@@ -2,16 +2,30 @@
 <title id="title">Угалз.мн — Монгол мөнхийн өлзий хээ</title>
 <desc id="desc">Хэрэглэгчийн илгээсэн эх зургаас векторчилсон, хар алтлаг өнгийн тасралтгүй өлзий хээ. Угалз.мн лого тусдаа давхаргаар яг төвд байрлана.</desc>
 <defs>
- <linearGradient id="antiqueGold" x1="0" y1="0" x2="1" y2="1">
-  <stop offset="0" stop-color="#806027"/><stop offset=".28" stop-color="#b98736"/>
-  <stop offset=".52" stop-color="#d4a64e"/><stop offset=".76" stop-color="#a8782d"/>
-  <stop offset="1" stop-color="#6e4d20"/>
+ <linearGradient id="antiqueGold" x1="0.05" y1="0" x2="0.92" y2="1">
+  <stop offset="0" stop-color="#3d2b16"/><stop offset=".16" stop-color="#705022"/>
+  <stop offset=".31" stop-color="#a87932"/><stop offset=".43" stop-color="#d2a653"/>
+  <stop offset=".50" stop-color="#edc777"/><stop offset=".59" stop-color="#b98539"/>
+  <stop offset=".76" stop-color="#795322"/><stop offset=".9" stop-color="#4a3218"/>
+  <stop offset="1" stop-color="#2d2012"/>
  </linearGradient>
- <filter id="softMetal" x="-8%" y="-6%" width="116%" height="112%">
-  <feGaussianBlur in="SourceAlpha" stdDeviation="5" result="blur"/><feOffset dy="3" result="shadow"/>
-  <feComponentTransfer in="shadow" result="shadowAlpha"><feFuncA type="linear" slope=".32"/></feComponentTransfer>
-  <feMerge><feMergeNode in="shadowAlpha"/><feMergeNode in="SourceGraphic"/></feMerge>
+ <linearGradient id="edgeLight" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#f4d58c" stop-opacity=".82"/>
+  <stop offset=".38" stop-color="#e2b45d" stop-opacity=".4"/>
+  <stop offset=".72" stop-color="#513719" stop-opacity=".12"/>
+  <stop offset="1" stop-color="#24190e" stop-opacity=".7"/>
+ </linearGradient>
+ <filter id="metalDepth" x="-14%" y="-12%" width="128%" height="130%" color-interpolation-filters="sRGB">
+  <feGaussianBlur in="SourceAlpha" stdDeviation="8" result="blur"/>
+  <feOffset in="blur" dx="0" dy="10" result="deepShadow"/>
+  <feColorMatrix in="deepShadow" type="matrix" values="0 0 0 0 0.04 0 0 0 0 0.025 0 0 0 0 0.01 0 0 0 .78 0" result="shadow"/>
+  <feGaussianBlur in="SourceAlpha" stdDeviation="2.2" result="edgeBlur"/>
+  <feSpecularLighting in="edgeBlur" surfaceScale="5" specularConstant=".75" specularExponent="22" lighting-color="#ffe2a0" result="specular">
+   <feDistantLight azimuth="225" elevation="55"/>
+  </feSpecularLighting>
+  <feComposite in="specular" in2="SourceAlpha" operator="in" result="shine"/>
+  <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/><feMergeNode in="shine"/></feMerge>
  </filter>
 </defs>
-<path d="M617,30 L376,272 L535,434 L525,449 L454,515 L291,356 L50,596 L50,602 L207,760 L207,765 L49,927 L290,1170 L450,1015 L459,1012 L523,1076 L534,1093 L377,1256 L619,1496 L861,1257 L860,1251 L703,1093 L716,1075 L780,1013 L788,1013 L939,1165 L948,1169 L1189,929 L1185,920 L1031,765 L1032,759 L1189,602 L1189,596 L949,357 L934,366 L787,513 L775,510 L703,434 L861,271Z M616,1175 L638,1191 L699,1254 L664,1294 L618,1336 L539,1256Z M617,849 L698,925 L698,931 L622,1006 L605,996 L540,931 L541,924Z M946,847 L1026,925 L1023,934 L950,1006 L936,999 L867,926Z M291,846 L370,926 L364,937 L294,1006 L288,1006 L211,926Z M783,684 L863,762 L859,771 L784,843 L703,764Z M454,684 L477,702 L534,763 L455,843 L375,765 L376,759Z M946,520 L1026,597 L1019,611 L949,679 L869,603 L875,589Z M616,520 L626,524 L699,597 L662,639 L619,678 L540,602 L545,591Z M291,519 L372,598 L296,677 L288,679 L212,603 L211,597Z M616,191 L623,192 L699,270 L622,350 L612,347 L539,272Z" fill="url(#antiqueGold)" fill-rule="evenodd" stroke="#9b7130" stroke-width="1.8" stroke-linejoin="round" filter="url(#softMetal)"/>
-</svg>
+<path d="M617,30 L376,272 L535,434 L525,449 L454,515 L291,356 L50,596 L50,602 L207,760 L207,765 L49,927 L290,1170 L450,1015 L459,1012 L523,1076 L534,1093 L377,1256 L619,1496 L861,1257 L860,1251 L703,1093 L716,1075 L780,1013 L788,1013 L939,1165 L948,1169 L1189,929 L1185,920 L1031,765 L1032,759 L1189,602 L1189,596 L949,357 L934,366 L787,513 L775,510 L703,434 L861,271Z M616,1175 L638,1191 L699,1254 L664,1294 L618,1336 L539,1256Z M617,849 L698,925 L698,931 L622,1006 L605,996 L540,931 L541,924Z M946,847 L1026,925 L1023,934 L950,1006 L936,999 L867,926Z M291,846 L370,926 L364,937 L294,1006 L288,1006 L211,926Z M783,684 L863,762 L859,771 L784,843 L703,764Z M454,684 L477,702 L534,763 L455,843 L375,765 L376,759Z M946,520 L1026,597 L1019,611 L949,679 L869,603 L875,589Z M616,520 L626,524 L699,597 L662,639 L619,678 L540,602 L545,591Z M291,519 L372,598 L296,677 L288,679 L212,603 L211,597Z M616,191 L623,192 L699,270 L622,350 L612,347 L539,272Z" fill="url(#antiqueGold)" fill-rule="evenodd" stroke="#9b7130" stroke-width="1.8" stroke-linejoin="round" filter="url(#metalDepth)"/>
+<path d="M617,30 L376,272 L535,434 L525,449 L454,515 L291,356 L50,596 L50,602 L207,760 L207,765 L49,927 L290,1170 L450,1015 L459,1012 L523,1076 L534,1093 L377,1256 L619,1496 L861,1257 L860,1251 L703,1093 L716,1075 L780,1013 L788,1013 L939,1165 L948,1169 L1189,929 L1185,920 L1031,765 L1032,759 L1189,602 L1189,596 L949,357 L934,366 L787,513 L775,510 L703,434 L861,271Z M616,1175 L638,1191 L699,1254 L664,1294 L618,1336 L539,1256Z M617,849 L698,925 L698,931 L622,1006 L605,996 L540,931 L541,924Z M946,847 L1026,925 L1023,934 L950,1006 L936,999 L867,926Z M291,846 L370,926 L364,937 L294,1006 L288,1006 L211,926Z M783,684 L863,762 L859,771 L784,843 L703,764Z M454,684 L477,702 L534,763 L455,843 L375,765 L376,759Z M946,520 L1026,597 L1019,611 L949,679 L869,603 L875,589Z M616,520 L626,524 L699,597 L662,639 L619,678 L540,602 L545,591Z M291,519 L372,598 L296,677 L288,679 L212,603 L211,597Z M616,191 L623,192 L699,270 L622,350 L612,347 L539,272Z" fill="none" stroke="url(#edgeLight)" stroke-width="4" stroke-linejoin="round" opacity=".72" pointer-events="none"/></svg>
