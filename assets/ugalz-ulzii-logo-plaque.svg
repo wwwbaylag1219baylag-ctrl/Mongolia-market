@@ -1,6 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="280" height="280" viewBox="0 0 60 80">
-  <title>Монгол уламжлалт өлзий хээ</title>
-  <desc>Монгол гэрийн чимэглэлд хэрэглэгддэг тасралтгүй сүлжилдсэн өлзий утасны хээ.</desc>
-  <path fill="none" stroke="#d6ad55" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="round" opacity=".76"
-    d="M25,15 a7,7 0 1,1 10,0l-30,30a7,7 0 1,0 10,10l30-30 a7,7 0 1,1 10,10l-30,30a7,7 0 1,0 10,0l-30-30 a7,7 0 1,1 10-10l30,30a7,7 0 1,0 10-10z"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320" fill="none">
+  <title>Угалз.мн — алтан өлзий хээ</title>
+  <desc>Дөрвөн зүгт тэгш хэмтэй, тасралтгүй сүлжилдсэн Монгол өлзий хээний алтлаг чимэглэл.</desc>
+  <defs>
+    <linearGradient id="gold" x1="42" y1="34" x2="278" y2="286" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F5D995"/>
+      <stop offset=".48" stop-color="#D6AD55"/>
+      <stop offset="1" stop-color="#A9792D"/>
+    </linearGradient>
+  </defs>
+  <g stroke="url(#gold)" stroke-width="5.2" stroke-linecap="square" stroke-linejoin="round" opacity=".92">
+    <!-- Гадна талын тасралтгүй дөрвөлжин өлзий хүрээ -->
+    <path d="M112 34H208Q250 34 250 76V112H214V84H236V76Q236 48 208 48H112Q84 48 84 76V84H106V112H70V76Q70 34 112 34Z"/>
+    <path d="M286 112V208Q286 250 244 250H208V214H236V236H244Q272 236 272 208V112Q272 84 244 84H236V106H208V70H244Q286 70 286 112Z"/>
+    <path d="M208 286H112Q70 286 70 244V208H106V236H84V244Q84 272 112 272H208Q236 272 236 244V236H214V208H250V244Q250 286 208 286Z"/>
+    <path d="M34 208V112Q34 70 76 70H112V106H84V84H76Q48 84 48 112V208Q48 236 76 236H84V214H112V250H76Q34 250 34 208Z"/>
+    <!-- Дотор сүлжилдсэн өлзийн зангилаа -->
+    <path d="M112 70H178Q202 70 202 94V112H178V96H188V94Q188 84 178 84H112Q102 84 102 94V112H78V94Q78 70 112 70Z"/>
+    <path d="M250 112V178Q250 202 226 202H208V178H224V188H226Q236 188 236 178V112Q236 102 226 102H208V78H226Q250 78 250 112Z"/>
+    <path d="M208 250H142Q118 250 118 226V208H142V224H132V226Q132 236 142 236H208Q218 236 218 226V208H242V226Q242 250 208 250Z"/>
+    <path d="M70 208V142Q70 118 94 118H112V142H96V132H94Q84 132 84 142V208Q84 218 94 218H112V242H94Q70 242 70 208Z"/>
+    <!-- Төвийн дөрвөн талт зангилаа -->
+    <path d="M112 112H160V136H136V160H112V112Z"/>
+    <path d="M208 112V160H184V136H160V112H208Z"/>
+    <path d="M208 208H160V184H184V160H208V208Z"/>
+    <path d="M112 208V160H136V184H160V208H112Z"/>
+  </g>
+  <g fill="#F0D28A" opacity=".82">
+    <circle cx="160" cy="160" r="4.5"/>
+    <circle cx="160" cy="22" r="2.5"/><circle cx="298" cy="160" r="2.5"/>
+    <circle cx="160" cy="298" r="2.5"/><circle cx="22" cy="160" r="2.5"/>
+  </g>
 </svg>
