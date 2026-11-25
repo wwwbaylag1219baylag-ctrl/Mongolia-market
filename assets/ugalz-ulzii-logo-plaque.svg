@@ -1,18 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
-<defs>
- <pattern id="ulzii" width="120" height="120" patternUnits="userSpaceOnUse">
-  <g fill="none" stroke="#d6ad55" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="round" opacity=".34">
-   <path d="M20 60 V42 Q20 20 42 20 H60 V38 H43 Q38 38 38 43 V60 H20Z"/>
-   <path d="M100 60 V78 Q100 100 78 100 H60 V82 H77 Q82 82 82 77 V60 H100Z"/>
-   <path d="M60 20 H78 Q100 20 100 42 V60 H82 V43 Q82 38 77 38 H60 V20Z"/>
-   <path d="M60 100 H42 Q20 100 20 78 V60 H38 V77 Q38 82 43 82 H60 V100Z"/>
-   <path d="M38 60 H60 V38 M82 60 H60 V82"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
+  <g fill="none" stroke="#d6ad55" stroke-width="5.2" stroke-linecap="square" stroke-linejoin="round" opacity=".58">
+    <path d="M42 120V76Q42 42 76 42H120V66H78Q66 66 66 78V120H42Z"/>
+    <path d="M198 120V164Q198 198 164 198H120V174H162Q174 174 174 162V120H198Z"/>
+    <path d="M120 42H164Q198 42 198 76V120H174V78Q174 66 162 66H120V42Z"/>
+    <path d="M120 198H76Q42 198 42 164V120H66V162Q66 174 78 174H120V198Z"/>
+    <path d="M66 120H96V96H120V66"/>
+    <path d="M174 120H144V144H120V174"/>
+    <path d="M120 66V96H144V120H174"/>
+    <path d="M120 174V144H96V120H66"/>
   </g>
-  <g fill="none" stroke="#f2d995" stroke-width="1" opacity=".18">
-   <path d="M0 0 H12 Q20 0 20 8 V20 H8 Q0 20 0 12Z"/>
-   <path d="M120 120 H108 Q100 120 100 112 V100 H112 Q120 100 120 108Z"/>
+  <g fill="none" stroke="#f0d28a" stroke-width="2.1" stroke-linecap="square" stroke-linejoin="round" opacity=".48">
+    <path d="M84 84H108V108H132V132H156"/>
+    <path d="M156 84H132V108H108V132H84"/>
+    <path d="M84 156H108V132H132V108H156"/>
+    <path d="M156 156H132V132H108V108H84"/>
   </g>
- </pattern>
-</defs>
-<rect width="120" height="120" fill="url(#ulzii)"/>
 </svg>
