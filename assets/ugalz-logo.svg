@@ -9,7 +9,7 @@
  <path d="M350 24 C374 58 405 76 405 111 C405 145 380 170 350 170 C320 170 295 145 295 111 C295 76 326 58 350 24Z" fill="url(#gold)" stroke="#80521e" stroke-width="5"/>
  <path d="M350 55 C365 78 382 91 382 113 C382 133 368 147 350 147 C332 147 318 133 318 113 C318 91 335 78 350 55Z" fill="none" stroke="#fff2c4" stroke-width="4"/>
 </g>
-<text x="350" y="285" text-anchor="middle" fill="url(#gold)" stroke="#70451d" stroke-width="3" paint-order="stroke" font-family="Georgia,'Noto Serif',serif" font-size="112" font-weight="700" filter="url(#shadow)">Угалз.мн</text>
+<text x="350" y="285" text-anchor="middle" fill="#111111" stroke="#050505" stroke-width="2" paint-order="stroke" font-family="Georgia,'Noto Serif',serif" font-size="112" font-weight="700" filter="url(#shadow)">Угалз.мн</text>
 <path d="M145 315 Q350 333 555 315" fill="none" stroke="url(#gold)" stroke-width="4"/>
-<text x="350" y="372" text-anchor="middle" fill="#f3d58f" stroke="#70451d" stroke-width="1" paint-order="stroke" font-family="Arial,sans-serif" font-size="25" font-weight="700" letter-spacing="5">ЗАР · ХУДАЛДАА</text>
+<text x="350" y="372" text-anchor="middle" fill="#111111" stroke="#111111" stroke-width="0.5" paint-order="stroke" font-family="Arial,sans-serif" font-size="25" font-weight="700" letter-spacing="5">ЗАР · ХУДАЛДАА</text>
 </svg>
